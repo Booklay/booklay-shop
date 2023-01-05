@@ -1,5 +1,9 @@
 package com.nhnacademy.booklay.server.entity;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,8 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+@Table(name = "product_detail")
 @Entity
-@Table(name="product_detail")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductDetail {
 
   @Id
@@ -24,9 +30,9 @@ public class ProductDetail {
   private String isbn;
 
   @Column
-  private int page;
+  private Integer page;
 
-  @Column(length = 100)
+  @Column
   private String publisher;
 
   @Column(name="published_date")
@@ -36,5 +42,5 @@ public class ProductDetail {
   private String ebookAddress;
 
   @Column
-  private int storage;
+  private Integer storage;
 }

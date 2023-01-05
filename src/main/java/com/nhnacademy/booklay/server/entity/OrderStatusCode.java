@@ -1,28 +1,24 @@
 package com.nhnacademy.booklay.server.entity;
 
-import javax.persistence.*;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table
+@Table(name = "order_status_code")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Author {
+public class OrderStatusCode {
 
-  @Id
-  @Column(name="author_no")
-  private Long authorNo;
+    @Id
+    @Column(name = "code")
+    private Long id;
 
-  @OneToOne
-  @JoinColumn(name = "member_no")
-  private Member member;
-
-  @Column(length = 50)
-  private String name;
+    @Column
+    private String name;
 }

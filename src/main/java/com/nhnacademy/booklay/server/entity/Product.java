@@ -1,21 +1,26 @@
 package com.nhnacademy.booklay.server.entity;
 
-import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import javax.persistence.*;
+
+@Table
 @Entity
-@Table(name = "product")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "product_no")
   private Long id;
 
-  @Column(name="thumbnail_no")
-  private Long thumbnailId;
+  @OneToOne
+  @JoinColumn(name = "image_no")
+  private Image image;
 
   @Column
   private String title;

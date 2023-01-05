@@ -1,89 +1,3 @@
-SET FOREIGN_KEY_CHECKS = 0;
-
-drop table if exists access_log;
-
-drop table if exists ask_chat;
-
-drop table if exists blocked_member_detail;
-
-drop table if exists book_subscribe;
-
-drop table if exists cart;
-
-drop table if exists category_product;
-
-drop table if exists category;
-
-drop table if exists coupon;
-
-drop table if exists coupon_type;
-
-drop table if exists delivery_destination;
-
-drop table if exists delivery_detail;
-
-drop table if exists delivery_status_code;
-
-drop table if exists gender;
-
-drop table if exists image;
-
-drop table if exists member_authority;
-
-drop table if exists authority;
-
-drop table if exists member_grade;
-
-drop table if exists `order`;
-
-drop table if exists order_coupon;
-
-drop table if exists order_product;
-
-drop table if exists order_status_code;
-
-drop table if exists order_subscribe;
-
-drop table if exists owned_ebook;
-
-drop table if exists point_history;
-
-drop table if exists post;
-
-drop table if exists post_type;
-
-drop table if exists product_ask_comment;
-
-drop table if exists product_author;
-
-drop table if exists author;
-
-drop table if exists product_coupon;
-
-drop table if exists product_detail;
-
-drop table if exists product_relation;
-
-drop table if exists product_tag;
-
-drop table if exists restocking_notification;
-
-drop table if exists review;
-
-drop table if exists subscribe;
-
-drop table if exists tag;
-
-drop table if exists view_count;
-
-drop table if exists wishlist;
-
-drop table if exists member;
-
-drop table if exists product;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
 create table access_log
 (
     access_log_no bigint not null
@@ -109,7 +23,7 @@ create table category
     parent_category_no bigint not null,
     name varchar(50) not null,
     depth tinyint not null,
-    is_exposure tinyint(1) default 1 not null,
+    is_exposure boolean default 1 not null,
     constraint FK_category_TO_category_1
         foreign key (parent_category_no) references category (category_no)
 );
@@ -130,7 +44,7 @@ create table delivery_status_code
 
 create table gender
 (
-    gender_no tinyint(1) not null
+    gender_no boolean not null
         primary key,
     gender varchar(5) not null
 );
@@ -154,7 +68,7 @@ create table coupon
     minimum_use_amount int not null,
     maximum_discount_amount int null,
     issuance_deadline_at datetime not null,
-    is_duplicatable tinyint(1) not null,
+    is_duplicatable boolean not null,
     constraint FK_coupon_type_TO_coupon_1
         foreign key (code) references coupon_type (code),
     constraint FK_image_TO_coupon_1
@@ -165,7 +79,7 @@ create table member
 (
     member_no bigint not null
         primary key auto_increment,
-    gender_no tinyint(1) not null,
+    gender_no boolean not null,
     id varchar(30) not null,
     password char(60) not null,
     nickname varchar(30) not null,
@@ -176,7 +90,7 @@ create table member
     created_at datetime not null,
     updated_at datetime null,
     deleted_at datetime null,
-    is_blocked tinyint(1) not null,
+    is_blocked boolean not null,
     constraint FK_gender_TO_member_1
         foreign key (gender_no) references gender (gender_no)
 );
@@ -221,7 +135,7 @@ create table delivery_destination
     name varchar(50) not null,
     zip_code char(5) not null,
     address varchar(50) not null,
-    is_default_destination tinyint(1) null,
+    is_default_destination boolean null,
     constraint FK_member_TO_delivery_destination_1
         foreign key (member_no) references member (member_no)
 );
@@ -269,7 +183,7 @@ create table `order`
     payment_price int not null,
     payment_method int not null,
     gift_wrapping_price int not null,
-    is_blinded tinyint(1) not null,
+    is_blinded boolean not null,
     constraint FK_member_TO_order_1
         foreign key (member_no) references member (member_no),
     constraint FK_order_status_code_TO_order_1
@@ -329,8 +243,8 @@ create table product
     point_rate int not null,
     short_description text not null,
     long_description text not null,
-    is_selling tinyint(1) not null,
-    point_method tinyint(1) not null,
+    is_selling boolean not null,
+    point_method boolean not null,
     constraint FK_image_TO_product_1
         foreign key (thumbnail_no) references image (image_no)
 );
@@ -339,7 +253,7 @@ create table cart
 (
     member_no bigint not null,
     product_no bigint not null,
-    count smallint not null,
+    `count` smallint not null,
     primary key (member_no, product_no),
     constraint FK_member_TO_cart_1
         foreign key (member_no) references member (member_no),
@@ -358,24 +272,24 @@ create table category_product
         foreign key (product_no) references product (product_no)
 );
 
-create table order_coupon
-(
-    order_coupon_no bigint not null
-        primary key auto_increment,
-    coupon_no bigint not null,
-    category_no bigint not null,
-    member_no bigint null,
-    order_no bigint null,
-    coupon_code char(36) not null,
-    constraint FK_category_product_TO_order_coupon_1
-        foreign key (category_no) references category_product (category_no),
-    constraint FK_coupon_TO_order_coupon_1
-        foreign key (coupon_no) references coupon (coupon_no),
-    constraint FK_member_TO_order_coupon_1
-        foreign key (member_no) references member (member_no),
-    constraint FK_order_TO_order_coupon_1
-        foreign key (order_no) references `order` (order_no)
-);
+-- create table order_coupon
+-- (
+--     order_coupon_no bigint not null
+--         primary key auto_increment,
+--     coupon_no bigint not null,
+--     category_no bigint not null,
+--     member_no bigint null,
+--     order_no bigint null,
+--     coupon_code char(36) not null,
+--     constraint FK_category_product_TO_order_coupon_1
+--         foreign key (category_no) references category_product (category_no),
+--     constraint FK_coupon_TO_order_coupon_1
+--         foreign key (coupon_no) references coupon (coupon_no),
+--     constraint FK_member_TO_order_coupon_1
+--         foreign key (member_no) references member (member_no),
+--     constraint FK_order_TO_order_coupon_1
+--         foreign key (order_no) references `order` (order_no)
+-- );
 
 create table order_product
 (
@@ -416,8 +330,8 @@ create table post
     title varchar(255) not null,
     content text not null,
     created_at datetime not null,
-    is_view_public tinyint(1) not null,
-    is_answered tinyint(1) null,
+    is_view_public boolean not null,
+    is_answered boolean null,
     constraint FK_member_TO_post_1
         foreign key (member_no) references member (member_no),
     constraint FK_post_TO_post_1
@@ -498,7 +412,7 @@ create table product_relation
         primary key auto_increment,
     base_product_no bigint not null,
     related_product_no2 bigint not null,
-    is_deleted tinyint(1) default 0 not null,
+    is_deleted boolean default 0 not null,
     constraint FK_product_TO_product_relation_1
         foreign key (base_product_no) references product (product_no),
     constraint FK_product_TO_product_relation_2
@@ -615,5 +529,3 @@ create table wishlist
     constraint FK_product_TO_wishlist_1
         foreign key (product_no) references product (product_no)
 );
-
--- 2023 01 05 17:30

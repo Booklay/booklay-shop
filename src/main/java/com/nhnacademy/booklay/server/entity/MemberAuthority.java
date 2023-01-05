@@ -8,7 +8,9 @@ import java.io.Serializable;
 @Table(name = "member_authority")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class MemberAuthority {
 
     @EmbeddedId

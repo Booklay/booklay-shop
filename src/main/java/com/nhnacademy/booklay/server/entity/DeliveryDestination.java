@@ -1,15 +1,15 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Table(name = "delivery_destination")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class DeliveryDestination {
 
     @Id
@@ -24,7 +24,7 @@ public class DeliveryDestination {
     @Column
     private String name;
 
-    @Column(name = "zie_code")
+    @Column(name = "zip_code")
     private String zipCode;
 
     @Column

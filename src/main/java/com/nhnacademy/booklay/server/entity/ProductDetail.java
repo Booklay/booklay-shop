@@ -14,11 +14,11 @@ public class ProductDetail {
 
   @Id
   @Column(name="book_no")
-  private long bookNo;
+  private Long id;
 
   @OneToOne
   @JoinColumn(name="product_no")
-  private Product productNo;
+  private Product product;
 
   @Column(length = 20)
   private String isbn;
@@ -29,10 +29,10 @@ public class ProductDetail {
   @Column(length = 100)
   private String publisher;
 
-  @Column
+  @Column(name="published_date")
   private LocalDate publishedDate;
 
-  @Column
+  @Column(name="ebook_address")
   private String ebookAddress;
 
   @Column

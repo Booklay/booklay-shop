@@ -1,21 +1,21 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Table
+@Table(name = "member")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Member {
 
     @Id
-    @Column(name = "member")
+    @Column(name = "member_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 

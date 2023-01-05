@@ -1,25 +1,25 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table
+@Table(name = "gender")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Gender {
 
     @Id
     @Column(name = "gender_no")
     private Long id;
 
-    @Column
+    @Column(name = "gender")
     private String gender;
 
 }

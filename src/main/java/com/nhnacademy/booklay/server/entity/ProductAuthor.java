@@ -8,7 +8,9 @@ import lombok.*;
 @Table(name = "product_author")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ProductAuthor {
 
   @EmbeddedId

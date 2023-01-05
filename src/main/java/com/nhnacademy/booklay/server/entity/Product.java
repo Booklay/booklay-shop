@@ -1,8 +1,6 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
@@ -10,7 +8,9 @@ import javax.persistence.*;
 @Table
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Product {
 
   @Id
@@ -19,7 +19,7 @@ public class Product {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "image_no")
+  @JoinColumn(name = "thumbnail_no")
   private Image image;
 
   @Column

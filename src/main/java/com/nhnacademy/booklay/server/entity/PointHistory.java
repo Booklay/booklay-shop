@@ -1,8 +1,6 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +8,9 @@ import java.time.LocalDateTime;
 @Table(name = "point_history")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class PointHistory {
 
     @Id

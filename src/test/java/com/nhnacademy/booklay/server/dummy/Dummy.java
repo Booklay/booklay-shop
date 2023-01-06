@@ -1,6 +1,9 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.entity.Coupon;
+import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.entity.Gender;
+import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -31,5 +34,35 @@ public class Dummy {
         ReflectionTestUtils.setField(member, "memberId", 1L);
 
         return member;
+    }
+
+    public static Coupon getDummyCoupon() {
+        Image image = Image.builder()
+            .ext("")
+            .address("")
+            .build();
+
+        ReflectionTestUtils.setField(image, "id", 1L);
+
+        CouponType couponType = CouponType.builder()
+            .name("정액")
+            .build();
+
+        ReflectionTestUtils.setField(couponType, "id", 1L);
+
+        Coupon coupon = Coupon.builder()
+            .image(image)
+            .couponType(couponType)
+            .name("이달의 쿠폰")
+            .amount(5)
+            .minimumUseAmount(1000)
+            .maximumDiscountAmount(3000)
+            .issuanceDeadlineAt(LocalDateTime.of(2023, 1, 20, 0, 0, 0))
+            .isDuplicatable(false)
+            .build();
+
+        ReflectionTestUtils.setField(coupon, "id", 1L);
+
+        return coupon;
     }
 }

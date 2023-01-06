@@ -8,15 +8,13 @@ import java.io.Serializable;
 @Table(name = "member_authority")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class MemberAuthority {
 
     @EmbeddedId
     private Pk pk;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     @MapsId("memberId")
     private Member member;
@@ -26,6 +24,12 @@ public class MemberAuthority {
     @MapsId("authorityId")
     private Authority authority;
 
+    @Builder
+    public MemberAuthority(Pk pk, Member member, Authority authority) {
+        this.pk = pk;
+        this.member = member;
+        this.authority = authority;
+    }
 
     @Embeddable
     @EqualsAndHashCode

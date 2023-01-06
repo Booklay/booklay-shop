@@ -1,6 +1,9 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,9 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "point_history")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class PointHistory {
 
     @Id
@@ -18,7 +19,7 @@ public class PointHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
 
@@ -33,4 +34,14 @@ public class PointHistory {
 
     @Column(name = "updated_detail")
     private String updatedDetail;
+
+    @Builder
+    public PointHistory(Long id, Member member, Integer point, Integer totalPoint, LocalDateTime updatedAt, String updatedDetail) {
+        this.id = id;
+        this.member = member;
+        this.point = point;
+        this.totalPoint = totalPoint;
+        this.updatedAt = updatedAt;
+        this.updatedDetail = updatedDetail;
+    }
 }

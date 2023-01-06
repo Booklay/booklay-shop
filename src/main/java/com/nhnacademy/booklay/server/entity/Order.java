@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 @Table
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Order {
 
     @Id
@@ -18,7 +16,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
 
@@ -53,4 +51,19 @@ public class Order {
     @Column(name = "is_blinded")
     private Boolean isBlinded;
 
+    @Builder
+    public Order(Long id, Member member, OrderStatusCode orderStatusCode, LocalDateTime orderedAt, Long productPriceSum, Long deliveryPrice, Long discountPrice, Long pointUsePrice, Long paymentPrice, Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded) {
+        this.id = id;
+        this.member = member;
+        this.orderStatusCode = orderStatusCode;
+        this.orderedAt = orderedAt;
+        this.productPriceSum = productPriceSum;
+        this.deliveryPrice = deliveryPrice;
+        this.discountPrice = discountPrice;
+        this.pointUsePrice = pointUsePrice;
+        this.paymentPrice = paymentPrice;
+        this.paymentMethod = paymentMethod;
+        this.giftWrappingPrice = giftWrappingPrice;
+        this.isBlinded = isBlinded;
+    }
 }

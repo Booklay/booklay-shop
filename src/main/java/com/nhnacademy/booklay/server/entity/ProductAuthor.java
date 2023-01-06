@@ -8,20 +8,18 @@ import lombok.*;
 @Table(name = "product_author")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class ProductAuthor {
 
   @EmbeddedId
   private Pk pk;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_no")
   @MapsId("bookId")
   private ProductDetail productDetail;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author_no")
   @MapsId("authorId")
   private Author author;
@@ -37,5 +35,12 @@ public class ProductAuthor {
 
     @Column(name = "author_no")
     private Long authorId;
+  }
+
+  @Builder
+  public ProductAuthor(Pk pk, ProductDetail productDetail, Author author) {
+    this.pk = pk;
+    this.productDetail = productDetail;
+    this.author = author;
   }
 }

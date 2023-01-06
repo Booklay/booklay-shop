@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "blocked_member_detail")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class BlockedMemberDetail {
 
     @Id
@@ -18,7 +16,7 @@ public class BlockedMemberDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
 
@@ -30,4 +28,13 @@ public class BlockedMemberDetail {
 
     @Column(name = "released_at")
     private LocalDateTime releasedAt;
+
+    @Builder
+    public BlockedMemberDetail(Long id, Member member, String reason, LocalDateTime blockedAt, LocalDateTime releasedAt) {
+        this.id = id;
+        this.member = member;
+        this.reason = reason;
+        this.blockedAt = blockedAt;
+        this.releasedAt = releasedAt;
+    }
 }

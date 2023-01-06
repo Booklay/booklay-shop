@@ -13,9 +13,7 @@ import javax.persistence.Table;
 @Table(name = "product_detail")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class ProductDetail {
 
   @Id
@@ -43,4 +41,16 @@ public class ProductDetail {
 
   @Column
   private Integer storage;
+
+  @Builder
+  public ProductDetail(Long id, Product product, String isbn, Integer page, String publisher, LocalDate publishedDate, String ebookAddress, Integer storage) {
+    this.id = id;
+    this.product = product;
+    this.isbn = isbn;
+    this.page = page;
+    this.publisher = publisher;
+    this.publishedDate = publishedDate;
+    this.ebookAddress = ebookAddress;
+    this.storage = storage;
+  }
 }

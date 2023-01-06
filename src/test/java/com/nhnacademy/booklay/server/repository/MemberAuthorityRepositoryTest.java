@@ -30,12 +30,13 @@ class MemberAuthorityRepositoryTest {
 
     @Test
     @DisplayName("MemberAuthorityRepository save test")
-    void testMemberSave() {
+    void testMemberAuthoritySave() {
         //given
         MemberAuthority memberAuthority = Dummy.getDummyMemberAuthority();
         entityManager.persist(memberAuthority.getAuthority());
         entityManager.persist(memberAuthority.getMember().getGender());
         memberRepository.save(memberAuthority.getMember());
+        memberAuthorityRepository.save(memberAuthority);
 
         //when
         MemberAuthority expected = memberAuthorityRepository.save(memberAuthority);
@@ -47,12 +48,13 @@ class MemberAuthorityRepositoryTest {
 
     @Test
     @DisplayName("MemberAuthorityRepository findById 테스트")
-    void testMemberFindById() {
+    void testMemberAuthorityFindById() {
         //given
         MemberAuthority memberAuthority = Dummy.getDummyMemberAuthority();
         entityManager.persist(memberAuthority.getAuthority());
         entityManager.persist(memberAuthority.getMember().getGender());
         memberRepository.save(memberAuthority.getMember());
+        memberAuthorityRepository.save(memberAuthority);
 
         //when
         MemberAuthority expected = memberAuthorityRepository.findById(memberAuthority.getPk()).orElseThrow(()
@@ -61,21 +63,5 @@ class MemberAuthorityRepositoryTest {
         //then
         assertThat(expected.getPk()).isEqualTo(memberAuthority.getPk());
     }
-
-//    @Test
-//    @DisplayName("Member Entity JPA Auditing 기능 테스트")
-//    void testMemberCreatedDated() {
-//        //given
-//        Member member = Dummy.getDummyMember();
-//        entityManager.persist(member.getGender());
-//
-//        //when
-//        Member actual = memberRepository.save(member);
-//
-//        //then
-//        assertThat(actual.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-//                .isEqualTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//
-//    }
 
 }

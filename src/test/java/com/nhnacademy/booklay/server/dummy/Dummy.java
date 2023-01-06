@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
+import com.nhnacademy.booklay.server.entity.MemberGrade;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -98,5 +99,16 @@ public class Dummy {
             .build();
 
         return memberAuthority;
+    }
+
+    public static MemberGrade getDummyMemberGrade() {
+        MemberGrade memberGrade = MemberGrade.builder()
+            .member(getDummyMember())
+            .name("white")
+            .build();
+
+        ReflectionTestUtils.setField(memberGrade, "id", 1L);
+
+        return memberGrade;
     }
 }

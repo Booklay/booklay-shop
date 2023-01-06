@@ -5,6 +5,10 @@ import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.Order;
+import com.nhnacademy.booklay.server.entity.OrderProduct;
+import com.nhnacademy.booklay.server.entity.Product;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -64,5 +68,18 @@ public class Dummy {
         ReflectionTestUtils.setField(coupon, "id", 1L);
 
         return coupon;
+    }
+
+    public static OrderProduct getDummyOrderProduct() {
+        OrderProduct orderProduct = OrderProduct.builder()
+            .order(null)
+            .product(null)
+            .count(1)
+            .price(10000)
+            .build();
+
+        ReflectionTestUtils.setField(orderProduct, "id", 1L);
+
+        return orderProduct;
     }
 }

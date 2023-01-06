@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class OwnedEbookRepositoryTest {
+class OwnedEbookRepositoryTest {
 
     @Autowired
     TestEntityManager entityManager;
@@ -28,7 +28,9 @@ public class OwnedEbookRepositoryTest {
     void testRestockingNotificationSave() {
         //given
         OwnedEbook ownedEbook = DummyNum3.getDummyOwnedEbook();
+        entityManager.persist(ownedEbook.getProduct().getImage());
         entityManager.persist(ownedEbook.getProduct());
+        entityManager.persist(ownedEbook.getMember().getGender());
         entityManager.persist(ownedEbook.getMember());
 
         //when
@@ -45,7 +47,9 @@ public class OwnedEbookRepositoryTest {
     void testMemberFindById() {
         //given
         OwnedEbook ownedEbook = DummyNum3.getDummyOwnedEbook();
+        entityManager.persist(ownedEbook.getProduct().getImage());
         entityManager.persist(ownedEbook.getProduct());
+        entityManager.persist(ownedEbook.getMember().getGender());
         entityManager.persist(ownedEbook.getMember());
         ownedEbookRepository.save(ownedEbook);
 

@@ -1,14 +1,18 @@
 package com.nhnacademy.booklay.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Table
+@Table(name="product")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
 
   @Id
@@ -23,14 +27,16 @@ public class Product {
   @Column
   private String title;
 
-  @Column(name="registed_at")
+  @CreatedDate
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Column(name = "registed_at")
   private LocalDateTime registedAt;
 
   @Column
-  private int price;
+  private Long price;
 
   @Column(name="point_rate")
-  private int pointRate;
+  private Long pointRate;
 
   @Column(name="short_description")
   private String shortDescription;
@@ -45,11 +51,9 @@ public class Product {
   private boolean pointMethod;
 
   @Builder
-  public Product(Long id, Image image, String title, LocalDateTime registedAt, int price, int pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {
-    this.id = id;
+  public Product(Image image, String title, Long price, Long pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {
     this.image = image;
     this.title = title;
-    this.registedAt = registedAt;
     this.price = price;
     this.pointRate = pointRate;
     this.shortDescription = shortDescription;

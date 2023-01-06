@@ -6,17 +6,21 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Author {
 
   @Id
   @Column(name="author_no")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long authorNo;
 
+  @Setter
   @OneToOne
   @JoinColumn(name = "member_no")
   private Member member;
@@ -25,9 +29,8 @@ public class Author {
   private String name;
 
   @Builder
-  public Author(Long authorNo, Member member, String name) {
+  public Author(Long authorNo, String name) {
     this.authorNo = authorNo;
-    this.member = member;
     this.name = name;
   }
 

@@ -24,6 +24,7 @@ class MemberGradeRepositoryTest {
 
     @Autowired
     MemberGradeRepository memberGradeRepository;
+
     @Autowired
     MemberRepository memberRepository;
 
@@ -69,7 +70,10 @@ class MemberGradeRepositoryTest {
         //given
         MemberGrade memberGrade = Dummy.getDummyMemberGrade();
         entityManager.persist(memberGrade.getMember().getGender());
-        memberRepository.save(memberGrade.getMember());
+
+        Member saveMember = memberRepository.save(memberGrade.getMember());
+        ReflectionTestUtils.setField(memberGrade, "id", 3L);
+        ReflectionTestUtils.setField(memberGrade, "member", saveMember);
 
         //when
         MemberGrade actual = memberGradeRepository.save(memberGrade);

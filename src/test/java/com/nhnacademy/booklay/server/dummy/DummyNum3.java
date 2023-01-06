@@ -26,7 +26,6 @@ public class DummyNum3 {
             .isSelling(true)
             .longDescription("")
             .pointMethod(true)
-            .registedAt(LocalDateTime.now())
             .title("")
             .shortDescription("")
             .build();
@@ -48,7 +47,6 @@ public class DummyNum3 {
             .birthday(LocalDate.now())
             .phoneNo("01012341234")
             .email("www.abcd.com")
-            .createdAt(LocalDateTime.now())
             .isBlocked(false)
             .build();
         return member;

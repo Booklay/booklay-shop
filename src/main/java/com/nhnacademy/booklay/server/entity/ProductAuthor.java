@@ -4,11 +4,13 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "product_author")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class ProductAuthor {
 
   @EmbeddedId

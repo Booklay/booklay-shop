@@ -3,11 +3,13 @@ package com.nhnacademy.booklay.server.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Tag {
 
     @Id
@@ -19,8 +21,7 @@ public class Tag {
     private String tag;
 
     @Builder
-    public Tag(Long id, String tag) {
-        this.id = id;
+    public Tag(String tag) {
         this.tag = tag;
     }
 }

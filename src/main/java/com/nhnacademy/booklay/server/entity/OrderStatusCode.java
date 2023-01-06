@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.entity;
 
+import javax.persistence.EntityListeners;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.stereotype.Controller;
 
 import javax.persistence.Column;
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class OrderStatusCode {
 
     @Id

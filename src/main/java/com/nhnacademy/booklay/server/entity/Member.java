@@ -58,6 +58,7 @@ public class Member {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Setter
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
@@ -66,7 +67,7 @@ public class Member {
     private Boolean isBlocked;
 
     @Builder
-    public Member(Gender gender, String id, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean isBlocked) {
+    public Member(Gender gender, String id, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
         this.gender = gender;
         this.id = id;
         this.password = password;
@@ -75,9 +76,6 @@ public class Member {
         this.birthday = birthday;
         this.phoneNo = phoneNo;
         this.email = email;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
         this.isBlocked = isBlocked;
     }
 }

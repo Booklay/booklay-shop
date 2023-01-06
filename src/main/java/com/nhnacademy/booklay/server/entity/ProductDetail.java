@@ -1,5 +1,7 @@
 package com.nhnacademy.booklay.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.persistence.EntityListeners;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -9,11 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "product_detail")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class ProductDetail {
 
   @Id
@@ -33,6 +37,7 @@ public class ProductDetail {
   @Column
   private String publisher;
 
+  @JsonFormat(pattern = "yyyy-MM-dd")
   @Column(name="published_date")
   private LocalDate publishedDate;
 

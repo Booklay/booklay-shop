@@ -1,14 +1,18 @@
 package com.nhnacademy.booklay.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
     @Id
@@ -24,6 +28,8 @@ public class Order {
     @JoinColumn(name = "code")
     private OrderStatusCode orderStatusCode;
 
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "ordered_at")
     private LocalDateTime orderedAt;
 
@@ -52,11 +58,9 @@ public class Order {
     private Boolean isBlinded;
 
     @Builder
-    public Order(Long id, Member member, OrderStatusCode orderStatusCode, LocalDateTime orderedAt, Long productPriceSum, Long deliveryPrice, Long discountPrice, Long pointUsePrice, Long paymentPrice, Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded) {
-        this.id = id;
+    public Order(Member member, OrderStatusCode orderStatusCode, Long productPriceSum, Long deliveryPrice, Long discountPrice, Long pointUsePrice, Long paymentPrice, Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded) {
         this.member = member;
         this.orderStatusCode = orderStatusCode;
-        this.orderedAt = orderedAt;
         this.productPriceSum = productPriceSum;
         this.deliveryPrice = deliveryPrice;
         this.discountPrice = discountPrice;

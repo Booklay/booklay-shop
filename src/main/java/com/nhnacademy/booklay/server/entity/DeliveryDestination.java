@@ -3,11 +3,13 @@ package com.nhnacademy.booklay.server.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "delivery_destination")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class DeliveryDestination {
 
     @Id
@@ -32,8 +34,7 @@ public class DeliveryDestination {
     private Boolean isDefaultDestination;
 
     @Builder
-    public DeliveryDestination(Long id, Member member, String name, String zipCode, String address, Boolean isDefaultDestination) {
-        this.id = id;
+    public DeliveryDestination(Member member, String name, String zipCode, String address, Boolean isDefaultDestination) {
         this.member = member;
         this.name = name;
         this.zipCode = zipCode;

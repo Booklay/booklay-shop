@@ -22,14 +22,22 @@ class ProductAskCommentRepositoryTest {
 
   @Autowired
   ProductAskCommentRepository commentRepository;
+  @Autowired
+  MemberRepository memberRepository;
+  @Autowired
+  PostRepository postRepository;
 
   @Test
   void testCommentSave(){
     ProductAskComment comment = DummyCart.getDummyComment();
-    entityManager.persist(comment.getPostId());
+    entityManager.persist(comment.getMemberId().getGender());
+    memberRepository.save(comment.getMemberId());
+
+    entityManager.persist(comment.getPostId().getPostTypeId());
+    postRepository.save(comment.getPostId());
 
     ProductAskComment expect = commentRepository.save(comment);
 
-    assertThat(expect.getCommentId()).isEqualTo(comment.getCommentId());
+    assertThat(expect.getContent()).isEqualTo(comment.getContent());
   }
 }

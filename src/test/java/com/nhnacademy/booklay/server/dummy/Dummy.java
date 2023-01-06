@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.Product;
 import org.aspectj.weaver.ast.Or;
+import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -90,5 +91,18 @@ public class Dummy {
             .build();
 
         return authority;
+    }
+
+    public static MemberAuthority getDummyMemberAuthority() {
+        Member member = getDummyMember();
+        Authority authority = getDummyAuthority();
+
+        MemberAuthority memberAuthority = MemberAuthority.builder()
+            .pk(new MemberAuthority.Pk(member.getMemberId(), authority.getId()))
+            .member(member)
+            .authority(authority)
+            .build();
+
+        return memberAuthority;
     }
 }

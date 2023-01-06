@@ -66,8 +66,7 @@ public class Member {
     private Boolean isBlocked;
 
     @Builder
-    public Member(Long memberId, Gender gender, String id, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean isBlocked) {
-        this.memberId = memberId;
+    public Member(Gender gender, String id, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean isBlocked) {
         this.gender = gender;
         this.id = id;
         this.password = password;

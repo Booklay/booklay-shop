@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Post;
@@ -16,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @Transactional
 class PostRepositoryTest {
+
   @Autowired
   TestEntityManager entityManager;
 
@@ -25,7 +25,7 @@ class PostRepositoryTest {
   MemberRepository memberRepository;
 
   @Test
-  void testPostSave(){
+  void testPostSave() {
     Post post = DummyCart.getDummyPost();
     entityManager.persist(post.getMemberId().getGender());
     memberRepository.save(post.getMemberId());
@@ -33,6 +33,21 @@ class PostRepositoryTest {
     entityManager.persist(post.getPostTypeId());
 
     Post expect = postRepository.save(post);
+
+    assertThat(expect.getContent()).isEqualTo(post.getContent());
+  }
+
+  @Test
+  void testPostFind() {
+    Post post = DummyCart.getDummyPost();
+    entityManager.persist(post.getMemberId().getGender());
+    memberRepository.save(post.getMemberId());
+
+    entityManager.persist(post.getPostTypeId());
+
+    postRepository.save(post);
+
+    Post expect = postRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("no"));
 
     assertThat(expect.getContent()).isEqualTo(post.getContent());
   }

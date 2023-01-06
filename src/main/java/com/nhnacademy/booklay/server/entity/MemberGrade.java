@@ -1,14 +1,18 @@
 package com.nhnacademy.booklay.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "member_grade")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class MemberGrade {
 
     @Id
@@ -23,14 +27,14 @@ public class MemberGrade {
     @Column
     private String name;
 
-    @Column
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "date")
     private LocalDate date;
 
     @Builder
-    public MemberGrade(Long id, Member member, String name, LocalDate date) {
-        this.id = id;
+    public MemberGrade(Member member, String name) {
         this.member = member;
         this.name = name;
-        this.date = date;
     }
 }

@@ -3,11 +3,13 @@ package com.nhnacademy.booklay.server.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "ask_chat")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class AskChat {
 
     @Id
@@ -23,8 +25,7 @@ public class AskChat {
     private String content;
 
     @Builder
-    public AskChat(Long id, Member member, String content) {
-        this.id = id;
+    public AskChat(Member member, String content) {
         this.member = member;
         this.content = content;
     }

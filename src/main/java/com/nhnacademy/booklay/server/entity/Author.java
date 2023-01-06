@@ -6,11 +6,13 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Author {
 
   @Id

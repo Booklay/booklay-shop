@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,11 +8,14 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "point_history")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class PointHistory {
 
     @Id
@@ -29,6 +33,8 @@ public class PointHistory {
     @Column(name = "total_point")
     private Integer totalPoint;
 
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -36,12 +42,10 @@ public class PointHistory {
     private String updatedDetail;
 
     @Builder
-    public PointHistory(Long id, Member member, Integer point, Integer totalPoint, LocalDateTime updatedAt, String updatedDetail) {
-        this.id = id;
+    public PointHistory(Member member, Integer point, Integer totalPoint, String updatedDetail) {
         this.member = member;
         this.point = point;
         this.totalPoint = totalPoint;
-        this.updatedAt = updatedAt;
         this.updatedDetail = updatedDetail;
     }
 }

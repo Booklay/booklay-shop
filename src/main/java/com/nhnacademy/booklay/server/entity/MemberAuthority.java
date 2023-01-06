@@ -4,11 +4,13 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "member_authority")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class MemberAuthority {
 
     @EmbeddedId

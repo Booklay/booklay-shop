@@ -43,8 +43,7 @@ public class ProductDetail {
   private Integer storage;
 
   @Builder
-  public ProductDetail(Long id, Product product, String isbn, Integer page, String publisher, LocalDate publishedDate, String ebookAddress, Integer storage) {
-    this.id = id;
+  public ProductDetail(Product product, String isbn, Integer page, String publisher, LocalDate publishedDate, String ebookAddress, Integer storage) {
     this.product = product;
     this.isbn = isbn;
     this.page = page;

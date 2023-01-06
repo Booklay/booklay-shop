@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class RestockingNotificationRepositoryTest {
+class RestockingNotificationRepositoryTest {
 
     @Autowired
     TestEntityManager entityManager;
@@ -28,7 +28,9 @@ public class RestockingNotificationRepositoryTest {
     void testRestockingNotificationSave() {
         //given
         RestockingNotification restockingNotification = DummyNum3.getDummyRestockingNotification();
+        entityManager.persist(restockingNotification.getProduct().getImage());
         entityManager.persist(restockingNotification.getProduct());
+        entityManager.persist(restockingNotification.getMember().getGender());
         entityManager.persist(restockingNotification.getMember());
 
         //when
@@ -45,8 +47,11 @@ public class RestockingNotificationRepositoryTest {
     void testMemberFindById() {
         //given
         RestockingNotification restockingNotification = DummyNum3.getDummyRestockingNotification();
+        entityManager.persist(restockingNotification.getProduct().getImage());
         entityManager.persist(restockingNotification.getProduct());
+        entityManager.persist(restockingNotification.getMember().getGender());
         entityManager.persist(restockingNotification.getMember());
+
         restockingNotificationRepository.save(restockingNotification);
 
         //when

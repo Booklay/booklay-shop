@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -12,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 public class Category {
 
     @Id
@@ -33,7 +31,8 @@ public class Category {
     private Boolean isExposure;
 
     @Builder
-    public Category(Category parent, String name, Integer depth, Boolean isExposure) {
+    public Category(Long id, Category parent, String name, Integer depth, Boolean isExposure) {
+        this.id = id;
         this.parent = parent;
         this.name = name;
         this.depth = depth;

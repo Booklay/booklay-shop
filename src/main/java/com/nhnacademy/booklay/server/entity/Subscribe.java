@@ -20,7 +20,7 @@ import lombok.Setter;
 public class Subscribe {
 
     @Id
-    @Column(name = "product_no")
+    @Column(name = "subscribe_no")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -10,9 +10,7 @@ import javax.persistence.Table;
 @Table(name = "post_type")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class PostType {
 
     @Id
@@ -21,4 +19,10 @@ public class PostType {
 
     @Column
     private String type;
+
+    @Builder
+    public PostType(Long id, String type) {
+        this.id = id;
+        this.type = type;
+    }
 }

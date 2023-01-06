@@ -10,9 +10,7 @@ import javax.persistence.Table;
 @Table
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Author {
 
   @Id
@@ -25,4 +23,12 @@ public class Author {
 
   @Column(length = 50)
   private String name;
+
+  @Builder
+  public Author(Long authorNo, Member member, String name) {
+    this.authorNo = authorNo;
+    this.member = member;
+    this.name = name;
+  }
+
 }

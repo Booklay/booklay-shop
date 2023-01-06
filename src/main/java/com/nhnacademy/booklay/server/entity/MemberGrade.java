@@ -8,9 +8,7 @@ import java.time.LocalDate;
 @Table(name = "member_grade")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class MemberGrade {
 
     @Id
@@ -18,7 +16,7 @@ public class MemberGrade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
 
@@ -27,4 +25,12 @@ public class MemberGrade {
 
     @Column
     private LocalDate date;
+
+    @Builder
+    public MemberGrade(Long id, Member member, String name, LocalDate date) {
+        this.id = id;
+        this.member = member;
+        this.name = name;
+        this.date = date;
+    }
 }

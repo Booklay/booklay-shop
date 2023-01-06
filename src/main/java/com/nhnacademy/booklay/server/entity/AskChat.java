@@ -7,9 +7,7 @@ import javax.persistence.*;
 @Table(name = "ask_chat")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class AskChat {
 
     @Id
@@ -17,10 +15,17 @@ public class AskChat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
 
     @Column
     private String content;
+
+    @Builder
+    public AskChat(Long id, Member member, String content) {
+        this.id = id;
+        this.member = member;
+        this.content = content;
+    }
 }

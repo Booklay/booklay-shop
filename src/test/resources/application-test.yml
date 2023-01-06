@@ -19,9 +19,5 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL5Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
-
-logging:
-  level:
-    root: debug

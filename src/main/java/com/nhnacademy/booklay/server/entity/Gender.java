@@ -10,9 +10,7 @@ import javax.persistence.Table;
 @Table(name = "gender")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Gender {
 
     @Id
@@ -22,4 +20,9 @@ public class Gender {
     @Column(name = "gender")
     private String gender;
 
+    @Builder
+    public Gender(Long id, String gender) {
+        this.id = id;
+        this.gender = gender;
+    }
 }

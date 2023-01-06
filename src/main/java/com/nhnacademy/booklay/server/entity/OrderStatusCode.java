@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.entity;
 
 import lombok.*;
+import org.springframework.stereotype.Controller;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,9 +11,7 @@ import javax.persistence.Table;
 @Table(name = "order_status_code")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class OrderStatusCode {
 
     @Id
@@ -21,4 +20,10 @@ public class OrderStatusCode {
 
     @Column
     private String name;
+
+    @Builder
+    public OrderStatusCode(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

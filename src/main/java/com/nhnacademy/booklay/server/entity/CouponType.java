@@ -10,9 +10,7 @@ import javax.persistence.Table;
 @Table(name = "coupon_type")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class CouponType {
 
     @Id
@@ -21,4 +19,10 @@ public class CouponType {
 
     @Column
     private String name;
+
+    @Builder
+    public CouponType(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

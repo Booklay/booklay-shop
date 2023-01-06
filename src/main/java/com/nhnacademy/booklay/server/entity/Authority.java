@@ -10,9 +10,7 @@ import javax.persistence.Table;
 @Table
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Authority {
 
     @Id
@@ -21,4 +19,10 @@ public class Authority {
 
     @Column
     private String authority;
+
+    @Builder
+    public Authority(Long id, String authority) {
+        this.id = id;
+        this.authority = authority;
+    }
 }

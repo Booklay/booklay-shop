@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -33,7 +34,9 @@ class MemberGradeRepositoryTest {
         //given
         MemberGrade memberGrade = Dummy.getDummyMemberGrade();
         entityManager.persist(memberGrade.getMember().getGender());
-        memberRepository.save(memberGrade.getMember());
+        Member saveMember = memberRepository.save(memberGrade.getMember());
+        ReflectionTestUtils.setField(memberGrade, "id", 1L);
+        ReflectionTestUtils.setField(memberGrade, "member", saveMember);
 
         //when
         MemberGrade expected = memberGradeRepository.save(memberGrade);
@@ -49,14 +52,16 @@ class MemberGradeRepositoryTest {
         //given
         MemberGrade memberGrade = Dummy.getDummyMemberGrade();
         entityManager.persist(memberGrade.getMember().getGender());
-        memberRepository.save(memberGrade.getMember());
+        Member saveMember = memberRepository.save(memberGrade.getMember());
+        ReflectionTestUtils.setField(memberGrade, "id", 2L);
+        ReflectionTestUtils.setField(memberGrade, "member", saveMember);
         memberGradeRepository.save(memberGrade);
 
         //when
         MemberGrade expected = memberGradeRepository.findById(memberGrade.getId()).orElseThrow(() -> new IllegalArgumentException("Authority not found"));
 
         //then
-        assertThat(expected.getId()).isEqualTo(memberGrade.getId());
+        assertThat(expected.getName()).isEqualTo(memberGrade.getName());
     }
 
     @Test

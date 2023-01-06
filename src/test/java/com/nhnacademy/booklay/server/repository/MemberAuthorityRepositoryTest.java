@@ -17,10 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @ActiveProfiles("test")
 class MemberAuthorityRepositoryTest {
-
     @Autowired
     TestEntityManager entityManager;
-
 
     @Autowired
     MemberAuthorityRepository memberAuthorityRepository;

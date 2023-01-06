@@ -25,7 +25,7 @@ class AuthorityRepositoryTest {
     AuthorityRepository authorityRepository;
 
     @Test
-    @DisplayName("AuthorityRepository save test ")
+    @DisplayName("AuthorityRepository save test")
     void testAuthoritySave() {
         //given
         Authority authority = Dummy.getDummyAuthority();

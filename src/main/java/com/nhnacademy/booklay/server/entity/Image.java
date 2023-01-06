@@ -10,9 +10,7 @@ import javax.persistence.Table;
 @Table
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Image {
 
     @Id
@@ -24,5 +22,11 @@ public class Image {
 
     @Column
     private String ext;
-}
 
+    @Builder
+    public Image(Long id, String address, String ext) {
+        this.id = id;
+        this.address = address;
+        this.ext = ext;
+    }
+}

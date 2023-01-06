@@ -7,9 +7,7 @@ import javax.persistence.*;
 @Table(name = "delivery_destination")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class DeliveryDestination {
 
     @Id
@@ -17,7 +15,7 @@ public class DeliveryDestination {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
 
@@ -32,4 +30,14 @@ public class DeliveryDestination {
 
     @Column(name = "is_default_destination")
     private Boolean isDefaultDestination;
+
+    @Builder
+    public DeliveryDestination(Long id, Member member, String name, String zipCode, String address, Boolean isDefaultDestination) {
+        this.id = id;
+        this.member = member;
+        this.name = name;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.isDefaultDestination = isDefaultDestination;
+    }
 }

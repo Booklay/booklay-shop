@@ -8,9 +8,7 @@ import javax.persistence.*;
 @Table
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Product {
 
   @Id
@@ -45,4 +43,18 @@ public class Product {
 
   @Column(name="point_method")
   private boolean pointMethod;
+
+  @Builder
+  public Product(Long id, Image image, String title, LocalDateTime registedAt, int price, int pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {
+    this.id = id;
+    this.image = image;
+    this.title = title;
+    this.registedAt = registedAt;
+    this.price = price;
+    this.pointRate = pointRate;
+    this.shortDescription = shortDescription;
+    this.longDescription = longDescription;
+    this.isSelling = isSelling;
+    this.pointMethod = pointMethod;
+  }
 }

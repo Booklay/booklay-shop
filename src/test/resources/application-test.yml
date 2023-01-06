@@ -21,7 +21,3 @@ spring:
         globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQL5Dialect
     defer-datasource-initialization: true
-
-logging:
-  level:
-    root: debug

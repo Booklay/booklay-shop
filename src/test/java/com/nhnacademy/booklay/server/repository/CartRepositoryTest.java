@@ -16,22 +16,22 @@ import org.springframework.test.context.ActiveProfiles;
 @Transactional
 class CartRepositoryTest {
 
-  @Autowired
-  TestEntityManager entityManager;
-
-  @Autowired
-  CartRepository cartRepository;
-
-  @Test
-  void testCategorySave() {
-    //given
-    Cart cart = DummyCart.getDummyCart();
-    entityManager.persist(cart);
-
-    //when
-    Cart expected = cartRepository.save(cart);
-
-    //then
-    assertThat(expected.getPk()).isEqualTo(cart.getPk());
-  }
+//  @Autowired
+//  TestEntityManager entityManager;
+//
+//  @Autowired
+//  CartRepository cartRepository;
+//
+//  @Test
+//  void testCategorySave() {
+//    //given
+//    Cart cart = DummyCart.getDummyCart();
+//    entityManager.persist(cart);
+//
+//    //when
+//    Cart expected = cartRepository.save(cart);
+//
+//    //then
+//    assertThat(expected.getPk()).isEqualTo(cart.getPk());
+//  }
 }

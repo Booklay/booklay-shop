@@ -1,6 +1,10 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.entity.*;
+import com.nhnacademy.booklay.server.entity.Authority;
+import com.nhnacademy.booklay.server.entity.Gender;
+import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -81,5 +85,18 @@ public class Dummy {
             .build();
 
         return authority;
+    }
+
+    public static MemberAuthority getDummyMemberAuthority() {
+        Member member = getDummyMember();
+        Authority authority = getDummyAuthority();
+
+        MemberAuthority memberAuthority = MemberAuthority.builder()
+            .pk(new MemberAuthority.Pk(member.getMemberId(), authority.getId()))
+            .member(member)
+            .authority(authority)
+            .build();
+
+        return memberAuthority;
     }
 }

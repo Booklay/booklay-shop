@@ -3,7 +3,6 @@ package com.nhnacademy.booklay.server.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
-import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import java.time.LocalDateTime;

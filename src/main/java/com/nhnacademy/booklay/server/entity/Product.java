@@ -8,7 +8,7 @@ import javax.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Table
+@Table(name="product")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,14 +29,15 @@ public class Product {
 
   @CreatedDate
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  @Column(name="registed_at")
+
+  @Column(name = "registed_at")
   private LocalDateTime registedAt;
 
   @Column
-  private int price;
+  private Long price;
 
   @Column(name="point_rate")
-  private int pointRate;
+  private Long pointRate;
 
   @Column(name="short_description")
   private String shortDescription;
@@ -51,7 +52,7 @@ public class Product {
   private boolean pointMethod;
 
   @Builder
-  public Product(Image image, String title, int price, int pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {
+  public Product(Image image, String title, Long price, Long pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {
     this.image = image;
     this.title = title;
     this.price = price;

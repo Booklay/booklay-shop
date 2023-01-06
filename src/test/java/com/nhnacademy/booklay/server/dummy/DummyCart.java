@@ -1,16 +1,20 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Cart;
+import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Post;
 import com.nhnacademy.booklay.server.entity.PostType;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAskComment;
-import java.time.LocalDateTime;
-import org.springframework.test.util.ReflectionTestUtils;
+import com.nhnacademy.booklay.server.entity.ProductAuthor;
+import com.nhnacademy.booklay.server.entity.ProductDetail;
+import java.time.LocalDate;
 
 public class DummyCart {
-  public static Cart getDummyCart(){
+
+  public static Cart getDummyCart() {
     Member dummyMember = Dummy.getDummyMember();
     Product dummyProduct = getDummyProduct();
     Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberId(), dummyProduct.getId());
@@ -47,7 +51,6 @@ public class DummyCart {
         .isViewPublic(true)
         .build();
 
-    ReflectionTestUtils.setField(post, "postId", 1L);
     return post;
   }
 
@@ -61,9 +64,70 @@ public class DummyCart {
         .groupOrder(0L)
         .build();
 
-    ReflectionTestUtils.setField(comment, "commentId", 1L);
-    ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.now());
-
     return comment;
+  }
+
+  public static Product getDummyProduct() {
+    Image dummyImage = getDummyImage();
+    Product product = Product.builder()
+        .price(1000L)
+        .image(getDummyImage())
+        .title("new product")
+        .longDescription("veeeeeeeeery looooooooooooooong description")
+        .shortDescription("short description")
+        .pointMethod(true)
+        .pointRate(5L)
+        .isSelling(true)
+        .build();
+
+    return product;
+  }
+
+  public static Image getDummyImage() {
+    Image image = Image.builder()
+        .id(1L)
+        .ext("dummy")
+        .address("dummy address")
+        .build();
+    return image;
+  }
+
+  public static Author getDummyAuthor() {
+
+    Author author = Author.builder()
+        .authorNo(1L)
+        .name("작가님")
+        .build();
+
+    return author;
+  }
+
+  public static ProductDetail getDummyProductDetail(){
+    Product dummyProduct = getDummyProduct();
+    ProductDetail productDetail = ProductDetail.builder()
+        .product(dummyProduct)
+        .isbn("9128-1231-123")
+        .publisher("출판사")
+        .page(200)
+        .publishedDate(LocalDate.of(1997,07,25))
+        .build();
+
+    productDetail.setStorage(300);
+
+    return productDetail;
+  }
+  public static ProductAuthor getDummyProductAuthor(){
+    Author dummyAuthor = getDummyAuthor();
+    ProductDetail dummyProductDetail = getDummyProductDetail();
+
+    ProductAuthor.Pk pk = new ProductAuthor.Pk(dummyAuthor.getAuthorNo(), dummyProductDetail.getId());
+
+    ProductAuthor productAuthor = ProductAuthor.builder()
+        .pk(pk)
+        .author(dummyAuthor)
+        .productDetail(dummyProductDetail)
+        .build();
+
+    return productAuthor;
   }
 }

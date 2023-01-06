@@ -2,6 +2,8 @@ package com.nhnacademy.booklay.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -22,6 +24,7 @@ public class ProductDetail {
 
   @Id
   @Column(name="book_no")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @OneToOne
@@ -41,20 +44,20 @@ public class ProductDetail {
   @Column(name="published_date")
   private LocalDate publishedDate;
 
+  @Setter
   @Column(name="ebook_address")
   private String ebookAddress;
 
+  @Setter
   @Column
   private Integer storage;
 
   @Builder
-  public ProductDetail(Product product, String isbn, Integer page, String publisher, LocalDate publishedDate, String ebookAddress, Integer storage) {
+  public ProductDetail(Product product, String isbn, Integer page, String publisher, LocalDate publishedDate) {
     this.product = product;
     this.isbn = isbn;
     this.page = page;
     this.publisher = publisher;
     this.publishedDate = publishedDate;
-    this.ebookAddress = ebookAddress;
-    this.storage = storage;
   }
 }

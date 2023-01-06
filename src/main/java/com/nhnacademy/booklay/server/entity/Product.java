@@ -1,21 +1,24 @@
 package com.nhnacademy.booklay.server.entity;
 
-import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.*;
 
+import java.time.LocalDateTime;
+import javax.persistence.*;
+
+@Table
 @Entity
-@Table(name = "product")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "product_no")
   private Long id;
 
-  @Column(name="thumbnail_no")
-  private Long thumbnailId;
+  @OneToOne
+  @JoinColumn(name = "thumbnail_no")
+  private Image image;
 
   @Column
   private String title;
@@ -40,4 +43,18 @@ public class Product {
 
   @Column(name="point_method")
   private boolean pointMethod;
+
+  @Builder
+  public Product(Long id, Image image, String title, LocalDateTime registedAt, int price, int pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {
+    this.id = id;
+    this.image = image;
+    this.title = title;
+    this.registedAt = registedAt;
+    this.price = price;
+    this.pointRate = pointRate;
+    this.shortDescription = shortDescription;
+    this.longDescription = longDescription;
+    this.isSelling = isSelling;
+    this.pointMethod = pointMethod;
+  }
 }

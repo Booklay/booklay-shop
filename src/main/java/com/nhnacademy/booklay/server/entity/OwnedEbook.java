@@ -24,7 +24,7 @@ public class OwnedEbook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "owned_ebook_no")
-    private Long ownedEbookNo;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_no")

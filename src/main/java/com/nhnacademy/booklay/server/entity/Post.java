@@ -31,7 +31,7 @@ public class Post {
   @Id
   @Column(name = "post_no")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Long postId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_type_no")
@@ -44,7 +44,7 @@ public class Post {
 
   @Setter
   @ManyToOne
-  @JoinColumn(name = "group_no")
+  @JoinColumn(name = "group_post_no")
   private Post groupNo;
 
   @Column(name = "group_order")

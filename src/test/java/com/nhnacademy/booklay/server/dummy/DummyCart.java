@@ -1,21 +1,28 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.entity.Cart;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Post;
 import com.nhnacademy.booklay.server.entity.PostType;
+import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAskComment;
+import java.time.LocalDateTime;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class DummyCart {
-//  public static Cart getDummyCart(){
-//    Member dummyMember = Dummy.getDummyMember();
-//    Product dummyProduct = Dummy.getDummyProduct();
-//    Cart.Pk dummyPk = new Pk(dummyMember.getMemberId(), dummyProduct.getId());
-//
-//    Cart cart = new Cart(dummyPk, dummyMember, dummyProduct);
-//
-//    return cart;
-//  }
+  public static Cart getDummyCart(){
+    Member dummyMember = Dummy.getDummyMember();
+    Product dummyProduct = getDummyProduct();
+    Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberId(), dummyProduct.getId());
+
+    Cart cart = Cart.builder()
+        .pk(dummyPk)
+        .member(dummyMember)
+        .product(dummyProduct)
+        .build();
+
+    return cart;
+  }
 
 
   public static PostType getDummyPostType() {
@@ -28,8 +35,10 @@ public class DummyCart {
 
   public static Post getDummyPost() {
     PostType dummyPostType = getDummyPostType();
+    Member dummyMember = Dummy.getDummyMember();
 
     Post post = Post.builder()
+        .memberId(dummyMember)
         .postTypeId(dummyPostType)
         .groupOrder(0L)
         .depth(0L)
@@ -53,6 +62,7 @@ public class DummyCart {
         .build();
 
     ReflectionTestUtils.setField(comment, "commentId", 1L);
+    ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.now());
 
     return comment;
   }

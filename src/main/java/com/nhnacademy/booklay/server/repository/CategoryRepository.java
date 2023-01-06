@@ -1,6 +1,7 @@
-package com.nhnacademy.booklay.server.repository.category;
+package com.nhnacademy.booklay.server.repository;
 
-import com.nhnacademy.booklay.server.entitiy.category.Category;
+
+import com.nhnacademy.booklay.server.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

@@ -2,17 +2,11 @@ server:
   port: 9090
 
 spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://133.186.151.141:3306/booklay_shop?serverTimezone=Asia/Seoul
-#    username: booklay
-#    password: _nys_6*0osSnt5Pa
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://133.186.151.141:3306/nhn_academy_32serverTimezone=Asia/Seoul
-    username: nhn_academy_32
-    password: EJdrW!(bf]HjT9a5
+    url: jdbc:mysql://133.186.151.141:3306/booklay_shop?serverTimezone=Asia/Seoul
+    username: booklay
+    password: _nys_6*0osSnt5Pa
 
   jpa:
     hibernate:

@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.service.category;
 
-import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

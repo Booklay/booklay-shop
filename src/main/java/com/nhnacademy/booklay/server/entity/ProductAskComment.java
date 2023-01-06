@@ -21,7 +21,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Table(name = "product_ask_comment")
+@Table(name = "comment")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

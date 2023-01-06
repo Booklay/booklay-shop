@@ -42,6 +42,22 @@ class ProductAuthorRepositoryTest {
     ProductAuthor expect = productAuthorRepository.save(productAuthor);
 
     assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
+  }
 
+  @Test
+  void testProductAuthorFind(){
+    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
+
+    entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
+    productRepository.save(productAuthor.getProductDetail().getProduct());
+    productDetailRepository.save(productAuthor.getProductDetail());
+
+    authorRepository.save(productAuthor.getAuthor());
+
+    productAuthorRepository.save(productAuthor);
+
+    ProductAuthor expect = productAuthorRepository.findById(productAuthor.getPk()).orElseThrow(() -> new IllegalArgumentException("no"));
+
+    assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
   }
 }

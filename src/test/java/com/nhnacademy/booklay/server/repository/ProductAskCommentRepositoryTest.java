@@ -40,4 +40,21 @@ class ProductAskCommentRepositoryTest {
 
     assertThat(expect.getContent()).isEqualTo(comment.getContent());
   }
+
+  @Test
+  void testCommentFind(){
+    ProductAskComment comment = DummyCart.getDummyComment();
+    entityManager.persist(comment.getMemberId().getGender());
+    memberRepository.save(comment.getMemberId());
+
+    entityManager.persist(comment.getPostId().getPostTypeId());
+    postRepository.save(comment.getPostId());
+
+    commentRepository.save(comment);
+
+    ProductAskComment expect = commentRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("no"));
+
+    assertThat(expect.getContent()).isEqualTo(comment.getContent());
+
+  }
 }

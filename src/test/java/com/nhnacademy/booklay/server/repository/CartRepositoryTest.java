@@ -28,7 +28,7 @@ class CartRepositoryTest {
 
 
   @Test
-  void testCategorySave() {
+  void testCartSave() {
     Cart cart = DummyCart.getDummyCart();
 
     entityManager.persist(cart.getMember().getGender());
@@ -40,5 +40,22 @@ class CartRepositoryTest {
     Cart expected = cartRepository.save(cart);
 
     assertThat(expected.getPk()).isEqualTo(cart.getPk());
+  }
+
+  @Test
+  void testCartFindById() {
+    Cart cart = DummyCart.getDummyCart();
+
+    entityManager.persist(cart.getMember().getGender());
+    memberRepository.save(cart.getMember());
+
+    entityManager.persist(cart.getProduct().getImage());
+    productRepository.save(cart.getProduct());
+
+    cartRepository.save(cart);
+
+    Cart expect = cartRepository.findById(cart.getPk()).orElseThrow(() -> new IllegalArgumentException("no"));
+
+    assertThat(expect.getPk()).isEqualTo(cart.getPk());
   }
 }

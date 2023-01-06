@@ -24,7 +24,7 @@ public class OrderProduct {
     @Id
     @Column(name = "order_product_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_no")

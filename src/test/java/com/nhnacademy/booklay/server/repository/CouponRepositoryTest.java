@@ -5,7 +5,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import javax.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@Transactional
 class CouponRepositoryTest {
 
     @Autowired
@@ -25,7 +23,7 @@ class CouponRepositoryTest {
     CouponRepository couponRepository;
 
     @Test
-    @DisplayName("couponRepository save test")
+    @DisplayName("CouponRepository save test")
     void testCouponSave() {
 
         //given
@@ -41,7 +39,7 @@ class CouponRepositoryTest {
     }
 
     @Test
-    @DisplayName("couponRepository save test")
+    @DisplayName("CouponRepository findById() test")
     void testCouponFindById() {
 
         //given

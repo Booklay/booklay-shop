@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -75,7 +76,7 @@ public class Post {
   @Column(name = "is_answered")
   private boolean isAnswered;
 
-
+  @Builder
   public Post(PostType postTypeId, Long groupOrder, Long depth, String title, String content,
       boolean isViewPublic) {
     this.postTypeId = postTypeId;

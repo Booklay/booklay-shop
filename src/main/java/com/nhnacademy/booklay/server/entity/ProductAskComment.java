@@ -21,7 +21,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Table(name = "comment")
+@Table(name = "product_ask_comment")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,7 +31,7 @@ public class ProductAskComment {
   @Id
   @Column(name = "comment_no")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Long commentId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_no")

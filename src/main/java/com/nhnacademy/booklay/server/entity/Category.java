@@ -7,9 +7,7 @@ import javax.persistence.*;
 @Table
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Category {
 
     @Id
@@ -29,4 +27,13 @@ public class Category {
 
     @Column(name = "is_exposure")
     private Boolean isExposure;
+
+    @Builder
+    public Category(Long id, Category parent, String name, Integer depth, Boolean isExposure) {
+        this.id = id;
+        this.parent = parent;
+        this.name = name;
+        this.depth = depth;
+        this.isExposure = isExposure;
+    }
 }

@@ -7,9 +7,7 @@ import javax.persistence.*;
 @Table
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Tag {
 
     @Id
@@ -19,4 +17,10 @@ public class Tag {
 
     @Column
     private String tag;
+
+    @Builder
+    public Tag(Long id, String tag) {
+        this.id = id;
+        this.tag = tag;
+    }
 }

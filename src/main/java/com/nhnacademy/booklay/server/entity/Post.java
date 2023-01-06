@@ -42,6 +42,10 @@ public class Post {
   @JoinColumn(name = "product_no")
   private Product productId;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_no")
+  private Member memberId;
+
   @Setter
   @ManyToOne
   @JoinColumn(name = "group_post_no")
@@ -76,10 +80,13 @@ public class Post {
   @Column(name = "is_answered")
   private boolean isAnswered;
 
+
   @Builder
-  public Post(PostType postTypeId, Long groupOrder, Long depth, String title, String content,
+  public Post(PostType postTypeId, Member memberId, Long groupOrder, Long depth, String title,
+      String content,
       boolean isViewPublic) {
     this.postTypeId = postTypeId;
+    this.memberId = memberId;
     this.groupOrder = groupOrder;
     this.depth = depth;
     this.title = title;

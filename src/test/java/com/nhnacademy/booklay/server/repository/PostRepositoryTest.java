@@ -21,14 +21,19 @@ class PostRepositoryTest {
 
   @Autowired
   PostRepository postRepository;
+  @Autowired
+  MemberRepository memberRepository;
 
   @Test
   void testPostSave(){
     Post post = DummyCart.getDummyPost();
+    entityManager.persist(post.getMemberId().getGender());
+    memberRepository.save(post.getMemberId());
+
     entityManager.persist(post.getPostTypeId());
 
     Post expect = postRepository.save(post);
 
-    assertThat(expect.getPostTypeId()).isEqualTo(post.getPostTypeId());
+    assertThat(expect.getContent()).isEqualTo(post.getContent());
   }
 }

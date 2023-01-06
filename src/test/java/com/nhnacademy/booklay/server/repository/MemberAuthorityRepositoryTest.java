@@ -36,7 +36,6 @@ class MemberAuthorityRepositoryTest {
         entityManager.persist(memberAuthority.getAuthority());
         entityManager.persist(memberAuthority.getMember().getGender());
         memberRepository.save(memberAuthority.getMember());
-        memberAuthorityRepository.save(memberAuthority);
 
         //when
         MemberAuthority expected = memberAuthorityRepository.save(memberAuthority);

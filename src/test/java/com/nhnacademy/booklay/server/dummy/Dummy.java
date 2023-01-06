@@ -11,6 +11,7 @@ import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.Product;
 import org.aspectj.weaver.ast.Or;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
+import com.nhnacademy.booklay.server.entity.MemberGrade;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -104,5 +105,16 @@ public class Dummy {
             .build();
 
         return memberAuthority;
+    }
+
+    public static MemberGrade getDummyMemberGrade() {
+        MemberGrade memberGrade = MemberGrade.builder()
+            .member(getDummyMember())
+            .name("white")
+            .build();
+
+        ReflectionTestUtils.setField(memberGrade, "id", 1L);
+
+        return memberGrade;
     }
 }

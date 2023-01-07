@@ -25,13 +25,13 @@ public class Category {
     private String name;
 
     @Column
-    private Integer depth;
+    private Long depth;
 
     @Column(name = "is_exposure")
     private Boolean isExposure;
 
     @Builder
-    public Category(Long id, Category parent, String name, Integer depth, Boolean isExposure) {
+    public Category(Long id, Category parent, String name, Long depth, Boolean isExposure) {
         this.id = id;
         this.parent = parent;
         this.name = name;

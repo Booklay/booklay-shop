@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
 import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
+import com.nhnacademy.booklay.server.exception.category.UpdateCategoryFailedException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class CategoryService {
             log.info("Update Category Processing");
             if (!taskForCategoryFromDto(updateDto)) {
                 log.info("Update Category Failed");
-                throw new CreateCategoryFailedException();
+                throw new UpdateCategoryFailedException();
             }
         } else {
             log.info("Category ID Not Existed");
@@ -63,6 +64,7 @@ public class CategoryService {
         if (categoryRepository.existsById(categoryId)) {
             categoryRepository.deleteById(categoryId);
         } else {
+            log.info("Category ID Not Existed");
             throw new CategoryNotFoundException();
         }
     }

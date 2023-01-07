@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -41,7 +42,7 @@ class ProductAuthorRepositoryTest {
 
     ProductAuthor expect = productAuthorRepository.save(productAuthor);
 
-    assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
+    assertThat(expect.getPk()).isEqualTo(productAuthor.getPk());
   }
 
   @Test

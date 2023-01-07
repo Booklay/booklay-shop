@@ -29,8 +29,6 @@ public class Dummy {
         .isBlocked(false)
         .build();
 
-    ReflectionTestUtils.setField(member, "memberId", 1L);
-
     return member;
   }
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -33,6 +34,7 @@ class ProductAskCommentRepositoryTest {
     entityManager.persist(comment.getMemberId().getGender());
     memberRepository.save(comment.getMemberId());
 
+    memberRepository.save(comment.getPostId().getMemberId());
     entityManager.persist(comment.getPostId().getPostTypeId());
     postRepository.save(comment.getPostId());
 
@@ -47,6 +49,7 @@ class ProductAskCommentRepositoryTest {
     entityManager.persist(comment.getMemberId().getGender());
     memberRepository.save(comment.getMemberId());
 
+    memberRepository.save(comment.getPostId().getMemberId());
     entityManager.persist(comment.getPostId().getPostTypeId());
     postRepository.save(comment.getPostId());
 

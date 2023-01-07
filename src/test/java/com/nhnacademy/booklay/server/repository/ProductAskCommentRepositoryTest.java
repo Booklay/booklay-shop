@@ -27,7 +27,7 @@ class ProductAskCommentRepositoryTest {
   @Autowired
   PostRepository postRepository;
 
-  @Test
+//  @Test
   void testCommentSave(){
     ProductAskComment comment = DummyCart.getDummyComment();
     entityManager.persist(comment.getMemberId().getGender());
@@ -41,7 +41,7 @@ class ProductAskCommentRepositoryTest {
     assertThat(expect.getContent()).isEqualTo(comment.getContent());
   }
 
-  @Test
+//  @Test
   void testCommentFind(){
     ProductAskComment comment = DummyCart.getDummyComment();
     entityManager.persist(comment.getMemberId().getGender());

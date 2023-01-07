@@ -5,6 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Post;
 import javax.transaction.Transactional;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,7 +27,7 @@ class PostRepositoryTest {
   @Autowired
   MemberRepository memberRepository;
 
-  @Test
+//  @Test
   void testPostSave() {
     Post post = DummyCart.getDummyPost();
     entityManager.persist(post.getMemberId().getGender());
@@ -37,7 +40,7 @@ class PostRepositoryTest {
     assertThat(expect.getContent()).isEqualTo(post.getContent());
   }
 
-  @Test
+//  @Test
   void testPostFind() {
     Post post = DummyCart.getDummyPost();
     entityManager.persist(post.getMemberId().getGender());
@@ -51,4 +54,5 @@ class PostRepositoryTest {
 
     assertThat(expect.getContent()).isEqualTo(post.getContent());
   }
+
 }

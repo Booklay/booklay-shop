@@ -330,6 +330,7 @@ create table post
     title varchar(255) not null,
     content text not null,
     created_at datetime not null,
+    updated_at datetime null,
     is_view_public boolean not null,
     is_answered boolean null,
     constraint FK_member_TO_post_1
@@ -351,6 +352,7 @@ create table product_ask_comment
     group_comment_no bigint null,
     content text not null,
     created_at datetime not null,
+    updated_at datetime null,
     group_order int not null,
     depth int not null,
     constraint FK_member_TO_product_ask_comment_1

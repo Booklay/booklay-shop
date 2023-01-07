@@ -1,17 +1,6 @@
 package com.nhnacademy.booklay.server.dummy;
 
-import com.nhnacademy.booklay.server.entity.Coupon;
-import com.nhnacademy.booklay.server.entity.CouponType;
-import com.nhnacademy.booklay.server.entity.Authority;
-import com.nhnacademy.booklay.server.entity.Gender;
-import com.nhnacademy.booklay.server.entity.Image;
-import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.entity.Order;
-import com.nhnacademy.booklay.server.entity.OrderProduct;
-import com.nhnacademy.booklay.server.entity.Product;
-import org.aspectj.weaver.ast.Or;
-import com.nhnacademy.booklay.server.entity.MemberAuthority;
-import com.nhnacademy.booklay.server.entity.MemberGrade;
+import com.nhnacademy.booklay.server.entity.*;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -37,10 +26,10 @@ public class Dummy {
             .isBlocked(false)
             .build();
 
-        ReflectionTestUtils.setField(member, "memberId", 1L);
+    ReflectionTestUtils.setField(member, "memberId", 1L);
 
-        return member;
-    }
+    return member;
+  }
 
     public static Coupon getDummyCoupon() {
         Image image = Image.builder()
@@ -117,4 +106,5 @@ public class Dummy {
 
         return memberGrade;
     }
+
 }

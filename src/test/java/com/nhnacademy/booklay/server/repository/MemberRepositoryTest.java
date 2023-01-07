@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.repository;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,15 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @BeforeEach
+    public void setUp() {
+        this.memberRepository.deleteAll();
+        this.entityManager
+                .getEntityManager()
+                .createNativeQuery("ALTER TABLE member ALTER COLUMN `member_no` RESTART WITH 1")
+                .executeUpdate();
+    }
 
     @Test
     @DisplayName("MemberRepository save test ")

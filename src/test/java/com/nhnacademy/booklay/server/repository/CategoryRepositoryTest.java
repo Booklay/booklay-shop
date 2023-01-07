@@ -2,8 +2,9 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.nhnacademy.booklay.server.dummy.category.DummyCategory;
+import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,7 +24,7 @@ class CategoryRepositoryTest {
     @Test
     void testCategorySave() {
         //given
-        Category category = DummyCategory.getDummyCategory();
+        Category category = Dummy.getDummyCategory();
         entityManager.persist(category.getParent());
 
         //when

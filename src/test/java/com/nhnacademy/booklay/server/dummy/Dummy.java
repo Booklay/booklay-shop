@@ -20,25 +20,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class Dummy {
 
-    /**
-     * auto increment 있는 엔티티의 경우 전역변수 추가하여 사용
-     * <p>
-     * 사용시 최상위 엔티티만 get 하여 사용한다.
-     * <p>
-     * ex) DeliveryDetail 사용시 order 와 member 더미가 필요함.
-     * - DeliveryDetail detail = getDummyDeliveryDetail()
-     * detail.getOrder()
-     * detail.getOrder().getMember()
-     * 와 같은 형태로 사용
-     */
-
-    private static long memberId = 0;
-    private static long orderId = 0;
-    private static long memberGradeId = 0;
-    private static long deliveryDetailId = 0;
-    private static long orderProductId = 0;
-    private static long couponId = 0;
-
     public static Member getDummyMember() {
 
         Gender gender = Gender.builder()
@@ -58,7 +39,7 @@ public class Dummy {
             .isBlocked(false)
             .build();
 
-        ReflectionTestUtils.setField(member, "memberId", ++memberId);
+        ReflectionTestUtils.setField(member, "memberId", 1L);
 
         return member;
     }
@@ -88,7 +69,7 @@ public class Dummy {
             .isDuplicatable(false)
             .build();
 
-        ReflectionTestUtils.setField(coupon, "id", ++couponId);
+        ReflectionTestUtils.setField(coupon, "id", 1L);
 
         return coupon;
     }
@@ -133,7 +114,7 @@ public class Dummy {
             .name("white")
             .build();
 
-        ReflectionTestUtils.setField(memberGrade, "id", ++memberGradeId);
+        ReflectionTestUtils.setField(memberGrade, "id", 1L);
 
         return memberGrade;
     }
@@ -172,7 +153,7 @@ public class Dummy {
 
         deliveryDetail.setCompletedAt(LocalDateTime.now());
 
-        ReflectionTestUtils.setField(deliveryDetail, "id", ++deliveryDetailId);
+        ReflectionTestUtils.setField(deliveryDetail, "id", 1L);
         ReflectionTestUtils.setField(deliveryDetail, "deliveryStartAt", LocalDateTime.now());
 
         return deliveryDetail;
@@ -199,7 +180,7 @@ public class Dummy {
             .isBlinded(false)
             .build();
 
-        ReflectionTestUtils.setField(order, "id", ++orderId);
+        ReflectionTestUtils.setField(order, "id", 1L);
         ReflectionTestUtils.setField(order, "orderedAt", LocalDateTime.now());
 
         return order;

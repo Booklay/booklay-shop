@@ -21,8 +21,8 @@ public class DummyNum3 {
         ReflectionTestUtils.setField(image, "id", 1L);
         Product product = Product.builder()
             .image(image)
-            .price(1)
-            .pointRate(1)
+            .price(1L)
+            .pointRate(1L)
             .isSelling(true)
             .longDescription("")
             .pointMethod(true)

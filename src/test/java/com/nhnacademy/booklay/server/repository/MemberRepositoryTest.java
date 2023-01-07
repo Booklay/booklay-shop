@@ -1,17 +1,19 @@
 package com.nhnacademy.booklay.server.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -22,6 +24,15 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @BeforeEach
+    public void setUp() {
+        this.memberRepository.deleteAll();
+        this.entityManager
+                .getEntityManager()
+                .createNativeQuery("ALTER TABLE member ALTER COLUMN `member_no` RESTART WITH 1")
+                .executeUpdate();
+    }
 
     @Test
     @DisplayName("MemberRepository save test ")
@@ -47,8 +58,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //when
-        Member expected = memberRepository.findById(member.getMemberId())
-            .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        Member expected = memberRepository.findById(member.getMemberId()).orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         //then
         assertThat(expected.getMemberId()).isEqualTo(member.getMemberId());
@@ -66,8 +76,7 @@ class MemberRepositoryTest {
 
         //then
         assertThat(actual.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-            .isEqualTo(
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                .isEqualTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
     }
 

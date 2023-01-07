@@ -1,17 +1,13 @@
 package com.nhnacademy.booklay.server.dummy;
 
-import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.entity.Authority;
-import com.nhnacademy.booklay.server.entity.DeliveryDetail;
-import com.nhnacademy.booklay.server.entity.DeliveryStatusCode;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.entity.OrderProduct;
-import com.nhnacademy.booklay.server.entity.OrderStatusCode;
 import com.nhnacademy.booklay.server.entity.Product;
 import org.aspectj.weaver.ast.Or;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
@@ -43,7 +39,6 @@ public class Dummy {
     private static long couponId = 0;
 
     public static Member getDummyMember() {
-
         Gender gender = Gender.builder()
             .id(1L)
             .gender("M")
@@ -63,8 +58,8 @@ public class Dummy {
 
         ReflectionTestUtils.setField(member, "memberId", ++memberId);
 
-        return member;
-    }
+    return member;
+  }
 
     public static Coupon getDummyCoupon() {
         Image image = Image.builder()
@@ -97,7 +92,6 @@ public class Dummy {
     }
 
     public static OrderProduct getDummyOrderProduct() {
-
         OrderProduct orderProduct = OrderProduct.builder()
             .order(null)
             .product(null)
@@ -110,7 +104,6 @@ public class Dummy {
         return orderProduct;
 
     }
-
     public static Authority getDummyAuthority() {
         Authority authority = Authority.builder()
             .id(1L)
@@ -134,7 +127,6 @@ public class Dummy {
     }
 
     public static MemberGrade getDummyMemberGrade() {
-
         MemberGrade memberGrade = MemberGrade.builder()
             .member(getDummyMember())
             .name("white")

@@ -1,5 +1,8 @@
 package com.nhnacademy.booklay.server.repository;
 
-public interface ProductDetailRepository {
+import com.nhnacademy.booklay.server.entity.ProductDetail;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductDetailRepository extends JpaRepository<ProductDetail, Long> {
 
 }

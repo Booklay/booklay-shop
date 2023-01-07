@@ -16,46 +16,47 @@ import org.springframework.test.context.ActiveProfiles;
 @Transactional
 class CartRepositoryTest {
 
-  @Autowired
-  TestEntityManager entityManager;
+    @Autowired
+    TestEntityManager entityManager;
 
-  @Autowired
-  CartRepository cartRepository;
-  @Autowired
-  MemberRepository memberRepository;
-  @Autowired
-  ProductRepository productRepository;
+    @Autowired
+    CartRepository cartRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    ProductRepository productRepository;
 
 
-  @Test
-  void testCartSave() {
-    Cart cart = DummyCart.getDummyCart();
+    @Test
+    void testCartSave() {
+        Cart cart = DummyCart.getDummyCart();
 
-    entityManager.persist(cart.getMember().getGender());
-    memberRepository.save(cart.getMember());
+        entityManager.persist(cart.getMember().getGender());
+        memberRepository.save(cart.getMember());
 
-    entityManager.persist(cart.getProduct().getImage());
-    productRepository.save(cart.getProduct());
+        entityManager.persist(cart.getProduct().getImage());
+        productRepository.save(cart.getProduct());
 
-    Cart expected = cartRepository.save(cart);
+        Cart expected = cartRepository.save(cart);
 
-    assertThat(expected.getPk()).isEqualTo(cart.getPk());
-  }
+        assertThat(expected.getPk()).isEqualTo(cart.getPk());
+    }
 
-  @Test
-  void testCartFindById() {
-    Cart cart = DummyCart.getDummyCart();
+    @Test
+    void testCartFindById() {
+        Cart cart = DummyCart.getDummyCart();
 
-    entityManager.persist(cart.getMember().getGender());
-    memberRepository.save(cart.getMember());
+        entityManager.persist(cart.getMember().getGender());
+        memberRepository.save(cart.getMember());
 
-    entityManager.persist(cart.getProduct().getImage());
-    productRepository.save(cart.getProduct());
+        entityManager.persist(cart.getProduct().getImage());
+        productRepository.save(cart.getProduct());
 
-    cartRepository.save(cart);
+        cartRepository.save(cart);
 
-    Cart expect = cartRepository.findById(cart.getPk()).orElseThrow(() -> new IllegalArgumentException("no"));
+        Cart expect = cartRepository.findById(cart.getPk())
+            .orElseThrow(() -> new IllegalArgumentException("no"));
 
-    assertThat(expect.getPk()).isEqualTo(cart.getPk());
-  }
+        assertThat(expect.getPk()).isEqualTo(cart.getPk());
+    }
 }

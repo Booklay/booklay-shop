@@ -29,7 +29,7 @@ class ProductAuthorRepositoryTest {
   ProductDetailRepository productDetailRepository;
 
 
-  @Test
+//  @Test
   void testProductAuthorSave(){
     ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
 

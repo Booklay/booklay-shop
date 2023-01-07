@@ -26,10 +26,10 @@ public class Dummy {
             .isBlocked(false)
             .build();
 
-    ReflectionTestUtils.setField(member, "memberId", 1L);
+        ReflectionTestUtils.setField(member, "memberId", 1L);
 
-    return member;
-  }
+        return member;
+    }
 
     public static Coupon getDummyCoupon() {
         Image image = Image.builder()
@@ -63,37 +63,35 @@ public class Dummy {
 
     public static OrderProduct getDummyOrderProduct() {
         OrderProduct orderProduct = OrderProduct.builder()
-                .order(null)
-                .product(null)
-                .count(1)
-                .price(10000)
-                .build();
+            .order(null)
+            .product(null)
+            .count(1)
+            .price(10000)
+            .build();
 
         ReflectionTestUtils.setField(orderProduct, "id", 1L);
 
         return orderProduct;
 
     }
+
     public static Authority getDummyAuthority() {
-        Authority authority = Authority.builder()
+
+        return Authority.builder()
             .id(1L)
             .authority("admin")
             .build();
-
-        return authority;
     }
 
     public static MemberAuthority getDummyMemberAuthority() {
         Member member = getDummyMember();
         Authority authority = getDummyAuthority();
 
-        MemberAuthority memberAuthority = MemberAuthority.builder()
+        return MemberAuthority.builder()
             .pk(new MemberAuthority.Pk(member.getMemberId(), authority.getId()))
             .member(member)
             .authority(authority)
             .build();
-
-        return memberAuthority;
     }
 
     public static MemberGrade getDummyMemberGrade() {
@@ -107,4 +105,30 @@ public class Dummy {
         return memberGrade;
     }
 
+    public static Category getDummyCategory() {
+
+        Category none = Category.builder()
+            .id(0L)
+            .parent(null)
+            .name("없음")
+            .depth(0L)
+            .isExposure(true)
+            .build();
+
+        Category allProduct = Category.builder()
+            .id(1L)
+            .parent(none)
+            .name("전체 상품")
+            .depth(none.getDepth() + 1)
+            .isExposure(true)
+            .build();
+
+        return Category.builder()
+            .id(101L)
+            .parent(allProduct)
+            .name("국내도서")
+            .depth(allProduct.getDepth())
+            .isExposure(true)
+            .build();
+    }
 }

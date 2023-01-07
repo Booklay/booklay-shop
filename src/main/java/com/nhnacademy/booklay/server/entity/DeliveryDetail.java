@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -75,5 +76,18 @@ public class DeliveryDetail {
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
-
+    @Builder
+    public DeliveryDetail(Order order, DeliveryStatusCode statusCode, String zipCode,
+                          String address,
+                          String sender, String senderPhoneNumber, String receiver,
+                          String receiverPhoneNumber) {
+        this.order = order;
+        this.statusCode = statusCode;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.sender = sender;
+        this.senderPhoneNumber = senderPhoneNumber;
+        this.receiver = receiver;
+        this.receiverPhoneNumber = receiverPhoneNumber;
+    }
 }

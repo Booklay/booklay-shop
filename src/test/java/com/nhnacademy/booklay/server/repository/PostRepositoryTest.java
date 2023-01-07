@@ -19,59 +19,63 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class PostRepositoryTest {
 
-  @Autowired
-  TestEntityManager entityManager;
+    @Autowired
+    TestEntityManager entityManager;
 
-  @Autowired
-  PostRepository postRepository;
-  @Autowired
-  MemberRepository memberRepository;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
-  @BeforeEach
-  void setUp() {
-    clearRepo("post", postRepository);
-    clearRepo("member", memberRepository);
-  }
+    @BeforeEach
+    void setUp() {
+        clearRepo("post", postRepository);
+        clearRepo("member", memberRepository);
+    }
 
 
-  @Test
-  void testPostSave() {
-    Post post = DummyCart.getDummyPost();
-    entityManager.persist(post.getMemberId().getGender());
-    memberRepository.save(post.getMemberId());
+    @Test
+    void testPostSave() {
+        Post post = DummyCart.getDummyPost();
+        entityManager.persist(post.getMemberId().getGender());
+        memberRepository.save(post.getMemberId());
 
-    entityManager.persist(post.getPostTypeId());
 
-    Post expect = postRepository.save(post);
+        entityManager.persist(post.getPostTypeId());
 
-    assertThat(expect.getContent()).isEqualTo(post.getContent());
-  }
+        Post expect = postRepository.save(post);
 
-  @Test
-  void testPostFind() {
-    Post post = DummyCart.getDummyPost();
-    entityManager.persist(post.getMemberId().getGender());
-    memberRepository.save(post.getMemberId());
+        assertThat(expect.getContent()).isEqualTo(post.getContent());
+    }
 
-    entityManager.persist(post.getPostTypeId());
+    @Test
+    void testPostFind() {
+        Post post = DummyCart.getDummyPost();
+        entityManager.persist(post.getMemberId().getGender());
+        memberRepository.save(post.getMemberId());
 
-    postRepository.save(post);
 
-    Post expect = postRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("no"));
+        entityManager.persist(post.getPostTypeId());
 
-    assertThat(expect.getContent()).isEqualTo(post.getContent());
-  }
-  void clearRepo(String entityName, JpaRepository jpaRepository) {
-    jpaRepository.deleteAll();
+        postRepository.save(post);
 
-    String query =
+        Post expect =
+            postRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("no"));
+
+        assertThat(expect.getContent()).isEqualTo(post.getContent());
+    }
+
+    void clearRepo(String entityName, JpaRepository jpaRepository) {
+        jpaRepository.deleteAll();
+
+        String query =
             String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName,
-                    entityName);
+                entityName);
 
-    this.entityManager
+        this.entityManager
             .getEntityManager()
             .createNativeQuery(query)
             .executeUpdate();
-  }
+    }
 
 }

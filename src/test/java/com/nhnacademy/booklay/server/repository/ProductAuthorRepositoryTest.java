@@ -20,17 +20,17 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class ProductAuthorRepositoryTest {
 
-  @Autowired
-  TestEntityManager entityManager;
+    @Autowired
+    TestEntityManager entityManager;
 
-  @Autowired
-  ProductAuthorRepository productAuthorRepository;
-  @Autowired
-  ProductRepository productRepository;
-  @Autowired
-  AuthorRepository authorRepository;
-  @Autowired
-  ProductDetailRepository productDetailRepository;
+    @Autowired
+    ProductAuthorRepository productAuthorRepository;
+    @Autowired
+    ProductRepository productRepository;
+    @Autowired
+    AuthorRepository authorRepository;
+    @Autowired
+    ProductDetailRepository productDetailRepository;
 
   void clearRepo(String entityName, JpaRepository jpaRepository) {
     jpaRepository.deleteAll();
@@ -55,30 +55,31 @@ class ProductAuthorRepositoryTest {
   void testProductAuthorSave(){
     ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
 
-    entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
-    productRepository.save(productAuthor.getProductDetail().getProduct());
-    productDetailRepository.save(productAuthor.getProductDetail());
+        entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
+        productRepository.save(productAuthor.getProductDetail().getProduct());
+        productDetailRepository.save(productAuthor.getProductDetail());
 
-    authorRepository.save(productAuthor.getAuthor());
+        authorRepository.save(productAuthor.getAuthor());
 
-    ProductAuthor expect = productAuthorRepository.save(productAuthor);
+        ProductAuthor expect = productAuthorRepository.save(productAuthor);
 
-    assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
-  }
+        assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
+    }
 
-  @Test
-  void testProductAuthorFind(){
-    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
+    @Test
+    void testProductAuthorFind() {
+        ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
 
-    entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
-    productRepository.save(productAuthor.getProductDetail().getProduct());
-    productDetailRepository.save(productAuthor.getProductDetail());
+        entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
+        productRepository.save(productAuthor.getProductDetail().getProduct());
+        productDetailRepository.save(productAuthor.getProductDetail());
 
-    authorRepository.save(productAuthor.getAuthor());
+        authorRepository.save(productAuthor.getAuthor());
 
-    productAuthorRepository.save(productAuthor);
+        productAuthorRepository.save(productAuthor);
 
-    ProductAuthor expect = productAuthorRepository.findById(productAuthor.getPk()).orElseThrow(() -> new IllegalArgumentException("no"));
+        ProductAuthor expect = productAuthorRepository.findById(productAuthor.getPk())
+            .orElseThrow(() -> new IllegalArgumentException("no"));
 
     assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
   }

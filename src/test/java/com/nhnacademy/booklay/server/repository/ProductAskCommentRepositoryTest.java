@@ -19,15 +19,15 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class ProductAskCommentRepositoryTest {
 
-  @Autowired
-  TestEntityManager entityManager;
+    @Autowired
+    TestEntityManager entityManager;
 
-  @Autowired
-  ProductAskCommentRepository commentRepository;
-  @Autowired
-  MemberRepository memberRepository;
-  @Autowired
-  PostRepository postRepository;
+    @Autowired
+    ProductAskCommentRepository commentRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    PostRepository postRepository;
 
   void clearRepo(String entityName, JpaRepository jpaRepository) {
     jpaRepository.deleteAll();
@@ -54,13 +54,14 @@ class ProductAskCommentRepositoryTest {
     entityManager.persist(comment.getMemberId().getGender());
     memberRepository.save(comment.getMemberId());
 
-    entityManager.persist(comment.getPostId().getPostTypeId());
-    postRepository.save(comment.getPostId());
 
-    ProductAskComment expect = commentRepository.save(comment);
+        entityManager.persist(comment.getPostId().getPostTypeId());
+        postRepository.save(comment.getPostId());
 
-    assertThat(expect.getContent()).isEqualTo(comment.getContent());
-  }
+        ProductAskComment expect = commentRepository.save(comment);
+
+        assertThat(expect.getContent()).isEqualTo(comment.getContent());
+    }
 
   @Test
   void testCommentFind(){
@@ -68,14 +69,15 @@ class ProductAskCommentRepositoryTest {
     entityManager.persist(comment.getMemberId().getGender());
     memberRepository.save(comment.getMemberId());
 
-    entityManager.persist(comment.getPostId().getPostTypeId());
-    postRepository.save(comment.getPostId());
+        entityManager.persist(comment.getPostId().getPostTypeId());
+        postRepository.save(comment.getPostId());
 
-    commentRepository.save(comment);
+        commentRepository.save(comment);
 
-    ProductAskComment expect = commentRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("no"));
+        ProductAskComment expect =
+            commentRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("no"));
 
-    assertThat(expect.getContent()).isEqualTo(comment.getContent());
+        assertThat(expect.getContent()).isEqualTo(comment.getContent());
 
-  }
+    }
 }

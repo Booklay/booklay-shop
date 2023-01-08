@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  * javadoc. 카테고리 서비스
  */
 @Slf4j
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -29,7 +29,6 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    @Transactional(readOnly = false)
     public void createCategory(CategoryCreateDto createDto) {
         if (!categoryRepository.existsById(createDto.getId())) {
             log.info("Create Category Processing");
@@ -44,6 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Transactional(readOnly = true)
     public CategoryDto retrieveCategory(Long categoryId) {
         CategoryDto categoryDto = categoryRepository.findById(categoryId, CategoryDto.class)
             .orElseThrow(CategoryNotFoundException::new);
@@ -53,6 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDto;
     }
 
+    @Transactional(readOnly = true)
     public Page<CategoryDto> retrieveCategory(Pageable pageable) {
         Page<CategoryDto> page = categoryRepository.findAllBy(pageable, CategoryDto.class);
 
@@ -61,7 +62,6 @@ public class CategoryServiceImpl implements CategoryService {
         return page;
     }
 
-    @Transactional(readOnly = false)
     public void updateCategory(CategoryUpdateDto updateDto) {
         if (categoryRepository.existsById(updateDto.getId())) {
             log.info("Update Category Processing");
@@ -78,7 +78,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    @Transactional(readOnly = false)
     public boolean deleteCategory(Long categoryId) {
         if (categoryRepository.existsById(categoryId)) {
             categoryRepository.deleteById(categoryId);
@@ -91,6 +90,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
+    /**
+     * javadoc.
+     *
+     * @param dto create,update dto.
+     * @return .
+     */
     private boolean taskForCategoryFromDto(CategoryCUDto dto) {
 
         try {

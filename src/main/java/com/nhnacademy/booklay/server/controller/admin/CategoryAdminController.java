@@ -87,11 +87,11 @@ public class CategoryAdminController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String deleteCategory(@RequestParam("categoryId") Long id) {
 
+        log.info("Category Delete");
+
         if (categoryService.deleteCategory(id)) {
-            log.info("Delete Category ID : " + id);
             return "{\"result\": \"Success\"}";
         } else {
-            log.info("Category ID Not Existed");
             return "{\"result\": \"Fail\"}";
         }
     }

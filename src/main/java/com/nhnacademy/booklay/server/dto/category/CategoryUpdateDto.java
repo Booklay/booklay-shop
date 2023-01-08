@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dto.category;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -9,17 +10,17 @@ import org.hibernate.validator.constraints.Length;
 @RequiredArgsConstructor
 public class CategoryUpdateDto implements CategoryCUDto {
 
-    @NotBlank
+    @NotNull
     private final Long id;
 
-    @NotBlank
+    @NotNull
     private final Long parentCategoryId;
 
     @NotBlank
     @Length(max = 50)
     private final String name;
 
-    @NotBlank
+    @NotNull
     private final Boolean isExposure;
 
 }

@@ -2,13 +2,10 @@ package com.nhnacademy.booklay.server.service.category;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
-import com.nhnacademy.booklay.server.dto.category.CategoryCUDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -19,19 +16,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
+@MockBean(JpaMetamodelMappingContext.class)
 class CategoryServiceTest {
 
-    @Spy
+    @MockBean
     CategoryRepository categoryRepository;
-    @InjectMocks
+    @Autowired
     CategoryService categoryService;
 
     Category category;
@@ -45,7 +44,7 @@ class CategoryServiceTest {
 
     @Test
     @DisplayName("Category Service Create 테스트")
-    void createCategory() {
+    void testCreateCategory() {
         //given
         CategoryCreateDto createDto = new CategoryCreateDto(
             category.getId(),
@@ -67,7 +66,7 @@ class CategoryServiceTest {
 
     @Test
     @DisplayName("Category Service Retrieve 테스트")
-    void retrieveCategory() {
+    void testRetrieveCategory() {
         CategoryDto categoryDto = new CategoryDto(
             category.getId(),
             category.getName()
@@ -89,7 +88,7 @@ class CategoryServiceTest {
 
     @Test
     @DisplayName("Category Service Update 테스트")
-    void updateCategory() {
+    void testUpdateCategory() {
         CategoryUpdateDto updateDto = new CategoryUpdateDto(
             category.getId(),
             category.getParent().getId(),
@@ -112,7 +111,7 @@ class CategoryServiceTest {
 
     @Test
     @DisplayName("Category Service Delete 테스트")
-    void deleteCategory() {
+    void testDeleteCategory() {
         when(categoryRepository.existsById(category.getId())).thenReturn(true);
 
         assertThatNoException().isThrownBy(() -> categoryService.deleteCategory(category.getId()));

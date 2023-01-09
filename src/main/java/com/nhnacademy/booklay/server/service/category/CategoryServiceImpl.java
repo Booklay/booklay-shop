@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
                 log.info("Create Category Success : " + createDto.getName());
             } else {
                 log.info("Create Category Failed");
-                throw new CreateCategoryFailedException();
+                throw new CreateCategoryFailedException(createDto);
             }
         } else {
             log.info("Category ID Already Existed");
@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional(readOnly = true)
     public CategoryDto retrieveCategory(Long categoryId) {
         CategoryDto categoryDto = categoryRepository.findById(categoryId, CategoryDto.class)
-            .orElseThrow(CategoryNotFoundException::new);
+            .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
         log.info("Retrieve Category : " + categoryDto.getName());
 
@@ -69,12 +69,12 @@ public class CategoryServiceImpl implements CategoryService {
                 log.info("Update Category Success : " + updateDto.getName());
             } else {
                 log.info("Update Category Failed");
-                throw new UpdateCategoryFailedException();
+                throw new UpdateCategoryFailedException(updateDto);
 
             }
         } else {
             log.info("Category ID Not Existed");
-            throw new CategoryNotFoundException();
+            throw new CategoryNotFoundException(updateDto.getId());
         }
     }
 
@@ -100,7 +100,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         try {
             Category parent = categoryRepository.findById(dto.getParentCategoryId())
-                .orElseThrow(CategoryNotFoundException::new);
+                .orElseThrow(() -> new CategoryNotFoundException(dto.getId()));
 
             Category category = Category.builder()
                 .id(dto.getId())

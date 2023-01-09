@@ -1,9 +1,12 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table
 @Entity
@@ -18,10 +21,10 @@ public class Tag {
     private Long id;
 
     @Column
-    private String tag;
+    private String name;
 
     @Builder
-    public Tag(String tag) {
-        this.tag = tag;
+    public Tag(String name) {
+        this.name = name;
     }
 }

@@ -31,7 +31,7 @@ class AuthorityRepositoryTest {
         Authority expected = authorityRepository.save(authority);
 
         //then
-        assertThat(expected.getAuthority()).isEqualTo(authority.getAuthority());
+        assertThat(expected.getName()).isEqualTo(authority.getName());
 
     }
 

@@ -1,12 +1,15 @@
 package com.nhnacademy.booklay.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-
-import java.time.LocalDateTime;
-import javax.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Table(name="product")
 @Entity

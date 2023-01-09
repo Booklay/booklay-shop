@@ -1,10 +1,10 @@
 package com.nhnacademy.booklay.server.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Table(name = "product_author")
 @Entity

@@ -1,15 +1,17 @@
 package com.nhnacademy.booklay.server.dto.member;
 
 import com.nhnacademy.booklay.server.entity.Gender;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberDto {
+
     private Long memberId;
     private Gender gender;
     private String id;
@@ -23,4 +25,5 @@ public class MemberDto {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
     private Boolean isBlocked;
+
 }

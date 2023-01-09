@@ -28,7 +28,6 @@ public class CouponAdminController {
 
     @PutMapping("/coupons/{couponId}")
     public String updateCoupon(@PathVariable Long couponId) {
-        //TODO: @RequestBody
         couponAdminService.updateCoupon(couponId);
         return "";
     }

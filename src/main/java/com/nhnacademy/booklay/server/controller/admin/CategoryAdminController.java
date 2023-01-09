@@ -1,23 +1,30 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
-import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
-import com.nhnacademy.booklay.server.dto.category.CategoryDto;
-import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
+import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
 import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.ValidationException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/admin/category")
+@RequestMapping("/admin/categories")
 public class CategoryAdminController {
 
     private final CategoryService categoryService;
@@ -26,16 +33,10 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/test")
-    @ResponseStatus(HttpStatus.OK)
-    public String testMapping() {
-        return "{\"Test Result\": \"Success\"}";
-    }
-
-    @PostMapping("/register")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto registerCategory(@Valid @RequestBody CategoryCreateDto createDto,
-                                        BindingResult bindingResult) {
+    public CategoryResponse createCategory(@Valid @RequestBody CategoryCreateRequest createDto,
+                                           BindingResult bindingResult) {
 
         log.info("Category Create");
 
@@ -47,46 +48,48 @@ public class CategoryAdminController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<CategoryDto> getCategoryList(Pageable pageable) {
+    public Page<CategoryResponse> retrieveCategoryList(Pageable pageable) {
         return categoryService.retrieveCategory(pageable);
     }
 
-    @GetMapping()
+    @GetMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto getCategory(@RequestParam("categoryId") Long id) {
+    public CategoryResponse retrieveCategory(@PathVariable("categoryId") Long id) {
 
         log.info("Category Retrieve");
 
         return categoryService.retrieveCategory(id);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public CategoryDto modifyCategory(@Valid @RequestBody CategoryUpdateDto updateDto,
-                                      BindingResult bindingResult) {
+    public CategoryResponse updateCategory(@PathVariable(value = "categoryId") Long categoryId,
+                                           @Valid @RequestBody CategoryUpdateRequest updateDto,
+                                           BindingResult bindingResult) {
 
-        log.info("Category Update");
+        log.info("Category Update ID : {}", categoryId);
 
         if (bindingResult.hasErrors()) {
-            throw new ValidationException();
+            throw new ValidationFailedException(bindingResult);
         }
 
-        categoryService.updateCategory(updateDto);
+        categoryService.updateCategory(updateDto, categoryId);
 
         return categoryService.retrieveCategory(updateDto.getId());
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteCategory(@RequestParam("categoryId") Long id) {
+    public String deleteCategory(@PathVariable("categoryId") Long categoryId) {
 
         log.info("Category Delete");
 
-        if (categoryService.deleteCategory(id)) {
+        try {
+            categoryService.deleteCategory(categoryId);
             return "{\"result\": \"Success\"}";
-        } else {
+        } catch (CategoryNotFoundException e) {
             return "{\"result\": \"Fail\"}";
         }
     }

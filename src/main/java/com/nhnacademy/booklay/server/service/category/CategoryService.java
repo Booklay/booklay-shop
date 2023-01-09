@@ -13,7 +13,7 @@ public interface CategoryService {
 
     void updateCategory(CategoryUpdateDto updateDto);
 
-    boolean deleteCategory(Long id);
+    void deleteCategory(Long id);
 
     Page<CategoryDto> retrieveCategory(Pageable pageable);
 }

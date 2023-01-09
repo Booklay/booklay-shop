@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.controller.admin;
 import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
+import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
 import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,8 @@ public class CategoryAdminController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto registerCategory(@Valid @RequestBody CategoryCreateDto createDto,
-                                        BindingResult bindingResult) {
+    public CategoryDto createCategory(@Valid @RequestBody CategoryCreateDto createDto,
+                                      BindingResult bindingResult) {
 
         log.info("Category Create");
 
@@ -49,13 +50,13 @@ public class CategoryAdminController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public Page<CategoryDto> getCategoryList(Pageable pageable) {
+    public Page<CategoryDto> retrieveCategoryList(Pageable pageable) {
         return categoryService.retrieveCategory(pageable);
     }
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto getCategory(@RequestParam("categoryId") Long id) {
+    public CategoryDto retrieveCategory(@RequestParam("categoryId") Long id) {
 
         log.info("Category Retrieve");
 
@@ -64,7 +65,7 @@ public class CategoryAdminController {
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public CategoryDto modifyCategory(@Valid @RequestBody CategoryUpdateDto updateDto,
+    public CategoryDto updateCategory(@Valid @RequestBody CategoryUpdateDto updateDto,
                                       BindingResult bindingResult) {
 
         log.info("Category Update");
@@ -84,9 +85,10 @@ public class CategoryAdminController {
 
         log.info("Category Delete");
 
-        if (categoryService.deleteCategory(id)) {
+        try {
+            categoryService.deleteCategory(id);
             return "{\"result\": \"Success\"}";
-        } else {
+        } catch (CategoryNotFoundException e) {
             return "{\"result\": \"Fail\"}";
         }
     }

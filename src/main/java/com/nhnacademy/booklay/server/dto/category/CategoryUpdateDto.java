@@ -24,10 +24,4 @@ public class CategoryUpdateDto implements CategoryCUDto {
     @NotNull
     private Boolean isExposure;
 
-    public CategoryUpdateDto(Long id, Long parentCategoryId, String name, Boolean isExposure) {
-        this.id = id;
-        this.parentCategoryId = parentCategoryId;
-        this.name = name;
-        this.isExposure = isExposure;
-    }
 }

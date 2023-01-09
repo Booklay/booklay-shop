@@ -36,10 +36,8 @@ class CategoryRepositoryTest {
     void testCategorySave() {
         //given
         Category category = Dummy.getDummyCategory();
-
         //when
         Category expected = categoryRepository.save(category);
-
         //then
         assertThat(expected.getName()).isEqualTo(category.getName());
     }
@@ -55,7 +53,6 @@ class CategoryRepositoryTest {
         Category expected = categoryRepository.findById(category.getId())
             .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-
         //then
         assertThat(expected.getId()).isEqualTo(category.getId());
     }
@@ -67,6 +64,9 @@ class CategoryRepositoryTest {
         Category category = Dummy.getDummyCategory();
         categoryRepository.save(category);
 
+        log.info("Origin category ID : {}", category.getId());
+        log.info("Origin category Name : {}", category.getName());
+
         Category expected = Category.builder()
             .id(category.getId())
             .parent(category.getParent())
@@ -77,9 +77,15 @@ class CategoryRepositoryTest {
 
         categoryRepository.save(expected);
 
+        log.info("Expected category ID : {}", expected.getId());
+        log.info("Expected category Name : {}", expected.getName());
+
         //when
         Category actual = categoryRepository.findById(category.getId())
             .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        log.info("Actual category ID : {}", actual.getId());
+        log.info("Actual category Name : {}", actual.getName());
 
         //then
         assertAll(
@@ -107,5 +113,4 @@ class CategoryRepositoryTest {
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"))
         ).isInstanceOf(IllegalArgumentException.class);
     }
-
 }

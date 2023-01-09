@@ -15,3 +15,11 @@ spring:
       hibernate:
         format_sql: true
     database: mysql
+
+booklay:
+  secure:
+    appkey: 500rMJPT021TnyNl
+    db_username: 06bd87410af34cdabe826c117fb76771
+    db_url: 0b22abcb84cf49e09f06fa3a29a919fe
+    db_password: 314a5e5a46004ab593c84049d362f835
+    url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/500rMJPT021TnyNl/secrets/

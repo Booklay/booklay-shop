@@ -1,9 +1,8 @@
 package com.nhnacademy.booklay.server.service.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import com.nhnacademy.booklay.server.dto.product.ProductBookDto;
+import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.service.ImageService;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @Slf4j
@@ -24,7 +22,7 @@ class ProductServiceTest {
   ImageService imageService;
 
   Product product;
-  ProductBookDto request = DummyCart.getDummyProductBookDto();
+  CreateProductBookRequest request = DummyCart.getDummyProductBookDto();
 
   @BeforeEach
   void setup(){

@@ -16,6 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
+/**
+ *
+ * author 양승아
+ */
 @DataJpaTest
 @ActiveProfiles("test")
 class MemberRepositoryTest {

@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ *
+ * @author 양승아
+ */
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -23,7 +27,7 @@ public class MemberController {
         return memberService.getMember(memberId);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public void createMember(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
         memberService.createMember(memberCreateRequest);
     }

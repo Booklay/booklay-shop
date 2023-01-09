@@ -14,6 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ *
+ * author 양승아
+ */
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {

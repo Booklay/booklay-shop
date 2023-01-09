@@ -16,7 +16,7 @@ public class CouponRetrieveResponse {
     private final int minimumUseAmount;
     private final int maximumDiscountAmount;
 
-    public CouponRetrieveResponse fromEntity(Coupon coupon) {
+    public static CouponRetrieveResponse fromEntity(Coupon coupon) {
         return CouponRetrieveResponse.builder()
             .id(coupon.getId())
             .name(coupon.getName())

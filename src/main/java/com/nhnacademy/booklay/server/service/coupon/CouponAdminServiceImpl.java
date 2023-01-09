@@ -19,7 +19,6 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     @Transactional(readOnly = true)
     public List<CouponRetrieveResponse> retrieveAllCoupons() {
         //List<CouponRetrieveResponse> couponList = couponRepository.getCouponsDto();
-
         return null;
     }
 

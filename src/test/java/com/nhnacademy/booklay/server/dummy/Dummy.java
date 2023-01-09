@@ -107,19 +107,11 @@ public class Dummy {
 
     public static Category getDummyCategory() {
 
-        Category none = Category.builder()
-            .id(0L)
-            .parent(null)
-            .name("없음")
-            .depth(0L)
-            .isExposure(true)
-            .build();
-
         Category allProduct = Category.builder()
             .id(1L)
-            .parent(none)
+            .parent(null)
             .name("전체 상품")
-            .depth(none.getDepth() + 1)
+            .depth(0L)
             .isExposure(true)
             .build();
 
@@ -127,7 +119,7 @@ public class Dummy {
             .id(101L)
             .parent(allProduct)
             .name("국내도서")
-            .depth(allProduct.getDepth())
+            .depth(allProduct.getDepth() + 1)
             .isExposure(true)
             .build();
     }

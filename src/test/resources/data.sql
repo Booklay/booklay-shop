@@ -102,7 +102,7 @@ create table category
 (
     category_no bigint not null
         primary key auto_increment,
-    parent_category_no bigint not null,
+    parent_category_no bigint null,
     name varchar(50) not null,
     depth tinyint not null,
     is_exposure boolean default 1 not null,

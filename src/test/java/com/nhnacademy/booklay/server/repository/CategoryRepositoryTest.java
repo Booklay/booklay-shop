@@ -28,7 +28,7 @@ class CategoryRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        entityManager.persist(Dummy.getDummyCategory().getParent());
+        categoryRepository.save(Dummy.getDummyCategory().getParent());
     }
 
     @Test

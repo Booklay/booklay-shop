@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.service.member;
 
 import com.nhnacademy.booklay.server.dto.member.MemberDto;
-import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.repository.MemberRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> getMembers() {
-        return memberRepository.findAll();
+    public List<MemberDto> getMembers() {
+        return memberRepository.findAllBy();
     }
 }

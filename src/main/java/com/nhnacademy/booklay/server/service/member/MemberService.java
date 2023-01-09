@@ -7,5 +7,5 @@ import java.util.List;
 public interface MemberService {
     MemberDto getMember(long memberId);
 
-    List<Member> getMembers();
+    List<MemberDto> getMembers();
 }

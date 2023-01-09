@@ -4,15 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
-import javax.transaction.Transactional;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 
-import org.aspectj.lang.annotation.Before;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
 

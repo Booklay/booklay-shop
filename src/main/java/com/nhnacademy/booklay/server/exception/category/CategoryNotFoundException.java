@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.exception.category;
 
 public class CategoryNotFoundException extends RuntimeException {
-    public CategoryNotFoundException(long categoryId) {
-        super("Category Not Found : " + categoryId);
+    public CategoryNotFoundException(Long categoryId) {
+        super("Category Not Found, Category ID : " + categoryId);
     }
 }

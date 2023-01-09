@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
 import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.exception.category.CategoryAlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
 import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
 import com.nhnacademy.booklay.server.exception.category.UpdateCategoryFailedException;
@@ -29,17 +30,26 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    /**
+     * javadoc.
+     * createCategory 와 updateCategory 메소드의 공통 부분을 추출하였고
+     * 전체적인 예외처리 과정은 비슷하지만 리팩토링 과정이 오히려 복잡할 것 같아 추가적인 추출은 하지 않음
+     *
+     * @param createDto ..
+     */
     public void createCategory(CategoryCreateDto createDto) {
         if (!categoryRepository.existsById(createDto.getId())) {
             log.info("Create Category Processing");
-            if (taskForCategoryFromDto(createDto)) {
+            try {
+                taskForCategoryFromDto(createDto);
                 log.info("Create Category Success : " + createDto.getName());
-            } else {
+            } catch (CategoryNotFoundException e) {
                 log.info("Create Category Failed");
                 throw new CreateCategoryFailedException(createDto);
             }
         } else {
             log.info("Category ID Already Existed");
+            throw new CategoryAlreadyExistedException(createDto.getId());
         }
     }
 
@@ -65,12 +75,12 @@ public class CategoryServiceImpl implements CategoryService {
     public void updateCategory(CategoryUpdateDto updateDto) {
         if (categoryRepository.existsById(updateDto.getId())) {
             log.info("Update Category Processing");
-            if (taskForCategoryFromDto(updateDto)) {
+            try {
+                taskForCategoryFromDto(updateDto);
                 log.info("Update Category Success : " + updateDto.getName());
-            } else {
+            } catch (CategoryNotFoundException e) {
                 log.info("Update Category Failed");
                 throw new UpdateCategoryFailedException(updateDto);
-
             }
         } else {
             log.info("Category ID Not Existed");
@@ -78,49 +88,36 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    public boolean deleteCategory(Long categoryId) {
+    public void deleteCategory(Long categoryId) {
         if (categoryRepository.existsById(categoryId)) {
             categoryRepository.deleteById(categoryId);
             log.info("Delete Category ID : " + categoryId);
-            return true;
         } else {
             log.info("Category ID Not Existed");
-            return false;
+            throw new CategoryNotFoundException(categoryId);
         }
-
     }
 
     /**
      * javadoc.
      *
-     * @param dto create,update dto.
-     * @return .
+     * @param dto create,update dto 는 CategoryCUDto 인터페이스의 구현체
+     *            생성과 수정 모두 부모 카테고리가 존재하여야 하고 dto를 이용해 빌드 후
+     *            JpaRepository.save() 메소드를 사용하기 때문에 하나의 메소드로 통합하였음.
      */
-    private boolean taskForCategoryFromDto(CategoryCUDto dto) {
+    private void taskForCategoryFromDto(CategoryCUDto dto) {
+        Category parent = categoryRepository.findById(dto.getParentCategoryId())
+            .orElseThrow(() -> new CategoryNotFoundException(dto.getId()));
 
-        try {
-            Category parent = categoryRepository.findById(dto.getParentCategoryId())
-                .orElseThrow(() -> new CategoryNotFoundException(dto.getId()));
+        Category category = Category.builder()
+            .id(dto.getId())
+            .parent(parent)
+            .name(dto.getName())
+            .depth(parent.getDepth() + 1L)
+            .isExposure(dto.getIsExposure())
+            .build();
 
-            Category category = Category.builder()
-                .id(dto.getId())
-                .parent(parent)
-                .name(dto.getName())
-                .depth(parent.getDepth() + 1L)
-                .isExposure(dto.getIsExposure())
-                .build();
-
-            categoryRepository.save(category);
-
-            return true;
-        } catch (Exception e) {
-            log.info(
-                "Exception Occurred : " + e.getMessage()
-                    + "\nException Caused By " + e.getCause()
-            );
-            return false;
-        }
-
+        categoryRepository.save(category);
     }
 
 }

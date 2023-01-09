@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CategoryAdminController.class)
@@ -66,12 +67,12 @@ class CategoryAdminControllerTest {
     @DisplayName("카테고리 등록 매핑 테스트")
     void testRegisterCategory() throws Exception {
         //given
-        CategoryCreateDto createDto = new CategoryCreateDto(
-            category.getId(),
-            category.getParent().getId(),
-            category.getName(),
-            category.getIsExposure()
-        );
+        CategoryCreateDto createDto = new CategoryCreateDto();
+
+        ReflectionTestUtils.setField(createDto, "id", category.getId());
+        ReflectionTestUtils.setField(createDto, "parentCategoryId", category.getParent().getId());
+        ReflectionTestUtils.setField(createDto, "name", category.getName());
+        ReflectionTestUtils.setField(createDto, "isExposure", category.getIsExposure());
 
         //mocking
         when(categoryService.retrieveCategory(category.getId())).thenReturn(categoryDto);
@@ -122,12 +123,7 @@ class CategoryAdminControllerTest {
     @DisplayName("카테고리 수정 매핑 테스트")
     void testModifyCategory() throws Exception {
         //given
-        CategoryUpdateDto updateDto = new CategoryUpdateDto(
-            category.getId(),
-            category.getParent().getId(),
-            category.getName(),
-            !category.getIsExposure()
-        );
+        CategoryUpdateDto updateDto = new CategoryUpdateDto();
 
         //mocking
         when(categoryService.retrieveCategory(category.getId())).thenReturn(categoryDto);
@@ -146,7 +142,6 @@ class CategoryAdminControllerTest {
     @DisplayName("카테고리 삭제 매핑 테스트")
     void testDeleteCategory() throws Exception {
         //mocking
-        when(categoryService.deleteCategory(category.getId())).thenReturn(true);
 
         //then
         mockMvc.perform(get("/admin/category/delete")

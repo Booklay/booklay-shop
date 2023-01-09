@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminServiceImpl;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class CouponAdminController {
     }
 
     @PostMapping("/coupons")
-    public void createCoupon(@RequestBody CouponCURequest couponRequest) {
+    public void createCoupon(@Valid @RequestBody CouponCURequest couponRequest) {
         couponAdminService.createCoupon(couponRequest);
     }
 

@@ -32,10 +32,6 @@ class CouponAdminServiceImplTest {
     @MockBean
     private CouponRepository couponRepository;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     @DisplayName("test retrieveAllCoupons()")
     void testRetrieveAllCoupons() {

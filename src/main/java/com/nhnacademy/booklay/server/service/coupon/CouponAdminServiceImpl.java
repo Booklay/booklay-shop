@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
+import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -18,6 +19,10 @@ public class CouponAdminServiceImpl implements CouponAdminService{
 
     private final CouponRepository couponRepository;
 
+    public void createCoupon(CouponCURequest couponRequest) {
+
+    }
+
     @Transactional(readOnly = true)
     public List<CouponRetrieveResponse> retrieveAllCoupons() {
         List<Coupon> couponList = couponRepository.findAll();
@@ -30,12 +35,12 @@ public class CouponAdminServiceImpl implements CouponAdminService{
         return CouponDetailRetrieveResponse.fromEntity(couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("No Such Coupon.")));
     }
 
-    @Transactional
-    public void updateCoupon(Long couponId) {
+    public void updateCoupon(Long couponId, CouponCURequest couponRequest) {
+
     }
 
-    @Transactional
     public void deleteCoupon(Long couponId) {
         couponRepository.deleteById(couponId);
     }
+
 }

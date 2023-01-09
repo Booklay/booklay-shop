@@ -18,8 +18,8 @@ public class CouponDetailRetrieveResponse {
     private final String name;
     private final String typeName;
     private final int amount;
-    private final Category category;
-    private final Product product;
+    private final Long categoryId;
+    private final Long productId;
     private final int minimumUseAmount;
     private final int maximumDiscountAmount;
     private final LocalDateTime issuanceDeadlineAt;

@@ -5,7 +5,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import java.util.List;
 
 public interface MemberService {
-    MemberDto getMember(long memberId);
+    MemberDto getMember(Long memberId);
 
     List<MemberDto> getMembers();
 }

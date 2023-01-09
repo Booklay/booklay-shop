@@ -23,7 +23,7 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    private MemberDto getMember(@PathVariable long memberId) {
+    private MemberDto getMember(@PathVariable Long memberId) {
         return memberService.getMember(memberId);
     }
 }

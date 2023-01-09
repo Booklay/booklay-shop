@@ -125,6 +125,11 @@ class CategoryAdminControllerTest {
         //given
         CategoryUpdateDto updateDto = new CategoryUpdateDto();
 
+        ReflectionTestUtils.setField(updateDto, "id", category.getId());
+        ReflectionTestUtils.setField(updateDto, "parentCategoryId", category.getParent().getId());
+        ReflectionTestUtils.setField(updateDto, "name", category.getName());
+        ReflectionTestUtils.setField(updateDto, "isExposure", category.getIsExposure());
+
         //mocking
         when(categoryService.retrieveCategory(category.getId())).thenReturn(categoryDto);
 

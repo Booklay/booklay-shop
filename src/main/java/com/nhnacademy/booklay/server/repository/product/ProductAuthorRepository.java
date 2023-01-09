@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProductAuthorRepository extends JpaRepository<ProductAuthor, ProductAuthor.Pk> {
 
   @Modifying
-  @Transactional
   @Query(value = "delete from ProductAuthor as pd where pd.pk.bookId=?1")
   void deleteAllByProductDetailId(Long id);
 }

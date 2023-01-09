@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
 
   @Modifying
-  @Transactional
   @Query(value = "update Subscribe  "
       + "as s set s.subscribeDay = :#{#subscribe.subscribeDay}, "
       + "s.subscribeWeek = :#{#subscribe.subscribeWeek}, s.publisher = :#{#subscribe.publisher} "

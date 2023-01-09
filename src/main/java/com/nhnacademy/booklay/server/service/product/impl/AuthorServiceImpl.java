@@ -23,6 +23,6 @@ public class AuthorServiceImpl implements AuthorService {
 
   @Override
   public Author retrieveAuthorById(Long id) throws Exception {
-    return authorRepository.findById(id).orElseThrow(()-> new Exception());
+    return authorRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("author not found"));
   }
 }

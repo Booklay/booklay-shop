@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface ProductDetailRepository extends JpaRepository<ProductDetail, Long> {
 
-  @Transactional
   @Modifying
   @Query("update ProductDetail as pd "
       + "set pd.isbn = :#{#productDetail.isbn}, pd.page = :#{#productDetail.page}, "

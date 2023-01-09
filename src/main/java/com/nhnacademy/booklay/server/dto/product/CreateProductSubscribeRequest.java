@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class ProductSubscribeDto {
+public class CreateProductSubscribeRequest {
 
   @Setter
   private Long productId;
@@ -40,7 +40,7 @@ public class ProductSubscribeDto {
   private String publisher;
 
 
-  public ProductSubscribeDto(Image image, String title, Long price, Long pointRate,
+  public CreateProductSubscribeRequest(Image image, String title, Long price, Long pointRate,
       String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
       List<Long> categoryIds, int subscribeWeek, int subscribeDay) {
     this.image = image;

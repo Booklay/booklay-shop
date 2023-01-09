@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.dummy;
 
-import com.nhnacademy.booklay.server.dto.product.ProductBookDto;
+import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Cart;
 import com.nhnacademy.booklay.server.entity.Image;
@@ -98,7 +98,6 @@ public class DummyCart {
   public static Author getDummyAuthor() {
 
     Author author = Author.builder()
-        .authorNo(1L)
         .name("작가님")
         .build();
 
@@ -134,7 +133,7 @@ public class DummyCart {
     return productAuthor;
   }
 
-  public static ProductBookDto getDummyProductBookDto(){
+  public static CreateProductBookRequest getDummyProductBookDto(){
     Image image = Image.builder()
         .id(1L)
         .address("c://downloads/dummy_image")
@@ -149,7 +148,7 @@ public class DummyCart {
     categories.add(1L);
     categories.add(2L);
 
-    ProductBookDto productBookDto = ProductBookDto.builder()
+    CreateProductBookRequest createProductBookRequest = CreateProductBookRequest.builder()
         .image(image)
         .isbn("923-2239-42-1")
         .page(300)
@@ -166,8 +165,8 @@ public class DummyCart {
         .publisher("더미 출판사")
         .build();
 
-    productBookDto.setStorage(400);
+    createProductBookRequest.setStorage(400);
 
-    return productBookDto;
+    return createProductBookRequest;
   }
 }

@@ -1,8 +1,8 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
 import com.nhnacademy.booklay.server.dto.category.CategoryDto;
-import com.nhnacademy.booklay.server.dto.product.ProductBookDto;
-import com.nhnacademy.booklay.server.dto.product.ProductSubscribeDto;
+import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
@@ -46,7 +46,7 @@ public class ProductRegisterController {
 
   //책 등록
   @PostMapping("/register/book")
-  public Long postBookRegister(ProductBookDto request) throws Exception {
+  public Long postBookRegister(CreateProductBookRequest request) throws Exception {
 
     //product
     Product product = splitProduct(request);
@@ -78,7 +78,7 @@ public class ProductRegisterController {
 
   //책 수정
   @PostMapping("/update/book")
-  public Long postBookUpdater(ProductBookDto request) throws Exception {
+  public Long postBookUpdater(CreateProductBookRequest request) throws Exception {
 
     Product product = splitProduct(request);
     Product updateProduct = productService.updateProduct(request.getProductId(), product);
@@ -114,7 +114,7 @@ public class ProductRegisterController {
 
   //구독
   @PostMapping("/register/subscribe")
-  public Long postSubscribeRegister(ProductSubscribeDto request) {
+  public Long postSubscribeRegister(CreateProductSubscribeRequest request) {
     //product
     Product product = splitProductSubscribe(request);
     Product savedProduct = productService.createProduct(product);
@@ -135,7 +135,7 @@ public class ProductRegisterController {
 
   //구독 수정
   @PostMapping("/update/subscribe")
-  public Long postSubscribeUpdate(ProductSubscribeDto request) {
+  public Long postSubscribeUpdate(CreateProductSubscribeRequest request) {
     //product
     Product product = splitProductSubscribe(request);
     Product updateProduct = productService.updateProduct(request.getProductId(), product);
@@ -177,7 +177,7 @@ public class ProductRegisterController {
   }
 
   //dto 에서 product 분리
-  private Product splitProduct(ProductBookDto request) {
+  private Product splitProduct(CreateProductBookRequest request) {
     return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
@@ -191,7 +191,7 @@ public class ProductRegisterController {
   }
 
   //dto 에서 product_detail 분리
-  private ProductDetail splitDetail(ProductBookDto request, Product savedProduct) {
+  private ProductDetail splitDetail(CreateProductBookRequest request, Product savedProduct) {
     //product detail
     return ProductDetail.builder()
         .product(savedProduct)
@@ -205,7 +205,7 @@ public class ProductRegisterController {
 //Product Subscribe Dto
 
   //dto 에서 product 분리
-  private Product splitProductSubscribe(ProductSubscribeDto request) {
+  private Product splitProductSubscribe(CreateProductSubscribeRequest request) {
     return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
@@ -218,7 +218,7 @@ public class ProductRegisterController {
         .build();
   }
 
-  private Subscribe splitSubscribe(Product product, ProductSubscribeDto request) {
+  private Subscribe splitSubscribe(Product product, CreateProductSubscribeRequest request) {
     return Subscribe.builder()
         .product(product)
         .subscribeWeek(request.getSubscribeWeek())

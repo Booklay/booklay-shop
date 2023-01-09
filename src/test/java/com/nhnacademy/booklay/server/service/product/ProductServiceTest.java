@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.nhnacademy.booklay.server.dto.product.ProductBookDto;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ class ProductServiceTest {
 
   @Autowired
   ProductService productService;
+  @Autowired
+  ImageService imageService;
 
   Product product;
   ProductBookDto request = DummyCart.getDummyProductBookDto();
@@ -39,11 +42,35 @@ class ProductServiceTest {
 
   @Test
   void testProductCreate_success(){
-    log.info("출력 섬네일 : " + product.getImage().getId() +"   " + product.getImage().getExt()+ "   " +product.getImage().getAddress() );
-
-  //TODO : 연관관계 매핑이 된 thumbnail_no 가 없다고 나오는데, Image repo에 image 추가하는거 같이 작성해줘야 하는것 같다.-> 일단 미룸...
+    imageService.createImage(product.getImage());
     Product expect = productService.createProduct(product);
 
     assertThat(expect.getTitle()).isEqualTo(product.getTitle());
   }
+
+  @Test
+  void testProductUpdate_Success(){
+    imageService.createImage(product.getImage());
+    Product original = productService.createProduct(product);
+
+
+    Product updateSource = Product.builder()
+        .price(30000L)
+        .pointMethod(request.isPointMethod())
+        .pointRate(request.getPointRate())
+        .title(request.getTitle())
+        .shortDescription(request.getShortDescription())
+        .longDescription(request.getLongDescription())
+        .image(request.getImage())
+        .isSelling(request.isSelling())
+        .build();
+
+
+    Product updated = productService.updateProduct(original.getId(), updateSource);
+
+
+    assertThat(updated.getId()).isEqualTo(original.getId());
+    assertThat(updated.getPrice()).isNotEqualTo(original.getPrice());
+  }
+
 }

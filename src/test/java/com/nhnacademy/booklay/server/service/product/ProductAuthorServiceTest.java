@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.product;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
@@ -9,24 +10,26 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductAuthor.Pk;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
+import com.nhnacademy.booklay.server.service.product.impl.ProductAuthorServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class ProductAuthorServiceTest {
 
-  @Autowired
-  ProductAuthorService productAuthorService;
-  @Autowired
-  ProductService productService;
-  @Autowired
-  AuthorService authorService;
-  @Autowired
-  ProductDetailService productDetailService;
+  @InjectMocks
+  ProductAuthorServiceImpl productAuthorService;
+  @Mock
+  ProductAuthorRepository productAuthorRepository;
 
   Product product;
   ProductDetail productDetail;
@@ -47,8 +50,6 @@ class ProductAuthorServiceTest {
         .isSelling(request.isSelling())
         .build();
 
-    productService.createProduct(product);
-
     productDetail = ProductDetail.builder()
         .product(product)
         .page(request.getPage())
@@ -57,20 +58,23 @@ class ProductAuthorServiceTest {
         .publishedDate(request.getPublishedDate())
         .build();
 
-    productDetailService.createProductDetail(productDetail);
   }
 
   @Test
   void testProductAuthorCreate_Success() {
-    Author savedAuthor = authorService.createAuthor(author);
+    //given
+    author.setAuthorNo(1L);
 
-    ProductAuthor.Pk pk = new Pk(productDetail.getId(), savedAuthor.getAuthorNo());
+    ProductAuthor.Pk pk = new Pk(productDetail.getId(), author.getAuthorNo());
 
     ProductAuthor productAuthor = ProductAuthor.builder()
         .pk(pk)
         .productDetail(productDetail)
-        .author(savedAuthor)
+        .author(author)
         .build();
+
+    //when
+    when(productAuthorRepository.save(productAuthor)).thenReturn(productAuthor);
 
     ProductAuthor expect = productAuthorService.createProductAuthor(productAuthor);
 

@@ -15,6 +15,7 @@ public class Author {
   @Id
   @Column(name="author_no")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Setter
   private Long authorNo;
 
   @Setter

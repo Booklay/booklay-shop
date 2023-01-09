@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
-import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
+import com.nhnacademy.booklay.server.service.coupon.CouponAdminServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CouponAdminController {
 
-    private final CouponAdminService couponAdminService;
+    private final CouponAdminServiceImpl couponAdminService;
 
     @GetMapping("/coupons")
     public String retrieveAllCoupons() {

@@ -11,6 +11,9 @@ import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,10 +46,12 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     }
 
     @Transactional(readOnly = true)
-    public List<CouponRetrieveResponse> retrieveAllCoupons() {
-        List<Coupon> couponList = couponRepository.findAll();
+    public List<CouponRetrieveResponse> retrieveAllCoupons(int pageNum) {
+        PageRequest pageRequest = PageRequest.of(pageNum, 10);
+        Page<Coupon> couponPage = couponRepository.findAllBy(pageRequest);
 
-        return couponList.stream().map(c -> CouponRetrieveResponse.fromEntity(c)).collect(Collectors.toList());
+        return couponPage.getContent().stream().map(CouponRetrieveResponse::fromEntity).collect(
+            Collectors.toList());
     }
 
     @Transactional(readOnly = true)

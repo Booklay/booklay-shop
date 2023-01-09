@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -185,5 +186,22 @@ public class Dummy {
             .id(1L)
             .name("입금대기중")
             .build();
+    }
+
+    public static CouponType getDummyCouponType() {
+        return CouponType.builder()
+            .id(1L)
+            .name("정율")
+            .build();
+    }
+
+    public static CouponCURequest getDummyCouponCURequest() {
+        CouponCURequest couponRequest = new CouponCURequest();
+        ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
+        ReflectionTestUtils.setField(couponRequest, "amount", 5);
+        ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
+        ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
+
+        return couponRequest;
     }
 }

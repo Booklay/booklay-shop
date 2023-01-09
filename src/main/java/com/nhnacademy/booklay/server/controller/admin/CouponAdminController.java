@@ -18,7 +18,7 @@ public class CouponAdminController {
 
     @GetMapping("/coupons/pages/{pageNum}")
     public List<CouponRetrieveResponse> retrieveAllCoupons(@PathVariable int pageNum) {
-        return couponAdminService.retrieveAllCoupons();
+        return couponAdminService.retrieveAllCoupons(pageNum);
     }
 
     @PostMapping("/coupons")

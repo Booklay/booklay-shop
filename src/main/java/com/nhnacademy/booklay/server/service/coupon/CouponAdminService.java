@@ -8,7 +8,7 @@ import java.util.List;
 public interface CouponAdminService {
 
     void createCoupon(CouponCURequest couponRequest);
-    List<CouponRetrieveResponse> retrieveAllCoupons();
+    List<CouponRetrieveResponse> retrieveAllCoupons(int pageNum);
     CouponDetailRetrieveResponse retrieveCoupon(Long couponId);
     void updateCoupon(Long couponId, CouponCURequest couponRequest);
 

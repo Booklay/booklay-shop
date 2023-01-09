@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,8 +18,8 @@ public class CouponCURequest {
     private Long typeCode;
     @NotNull
     private Integer amount;
-    private long categoryId;
-    private long productId;
+    private Long categoryId;
+    private Long productId;
     @NotNull
     private int minimumUseAmount;
     private int maximumDiscountAmount;

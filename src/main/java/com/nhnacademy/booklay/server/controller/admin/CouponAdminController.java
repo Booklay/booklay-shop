@@ -4,11 +4,16 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
-import com.nhnacademy.booklay.server.service.coupon.CouponAdminServiceImpl;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor

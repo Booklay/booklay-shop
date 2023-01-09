@@ -19,16 +19,16 @@ import java.time.LocalDateTime;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class Dummy {
-
-    public static Member getDummyMember() {
-
-        Gender gender = Gender.builder()
+    public static Gender getDummyGender() {
+        return Gender.builder()
             .id(1L)
             .name("M")
             .build();
+    }
 
+    public static Member getDummyMember() {
         Member member = Member.builder()
-            .gender(gender)
+            .gender(getDummyGender())
             .id("dummyMemberId")
             .password("$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu") //1234
             .nickname("메뚜기")

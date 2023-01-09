@@ -2,10 +2,11 @@ package com.nhnacademy.booklay.server.service.coupon;
 
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.repository.CouponRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

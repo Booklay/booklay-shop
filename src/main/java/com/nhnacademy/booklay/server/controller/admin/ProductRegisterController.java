@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ *
+ * @author 최규태
+ */
 @Controller
 @RequestMapping("/admin/product")
 @RequiredArgsConstructor
@@ -16,7 +20,7 @@ public class ProductRegisterController {
 
   //관리 페이지로
   @GetMapping
-  private String productMain(){
+  public String productMain(){
 
     return "web/admin/product/main";
   }
@@ -25,28 +29,28 @@ public class ProductRegisterController {
 
   //책
   @GetMapping("/register/book")
-  private String getBookRegister(){
+  public String getBookRegister(){
 
     return null;
   }
 
 
   @PostMapping("/register/book")
-  private String postBookRegister(){
+  public String postBookRegister(){
 
     return null;
   }
 
   //구독
   @GetMapping("/register/subscribe")
-  private String getSubscribeRegister(){
+  public String getSubscribeRegister(){
 
     return null;
   }
 
 
   @PostMapping("/register/subscribe")
-  private String postSubscribeRegister(){
+  public String postSubscribeRegister(){
 
     return null;
   }

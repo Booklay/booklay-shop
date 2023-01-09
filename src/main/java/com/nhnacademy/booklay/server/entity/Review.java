@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * javadoc. 리뷰 entity
@@ -51,7 +51,6 @@ public class Review {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // TODO 컬럼 이름 변경 필요 -> modified_at
     @Setter
     @LastModifiedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

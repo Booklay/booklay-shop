@@ -1,9 +1,12 @@
 package com.nhnacademy.booklay.server.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "delivery_destination")
 @Entity

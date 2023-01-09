@@ -1,13 +1,12 @@
 package com.nhnacademy.booklay.server.entity;
 
-import javax.persistence.EntityListeners;
-import lombok.*;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 
 @Table
 @Entity
@@ -21,11 +20,11 @@ public class Authority {
     private Long id;
 
     @Column
-    private String authority;
+    private String name;
 
     @Builder
-    public Authority(Long id, String authority) {
+    public Authority(Long id, String name) {
         this.id = id;
-        this.authority = authority;
+        this.name = name;
     }
 }

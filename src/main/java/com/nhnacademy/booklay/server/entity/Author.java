@@ -1,12 +1,9 @@
 package com.nhnacademy.booklay.server.entity;
 
-import javax.persistence.*;
-
 import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 
 @Table
 @Entity

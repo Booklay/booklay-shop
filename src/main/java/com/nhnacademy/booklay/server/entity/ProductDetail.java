@@ -1,19 +1,11 @@
 package com.nhnacademy.booklay.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import lombok.*;
-
-import java.time.LocalDate;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @Table(name = "product_detail")
 @Entity

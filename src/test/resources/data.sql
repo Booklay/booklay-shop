@@ -286,8 +286,8 @@ create table delivery_detail
     receiver_phone_no varchar(15) not null,
     memo varchar(50) null,
     invoice_no varchar(20) null,
-    delivery_start_date datetime not null,
-    completed_at datetime not null,
+    delivery_started_at datetime not null,
+    completed_at datetime null,
     constraint FK_delivery_status_code_TO_delivery_detail_1
         foreign key (code) references delivery_status_code (code),
     constraint FK_order_TO_delivery_detail_1

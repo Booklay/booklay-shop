@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -66,10 +65,9 @@ public class DeliveryDetail {
     @Column(name = "invoice_no", length = 20)
     private String invoiceNo;
 
-    //TODO 컬럼명 변경 필요 -> delivery_started_at , 완료시간은 nullable = true
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "delivery_start_date", nullable = false)
+    @Column(name = "delivery_started_at", nullable = false)
     private LocalDateTime deliveryStartAt;
 
     @Setter

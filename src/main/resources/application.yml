@@ -15,3 +15,11 @@ spring:
       hibernate:
         format_sql: true
     database: mysql
+
+booklay:
+  secure:
+    appkey: REDACTED
+    db_username: REDACTED
+    db_url: REDACTED
+    db_password: REDACTED
+    url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/REDACTED/secrets/

@@ -13,8 +13,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     @Override
     @Transactional(readOnly = true)
-    public MemberDto getMember(long memberId) {
-        return memberRepository.findById(memberId);
+    public MemberDto getMember(Long memberId) {
+        return memberRepository.findByMemberId(memberId);
     }
 
     @Override

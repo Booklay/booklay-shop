@@ -61,7 +61,7 @@ public class DeliveryDetail {
 
     @Setter
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "completed_at")
+    @Column(name = "delivery_completed_at")
     private LocalDateTime completedAt;
 
     @Builder

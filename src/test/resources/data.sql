@@ -1,3 +1,85 @@
+drop table if exists access_log cascade;
+
+drop table if exists ask_chat cascade;
+
+drop table if exists blocked_member_detail cascade;
+
+drop table if exists book_subscribe cascade;
+
+drop table if exists cart cascade;
+
+drop table if exists delivery_destination cascade;
+
+drop table if exists delivery_detail cascade;
+
+drop table if exists delivery_status_code cascade;
+
+drop table if exists member_authority cascade;
+
+drop table if exists authority cascade;
+
+drop table if exists member_grade cascade;
+
+drop table if exists order_coupon cascade;
+
+drop table if exists category_product cascade;
+
+drop table if exists category cascade;
+
+drop table if exists order_subscribe cascade;
+
+drop table if exists owned_ebook cascade;
+
+drop table if exists point_history cascade;
+
+drop table if exists product_ask_comment cascade;
+
+drop table if exists post cascade;
+
+drop table if exists post_type cascade;
+
+drop table if exists product_author cascade;
+
+drop table if exists author cascade;
+
+drop table if exists product_coupon cascade;
+
+drop table if exists coupon cascade;
+
+drop table if exists coupon_type cascade;
+
+drop table if exists order_product cascade;
+
+drop table if exists `order` cascade;
+
+drop table if exists order_status_code cascade;
+
+drop table if exists product_detail cascade;
+
+drop table if exists product_relation cascade;
+
+drop table if exists product_tag cascade;
+
+drop table if exists restocking_notification cascade;
+
+drop table if exists review cascade;
+
+drop table if exists subscribe cascade;
+
+drop table if exists tag cascade;
+
+drop table if exists view_count cascade;
+
+drop table if exists wishlist cascade;
+
+drop table if exists member cascade;
+
+drop table if exists gender cascade;
+
+drop table if exists product cascade;
+
+drop table if exists image cascade;
+
 create table access_log
 (
     access_log_no bigint not null
@@ -20,7 +102,7 @@ create table category
 (
     category_no bigint not null
         primary key auto_increment,
-    parent_category_no bigint not null,
+    parent_category_no bigint null,
     name varchar(50) not null,
     depth tinyint not null,
     is_exposure boolean default 1 not null,
@@ -204,8 +286,8 @@ create table delivery_detail
     receiver_phone_no varchar(15) not null,
     memo varchar(50) null,
     invoice_no varchar(20) null,
-    delivery_start_date datetime not null,
-    completed_at datetime not null,
+    delivery_started_at datetime not null,
+    completed_at datetime null,
     constraint FK_delivery_status_code_TO_delivery_detail_1
         foreign key (code) references delivery_status_code (code),
     constraint FK_order_TO_delivery_detail_1

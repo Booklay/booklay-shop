@@ -2,7 +2,9 @@ package com.nhnacademy.booklay.server.service.coupon;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
+import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,15 +20,14 @@ public class CouponAdminServiceImpl implements CouponAdminService{
 
     @Transactional(readOnly = true)
     public List<CouponRetrieveResponse> retrieveAllCoupons() {
-        //List<CouponRetrieveResponse> couponList = couponRepository.getCouponsDto();
-        return null;
+        List<Coupon> couponList = couponRepository.findAll();
+
+        return couponList.stream().map(c -> CouponRetrieveResponse.fromEntity(c)).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public CouponDetailRetrieveResponse retrieveCoupon(Long couponId) {
-        //CouponDetailRetrieveDto coupon = couponRepository.getCouponById(couponId).orElseThrow(() -> new IllegalArgumentException("No Such Coupon."));
-
-        return null;
+        return CouponDetailRetrieveResponse.fromEntity(couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("No Such Coupon.")));
     }
 
     @Transactional

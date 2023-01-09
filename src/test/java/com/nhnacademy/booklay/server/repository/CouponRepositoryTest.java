@@ -2,7 +2,6 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
@@ -19,10 +18,10 @@ import org.springframework.test.context.ActiveProfiles;
 class CouponRepositoryTest {
 
     @Autowired
-    TestEntityManager entityManager;
+    private TestEntityManager entityManager;
 
     @Autowired
-    CouponRepository couponRepository;
+    private CouponRepository couponRepository;
 
     @Test
     @DisplayName("CouponRepository save test")
@@ -60,7 +59,6 @@ class CouponRepositoryTest {
     @Test
     @DisplayName("CouponRepository")
     void testGetCoupons() {
-/*
         //given
         Coupon coupon = Dummy.getDummyCoupon();
         entityManager.persist(coupon.getImage());
@@ -68,11 +66,11 @@ class CouponRepositoryTest {
         couponRepository.save(coupon);
 
         //when
-        List<CouponRetrieveResponse> dtoList = couponRepository.getCouponsDto();
+        List<Coupon> dtoList = couponRepository.findAll();
 
         //then
         assertThat(dtoList.size()).isEqualTo(1);
-        assertThat(dtoList.get(0).getName()).isEqualTo(coupon.getName());*/
+        assertThat(dtoList.get(0).getName()).isEqualTo(coupon.getName());
     }
 
     @Test

@@ -24,7 +24,7 @@ public class Dummy {
 
         Gender gender = Gender.builder()
             .id(1L)
-            .gender("M")
+            .name("M")
             .build();
 
         Member member = Member.builder()
@@ -92,7 +92,7 @@ public class Dummy {
 
         return Authority.builder()
             .id(1L)
-            .authority("admin")
+            .name("admin")
             .build();
     }
 

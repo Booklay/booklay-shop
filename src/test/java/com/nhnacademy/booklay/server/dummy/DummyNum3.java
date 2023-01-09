@@ -35,7 +35,7 @@ public class DummyNum3 {
     private static Member getDummyMemberForDummy(){
         Gender gender = Gender.builder()
             .id(1L)
-            .gender("M")
+            .name("M")
             .build();
 
         Member member = Member.builder()

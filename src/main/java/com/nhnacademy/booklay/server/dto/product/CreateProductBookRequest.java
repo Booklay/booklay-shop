@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class ProductBookDto {
+public class CreateProductBookRequest {
 
   @Setter
   private Long productId;
@@ -50,7 +50,7 @@ public class ProductBookDto {
   private List<Long> categoryIds;
 
   @Builder
-  public ProductBookDto(Image image, String title, Long price, Long pointRate,
+  public CreateProductBookRequest(Image image, String title, Long price, Long pointRate,
       String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
       String isbn, int page, String publisher, LocalDate publishedDate, List<Long> authorIds, List<Long> categoryIds) {
     this.image = image;

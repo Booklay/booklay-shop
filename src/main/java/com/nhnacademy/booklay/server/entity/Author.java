@@ -26,8 +26,7 @@ public class Author {
   private String name;
 
   @Builder
-  public Author(Long authorNo, String name) {
-    this.authorNo = authorNo;
+  public Author(String name) {
     this.name = name;
   }
 

@@ -12,12 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
+/**
+ *
+ * author 양승아
+ */
 @DataJpaTest
 @ActiveProfiles("test")
 class MemberRepositoryTest {
-
     @Autowired
     TestEntityManager entityManager;
 
@@ -34,7 +39,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("MemberRepository save test ")
+    @DisplayName("MemberRepository save 테스트")
     void testMemberSave() {
         //given
         Member member = Dummy.getDummyMember();
@@ -62,6 +67,37 @@ class MemberRepositoryTest {
 
         //then
         assertThat(expected.getMemberId()).isEqualTo(member.getMemberId());
+    }
+
+    @Test
+    @DisplayName("MemberRepository findByMemberId 테스트")
+    void testMemberFindByMemberId() {
+        //given
+        Member member = Dummy.getDummyMember();
+        entityManager.persist(member.getGender());
+        memberRepository.save(member);
+
+        //when
+        Member expected = memberRepository.findByMemberId(member.getMemberId());
+
+        //then
+        assertThat(expected.getMemberId()).isEqualTo(member.getMemberId());
+    }
+
+    @Test
+    @DisplayName("MemberRepository findAllBy 테스트")
+    void testMemberFindAllBy() {
+        //given
+        Member member = Dummy.getDummyMember();
+        entityManager.persist(member.getGender());
+        memberRepository.save(member);
+
+        //when
+        PageRequest page = PageRequest.of(1, 10);
+        Page<Member> members = memberRepository.findAllBy(page);
+
+        //then
+        assertThat(members).isNotNull();
     }
 
     @Test

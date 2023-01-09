@@ -128,7 +128,7 @@ public class ProductRegisterController {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    Subscribe savedSubscribe = subscribeService.createSubscribe(subscribe);
+    subscribeService.createSubscribe(subscribe);
 
     return savedProduct.getId();
   }
@@ -151,7 +151,7 @@ public class ProductRegisterController {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    Subscribe updatedSubscribe = subscribeService.updateSubscribeById(request.getSubscribeId(), subscribe);
+    subscribeService.updateSubscribeById(request.getSubscribeId(), subscribe);
 
     return request.getProductId();
   }
@@ -178,7 +178,7 @@ public class ProductRegisterController {
 
   //dto 에서 product 분리
   private Product splitProduct(ProductBookDto request) {
-    Product product = Product.builder()
+    return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
         .pointRate(request.getPointRate())
@@ -188,29 +188,25 @@ public class ProductRegisterController {
         .image(request.getImage())
         .isSelling(request.isSelling())
         .build();
-
-    return product;
   }
 
   //dto 에서 product_detail 분리
   private ProductDetail splitDetail(ProductBookDto request, Product savedProduct) {
     //product detail
-    ProductDetail productDetail = ProductDetail.builder()
+    return ProductDetail.builder()
         .product(savedProduct)
         .page(request.getPage())
         .isbn(request.getIsbn())
         .publisher(request.getPublisher())
         .publishedDate(request.getPublishedDate())
         .build();
-
-    return productDetail;
   }
 
 //Product Subscribe Dto
 
   //dto 에서 product 분리
   private Product splitProductSubscribe(ProductSubscribeDto request) {
-    Product product = Product.builder()
+    return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
         .pointRate(request.getPointRate())
@@ -220,18 +216,14 @@ public class ProductRegisterController {
         .image(request.getImage())
         .isSelling(request.isSelling())
         .build();
-
-    return product;
   }
 
   private Subscribe splitSubscribe(Product product, ProductSubscribeDto request) {
-    Subscribe subscribe = Subscribe.builder()
+    return Subscribe.builder()
         .product(product)
         .subscribeWeek(request.getSubscribeWeek())
         .subscribeDay(request.getSubscribeDay())
         .build();
-
-    return subscribe;
   }
 
 

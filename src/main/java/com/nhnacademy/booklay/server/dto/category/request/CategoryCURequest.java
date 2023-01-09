@@ -1,6 +1,6 @@
-package com.nhnacademy.booklay.server.dto.category;
+package com.nhnacademy.booklay.server.dto.category.request;
 
-public interface CategoryCUDto {
+public interface CategoryCURequest {
     Long getId();
 
     String getName();

@@ -23,6 +23,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
   @Override
   public ProductDetail updateProductDetail(Long id, ProductDetail productDetail) {
-    return productDetailRepository.updateProductDetailById(id, productDetail);
+    productDetailRepository.updateProductDetailById(id, productDetail);
+    return productDetailRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("product detail not found"));
   }
 }

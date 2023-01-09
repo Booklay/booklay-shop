@@ -14,5 +14,5 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, Lo
       + "set pd.isbn = :#{#productDetail.isbn}, pd.page = :#{#productDetail.page}, "
       + "pd.publishedDate = :#{#productDetail.publishedDate}, pd.publisher = :#{#productDetail.publisher}, "
       + "pd.ebookAddress = :#{#productDetail.ebookAddress}, pd.storage= :#{#productDetail.storage} where pd.id = ?1")
-  ProductDetail updateProductDetailById(Long id, ProductDetail productDetail);
+  void updateProductDetailById(Long id, ProductDetail productDetail);
 }

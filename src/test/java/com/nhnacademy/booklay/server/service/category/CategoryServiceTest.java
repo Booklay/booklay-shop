@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
-import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
-import com.nhnacademy.booklay.server.dto.category.CategoryDto;
-import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.category.CategoryAlreadyExistedException;
@@ -22,47 +22,51 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @Slf4j
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 @MockBean(JpaMetamodelMappingContext.class)
 class CategoryServiceTest {
 
-    @MockBean
+    @Mock
     CategoryRepository categoryRepository;
-    @Autowired
-    CategoryService categoryService;
+    @InjectMocks
+    CategoryServiceImpl categoryService;
 
     Category category;
     Category parentCategory;
-    CategoryCreateDto createDto;
-    CategoryUpdateDto updateDto;
+    CategoryCreateRequest createRequest;
+    CategoryUpdateRequest updateRequest;
 
     @BeforeEach
     void Setup() {
         category = Dummy.getDummyCategory();
         parentCategory = category.getParent();
 
-        createDto = new CategoryCreateDto();
+        createRequest = new CategoryCreateRequest();
 
-        ReflectionTestUtils.setField(createDto, "id", category.getId());
-        ReflectionTestUtils.setField(createDto, "parentCategoryId", category.getParent().getId());
-        ReflectionTestUtils.setField(createDto, "name", category.getName());
-        ReflectionTestUtils.setField(createDto, "isExposure", category.getIsExposure());
+        ReflectionTestUtils.setField(createRequest, "id", category.getId());
+        ReflectionTestUtils.setField(createRequest, "parentCategoryId",
+            category.getParent().getId());
+        ReflectionTestUtils.setField(createRequest, "name", category.getName());
+        ReflectionTestUtils.setField(createRequest, "isExposure", category.getIsExposure());
 
-        updateDto = new CategoryUpdateDto();
+        updateRequest = new CategoryUpdateRequest();
 
-        ReflectionTestUtils.setField(updateDto, "id", category.getId());
-        ReflectionTestUtils.setField(updateDto, "parentCategoryId", category.getParent().getId());
-        ReflectionTestUtils.setField(updateDto, "name", category.getName());
-        ReflectionTestUtils.setField(updateDto, "isExposure", category.getIsExposure());
+        ReflectionTestUtils.setField(updateRequest, "id", category.getId());
+        ReflectionTestUtils.setField(updateRequest, "parentCategoryId",
+            category.getParent().getId());
+        ReflectionTestUtils.setField(updateRequest, "name", category.getName());
+        ReflectionTestUtils.setField(updateRequest, "isExposure", category.getIsExposure());
     }
 
     @Test
@@ -78,7 +82,7 @@ class CategoryServiceTest {
 
 
         //then
-        assertDoesNotThrow(() -> categoryService.createCategory(createDto));
+        assertDoesNotThrow(() -> categoryService.createCategory(createRequest));
     }
 
     @Test
@@ -87,15 +91,15 @@ class CategoryServiceTest {
         //given
 
         //mocking
-        when(categoryRepository.existsById(createDto.getId()))
+        when(categoryRepository.existsById(createRequest.getId()))
             .thenReturn(true);
 
         //when
 
         //then
-        assertThatThrownBy(() -> categoryService.createCategory(createDto))
+        assertThatThrownBy(() -> categoryService.createCategory(createRequest))
             .isInstanceOf(CategoryAlreadyExistedException.class)
-            .hasMessageContaining(String.valueOf(createDto.getId()));
+            .hasMessageContaining(String.valueOf(createRequest.getId()));
     }
 
     @Test
@@ -104,32 +108,35 @@ class CategoryServiceTest {
         //given
 
         //mocking
-        when(categoryRepository.findById(createDto.getParentCategoryId()))
+        when(categoryRepository.findById(createRequest.getParentCategoryId()))
             .thenThrow(CategoryNotFoundException.class);
 
         //when
 
         //then
-        assertThatThrownBy(() -> categoryService.createCategory(createDto))
+        assertThatThrownBy(() -> categoryService.createCategory(createRequest))
             .isInstanceOf(CreateCategoryFailedException.class)
-            .hasMessageContaining(String.valueOf(createDto.getParentCategoryId()));
+            .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
     }
 
 
     @Test
     @DisplayName("카테고리 검색 성공")
     void testRetrieveCategory() {
-        CategoryDto categoryDto = new CategoryDto(
-            category.getId(),
-            category.getName()
-        );
+        CategoryResponse categoryResponse = new CategoryResponse();
+
+        ReflectionTestUtils.setField(categoryResponse, "id", category.getId());
+        ReflectionTestUtils.setField(categoryResponse, "parentCategoryId",
+            category.getParent().getId());
+        ReflectionTestUtils.setField(categoryResponse, "name", category.getName());
+        ReflectionTestUtils.setField(categoryResponse, "isExposure", category.getIsExposure());
 
         //mocking
-        when(categoryRepository.findById(category.getId(), CategoryDto.class)).thenReturn(
-            Optional.of(categoryDto));
+        when(categoryRepository.findById(category.getId(), CategoryResponse.class)).thenReturn(
+            Optional.of(categoryResponse));
 
         //when
-        CategoryDto actual = categoryService.retrieveCategory(category.getId());
+        CategoryResponse actual = categoryService.retrieveCategory(category.getId());
 
         //then
         assertAll(
@@ -159,12 +166,11 @@ class CategoryServiceTest {
         when(categoryRepository.findById(parentCategory.getId())).thenReturn(
             Optional.ofNullable(parentCategory));
 
-        when(categoryRepository.findById(category.getId())).thenReturn(
-            Optional.ofNullable(category));
         //when
 
         //then
-        assertThatNoException().isThrownBy(() -> categoryService.updateCategory(updateDto));
+        assertThatNoException().isThrownBy(() -> categoryService.updateCategory(updateRequest,
+            category.getId()));
     }
 
     @Test
@@ -173,15 +179,15 @@ class CategoryServiceTest {
         //given
 
         //mocking
-        when(categoryRepository.existsById(updateDto.getId()))
+        when(categoryRepository.existsById(updateRequest.getId()))
             .thenReturn(false);
 
         //when
 
         //then
-        assertThatThrownBy(() -> categoryService.updateCategory(updateDto))
+        assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
             .isInstanceOf(CategoryNotFoundException.class)
-            .hasMessageContaining(String.valueOf(updateDto.getId()));
+            .hasMessageContaining(String.valueOf(updateRequest.getId()));
     }
 
     @Test
@@ -190,18 +196,18 @@ class CategoryServiceTest {
         //given
 
         //mocking
-        when(categoryRepository.existsById(updateDto.getId()))
+        when(categoryRepository.existsById(updateRequest.getId()))
             .thenReturn(true);
 
-        when(categoryRepository.findById(updateDto.getParentCategoryId()))
+        when(categoryRepository.findById(updateRequest.getParentCategoryId()))
             .thenThrow(CategoryNotFoundException.class);
 
         //when
 
         //then
-        assertThatThrownBy(() -> categoryService.updateCategory(updateDto))
+        assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
             .isInstanceOf(UpdateCategoryFailedException.class)
-            .hasMessageContaining(String.valueOf(createDto.getParentCategoryId()));
+            .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
     }
 
     @Test

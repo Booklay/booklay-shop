@@ -17,6 +17,7 @@ public class ProductDetail {
   @Id
   @Column(name="book_no")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Setter
   private Long id;
 
   @OneToOne

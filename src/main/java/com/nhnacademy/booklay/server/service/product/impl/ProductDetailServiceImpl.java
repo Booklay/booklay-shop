@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.service.product.ProductDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author 최규태
@@ -17,13 +18,17 @@ public class ProductDetailServiceImpl implements ProductDetailService {
   private final ProductDetailRepository productDetailRepository;
 
   @Override
+  @Transactional
   public ProductDetail createProductDetail(ProductDetail productDetail) {
     return productDetailRepository.save(productDetail);
   }
 
   @Override
-  public ProductDetail updateProductDetail(Long id, ProductDetail productDetail) {
-    productDetailRepository.updateProductDetailById(id, productDetail);
-    return productDetailRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("product detail not found"));
+  @Transactional
+  public void updateProductDetail(ProductDetail productDetail) {
+    if(!productDetailRepository.existsById(productDetail.getId())){
+      throw new IllegalArgumentException();
+    }
+    productDetailRepository.save(productDetail);
   }
 }

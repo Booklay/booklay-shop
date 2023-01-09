@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 public interface ProductDetailService{
   ProductDetail createProductDetail(ProductDetail productDetail);
 
-  ProductDetail updateProductDetail(Long id, ProductDetail productDetail);
+  void updateProductDetail(ProductDetail productDetail);
 }

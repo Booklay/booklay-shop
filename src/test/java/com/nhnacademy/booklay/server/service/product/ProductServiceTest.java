@@ -37,13 +37,13 @@ class ProductServiceTest {
         .build();
   }
 
-//  @Test
-//  void testProductCreate_success(){
-//    log.info("출력 섬네일 : " + product.getImage().getId() +"   " + product.getImage().getExt()+ "   " +product.getImage().getAddress() );
-//
-//  //TODO : 연관관계 매핑이 된 thumbnail_no 가 없다고 나오는데, Image repo에 image 추가하는거 같이 작성해줘야 하는것 같다.-> 일단 미룸...
-//    Product expect = productService.createProduct(product);
-//
-//    assertThat(expect.getTitle()).isEqualTo(product.getTitle());
-//  }
+  @Test
+  void testProductCreate_success(){
+    log.info("출력 섬네일 : " + product.getImage().getId() +"   " + product.getImage().getExt()+ "   " +product.getImage().getAddress() );
+
+  //TODO : 연관관계 매핑이 된 thumbnail_no 가 없다고 나오는데, Image repo에 image 추가하는거 같이 작성해줘야 하는것 같다.-> 일단 미룸...
+    Product expect = productService.createProduct(product);
+
+    assertThat(expect.getTitle()).isEqualTo(product.getTitle());
+  }
 }

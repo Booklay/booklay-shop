@@ -19,7 +19,7 @@ public class Authority {
     @Column(name = "authority_no")
     private Long id;
 
-    @Column
+    @Column(name = "authority")
     private String name;
 
     @Builder

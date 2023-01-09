@@ -12,6 +12,7 @@ public class Subscribe {
 
     @Id
     @Column(name = "subscribe_no")
+    @Setter
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

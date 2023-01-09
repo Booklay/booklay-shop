@@ -33,7 +33,7 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryResponse createCategory(@Valid @RequestBody CategoryCreateRequest createDto,
                                            BindingResult bindingResult) {

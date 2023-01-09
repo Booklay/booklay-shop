@@ -15,6 +15,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
+/**
+ *
+ * author 양승아
+ */
 @DataJpaTest
 @ActiveProfiles("test")
 class MemberGradeRepositoryTest {

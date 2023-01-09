@@ -5,17 +5,20 @@ import com.nhnacademy.booklay.server.repository.MemberRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     @Override
+    @Transactional(readOnly = true)
     public MemberDto getMember(long memberId) {
         return memberRepository.findById(memberId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MemberDto> getMembers() {
         return memberRepository.findAllBy();
     }

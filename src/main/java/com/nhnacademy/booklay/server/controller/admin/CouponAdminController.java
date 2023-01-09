@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ *
+ * @author 김승혜
+ */
 @RestController
 @RequiredArgsConstructor
 public class CouponAdminController {

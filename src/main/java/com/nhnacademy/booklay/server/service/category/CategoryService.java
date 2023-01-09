@@ -1,19 +1,19 @@
 package com.nhnacademy.booklay.server.service.category;
 
-import com.nhnacademy.booklay.server.repository.CategoryRepository;
-import javax.transaction.Transactional;
-import org.springframework.stereotype.Service;
+import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
+import com.nhnacademy.booklay.server.dto.category.CategoryDto;
+import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-/**
- * javadoc. 카테고리 서비스
- */
-@Transactional
-@Service
-public class CategoryService {
+public interface CategoryService {
+    void createCategory(CategoryCreateDto createDto);
 
-    private final CategoryRepository categoryRepository;
+    CategoryDto retrieveCategory(Long id);
 
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    void updateCategory(CategoryUpdateDto updateDto);
+
+    boolean deleteCategory(Long id);
+
+    Page<CategoryDto> retrieveCategory(Pageable pageable);
 }

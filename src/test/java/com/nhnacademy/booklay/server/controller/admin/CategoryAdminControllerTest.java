@@ -91,7 +91,7 @@ class CategoryAdminControllerTest {
         when(categoryService.retrieveCategory(category.getId())).thenReturn(categoryResponse);
 
         //then
-        mockMvc.perform(post(URI_PREFIX + "/create")
+        mockMvc.perform(post(URI_PREFIX)
                 .content(objectMapper.writeValueAsString(createDto))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
@@ -108,7 +108,7 @@ class CategoryAdminControllerTest {
         //mocking
 
         //then
-        mockMvc.perform(post(URI_PREFIX + "/create")
+        mockMvc.perform(post(URI_PREFIX)
                 .content(objectMapper.writeValueAsString(sampleDto))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())

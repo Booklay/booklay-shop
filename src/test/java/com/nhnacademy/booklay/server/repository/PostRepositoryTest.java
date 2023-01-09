@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@Transactional
 class PostRepositoryTest {
 
   @Autowired
@@ -27,7 +27,14 @@ class PostRepositoryTest {
   @Autowired
   MemberRepository memberRepository;
 
-//  @Test
+  @BeforeEach
+  void setUp() {
+    clearRepo("post", postRepository);
+    clearRepo("member", memberRepository);
+  }
+
+
+  @Test
   void testPostSave() {
     Post post = DummyCart.getDummyPost();
     entityManager.persist(post.getMemberId().getGender());
@@ -40,7 +47,7 @@ class PostRepositoryTest {
     assertThat(expect.getContent()).isEqualTo(post.getContent());
   }
 
-//  @Test
+  @Test
   void testPostFind() {
     Post post = DummyCart.getDummyPost();
     entityManager.persist(post.getMemberId().getGender());
@@ -53,6 +60,18 @@ class PostRepositoryTest {
     Post expect = postRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("no"));
 
     assertThat(expect.getContent()).isEqualTo(post.getContent());
+  }
+  void clearRepo(String entityName, JpaRepository jpaRepository) {
+    jpaRepository.deleteAll();
+
+    String query =
+            String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName,
+                    entityName);
+
+    this.entityManager
+            .getEntityManager()
+            .createNativeQuery(query)
+            .executeUpdate();
   }
 
 }

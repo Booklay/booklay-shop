@@ -45,12 +45,6 @@ public class Dummy {
     }
 
     public static Coupon getDummyCoupon() {
-        Image image = Image.builder()
-            .ext("")
-            .address("")
-            .build();
-
-        ReflectionTestUtils.setField(image, "id", 1L);
 
         CouponType couponType = CouponType.builder()
             .name("정액")
@@ -59,7 +53,7 @@ public class Dummy {
         ReflectionTestUtils.setField(couponType, "id", 1L);
 
         Coupon coupon = Coupon.builder()
-            .image(image)
+            .image(DummyCart.getDummyImage())
             .couponType(couponType)
             .name("이달의 쿠폰")
             .amount(5)

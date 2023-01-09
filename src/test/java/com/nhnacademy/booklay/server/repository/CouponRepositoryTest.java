@@ -2,9 +2,11 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
-import javax.transaction.Transactional;
+import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +55,40 @@ class CouponRepositoryTest {
 
         //then
         assertThat(expected.getId()).isEqualTo(coupon.getId());
+    }
+
+    @Test
+    @DisplayName("CouponRepository")
+    void testGetCoupons() {
+/*
+        //given
+        Coupon coupon = Dummy.getDummyCoupon();
+        entityManager.persist(coupon.getImage());
+        entityManager.persist(coupon.getCouponType());
+        couponRepository.save(coupon);
+
+        //when
+        List<CouponRetrieveResponse> dtoList = couponRepository.getCouponsDto();
+
+        //then
+        assertThat(dtoList.size()).isEqualTo(1);
+        assertThat(dtoList.get(0).getName()).isEqualTo(coupon.getName());*/
+    }
+
+    @Test
+    @DisplayName("CouponRepository deleteCoupon() test.")
+    void testDeleteCoupon() {
+
+        //given
+        Coupon coupon = Dummy.getDummyCoupon();
+        entityManager.persist(coupon.getImage());
+        entityManager.persist(coupon.getCouponType());
+        couponRepository.save(coupon);
+
+        //when
+        couponRepository.deleteById(coupon.getId());
+
+        //then
+        assertThat(couponRepository.findAll().size()).isEqualTo(0);
     }
 }

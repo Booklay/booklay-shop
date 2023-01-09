@@ -8,4 +8,6 @@ public interface ProductDetailService{
   ProductDetail createProductDetail(ProductDetail productDetail);
 
   void updateProductDetail(ProductDetail productDetail);
+
+  ProductDetail retrieveById(Long id);
 }

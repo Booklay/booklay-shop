@@ -140,12 +140,12 @@ public class ProductServiceImpl implements ProductService {
 
     //subscribe
     Subscribe subscribe = splitSubscribe(savedProduct, request);
+    subscribe.setId(request.getSubscribeId());
 
     if (Objects.nonNull(request.getPublisher())) {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    subscribe.setId(request.getSubscribeId());
     subscribeService.updateSubscribeById(subscribe);
 
     return savedProduct.getId();

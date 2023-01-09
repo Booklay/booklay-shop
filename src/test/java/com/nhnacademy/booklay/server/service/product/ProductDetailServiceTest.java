@@ -1,29 +1,37 @@
 package com.nhnacademy.booklay.server.service.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.service.ImageService;
+import com.nhnacademy.booklay.server.service.product.impl.ProductDetailServiceImpl;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class ProductDetailServiceTest {
 
-  @Autowired
-  ProductDetailService productDetailService;
+  @InjectMocks
+  ProductDetailServiceImpl productDetailService;
 
-  @Autowired
-  ProductService productService;
-  @Autowired
-  ImageService imageService;
+  @Mock
+  ProductDetailRepository productDetailRepository;
 
   ProductDetail productDetail;
   Product product;
@@ -49,14 +57,12 @@ class ProductDetailServiceTest {
         .publisher(request.getPublisher())
         .publishedDate(request.getPublishedDate())
         .build();
+    productDetail.setId(1L);
   }
 
   @Test
   void testProductDetailCreate_Success() {
-    //TODO : Mock 사용법 알아내서 수정할것
-    imageService.createImage(product.getImage());
-    productService.createProduct(product);
-
+    when(productDetailRepository.save(productDetail)).thenReturn(productDetail);
     ProductDetail expect = productDetailService.createProductDetail(productDetail);
 
     assertThat(expect.getPage()).isEqualTo(productDetail.getPage());
@@ -65,10 +71,10 @@ class ProductDetailServiceTest {
 
   @Test
   void testProductDetailUpdate_Success() {
-    imageService.createImage(product.getImage());
-    productService.createProduct(product);
-
+    when(productDetailRepository.save(productDetail)).thenReturn(productDetail);
     ProductDetail original = productDetailService.createProductDetail(productDetail);
+
+    log.info("출력 : " + original.getId());
 
     ProductDetail updateSource = ProductDetail.builder()
         .product(product)
@@ -78,7 +84,15 @@ class ProductDetailServiceTest {
         .publishedDate(request.getPublishedDate())
         .build();
 
-    ProductDetail updated = productDetailService.updateProductDetail(original.getId(), updateSource);
+    updateSource.setId(original.getId());
+
+    log.info("출력 : " + updateSource.getId());
+
+    when(productDetailRepository.save(updateSource)).thenReturn(updateSource);
+    productDetailService.updateProductDetail(updateSource);
+
+    when(productDetailRepository.findById(updateSource.getId())).thenReturn(Optional.ofNullable(updateSource));
+    ProductDetail updated = productDetailService.retrieveById(original.getId());
 
     assertThat(updated.getId()).isEqualTo(original.getId());
     assertThat(updated.getPublisher()).isNotEqualTo(original.getPublisher());

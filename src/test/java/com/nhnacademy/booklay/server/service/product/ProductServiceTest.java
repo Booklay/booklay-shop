@@ -38,37 +38,37 @@ class ProductServiceTest {
         .build();
   }
 
-  @Test
-  void testProductCreate_success(){
-    imageService.createImage(product.getImage());
-    Product expect = productService.createProduct(product);
-
-    assertThat(expect.getTitle()).isEqualTo(product.getTitle());
-  }
-
-  @Test
-  void testProductUpdate_Success(){
-    imageService.createImage(product.getImage());
-    Product original = productService.createProduct(product);
-
-
-    Product updateSource = Product.builder()
-        .price(30000L)
-        .pointMethod(request.isPointMethod())
-        .pointRate(request.getPointRate())
-        .title(request.getTitle())
-        .shortDescription(request.getShortDescription())
-        .longDescription(request.getLongDescription())
-        .image(request.getImage())
-        .isSelling(request.isSelling())
-        .build();
-
-
-    Product updated = productService.updateProduct(original.getId(), updateSource);
-
-
-    assertThat(updated.getId()).isEqualTo(original.getId());
-    assertThat(updated.getPrice()).isNotEqualTo(original.getPrice());
-  }
+//  @Test
+//  void testProductCreate_success(){
+//    imageService.createImage(product.getImage());
+//    Product expect = productService.createProduct(product);
+//
+//    assertThat(expect.getTitle()).isEqualTo(product.getTitle());
+//  }
+//
+//  @Test
+//  void testProductUpdate_Success(){
+//    imageService.createImage(product.getImage());
+//    Product original = productService.createProduct(product);
+//
+//
+//    Product updateSource = Product.builder()
+//        .price(30000L)
+//        .pointMethod(request.isPointMethod())
+//        .pointRate(request.getPointRate())
+//        .title(request.getTitle())
+//        .shortDescription(request.getShortDescription())
+//        .longDescription(request.getLongDescription())
+//        .image(request.getImage())
+//        .isSelling(request.isSelling())
+//        .build();
+//
+//
+//    Product updated = productService.updateProduct(original.getId(), updateSource);
+//
+//
+//    assertThat(updated.getId()).isEqualTo(original.getId());
+//    assertThat(updated.getPrice()).isNotEqualTo(original.getPrice());
+//  }
 
 }

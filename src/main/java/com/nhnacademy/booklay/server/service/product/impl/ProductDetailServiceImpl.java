@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.service.product.ProductDetailService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductDetailServiceImpl implements ProductDetailService {
 
   private final ProductDetailRepository productDetailRepository;
+  private final ProductAuthorRepository productAuthorRepository;
 
   @Override
   @Transactional
@@ -26,9 +28,14 @@ public class ProductDetailServiceImpl implements ProductDetailService {
   @Override
   @Transactional
   public void updateProductDetail(ProductDetail productDetail) {
-    if(!productDetailRepository.existsById(productDetail.getId())){
+    if(productDetailRepository.existsById(productDetail.getId())){
       throw new IllegalArgumentException();
     }
     productDetailRepository.save(productDetail);
+  }
+
+  @Override
+  public ProductDetail retrieveById(Long id) {
+    return productDetailRepository.findById(id).orElseThrow(()-> new IllegalArgumentException());
   }
 }

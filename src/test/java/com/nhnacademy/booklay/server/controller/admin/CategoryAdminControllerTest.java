@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.controller.admin;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,7 +96,7 @@ class CategoryAdminControllerTest {
         when(categoryService.retrieveCategory(Pageable.unpaged())).thenReturn(page);
 
         //then
-        mockMvc.perform(get("/admin/category/get/all"))
+        mockMvc.perform(get("/admin/category/all"))
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
@@ -108,7 +109,7 @@ class CategoryAdminControllerTest {
         when(categoryService.retrieveCategory(category.getId())).thenReturn(categoryDto);
 
         //then
-        mockMvc.perform(get("/admin/category/get")
+        mockMvc.perform(get("/admin/category")
                 .param("categoryId", String.valueOf(category.getId()))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -132,7 +133,7 @@ class CategoryAdminControllerTest {
         when(categoryService.retrieveCategory(category.getId())).thenReturn(categoryDto);
 
         //then
-        mockMvc.perform(post("/admin/category/update")
+        mockMvc.perform(put("/admin/category/update")
                 .content(objectMapper.writeValueAsString(updateDto))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isAccepted())

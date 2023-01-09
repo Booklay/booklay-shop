@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,13 +53,13 @@ public class CategoryAdminController {
         }
     }
 
-    @GetMapping("/get/all")
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public Page<CategoryDto> getCategoryList(Pageable pageable) {
         return categoryService.retrieveCategory(pageable);
     }
 
-    @GetMapping("/get")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public CategoryDto getCategory(@RequestParam("categoryId") Long id) {
 
@@ -67,7 +68,7 @@ public class CategoryAdminController {
         return categoryService.retrieveCategory(id);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public CategoryDto modifyCategory(@Valid @RequestBody CategoryUpdateDto updateDto,
                                       BindingResult bindingResult) {

@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.dto.product.ProductBookDto;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Cart;
 import com.nhnacademy.booklay.server.entity.Image;
@@ -11,6 +12,8 @@ import com.nhnacademy.booklay.server.entity.ProductAskComment;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DummyCart {
 
@@ -129,5 +132,42 @@ public class DummyCart {
         .build();
 
     return productAuthor;
+  }
+
+  public static ProductBookDto getDummyProductBookDto(){
+    Image image = Image.builder()
+        .id(1L)
+        .address("c://downloads/dummy_image")
+        .ext("jpg")
+        .build();
+
+    List<Long> authors = new ArrayList<>();
+    authors.add(1L);
+    authors.add(2L);
+
+    List<Long> categories = new ArrayList<>();
+    categories.add(1L);
+    categories.add(2L);
+
+    ProductBookDto productBookDto = ProductBookDto.builder()
+        .image(image)
+        .isbn("923-2239-42-1")
+        .page(300)
+        .isSelling(true)
+        .price(12900L)
+        .authorIds(authors)
+        .categoryIds(categories)
+        .longDescription("really looooooooooooong description")
+        .shortDescription("short")
+        .pointMethod(true)
+        .pointRate(5L)
+        .title("dummy title")
+        .publishedDate(LocalDate.of(2023,1,1))
+        .publisher("더미 출판사")
+        .build();
+
+    productBookDto.setStorage(400);
+
+    return productBookDto;
   }
 }

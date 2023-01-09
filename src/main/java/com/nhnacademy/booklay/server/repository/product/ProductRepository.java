@@ -13,5 +13,5 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
       + " p.pointMethod= :#{#product.pointMethod}, p.pointRate= :#{#product.pointRate}, p.price = :#{#product.price},"
       + " p.title= :#{#product.title} "
       + "where p.id = ?1")
-  Product updateProductById(Long id, Product product);
+  void updateProductById(Long id, Product product);
 }

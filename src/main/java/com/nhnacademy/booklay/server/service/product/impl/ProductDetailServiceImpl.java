@@ -6,6 +6,10 @@ import com.nhnacademy.booklay.server.service.product.ProductDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author 최규태
+ */
+
 @Service
 @RequiredArgsConstructor
 public class ProductDetailServiceImpl implements ProductDetailService {

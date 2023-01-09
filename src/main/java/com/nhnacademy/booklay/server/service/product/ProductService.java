@@ -7,4 +7,5 @@ public interface ProductService {
   Product createProduct(Product product);
 
   Product updateProduct(Long id, Product product);
+
 }

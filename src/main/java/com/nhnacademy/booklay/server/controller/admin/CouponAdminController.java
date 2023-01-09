@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.controller.admin;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
+import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminServiceImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CouponAdminController {
 
-    private final CouponAdminServiceImpl couponAdminService;
+    private final CouponAdminService couponAdminService;
 
-    @GetMapping("/coupons")
-    public List<CouponRetrieveResponse> retrieveAllCoupons() {
+    @GetMapping("/coupons/pages/{pageNum}")
+    public List<CouponRetrieveResponse> retrieveAllCoupons(@PathVariable int pageNum) {
         return couponAdminService.retrieveAllCoupons();
     }
 

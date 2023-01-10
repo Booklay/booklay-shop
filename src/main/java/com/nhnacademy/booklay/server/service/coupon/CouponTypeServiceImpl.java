@@ -19,6 +19,11 @@ public class CouponTypeServiceImpl implements CouponTypeService{
     private final CouponTypeRepository couponTypeRepository;
 
     @Override
+    public void createCouponType(CouponTypeCURequest couponTypeRequest) {
+        couponTypeRepository.save(CouponTypeCURequest.toEntity(couponTypeRequest));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<CouponTypeRetrieveResponse> retrieveAllCouponTypes() {
         List<CouponType> couponTypeList = couponTypeRepository.findAll();
@@ -28,8 +33,17 @@ public class CouponTypeServiceImpl implements CouponTypeService{
     }
 
     @Override
-    public void createCouponType(CouponTypeCURequest couponTypeRequest) {
-        couponTypeRepository.save(CouponTypeCURequest.toEntity(couponTypeRequest));
+    public void updateCouponType(Long couponTypeId, CouponTypeCURequest couponTypeRequest) {
+        if(couponTypeRepository.existsById(couponTypeId)) {
+            throw new NotFoundException(CouponType.class.toString(), couponTypeId);
+        }
+
+        CouponType couponType = CouponType.builder()
+            .id(couponTypeRequest.getId())
+            .name(couponTypeRequest.getName())
+            .build();
+
+        couponTypeRepository.save(couponType);
     }
 
     @Override
@@ -38,11 +52,6 @@ public class CouponTypeServiceImpl implements CouponTypeService{
             throw new NotFoundException(CouponType.class.toString(), couponTypeId);
         }
         couponTypeRepository.deleteById(couponTypeId);
-    }
-
-    @Override
-    public void updateCouponType() {
-
     }
 
 

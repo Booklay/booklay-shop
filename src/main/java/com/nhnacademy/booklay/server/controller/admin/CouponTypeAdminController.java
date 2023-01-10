@@ -42,10 +42,10 @@ public class CouponTypeAdminController {
        couponTypeService.createCouponType(couponTypeRequest);
     }
 
-    @PutMapping
+    @PutMapping("/{couponTypeId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateCouponType(@Valid @RequestBody CouponTypeCURequest couponTypeCURequest) {
-        couponTypeService.updateCouponType();
+    public void updateCouponType(@PathVariable Long couponTypeId, @Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
+        couponTypeService.updateCouponType(couponTypeId, couponTypeRequest);
     }
 
     @DeleteMapping("/{couponTypeId}")

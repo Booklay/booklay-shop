@@ -44,25 +44,27 @@ public class MemberController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createMember(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
 
         memberService.createMember(memberCreateRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     @PutMapping("/{memberNo}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateMember(@PathVariable Long memberNo, @Valid @RequestBody MemberUpdateRequest memberUpdateRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ValidationFailedException(bindingResult);
-        }
+    public ResponseEntity<Void> updateMember(@PathVariable Long memberNo, @Valid @RequestBody MemberUpdateRequest memberUpdateRequest) {
+
         memberService.updateMember(memberNo, memberUpdateRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
     }
 
     @DeleteMapping("/{memberNo}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteMember(@PathVariable Long memberNo) {
+    public ResponseEntity<Void> deleteMember(@PathVariable Long memberNo) {
+
         memberService.deleteMember(memberNo);
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
     }
 }
 

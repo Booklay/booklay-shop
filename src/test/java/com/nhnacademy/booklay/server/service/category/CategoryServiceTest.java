@@ -13,7 +13,7 @@ import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.category.CategoryAlreadyExistedException;
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
+import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
 import com.nhnacademy.booklay.server.exception.category.UpdateCategoryFailedException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
@@ -109,7 +109,7 @@ class CategoryServiceTest {
 
         //mocking
         when(categoryRepository.findById(createRequest.getParentCategoryId()))
-            .thenThrow(CategoryNotFoundException.class);
+            .thenThrow(NotFoundException.class);
 
         //when
 
@@ -186,7 +186,7 @@ class CategoryServiceTest {
 
         //then
         assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
-            .isInstanceOf(CategoryNotFoundException.class)
+            .isInstanceOf(NotFoundException.class)
             .hasMessageContaining(String.valueOf(updateRequest.getId()));
     }
 
@@ -200,7 +200,7 @@ class CategoryServiceTest {
             .thenReturn(true);
 
         when(categoryRepository.findById(updateRequest.getParentCategoryId()))
-            .thenThrow(CategoryNotFoundException.class);
+            .thenThrow(NotFoundException.class);
 
         //when
 
@@ -224,7 +224,7 @@ class CategoryServiceTest {
         when(categoryRepository.existsById(category.getId())).thenReturn(false);
 
         assertThatThrownBy(() -> categoryService.deleteCategory(category.getId()))
-            .isInstanceOf(CategoryNotFoundException.class)
+            .isInstanceOf(NotFoundException.class)
             .hasMessageContaining(String.valueOf(category.getId()));
     }
 }

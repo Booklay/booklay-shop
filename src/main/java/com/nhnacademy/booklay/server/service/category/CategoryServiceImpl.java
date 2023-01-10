@@ -6,7 +6,7 @@ import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.category.CategoryAlreadyExistedException;
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
+import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
 import com.nhnacademy.booklay.server.exception.category.UpdateCategoryFailedException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
             try {
                 taskForCategoryFromDto(createDto);
                 log.info("Create Category Success : " + createDto.getName());
-            } catch (CategoryNotFoundException e) {
+            } catch (NotFoundException e) {
                 log.info("Create Category Failed");
                 throw new CreateCategoryFailedException(createDto);
             }
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse retrieveCategory(Long categoryId) {
         CategoryResponse
             categoryResponse = categoryRepository.findById(categoryId, CategoryResponse.class)
-            .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+            .orElseThrow(() -> new NotFoundException(Category.class.toString(), categoryId));
 
         log.info("Retrieve Category : " + categoryResponse.getName());
 
@@ -81,13 +81,13 @@ public class CategoryServiceImpl implements CategoryService {
                 deleteCategory(categoryId);
                 taskForCategoryFromDto(updateDto);
                 log.info("Update Category Success : " + updateDto.getName());
-            } catch (CategoryNotFoundException e) {
+            } catch (NotFoundException e) {
                 log.info("Update Category Failed");
                 throw new UpdateCategoryFailedException(updateDto);
             }
         } else {
             log.info("Category ID Not Existed");
-            throw new CategoryNotFoundException(categoryId);
+            throw new NotFoundException(Category.class.toString(), categoryId);
         }
     }
 
@@ -97,7 +97,7 @@ public class CategoryServiceImpl implements CategoryService {
             log.info("Delete Category ID : " + categoryId);
         } else {
             log.info("Category ID Not Existed");
-            throw new CategoryNotFoundException(categoryId);
+            throw new NotFoundException(Category.class.toString(), categoryId);
         }
     }
 
@@ -110,7 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     private void taskForCategoryFromDto(CategoryCURequest request) {
         Category parent = categoryRepository.findById(request.getParentCategoryId())
-            .orElseThrow(() -> new CategoryNotFoundException(request.getId()));
+            .orElseThrow(() -> new NotFoundException(Category.class.toString(), request.getId()));
 
         Category category = Category.builder()
             .id(request.getId())

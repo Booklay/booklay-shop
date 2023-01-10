@@ -1,5 +1,7 @@
 package com.nhnacademy.booklay.server.entity;
 
+import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,6 +59,15 @@ public class Coupon {
         this.maximumDiscountAmount = maximumDiscountAmount;
         this.issuanceDeadlineAt = issuanceDeadlineAt;
         this.isDuplicatable = isDuplicatable;
+    }
+
+    public void update(CouponUpdateRequest couponUpdateRequest) {
+        this.name = couponUpdateRequest.getName();
+        this.amount = couponUpdateRequest.getAmount();
+        this.minimumUseAmount = couponUpdateRequest.getMinimumUseAmount();
+        this.maximumDiscountAmount = couponUpdateRequest.getMaximumDiscountAmount();
+        this.issuanceDeadlineAt = couponUpdateRequest.getIssuanceDeadlineAt();
+        this.isDuplicatable = couponUpdateRequest.getIsDuplicatable();
     }
 
 }

@@ -1,10 +1,12 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
+import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.ProductRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
@@ -13,7 +15,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,8 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
-    public void createCoupon(CouponCURequest couponRequest) {
+    @Override
+    public void createCoupon(CouponCreateRequest couponRequest) {
         CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode()).orElseThrow(() -> new IllegalArgumentException("No Such Coupon Type."));
 
         Coupon coupon = Coupon.builder()
@@ -49,6 +51,7 @@ public class CouponAdminServiceImpl implements CouponAdminService{
         couponRepository.save(coupon);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<CouponRetrieveResponse> retrieveAllCoupons(int pageNum) {
         PageRequest pageRequest = PageRequest.of(pageNum, 10);
@@ -58,16 +61,25 @@ public class CouponAdminServiceImpl implements CouponAdminService{
             Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public CouponDetailRetrieveResponse retrieveCoupon(Long couponId) {
         return CouponDetailRetrieveResponse.fromEntity(couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("No Such Coupon.")));
     }
 
-    public void updateCoupon(Long couponId, CouponCURequest couponRequest) {
+    @Override
+    public void updateCoupon(Long couponId, CouponUpdateRequest couponRequest) {
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new NotFoundException(Coupon.class.toString(), couponId));
+        coupon.update(couponRequest);
 
+        couponRepository.save(coupon);
     }
 
+    @Override
     public void deleteCoupon(Long couponId) {
+        if(!couponRepository.existsById(couponId)) {
+            throw new NotFoundException(Coupon.class.toString(), couponId);
+        }
         couponRepository.deleteById(couponId);
     }
 

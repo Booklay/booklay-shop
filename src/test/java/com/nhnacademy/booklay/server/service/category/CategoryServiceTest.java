@@ -36,195 +36,194 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ActiveProfiles("test")
 @MockBean(JpaMetamodelMappingContext.class)
 class CategoryServiceTest {
+    @Mock
+    CategoryRepository categoryRepository;
+    @InjectMocks
+    CategoryServiceImpl categoryService;
 
-  @Mock
-  CategoryRepository categoryRepository;
-  @InjectMocks
-  CategoryServiceImpl categoryService;
+    Category category;
+    Category parentCategory;
+    CategoryCreateRequest createRequest;
+    CategoryUpdateRequest updateRequest;
 
-  Category category;
-  Category parentCategory;
-  CategoryCreateRequest createRequest;
-  CategoryUpdateRequest updateRequest;
+    @BeforeEach
+    void Setup() {
+        category = Dummy.getDummyCategory();
+        parentCategory = category.getParent();
 
-  @BeforeEach
-  void Setup() {
-    category = Dummy.getDummyCategory();
-    parentCategory = category.getParent();
+        createRequest = new CategoryCreateRequest();
 
-    createRequest = new CategoryCreateRequest();
+        ReflectionTestUtils.setField(createRequest, "id", category.getId());
+        ReflectionTestUtils.setField(createRequest, "parentCategoryId",
+            category.getParent().getId());
+        ReflectionTestUtils.setField(createRequest, "name", category.getName());
+        ReflectionTestUtils.setField(createRequest, "isExposure", category.getIsExposure());
 
-    ReflectionTestUtils.setField(createRequest, "id", category.getId());
-    ReflectionTestUtils.setField(createRequest, "parentCategoryId",
-        category.getParent().getId());
-    ReflectionTestUtils.setField(createRequest, "name", category.getName());
-    ReflectionTestUtils.setField(createRequest, "isExposure", category.getIsExposure());
+        updateRequest = new CategoryUpdateRequest();
 
-    updateRequest = new CategoryUpdateRequest();
+        ReflectionTestUtils.setField(updateRequest, "id", category.getId());
+        ReflectionTestUtils.setField(updateRequest, "parentCategoryId",
+            category.getParent().getId());
+        ReflectionTestUtils.setField(updateRequest, "name", category.getName());
+        ReflectionTestUtils.setField(updateRequest, "isExposure", category.getIsExposure());
+    }
 
-    ReflectionTestUtils.setField(updateRequest, "id", category.getId());
-    ReflectionTestUtils.setField(updateRequest, "parentCategoryId",
-        category.getParent().getId());
-    ReflectionTestUtils.setField(updateRequest, "name", category.getName());
-    ReflectionTestUtils.setField(updateRequest, "isExposure", category.getIsExposure());
-  }
+    @Test
+    @DisplayName("카테고리 생성 성공")
+    void testCreateCategory() {
+        //given
 
-  @Test
-  @DisplayName("카테고리 생성 성공")
-  void testCreateCategory() {
-    //given
+        //mocking
+        when(categoryRepository.findById(parentCategory.getId()))
+            .thenReturn(Optional.ofNullable(parentCategory));
 
-    //mocking
-    when(categoryRepository.findById(parentCategory.getId()))
-        .thenReturn(Optional.ofNullable(parentCategory));
-
-    //when
-
-
-    //then
-    assertDoesNotThrow(() -> categoryService.createCategory(createRequest));
-  }
-
-  @Test
-  @DisplayName("카테고리 생성 실패, 이미 있는 ID를 생성 시도")
-  void testCreateCategory_ifAlreadyExistedCategoryId_thenThrowsCategoryAlreadyExistedException() {
-    //given
-
-    //mocking
-    when(categoryRepository.existsById(createRequest.getId()))
-        .thenReturn(true);
-
-    //when
-
-    //then
-    assertThatThrownBy(() -> categoryService.createCategory(createRequest))
-        .isInstanceOf(CategoryAlreadyExistedException.class)
-        .hasMessageContaining(String.valueOf(createRequest.getId()));
-  }
-
-  @Test
-  @DisplayName("카테고리 생성 실패, 존재하지 않는 부모 카테고리")
-  void testCreateCategory_ifNotExistedParentCategoryId_thenThrowsCreateCategoryFailedException() {
-    //given
-
-    //mocking
-    when(categoryRepository.findById(createRequest.getParentCategoryId()))
-        .thenThrow(CategoryNotFoundException.class);
-
-    //when
-
-    //then
-    assertThatThrownBy(() -> categoryService.createCategory(createRequest))
-        .isInstanceOf(CreateCategoryFailedException.class)
-        .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
-  }
+        //when
 
 
-  @Test
-  @DisplayName("카테고리 검색 성공")
-  void testRetrieveCategory() {
-    CategoryResponse categoryResponse = new CategoryResponse();
+        //then
+        assertDoesNotThrow(() -> categoryService.createCategory(createRequest));
+    }
 
-    ReflectionTestUtils.setField(categoryResponse, "id", category.getId());
-    ReflectionTestUtils.setField(categoryResponse, "parentCategoryId",
-        category.getParent().getId());
-    ReflectionTestUtils.setField(categoryResponse, "name", category.getName());
-    ReflectionTestUtils.setField(categoryResponse, "isExposure", category.getIsExposure());
+    @Test
+    @DisplayName("카테고리 생성 실패, 이미 있는 ID를 생성 시도")
+    void testCreateCategory_ifAlreadyExistedCategoryId_thenThrowsCategoryAlreadyExistedException() {
+        //given
 
-    //mocking
-    when(categoryRepository.findById(category.getId(), CategoryResponse.class)).thenReturn(
-        Optional.of(categoryResponse));
+        //mocking
+        when(categoryRepository.existsById(createRequest.getId()))
+            .thenReturn(true);
 
-    //when
-    CategoryResponse actual = categoryService.retrieveCategory(category.getId());
+        //when
 
-    //then
-    assertAll(
-        () -> assertThat(actual.getId()).isEqualTo(category.getId()),
-        () -> assertThat(actual.getName()).isEqualTo(category.getName())
-    );
-  }
+        //then
+        assertThatThrownBy(() -> categoryService.createCategory(createRequest))
+            .isInstanceOf(CategoryAlreadyExistedException.class)
+            .hasMessageContaining(String.valueOf(createRequest.getId()));
+    }
 
-  @Test
-  @DisplayName("카테고리 검색 실패, 존재하지 않는 ID")
-  void testRetrieveCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
+    @Test
+    @DisplayName("카테고리 생성 실패, 존재하지 않는 부모 카테고리")
+    void testCreateCategory_ifNotExistedParentCategoryId_thenThrowsCreateCategoryFailedException() {
+        //given
 
-    //mocking
+        //mocking
+        when(categoryRepository.findById(createRequest.getParentCategoryId()))
+            .thenThrow(CategoryNotFoundException.class);
 
-    //when
+        //when
 
-    //then
-    assertThatThrownBy(() -> categoryService.retrieveCategory(category.getId()));
-  }
+        //then
+        assertThatThrownBy(() -> categoryService.createCategory(createRequest))
+            .isInstanceOf(CreateCategoryFailedException.class)
+            .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
+    }
 
-  @Test
-  @DisplayName("카테고리 수정 성공")
-  void testUpdateCategory() {
-    //mocking
-    when(categoryRepository.existsById(category.getId())).thenReturn(true);
 
-    when(categoryRepository.findById(parentCategory.getId())).thenReturn(
-        Optional.ofNullable(parentCategory));
+    @Test
+    @DisplayName("카테고리 검색 성공")
+    void testRetrieveCategory() {
+        CategoryResponse categoryResponse = new CategoryResponse();
 
-    //when
+        ReflectionTestUtils.setField(categoryResponse, "id", category.getId());
+        ReflectionTestUtils.setField(categoryResponse, "parentCategoryId",
+            category.getParent().getId());
+        ReflectionTestUtils.setField(categoryResponse, "name", category.getName());
+        ReflectionTestUtils.setField(categoryResponse, "isExposure", category.getIsExposure());
 
-    //then
-    assertThatNoException().isThrownBy(() -> categoryService.updateCategory(updateRequest,
-        category.getId()));
-  }
+        //mocking
+        when(categoryRepository.findById(category.getId(), CategoryResponse.class)).thenReturn(
+            Optional.of(categoryResponse));
 
-  @Test
-  @DisplayName("카테고리 수정 실패, 존재하지 않는 ID에 대해 수정 시도")
-  void testUpdateCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
-    //given
+        //when
+        CategoryResponse actual = categoryService.retrieveCategory(category.getId());
 
-    //mocking
-    when(categoryRepository.existsById(updateRequest.getId()))
-        .thenReturn(false);
+        //then
+        assertAll(
+            () -> assertThat(actual.getId()).isEqualTo(category.getId()),
+            () -> assertThat(actual.getName()).isEqualTo(category.getName())
+        );
+    }
 
-    //when
+    @Test
+    @DisplayName("카테고리 검색 실패, 존재하지 않는 ID")
+    void testRetrieveCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
 
-    //then
-    assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
-        .isInstanceOf(CategoryNotFoundException.class)
-        .hasMessageContaining(String.valueOf(updateRequest.getId()));
-  }
+        //mocking
 
-  @Test
-  @DisplayName("카테고리 수정 실패, 존재하지 않는 부모 카테고리")
-  void testUpdateCategory_ifNotExistedParentCategoryId_thenThrowsUpdateCategoryFailedException() {
-    //given
+        //when
 
-    //mocking
-    when(categoryRepository.existsById(updateRequest.getId()))
-        .thenReturn(true);
+        //then
+        assertThatThrownBy(() -> categoryService.retrieveCategory(category.getId()));
+    }
 
-    when(categoryRepository.findById(updateRequest.getParentCategoryId()))
-        .thenThrow(CategoryNotFoundException.class);
+    @Test
+    @DisplayName("카테고리 수정 성공")
+    void testUpdateCategory() {
+        //mocking
+        when(categoryRepository.existsById(category.getId())).thenReturn(true);
 
-    //when
+        when(categoryRepository.findById(parentCategory.getId())).thenReturn(
+            Optional.ofNullable(parentCategory));
 
-    //then
-    assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
-        .isInstanceOf(UpdateCategoryFailedException.class)
-        .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
-  }
+        //when
 
-  @Test
-  @DisplayName("카테고리 삭제 성공")
-  void testDeleteCategory() {
-    when(categoryRepository.existsById(category.getId())).thenReturn(true);
+        //then
+        assertThatNoException().isThrownBy(() -> categoryService.updateCategory(updateRequest,
+            category.getId()));
+    }
 
-    assertThatNoException().isThrownBy(() -> categoryService.deleteCategory(category.getId()));
-  }
+    @Test
+    @DisplayName("카테고리 수정 실패, 존재하지 않는 ID에 대해 수정 시도")
+    void testUpdateCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
+        //given
 
-  @Test
-  @DisplayName("카테고리 삭제 실패, 존재하지 않는 카테고리")
-  void testDeleteCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
-    when(categoryRepository.existsById(category.getId())).thenReturn(false);
+        //mocking
+        when(categoryRepository.existsById(updateRequest.getId()))
+            .thenReturn(false);
 
-    assertThatThrownBy(() -> categoryService.deleteCategory(category.getId()))
-        .isInstanceOf(CategoryNotFoundException.class)
-        .hasMessageContaining(String.valueOf(category.getId()));
-  }
+        //when
+
+        //then
+        assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
+            .isInstanceOf(CategoryNotFoundException.class)
+            .hasMessageContaining(String.valueOf(updateRequest.getId()));
+    }
+
+    @Test
+    @DisplayName("카테고리 수정 실패, 존재하지 않는 부모 카테고리")
+    void testUpdateCategory_ifNotExistedParentCategoryId_thenThrowsUpdateCategoryFailedException() {
+        //given
+
+        //mocking
+        when(categoryRepository.existsById(updateRequest.getId()))
+            .thenReturn(true);
+
+        when(categoryRepository.findById(updateRequest.getParentCategoryId()))
+            .thenThrow(CategoryNotFoundException.class);
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
+            .isInstanceOf(UpdateCategoryFailedException.class)
+            .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 성공")
+    void testDeleteCategory() {
+        when(categoryRepository.existsById(category.getId())).thenReturn(true);
+
+        assertThatNoException().isThrownBy(() -> categoryService.deleteCategory(category.getId()));
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 실패, 존재하지 않는 카테고리")
+    void testDeleteCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
+        when(categoryRepository.existsById(category.getId())).thenReturn(false);
+
+        assertThatThrownBy(() -> categoryService.deleteCategory(category.getId()))
+            .isInstanceOf(CategoryNotFoundException.class)
+            .hasMessageContaining(String.valueOf(category.getId()));
+    }
 }

@@ -7,13 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
-  void createCategory(CategoryCreateRequest createRequest);
+    void createCategory(CategoryCreateRequest createRequest);
 
-  CategoryResponse retrieveCategory(Long id);
+    CategoryResponse retrieveCategory(Long id);
 
-  void updateCategory(CategoryUpdateRequest updateDto, Long categoryId);
+    void updateCategory(CategoryUpdateRequest updateDto, Long categoryId);
 
-  void deleteCategory(Long id);
+    void deleteCategory(Long id);
 
-  Page<CategoryResponse> retrieveCategory(Pageable pageable);
+    Page<CategoryResponse> retrieveCategory(Pageable pageable);
 }

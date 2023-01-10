@@ -1,35 +1,17 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
-import com.nhnacademy.booklay.server.entity.Coupon;
-import com.nhnacademy.booklay.server.repository.CouponRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class CouponAdminService {
+public interface CouponAdminService {
 
-    private final CouponRepository couponRepository;
+    void createCoupon(CouponCURequest couponRequest);
+    List<CouponRetrieveResponse> retrieveAllCoupons();
+    CouponDetailRetrieveResponse retrieveCoupon(Long couponId);
+    void updateCoupon(Long couponId, CouponCURequest couponRequest);
 
-    @Transactional(readOnly = true)
-    public void retrieveAllCoupons() {
-        List<Coupon> couponList = couponRepository.findAll();
-    }
+    void deleteCoupon(Long couponId);
 
-    @Transactional(readOnly = true)
-    public void retrieveCoupon(Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("No Such Coupon."));
-    }
-
-    @Transactional
-    public void updateCoupon(Long couponId) {
-    }
-
-    @Transactional
-    public void deleteCoupon(Long couponId) {
-        couponRepository.deleteById(couponId);
-    }
 }

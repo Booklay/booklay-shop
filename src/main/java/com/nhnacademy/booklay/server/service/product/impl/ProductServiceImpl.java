@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.entity.Author;

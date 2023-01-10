@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.repository;
+package com.nhnacademy.booklay.server.repository.coupon;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

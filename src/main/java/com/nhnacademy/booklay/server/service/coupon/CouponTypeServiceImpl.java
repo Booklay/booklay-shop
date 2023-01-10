@@ -34,7 +34,7 @@ public class CouponTypeServiceImpl implements CouponTypeService{
 
     @Override
     public void updateCouponType(Long couponTypeId, CouponTypeCURequest couponTypeRequest) {
-        if(couponTypeRepository.existsById(couponTypeId)) {
+        if(!couponTypeRepository.existsById(couponTypeId)) {
             throw new NotFoundException(CouponType.class.toString(), couponTypeId);
         }
 
@@ -48,7 +48,7 @@ public class CouponTypeServiceImpl implements CouponTypeService{
 
     @Override
     public void deleteCouponType(Long couponTypeId) {
-        if(couponTypeRepository.existsById(couponTypeId)) {
+        if(!couponTypeRepository.existsById(couponTypeId)) {
             throw new NotFoundException(CouponType.class.toString(), couponTypeId);
         }
         couponTypeRepository.deleteById(couponTypeId);

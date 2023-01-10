@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -203,5 +204,13 @@ public class Dummy {
         ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
 
         return couponRequest;
+    }
+
+    public static CouponTypeCURequest getDummyCouponTypeCURequest() {
+        CouponTypeCURequest couponTypeRequest = new CouponTypeCURequest();
+        ReflectionTestUtils.setField(couponTypeRequest, "id", 1L);
+        ReflectionTestUtils.setField(couponTypeRequest, "name", "정액");
+
+        return couponTypeRequest;
     }
 }

@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.member;
+package com.nhnacademy.booklay.server.dto.member.reponse;
 
 import com.nhnacademy.booklay.server.entity.Member;
 import java.util.List;

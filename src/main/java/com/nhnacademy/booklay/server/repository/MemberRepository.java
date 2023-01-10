@@ -10,5 +10,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findAllBy(Pageable pageable);
     Optional<Member> findByMemberNo(Long memberNo);
     boolean existsByMemberId(String memberId);
-
 }

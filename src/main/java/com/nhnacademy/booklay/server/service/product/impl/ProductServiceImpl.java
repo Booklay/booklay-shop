@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
-
   private final CategoryRepository categoryRepository;
   private final ProductDetailRepository productDetailRepository;
   private final CategoryProductRepository categoryProductRepository;

@@ -11,6 +11,8 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,17 +35,18 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/{memberNo}")
-    @ResponseStatus(HttpStatus.OK)
-    public MemberRetrieveResponse retrieveMember(@PathVariable Long memberNo) {
-        return memberService.retrieveMember(memberNo);
+    public ResponseEntity<MemberRetrieveResponse> retrieveMember(@PathVariable Long memberNo) {
+
+        MemberRetrieveResponse memberResponse = memberService.retrieveMember(memberNo);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(memberResponse);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createMember(@Valid @RequestBody MemberCreateRequest memberCreateRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ValidationFailedException(bindingResult);
-        }
+    public ResponseEntity<Void> createMember(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
+
         memberService.createMember(memberCreateRequest);
     }
 

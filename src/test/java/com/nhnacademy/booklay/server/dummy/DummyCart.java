@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.dummy;
 
-import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Cart;
 import com.nhnacademy.booklay.server.entity.Image;

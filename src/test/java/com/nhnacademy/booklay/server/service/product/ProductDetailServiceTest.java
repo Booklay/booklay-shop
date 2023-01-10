@@ -3,12 +3,11 @@ package com.nhnacademy.booklay.server.service.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
-import com.nhnacademy.booklay.server.service.ImageService;
 import com.nhnacademy.booklay.server.service.product.impl.ProductDetailServiceImpl;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j

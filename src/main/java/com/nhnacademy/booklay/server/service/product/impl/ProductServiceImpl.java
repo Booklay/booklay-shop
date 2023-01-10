@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.dto.product.CreateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
@@ -10,8 +10,13 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.repository.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.CategoryProductService;
 import com.nhnacademy.booklay.server.service.product.ProductAuthorService;
@@ -34,12 +39,12 @@ public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
 
-  private final ProductDetailService productDetailService;
   private final CategoryRepository categoryRepository;
-  private final CategoryProductService categoryProductService;
-  private final AuthorService authorService;
-  private final ProductAuthorService productAuthorService;
-  private final SubscribeService subscribeService;
+  private final ProductDetailRepository productDetailRepository;
+  private final CategoryProductRepository categoryProductRepository;
+  private final AuthorRepository authorRepository;
+  private final ProductAuthorRepository productAuthorRepository;
+  private final SubscribeRepository subscribeRepository;
 
   @Override
   @Transactional
@@ -60,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
       productDetail.setEbookAddress(request.getEbookAddress());
     }
 
-    ProductDetail savedDetail = productDetailService.createProductDetail(productDetail);
+    ProductDetail savedDetail = productDetailRepository.save(productDetail);
 
     //product_author
     productAuthorRegister(request.getAuthorIds(), savedDetail);
@@ -84,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    subscribeService.createSubscribe(subscribe);
+    subscribeRepository.save(subscribe);
 
     return savedProduct.getId();
   }
@@ -100,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
     product.setId(request.getProductId());
     Product updateProduct = productRepository.save(product);
 
-    categoryProductService.deleteAllByProductId(updateProduct.getId());
+    categoryProductRepository.deleteAllByProductId(updateProduct.getId());
     saveProductCategory(request.getCategoryIds(), updateProduct);
 
     //product detail
@@ -114,10 +119,13 @@ public class ProductServiceImpl implements ProductService {
       productDetail.setEbookAddress(request.getEbookAddress());
     }
 
-    ProductDetail updatedDetail = productDetailService.createProductDetail(productDetail);
+    if(!productDetailRepository.existsById(productDetail.getId())){
+      throw new IllegalArgumentException();
+    }
+    ProductDetail updatedDetail = productDetailRepository.save(productDetail);
 
     //싹 밀었다가 다시 다 등록하는걸로 생각하는데 그게 맞나?
-    productAuthorService.deleteProductAuthors(updatedDetail.getId());
+    productAuthorRepository.deleteAllByProductDetailId(updatedDetail.getId());
     productAuthorRegister(request.getAuthorIds(), updatedDetail);
     return null;
   }
@@ -134,7 +142,7 @@ public class ProductServiceImpl implements ProductService {
     Product savedProduct = productRepository.save(product);
 
     //category_product
-    categoryProductService.deleteAllByProductId(savedProduct.getId());
+    categoryProductRepository.deleteAllByProductId(savedProduct.getId());
     saveProductCategory(request.getCategoryIds(), savedProduct);
 
     //subscribe
@@ -145,7 +153,10 @@ public class ProductServiceImpl implements ProductService {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    subscribeService.updateSubscribeById(subscribe);
+    if(!subscribeRepository.existsById(subscribe.getId())){
+      throw new IllegalArgumentException();
+    }
+    subscribeRepository.save(subscribe);
 
     return savedProduct.getId();
   }
@@ -165,7 +176,7 @@ public class ProductServiceImpl implements ProductService {
           .category(category)
           .build();
 
-      categoryProductService.createCategoryProduct(categoryProduct);
+      categoryProductRepository.save(categoryProduct);
     }
   }
 
@@ -189,7 +200,7 @@ public class ProductServiceImpl implements ProductService {
   private void productAuthorRegister(List<Long> authorIdList, ProductDetail productDetail)
       throws Exception {
     for (int i = 0; i < authorIdList.size(); i++) {
-      Author foundAuthor = authorService.retrieveAuthorById(authorIdList.get(i));
+      Author foundAuthor = authorRepository.findById(authorIdList.get(i)).orElseThrow(()-> new IllegalArgumentException());
 
       ProductAuthor.Pk pk = new ProductAuthor.Pk(productDetail.getId(), foundAuthor.getAuthorNo());
 
@@ -199,7 +210,7 @@ public class ProductServiceImpl implements ProductService {
           .productDetail(productDetail)
           .build();
 
-      productAuthorService.createProductAuthor(productAuthor);
+      productAuthorRepository.save(productAuthor);
     }
   }
 

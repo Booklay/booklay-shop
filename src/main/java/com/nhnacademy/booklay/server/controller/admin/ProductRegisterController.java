@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
-import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.dto.product.CreateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.CategoryProductService;

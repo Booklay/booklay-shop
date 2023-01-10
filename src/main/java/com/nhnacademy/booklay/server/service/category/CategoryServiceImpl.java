@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.category.CategoryCUDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryDto;
 import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
 import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
@@ -44,13 +45,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public CategoryDto retrieveCategory(Long categoryId) {
-        CategoryDto categoryDto = categoryRepository.findById(categoryId, CategoryDto.class)
+    public CategoryResponse retrieveCategory(Long categoryId) {
+        CategoryResponse categoryResponse = categoryRepository.findById(categoryId, CategoryResponse.class)
             .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
-        log.info("Retrieve Category : " + categoryDto.getName());
+        log.info("Retrieve Category : " + categoryResponse.getName());
 
-        return categoryDto;
+        return categoryResponse;
     }
 
     @Transactional(readOnly = true)

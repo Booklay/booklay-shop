@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import com.nhnacademy.booklay.server.dto.category.CategoryDto;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.entity.Author;
@@ -158,10 +159,11 @@ public class ProductServiceImpl implements ProductService {
     for (int i = 0; i < categories.size(); i++) {
       CategoryProduct.Pk pk = new Pk(product.getId(), categories.get(i));
 
-      CategoryDto categoryDto = categoryService.retrieveCategory(categories.get(i));
+      CategoryResponse categoryResponse = categoryService.retrieveCategory(categories.get(i));
       Category category = Category.builder()
-          .id(categoryDto.getId())
-          .name(categoryDto.getName())
+          .id(categoryResponse.getId())
+          .name(categoryResponse.getName())
+          .isExposure(categoryResponse.getIsExposure())
           .build();
 
       CategoryProduct categoryProduct = CategoryProduct.builder()

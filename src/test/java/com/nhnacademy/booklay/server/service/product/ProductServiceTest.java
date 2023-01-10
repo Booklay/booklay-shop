@@ -2,7 +2,7 @@ package com.nhnacademy.booklay.server.service.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.service.ImageService;
@@ -38,37 +38,24 @@ class ProductServiceTest {
         .build();
   }
 
-//  @Test
-//  void testProductCreate_success(){
-//    imageService.createImage(product.getImage());
-//    Product expect = productService.createProduct(product);
-//
-//    assertThat(expect.getTitle()).isEqualTo(product.getTitle());
-//  }
-//
-//  @Test
-//  void testProductUpdate_Success(){
-//    imageService.createImage(product.getImage());
-//    Product original = productService.createProduct(product);
-//
-//
-//    Product updateSource = Product.builder()
-//        .price(30000L)
-//        .pointMethod(request.isPointMethod())
-//        .pointRate(request.getPointRate())
-//        .title(request.getTitle())
-//        .shortDescription(request.getShortDescription())
-//        .longDescription(request.getLongDescription())
-//        .image(request.getImage())
-//        .isSelling(request.isSelling())
-//        .build();
-//
-//
-//    Product updated = productService.updateProduct(original.getId(), updateSource);
-//
-//
-//    assertThat(updated.getId()).isEqualTo(original.getId());
-//    assertThat(updated.getPrice()).isNotEqualTo(original.getPrice());
-//  }
+  @Test
+  void testProductBookCreate_Success(){
+
+  }
+
+  @Test
+  void testProductSubscribeCreate_Success(){
+
+  }
+
+  @Test
+  void testProductBookUpdate_Success(){
+
+  }
+
+  @Test
+  void testProductSubscribeUpdate_Success(){
+
+  }
 
 }

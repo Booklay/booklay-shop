@@ -1,8 +1,7 @@
 package com.nhnacademy.booklay.server.service.product;
 
-import com.nhnacademy.booklay.server.dto.product.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.dto.product.CreateProductSubscribeRequest;
-import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 
 public interface ProductService {
 

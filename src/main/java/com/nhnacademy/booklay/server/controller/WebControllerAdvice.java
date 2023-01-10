@@ -27,8 +27,8 @@ public class WebControllerAdvice {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "존재하지 않는 카테고리에 대한 요청입니다.")
-    public String categoryNotFoundException(Exception ex) {
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "존재하지 않는 요소에 대한 요청입니다.")
+    public String elementNotFoundException(Exception ex) {
         return treatException(ex);
     }
 

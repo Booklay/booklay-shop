@@ -1,18 +1,19 @@
 package com.nhnacademy.booklay.server.controller.member;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -163,12 +164,12 @@ class MemberControllerTest {
     @Test
     @DisplayName("회원 삭제 성공 테스트")
     void testDeleteMember_successTest() throws Exception {
-        doNothing().when(memberService).deleteMember(member.getMemberNo());
-
         mockMvc.perform(delete(URI_PREFIX + "/" + member.getMemberNo()))
             .andExpect(status().isAccepted())
             .andDo(print())
             .andReturn();
+
+        verify(memberService, times(1)).deleteMember(member.getMemberNo());
     }
 
     @Test

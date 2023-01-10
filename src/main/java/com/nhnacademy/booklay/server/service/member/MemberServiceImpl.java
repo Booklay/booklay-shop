@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.service.member;
 
-import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -13,13 +13,12 @@ import com.nhnacademy.booklay.server.exception.member.UpdateMemberFailedExceptio
 import com.nhnacademy.booklay.server.repository.GenderRepository;
 import com.nhnacademy.booklay.server.repository.MemberRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * @author 양승아
@@ -78,7 +77,6 @@ public class MemberServiceImpl implements MemberService {
                 updateDto.getPhoneNo(),
                 updateDto.getEmail(),
                 member.getIsBlocked());
-            memberRepository.save(member);
         } catch (Exception e) {
             throw new UpdateMemberFailedException(memberNo);
         }
@@ -89,7 +87,5 @@ public class MemberServiceImpl implements MemberService {
             Member member = memberRepository.findByMemberNo(memberNo)
                 .orElseThrow(() -> new MemberNotFoundException(memberNo));
             member.setDeletedAt(LocalDateTime.now());
-
-            memberRepository.save(member);
     }
 }

@@ -21,9 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- *
- * author 양승아
- *
+ * @author 양승아
  */
 @WebMvcTest(MemberAdminController.class)
 @MockBean(JpaMetamodelMappingContext.class)

@@ -20,6 +20,11 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.Objects;
 
+/**
+ * Web에 관한 전반적인 설정을 관리합니다.
+ *
+ * @author 조현진
+ */
 @Configuration
 public class WebConfig {
 
@@ -38,6 +43,20 @@ public class WebConfig {
     @Value("${booklay.secure.db_url}")
     private String dbUrl;
 
+    /**
+     * NHN Secure Manager를 통해 민감정보를 받습니다.
+     * booklay.p12인증서를 통해 HTTPS 요청을 보냅니다.
+     *
+     * @return
+     * @throws IOException
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws UnrecoverableKeyException
+     * @throws KeyManagementException
+     *
+     * @author 조현진
+     */
     @Bean
     public RestTemplate restTemplate() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
         KeyStore clientStore = KeyStore.getInstance("PKCS12");
@@ -62,6 +81,14 @@ public class WebConfig {
         return new RestTemplate(requestFactory);
     }
 
+    /**
+     * 애플리케이션이 구동되는 동시에 NHN Secure Manager로부터 접속 정보를 가져옵니다.
+     *
+     * @param restTemplate
+     * @return DB 접속 정보를 반환합니다.
+     *
+     * @author 조현진
+     */
     @Bean
     public DatasourceInfo datasourceInfo(RestTemplate restTemplate) {
         SecretResponse usernameResponse = Objects.requireNonNull(restTemplate.getForObject(url + this.username, SecretResponse.class));

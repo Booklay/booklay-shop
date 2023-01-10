@@ -29,6 +29,9 @@ public class DatabaseConfig {
     @Value("${booklay.secure.db_url}")
     private String dbUrl;
 
+    @Value("${booklay.pool_size}")
+    private int poolSize;
+
     @Bean
     public DataSource dataSource(RestTemplate restTemplate) {
 
@@ -43,7 +46,7 @@ public class DatabaseConfig {
         hikariConfig.setPassword(passwordResponse.getBody().getSecret());
 
         HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
-        hikariDataSource.setMaximumPoolSize(2);
+        hikariDataSource.setMaximumPoolSize(poolSize);
 
         return hikariDataSource;
     }

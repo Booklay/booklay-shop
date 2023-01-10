@@ -48,7 +48,7 @@ public class WishlistServiceImpl implements WishlistService {
     }
     Wishlist.Pk pk = new Pk(request.getMemberId(), request.getProductId());
 
-    //없는걸 지우려고함
+    //없는걸 지우려고하면 안되니까...
     if(!wishlistRepository.existsById(pk)){
 
     }

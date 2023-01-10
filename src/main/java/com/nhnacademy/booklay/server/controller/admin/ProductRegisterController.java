@@ -4,10 +4,14 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookReques
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.TagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,6 +66,10 @@ public class ProductRegisterController {
 
 
   //태그 자체만
+  @GetMapping("/tag")
+  public Page<RetrieveTagResponse> tagPage(Pageable pageable){
+    return tagService.retrieveAllTag(pageable);
+  }
   @PostMapping("/tag")
   public void tagRegister(CreateTagRequest request) {
     tagService.createTag(request);
@@ -70,7 +78,6 @@ public class ProductRegisterController {
   @PutMapping("/tag")
   public void tagUpdate(UpdateTagRequest request){
     tagService.updateTag(request);
-
   }
 
   @DeleteMapping("/tag")

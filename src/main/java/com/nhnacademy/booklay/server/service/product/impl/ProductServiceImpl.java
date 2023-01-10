@@ -17,12 +17,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
-import com.nhnacademy.booklay.server.service.product.AuthorService;
-import com.nhnacademy.booklay.server.service.product.CategoryProductService;
-import com.nhnacademy.booklay.server.service.product.ProductAuthorService;
-import com.nhnacademy.booklay.server.service.product.ProductDetailService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import com.nhnacademy.booklay.server.service.product.SubscribeService;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -97,6 +92,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public Long updateBookProduct(CreateProductBookRequest request) throws Exception {
+    //TODO : 예외처리 만들것
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
@@ -119,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
       productDetail.setEbookAddress(request.getEbookAddress());
     }
 
-    if(!productDetailRepository.existsById(productDetail.getId())){
+    if (!productDetailRepository.existsById(productDetail.getId())) {
       throw new IllegalArgumentException();
     }
     ProductDetail updatedDetail = productDetailRepository.save(productDetail);
@@ -134,9 +130,11 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public Long updateSubscribeProduct(CreateProductSubscribeRequest request) throws Exception {
+    //TODO :예외처리 만들것
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
+
 
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
@@ -153,7 +151,8 @@ public class ProductServiceImpl implements ProductService {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    if(!subscribeRepository.existsById(subscribe.getId())){
+    //TODO : 에외처리 만들것
+    if (!subscribeRepository.existsById(subscribe.getId())) {
       throw new IllegalArgumentException();
     }
     subscribeRepository.save(subscribe);
@@ -168,7 +167,8 @@ public class ProductServiceImpl implements ProductService {
     for (int i = 0; i < categories.size(); i++) {
       CategoryProduct.Pk pk = new Pk(product.getId(), categories.get(i));
 
-      Category category = categoryRepository.findById(categories.get(i)).orElseThrow(()-> new IllegalArgumentException("catrgory not found"));
+      Category category = categoryRepository.findById(categories.get(i))
+          .orElseThrow(() -> new IllegalArgumentException("catrgory not found"));
 
       CategoryProduct categoryProduct = CategoryProduct.builder()
           .pk(pk)
@@ -200,7 +200,8 @@ public class ProductServiceImpl implements ProductService {
   private void productAuthorRegister(List<Long> authorIdList, ProductDetail productDetail)
       throws Exception {
     for (int i = 0; i < authorIdList.size(); i++) {
-      Author foundAuthor = authorRepository.findById(authorIdList.get(i)).orElseThrow(()-> new IllegalArgumentException());
+      Author foundAuthor = authorRepository.findById(authorIdList.get(i))
+          .orElseThrow(() -> new IllegalArgumentException());
 
       ProductAuthor.Pk pk = new ProductAuthor.Pk(productDetail.getId(), foundAuthor.getAuthorNo());
 

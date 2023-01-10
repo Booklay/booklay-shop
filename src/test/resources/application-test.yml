@@ -29,4 +29,5 @@ booklay:
     db_url: 0b22abcb84cf49e09f06fa3a29a919fe
     db_password: 314a5e5a46004ab593c84049d362f835
     url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/500rMJPT021TnyNl/secrets/
+    p12_password: 1234
   pool_size: 2

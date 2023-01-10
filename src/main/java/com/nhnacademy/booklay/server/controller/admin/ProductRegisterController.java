@@ -2,7 +2,7 @@ package com.nhnacademy.booklay.server.controller.admin;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
-import com.nhnacademy.booklay.server.service.category.CategoryService;
+import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.CategoryProductService;
 import com.nhnacademy.booklay.server.service.product.ProductAuthorService;
@@ -30,7 +30,7 @@ public class ProductRegisterController {
   private final ProductService productService;
   private final AuthorService authorService;
   private final ProductAuthorService productAuthorService;
-  private final CategoryService categoryService;
+  private final CategoryRepository categoryRepository;
   private final CategoryProductService categoryProductService;
   private final SubscribeService subscribeService;
 

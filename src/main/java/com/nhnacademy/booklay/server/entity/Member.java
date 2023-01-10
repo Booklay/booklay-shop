@@ -76,4 +76,15 @@ public class Member {
         this.email = email;
         this.isBlocked = isBlocked;
     }
+
+    public void update(Gender gender, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
+        this.gender = gender;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+        this.phoneNo = phoneNo;
+        this.email = email;
+        this.isBlocked = isBlocked;
+    }
 }

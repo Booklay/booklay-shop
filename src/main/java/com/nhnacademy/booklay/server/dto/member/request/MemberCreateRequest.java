@@ -1,11 +1,16 @@
-package com.nhnacademy.booklay.server.dto.member;
+package com.nhnacademy.booklay.server.dto.member.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import java.time.LocalDate;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +30,9 @@ public class MemberCreateRequest {
     private String nickname;
     @NotBlank
     private String name;
-    @NotBlank
+    @NotNull
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
     @NotBlank

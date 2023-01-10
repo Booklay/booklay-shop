@@ -1,5 +1,3 @@
-
-
 package com.nhnacademy.booklay.server.dto.category.response;
 
 import lombok.Getter;

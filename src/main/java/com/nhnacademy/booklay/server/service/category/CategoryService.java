@@ -1,20 +1,19 @@
 package com.nhnacademy.booklay.server.service.category;
 
-import com.nhnacademy.booklay.server.dto.category.CategoryCreateDto;
-import com.nhnacademy.booklay.server.dto.category.CategoryDto;
-import com.nhnacademy.booklay.server.dto.category.CategoryUpdateDto;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
-    void createCategory(CategoryCreateDto createDto);
+    void createCategory(CategoryCreateRequest createRequest);
 
     CategoryResponse retrieveCategory(Long id);
 
-    void updateCategory(CategoryUpdateDto updateDto);
+    void updateCategory(CategoryUpdateRequest updateDto, Long categoryId);
 
-    boolean deleteCategory(Long id);
+    void deleteCategory(Long id);
 
-    Page<CategoryDto> retrieveCategory(Pageable pageable);
+    Page<CategoryResponse> retrieveCategory(Pageable pageable);
 }

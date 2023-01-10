@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  * @author 양승아
@@ -68,4 +69,5 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByMemberNo(memberNo).orElseThrow(() -> new MemberNotFoundException(memberNo));
         member.setDeletedAt(LocalDateTime.now());
     }
+
 }

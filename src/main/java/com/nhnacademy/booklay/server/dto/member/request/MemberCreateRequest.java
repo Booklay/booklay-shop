@@ -18,25 +18,33 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class MemberCreateRequest {
+
     @NotBlank
     private String gender;
+
     @NotBlank
     private String memberId;
+
     @NotBlank
     private String password;
+
     @NotBlank
     private String nickname;
+
     @NotBlank
     private String name;
+
     @NotNull
-    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
+
     @NotBlank
     private String phoneNo;
+
     @Email
     @NotBlank
     private String email;

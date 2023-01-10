@@ -1,5 +1,7 @@
 package com.nhnacademy.booklay.server.config;
 
+import com.nhnacademy.booklay.server.dto.secrets.DatasourceInfo;
+import com.nhnacademy.booklay.server.dto.secrets.SecretResponse;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -24,6 +26,18 @@ public class WebConfig {
     @Value("${booklay.secure.p12_password}")
     private String p12Password;
 
+    @Value("${booklay.secure.url}")
+    private String url;
+
+    @Value("${booklay.secure.db_username}")
+    private String username;
+
+    @Value("${booklay.secure.db_password}")
+    private String password;
+
+    @Value("${booklay.secure.db_url}")
+    private String dbUrl;
+
     @Bean
     public RestTemplate restTemplate() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
         KeyStore clientStore = KeyStore.getInstance("PKCS12");
@@ -46,5 +60,19 @@ public class WebConfig {
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
 
         return new RestTemplate(requestFactory);
+    }
+
+    @Bean
+    public DatasourceInfo datasourceInfo(RestTemplate restTemplate) {
+        SecretResponse usernameResponse = Objects.requireNonNull(restTemplate.getForObject(url + this.username, SecretResponse.class));
+        SecretResponse passwordResponse = Objects.requireNonNull(restTemplate.getForObject(url + this.password, SecretResponse.class));
+        SecretResponse dbUrlResponse = Objects.requireNonNull(restTemplate.getForObject(url + this.dbUrl, SecretResponse.class));
+
+        return DatasourceInfo.builder()
+                .passwword(passwordResponse.getBody().getSecret())
+                .dbUrl(dbUrlResponse.getBody().getSecret())
+                .username(usernameResponse.getBody().getSecret())
+                .build();
+
     }
 }

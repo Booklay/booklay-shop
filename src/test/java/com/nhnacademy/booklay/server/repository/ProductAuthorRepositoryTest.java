@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
@@ -33,6 +34,8 @@ class ProductAuthorRepositoryTest {
     @Autowired
     ProductDetailRepository productDetailRepository;
 
+    CreateProductBookRequest request = DummyCart.getDummyProductBookDto();
+
   void clearRepo(String entityName, JpaRepository jpaRepository) {
     jpaRepository.deleteAll();
 
@@ -54,7 +57,7 @@ class ProductAuthorRepositoryTest {
 
   @Test
   void testProductAuthorSave(){
-    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
+    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(request);
 
         entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
         productRepository.save(productAuthor.getProductDetail().getProduct());
@@ -69,7 +72,7 @@ class ProductAuthorRepositoryTest {
 
     @Test
     void testProductAuthorFind() {
-        ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
+        ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(request);
 
         entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
         productRepository.save(productAuthor.getProductDetail().getProduct());

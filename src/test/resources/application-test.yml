@@ -29,4 +29,5 @@ booklay:
     db_url: REDACTED
     db_password: REDACTED
     url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/REDACTED/secrets/
+    p12_password: 1234
   pool_size: 2

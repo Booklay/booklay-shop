@@ -62,26 +62,27 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //when
-        Member expected = memberRepository.findById(member.getMemberId())
+        Member expected = memberRepository.findById(member.getMemberNo())
             .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         //then
-        assertThat(expected.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(expected.getMemberNo()).isEqualTo(member.getMemberNo());
     }
 
     @Test
-    @DisplayName("MemberRepository findByMemberId 테스트")
-    void testMemberFindByMemberId() {
+    @DisplayName("MemberRepository findByMemberNo 테스트")
+    void testMemberFindByMemberNo() {
         //given
         Member member = Dummy.getDummyMember();
         entityManager.persist(member.getGender());
         memberRepository.save(member);
 
         //when
-        Member expected = memberRepository.findByMemberId(member.getMemberId());
+        Member expected = memberRepository.findByMemberNo(member.getMemberNo())
+            .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         //then
-        assertThat(expected.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(expected.getMemberNo()).isEqualTo(member.getMemberNo());
     }
 
     @Test
@@ -98,6 +99,21 @@ class MemberRepositoryTest {
 
         //then
         assertThat(members).isNotNull();
+    }
+
+    @Test
+    @DisplayName("MemberRepository existByMemberId() 테스트")
+    void testExistByMemberId() {
+        //given
+        Member member = Dummy.getDummyMember();
+        entityManager.persist(member.getGender());
+        memberRepository.save(member);
+
+        //when
+        boolean expected = memberRepository.existsByMemberId(member.getMemberId());
+
+        //then
+        assertThat(expected).isEqualTo(true);
     }
 
     @Test

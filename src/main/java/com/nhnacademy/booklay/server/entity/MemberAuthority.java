@@ -18,7 +18,7 @@ public class MemberAuthority {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-    @MapsId("memberId")
+    @MapsId("memberNo")
     private Member member;
 
     @ManyToOne
@@ -40,7 +40,7 @@ public class MemberAuthority {
     public static class Pk implements Serializable {
 
         @Column(name = "member_no")
-        private Long memberId;
+        private Long memberNo;
 
         @Column(name = "authority_no")
         private Long authorityId;

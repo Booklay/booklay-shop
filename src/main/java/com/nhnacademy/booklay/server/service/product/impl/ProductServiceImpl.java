@@ -11,8 +11,8 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
-import com.nhnacademy.booklay.server.service.category.CategoryService;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.CategoryProductService;
 import com.nhnacademy.booklay.server.service.product.ProductAuthorService;
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
   private final ProductRepository productRepository;
 
   private final ProductDetailService productDetailService;
-  private final CategoryService categoryService;
+  private final CategoryRepository categoryRepository;
   private final CategoryProductService categoryProductService;
   private final AuthorService authorService;
   private final ProductAuthorService productAuthorService;
@@ -158,12 +158,7 @@ public class ProductServiceImpl implements ProductService {
     for (int i = 0; i < categories.size(); i++) {
       CategoryProduct.Pk pk = new Pk(product.getId(), categories.get(i));
 
-      CategoryResponse categoryResponse = categoryService.retrieveCategory(categories.get(i));
-      Category category = Category.builder()
-          .id(categoryResponse.getId())
-          .name(categoryResponse.getName())
-          .isExposure(categoryResponse.getIsExposure())
-          .build();
+      Category category = categoryRepository.findById(categories.get(i)).orElseThrow(()-> new IllegalArgumentException("catrgory not found"));
 
       CategoryProduct categoryProduct = CategoryProduct.builder()
           .pk(pk)

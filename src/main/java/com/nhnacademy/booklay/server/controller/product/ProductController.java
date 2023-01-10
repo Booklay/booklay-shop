@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.controller.product;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateWishlistRequest;
-import com.nhnacademy.booklay.server.entity.Wishlist;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.WishlistService;
 import lombok.RequiredArgsConstructor;
@@ -17,24 +16,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
   private final WishlistService wishlistService;
+  private final ProductService productService;
 
   @GetMapping("/{id}")
-  public void viewProduct(){
-
+  public void viewProduct() {
+//    productService.retrieveById();
   }
 
   //위시리스트 등록 삭제
   @PostMapping("/wishlist")
-  public void createWishlist(CreateWishlistRequest request){
+  public void createWishlist(CreateWishlistRequest request) {
     wishlistService.createWishlist(request);
 
   }
 
   @DeleteMapping("/wishlist")
-  public void deleteWishlist(CreateWishlistRequest request){
+  public void deleteWishlist(CreateWishlistRequest request) {
     wishlistService.deleteWishlist(request);
   }
-
 
 
 }

@@ -1,11 +1,11 @@
 package com.nhnacademy.booklay.server.exception.category;
 
-import com.nhnacademy.booklay.server.dto.category.CategoryCUDto;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryCURequest;
 
 public class CreateCategoryFailedException extends RuntimeException {
-    public CreateCategoryFailedException(CategoryCUDto dto) {
+    public CreateCategoryFailedException(CategoryCURequest request) {
         super("Failed to Create Category \n"
-            + "   ID : " + dto.getId() + "\n"
-            + " Name : " + dto.getName());
+            + "   ID : " + request.getId() + "\n"
+            + " Name : " + request.getName());
     }
 }

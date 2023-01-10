@@ -14,6 +14,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+/**
+ *
+ * author 양승아
+ */
 @DataJpaTest
 @ActiveProfiles("test")
 class MemberAuthorityRepositoryTest {

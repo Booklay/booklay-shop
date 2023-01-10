@@ -3,7 +3,7 @@ package com.nhnacademy.booklay.server.controller.admin;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
+import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
 import javax.validation.Valid;
@@ -89,7 +89,7 @@ public class CategoryAdminController {
         try {
             categoryService.deleteCategory(categoryId);
             return "{\"result\": \"Success\"}";
-        } catch (CategoryNotFoundException e) {
+        } catch (NotFoundException e) {
             return "{\"result\": \"Fail\"}";
         }
     }

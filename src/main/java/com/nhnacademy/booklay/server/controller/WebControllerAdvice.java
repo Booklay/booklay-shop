@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.controller;
 
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
+import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
 import com.nhnacademy.booklay.server.exception.category.UpdateCategoryFailedException;
 import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
@@ -26,7 +26,7 @@ public class WebControllerAdvice {
         return treatException(ex);
     }
 
-    @ExceptionHandler(CategoryNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "존재하지 않는 카테고리에 대한 요청입니다.")
     public String categoryNotFoundException(Exception ex) {
         return treatException(ex);

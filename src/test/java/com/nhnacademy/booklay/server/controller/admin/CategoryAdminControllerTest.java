@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -17,7 +16,7 @@ import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
+import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -135,7 +134,7 @@ class CategoryAdminControllerTest {
     void testRetrieveCategory_ifNotExistedCategoryId() throws Exception {
         //mocking
         when(categoryService.retrieveCategory(category.getId())).thenThrow(
-            CategoryNotFoundException.class);
+            NotFoundException.class);
 
         //then
         mockMvc.perform(get(URI_PREFIX + "/" + category.getId())
@@ -204,7 +203,7 @@ class CategoryAdminControllerTest {
         //mocking
         doNothing().when(categoryService).deleteCategory(category.getId());
 
-        doThrow(CategoryNotFoundException.class).when(categoryService)
+        doThrow(NotFoundException.class).when(categoryService)
             .deleteCategory(category.getId());
 
         //then

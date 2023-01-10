@@ -7,7 +7,6 @@ import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.entity.DeliveryStatusCode;
 import com.nhnacademy.booklay.server.entity.Gender;
-import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
@@ -29,17 +28,17 @@ public class Dummy {
     public static Member getDummyMember() {
         Member member = Member.builder()
             .gender(getDummyGender())
-            .id("dummyMemberId")
+            .memberId("dummyMemberId")
             .password("$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu") //1234
             .nickname("메뚜기")
             .name("유재석")
             .birthday(LocalDate.now())
             .phoneNo("01012341234")
-            .email("www.abcd.com")
+            .email("abcd@naver.com")
             .isBlocked(false)
             .build();
 
-        ReflectionTestUtils.setField(member, "memberId", 1L);
+        ReflectionTestUtils.setField(member, "memberNo", 1L);
 
         return member;
     }
@@ -95,7 +94,7 @@ public class Dummy {
         Authority authority = getDummyAuthority();
 
         return MemberAuthority.builder()
-            .pk(new MemberAuthority.Pk(member.getMemberId(), authority.getId()))
+            .pk(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()))
             .member(member)
             .authority(authority)
             .build();

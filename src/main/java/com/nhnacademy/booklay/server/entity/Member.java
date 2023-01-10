@@ -16,18 +16,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
-
     @Id
     @Column(name = "member_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long memberNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender_no")
     private Gender gender;
 
-    @Column
-    private String id;
+    @Column(name = "id")
+    private String memberId;
 
     @Column
     private String password;
@@ -66,9 +65,9 @@ public class Member {
     private Boolean isBlocked;
 
     @Builder
-    public Member(Gender gender, String id, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
+    public Member(Gender gender, String memberId, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
         this.gender = gender;
-        this.id = id;
+        this.memberId = memberId;
         this.password = password;
         this.nickname = nickname;
         this.name = name;

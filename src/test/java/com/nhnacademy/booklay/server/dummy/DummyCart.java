@@ -17,7 +17,7 @@ public class DummyCart {
   public static Cart getDummyCart() {
     Member dummyMember = Dummy.getDummyMember();
     Product dummyProduct = getDummyProduct();
-    Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberId(), dummyProduct.getId());
+    Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberNo(), dummyProduct.getId());
 
     Cart cart = Cart.builder()
         .pk(dummyPk)

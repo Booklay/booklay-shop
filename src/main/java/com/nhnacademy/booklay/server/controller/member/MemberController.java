@@ -5,7 +5,9 @@ import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
+
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,8 +40,7 @@ public class MemberController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createMember(@Valid @RequestBody MemberCreateRequest memberCreateRequest,
-                             BindingResult bindingResult) {
+    public void createMember(@Valid @RequestBody MemberCreateRequest memberCreateRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
@@ -48,9 +49,7 @@ public class MemberController {
 
     @PutMapping("/{memberNo}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateMember(@PathVariable Long memberNo,
-                             @Valid @RequestBody MemberUpdateRequest memberUpdateRequest,
-                             BindingResult bindingResult) {
+    public void updateMember(@PathVariable Long memberNo, @Valid @RequestBody MemberUpdateRequest memberUpdateRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }

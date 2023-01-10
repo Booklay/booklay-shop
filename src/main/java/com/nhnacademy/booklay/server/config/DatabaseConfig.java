@@ -12,6 +12,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+/**
+ * Spring Boot의 기본 Datasource인 hikari를 DBCP2로 바꾸기 위한 설정 파일입니다.
+ *
+ * @author 조현진
+ */
 @Configuration
 @Slf4j
 public class DatabaseConfig {

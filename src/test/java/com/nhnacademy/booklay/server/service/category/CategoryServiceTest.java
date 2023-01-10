@@ -12,10 +12,8 @@ import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.exception.category.CategoryAlreadyExistedException;
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
-import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
-import com.nhnacademy.booklay.server.exception.category.UpdateCategoryFailedException;
+import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -98,8 +96,8 @@ class CategoryServiceTest {
 
         //then
         assertThatThrownBy(() -> categoryService.createCategory(createRequest))
-            .isInstanceOf(CategoryAlreadyExistedException.class)
-            .hasMessageContaining(String.valueOf(createRequest.getId()));
+            .isInstanceOf(AlreadyExistedException.class)
+            .hasMessageContaining("이미 존재하는 카테고리 ID 입니다.");
     }
 
     @Test
@@ -107,33 +105,28 @@ class CategoryServiceTest {
     void testCreateCategory_ifNotExistedParentCategoryId_thenThrowsCreateCategoryFailedException() {
         //given
 
+
         //mocking
-        when(categoryRepository.findById(createRequest.getParentCategoryId()))
-            .thenThrow(CategoryNotFoundException.class);
+        when(categoryRepository.findById(createRequest.getParentCategoryId())).thenThrow(
+            new NotFoundException(Category.class,
+                "존재하지 않는 상위 카테고리 ID 입니다."));
 
         //when
 
         //then
         assertThatThrownBy(() -> categoryService.createCategory(createRequest))
-            .isInstanceOf(CreateCategoryFailedException.class)
-            .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
+            .isInstanceOf(NotFoundException.class)
+            .hasMessageContaining("존재하지 않는 상위 카테고리 ID 입니다.");
     }
 
 
     @Test
     @DisplayName("카테고리 검색 성공")
     void testRetrieveCategory() {
-        CategoryResponse categoryResponse = new CategoryResponse();
-
-        ReflectionTestUtils.setField(categoryResponse, "id", category.getId());
-        ReflectionTestUtils.setField(categoryResponse, "parentCategoryId",
-            category.getParent().getId());
-        ReflectionTestUtils.setField(categoryResponse, "name", category.getName());
-        ReflectionTestUtils.setField(categoryResponse, "isExposure", category.getIsExposure());
 
         //mocking
-        when(categoryRepository.findById(category.getId(), CategoryResponse.class)).thenReturn(
-            Optional.of(categoryResponse));
+        when(categoryRepository.findById(category.getId())).thenReturn(
+            Optional.ofNullable(category));
 
         //when
         CategoryResponse actual = categoryService.retrieveCategory(category.getId());
@@ -154,7 +147,9 @@ class CategoryServiceTest {
         //when
 
         //then
-        assertThatThrownBy(() -> categoryService.retrieveCategory(category.getId()));
+        assertThatThrownBy(() -> categoryService.retrieveCategory(category.getId()))
+            .isInstanceOf(NotFoundException.class)
+            .hasMessageContaining("존재하지 않는 카테고리 ID에 대한 요청입니다.");
     }
 
     @Test
@@ -186,8 +181,8 @@ class CategoryServiceTest {
 
         //then
         assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
-            .isInstanceOf(CategoryNotFoundException.class)
-            .hasMessageContaining(String.valueOf(updateRequest.getId()));
+            .isInstanceOf(NotFoundException.class)
+            .hasMessageContaining("존재하지 않는 카테고리 ID 입니다.");
     }
 
     @Test
@@ -200,14 +195,15 @@ class CategoryServiceTest {
             .thenReturn(true);
 
         when(categoryRepository.findById(updateRequest.getParentCategoryId()))
-            .thenThrow(CategoryNotFoundException.class);
+            .thenThrow(new NotFoundException(Category.class,
+                "존재하지 않는 상위 카테고리 ID 입니다."));
 
         //when
 
         //then
         assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
-            .isInstanceOf(UpdateCategoryFailedException.class)
-            .hasMessageContaining(String.valueOf(createRequest.getParentCategoryId()));
+            .isInstanceOf(NotFoundException.class)
+            .hasMessageContaining("존재하지 않는 상위 카테고리 ID 입니다.");
     }
 
     @Test
@@ -224,7 +220,7 @@ class CategoryServiceTest {
         when(categoryRepository.existsById(category.getId())).thenReturn(false);
 
         assertThatThrownBy(() -> categoryService.deleteCategory(category.getId()))
-            .isInstanceOf(CategoryNotFoundException.class)
-            .hasMessageContaining(String.valueOf(category.getId()));
+            .isInstanceOf(NotFoundException.class)
+            .hasMessageContaining("존재하지 않는 카테고리 ID에 대한 요청입니다.");
     }
 }

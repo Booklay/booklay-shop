@@ -1,8 +1,8 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,11 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
-import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -58,13 +58,7 @@ class CategoryAdminControllerTest {
         objectMapper = new ObjectMapper();
         category = Dummy.getDummyCategory();
 
-        categoryResponse = new CategoryResponse();
-
-        ReflectionTestUtils.setField(categoryResponse, "id", category.getId());
-        ReflectionTestUtils.setField(categoryResponse, "parentCategoryId",
-            category.getParent().getId());
-        ReflectionTestUtils.setField(categoryResponse, "name", category.getName());
-        ReflectionTestUtils.setField(categoryResponse, "isExposure", category.getIsExposure());
+        categoryResponse = new CategoryResponse().fromEntity(category);
 
         createDto = new CategoryCreateRequest();
 
@@ -104,12 +98,12 @@ class CategoryAdminControllerTest {
     void testCreateCategory_ifCreateRequestIncludeNullOrBlank_throwsValidationFailedException()
         throws Exception {
         //given
-        CategoryCreateRequest sampleDto = new CategoryCreateRequest();
+        CategoryCreateRequest emptyRequest = new CategoryCreateRequest();
         //mocking
 
         //then
         mockMvc.perform(post(URI_PREFIX)
-                .content(objectMapper.writeValueAsString(sampleDto))
+                .content(objectMapper.writeValueAsString(emptyRequest))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andDo(print())
@@ -135,7 +129,7 @@ class CategoryAdminControllerTest {
     void testRetrieveCategory_ifNotExistedCategoryId() throws Exception {
         //mocking
         when(categoryService.retrieveCategory(category.getId())).thenThrow(
-            CategoryNotFoundException.class);
+            NotFoundException.class);
 
         //then
         mockMvc.perform(get(URI_PREFIX + "/" + category.getId())
@@ -185,12 +179,13 @@ class CategoryAdminControllerTest {
     void testUpdateCategory_ifUpdateRequestIncludeNullOrBlank_throwsValidationFailedException()
         throws Exception {
         //given
-        CategoryUpdateRequest sampleDto = new CategoryUpdateRequest();
+        CategoryUpdateRequest emptyRequest = new CategoryUpdateRequest();
+
         //mocking
 
         //then
         mockMvc.perform(put(URI_PREFIX + "/" + category.getId())
-                .content(objectMapper.writeValueAsString(sampleDto))
+                .content(objectMapper.writeValueAsString(emptyRequest))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andDo(print())
@@ -202,17 +197,31 @@ class CategoryAdminControllerTest {
     @DisplayName("카테고리 삭제 매핑 테스트")
     void testDeleteCategory() throws Exception {
         //mocking
-        doNothing().when(categoryService).deleteCategory(category.getId());
 
-        doThrow(CategoryNotFoundException.class).when(categoryService)
-            .deleteCategory(category.getId());
-
-        //then
+        //when
         mockMvc.perform(delete(URI_PREFIX + "/" + category.getId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isAccepted())
             .andDo(print())
             .andReturn();
 
+        //then
+        verify(categoryService, times(1)).deleteCategory(category.getId());
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 매핑 테스트")
+    void testDeleteCategory_ifNotExistedCategoryId() throws Exception {
+        //mocking
+
+        doThrow(NotFoundException.class).when(categoryService)
+            .deleteCategory(category.getId());
+
+        //then
+        mockMvc.perform(delete(URI_PREFIX + "/" + category.getId())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andReturn();
     }
 }

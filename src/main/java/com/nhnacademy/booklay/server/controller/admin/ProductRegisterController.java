@@ -2,14 +2,12 @@ package com.nhnacademy.booklay.server.controller.admin;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
-import com.nhnacademy.booklay.server.repository.CategoryRepository;
-import com.nhnacademy.booklay.server.service.product.AuthorService;
-import com.nhnacademy.booklay.server.service.product.CategoryProductService;
-import com.nhnacademy.booklay.server.service.product.ProductAuthorService;
-import com.nhnacademy.booklay.server.service.product.ProductDetailService;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import com.nhnacademy.booklay.server.service.product.SubscribeService;
+import com.nhnacademy.booklay.server.service.product.TagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,13 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductRegisterController {
 
-  private final ProductDetailService productDetailService;
   private final ProductService productService;
-  private final AuthorService authorService;
-  private final ProductAuthorService productAuthorService;
-  private final CategoryRepository categoryRepository;
-  private final CategoryProductService categoryProductService;
-  private final SubscribeService subscribeService;
+  private final TagService tagService;
 
   //책 등록
   @PostMapping("/register/book")
@@ -61,10 +54,42 @@ public class ProductRegisterController {
   }
 
   //구독 수정
-  @PostMapping("/update/subscribe")
+  @PutMapping("/update/subscribe")
   public Long postSubscribeUpdate(CreateProductSubscribeRequest request) throws Exception {
     Long savedId = productService.updateSubscribeProduct(request);
     return savedId;
   }
+
+
+  //태그 자체만
+  @PostMapping("/tag")
+  public void tagRegister(CreateTagRequest request) {
+    tagService.createTag(request);
+  }
+
+  @PutMapping("/tag")
+  public void tagUpdate(UpdateTagRequest request){
+    tagService.updateTag(request);
+
+  }
+
+  @DeleteMapping("/tag")
+  public void tagDelete(Long id) {
+    tagService.deleteTag(id);
+  }
+
+  //태그와 상품
+  //연결
+  @PostMapping("/tag/connection")
+  public void tagConnection(){
+
+  }
+  //분리
+  @DeleteMapping("/tag/connection")
+  public void tagDisconnection(){
+
+  }
+
+
 
 }

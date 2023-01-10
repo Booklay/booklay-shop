@@ -1,13 +1,17 @@
-package com.nhnacademy.booklay.server.controller.admin;
+package com.nhnacademy.booklay.server.controller.admin.coupon;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
+import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +41,11 @@ public class CouponAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCoupon(@Valid @RequestBody CouponCURequest couponRequest) {
+    public void createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
         couponAdminService.createCoupon(couponRequest);
     }
 
@@ -49,7 +57,8 @@ public class CouponAdminController {
 
     @PutMapping("/{couponId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateCoupon(@PathVariable Long couponId, @RequestBody CouponCURequest couponRequest) {
+    public void updateCoupon(@PathVariable Long couponId, @RequestBody
+    CouponUpdateRequest couponRequest) {
         couponAdminService.updateCoupon(couponId, couponRequest);
     }
 

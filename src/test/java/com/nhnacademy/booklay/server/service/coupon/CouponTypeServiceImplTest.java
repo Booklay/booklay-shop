@@ -2,13 +2,10 @@ package com.nhnacademy.booklay.server.service.coupon;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
-import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
 import org.junit.jupiter.api.DisplayName;

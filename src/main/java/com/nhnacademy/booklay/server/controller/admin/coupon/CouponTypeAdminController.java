@@ -1,12 +1,14 @@
-package com.nhnacademy.booklay.server.controller.admin;
+package com.nhnacademy.booklay.server.controller.admin.coupon;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeRetrieveResponse;
+import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
 import com.nhnacademy.booklay.server.service.coupon.CouponTypeService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,13 +40,21 @@ public class CouponTypeAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCouponType(@Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
+    public void createCouponType(@Valid @RequestBody CouponTypeCURequest couponTypeRequest,
+                                 BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
        couponTypeService.createCouponType(couponTypeRequest);
     }
 
     @PutMapping("/{couponTypeId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateCouponType(@PathVariable Long couponTypeId, @Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
+    public void updateCouponType(@PathVariable Long couponTypeId, @Valid @RequestBody CouponTypeCURequest couponTypeRequest,
+                                 BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
         couponTypeService.updateCouponType(couponTypeId, couponTypeRequest);
     }
 

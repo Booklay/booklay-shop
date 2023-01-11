@@ -1,7 +1,11 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Cart;
+import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.entity.CategoryProduct;
+import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
 import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Post;
@@ -11,12 +15,16 @@ import com.nhnacademy.booklay.server.entity.ProductAskComment;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class DummyCart {
 
   public static Cart getDummyCart() {
+    CreateProductBookRequest request = getDummyProductBookDto();
     Member dummyMember = Dummy.getDummyMember();
-    Product dummyProduct = getDummyProduct();
+    Product dummyProduct = getDummyProduct(request);
     Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberId(), dummyProduct.getId());
 
     Cart cart = Cart.builder()
@@ -67,20 +75,17 @@ public class DummyCart {
     return comment;
   }
 
-  public static Product getDummyProduct() {
-    Image dummyImage = getDummyImage();
-    Product product = Product.builder()
-        .price(1000L)
-        .image(getDummyImage())
-        .title("new product")
-        .longDescription("veeeeeeeeery looooooooooooooong description")
-        .shortDescription("short description")
-        .pointMethod(true)
-        .pointRate(5L)
-        .isSelling(true)
+  public static Product getDummyProduct(CreateProductBookRequest request) {
+    return Product.builder()
+        .price(request.getPrice())
+        .pointMethod(request.isPointMethod())
+        .pointRate(request.getPointRate())
+        .title(request.getTitle())
+        .shortDescription(request.getShortDescription())
+        .longDescription(request.getLongDescription())
+        .image(request.getImage())
+        .isSelling(request.isSelling())
         .build();
-
-    return product;
   }
 
   public static Image getDummyImage() {
@@ -95,32 +100,40 @@ public class DummyCart {
   public static Author getDummyAuthor() {
 
     Author author = Author.builder()
-        .authorNo(1L)
         .name("작가님")
         .build();
+
+    author.setAuthorNo(1L);
 
     return author;
   }
 
-  public static ProductDetail getDummyProductDetail(){
-    Product dummyProduct = getDummyProduct();
+  public static ProductDetail getDummyProductDetail(CreateProductBookRequest request) {
+    Product dummyProduct = getDummyProduct(request);
     ProductDetail productDetail = ProductDetail.builder()
         .product(dummyProduct)
-        .isbn("9128-1231-123")
-        .publisher("출판사")
-        .page(200)
-        .publishedDate(LocalDate.of(1997,07,25))
+        .page(request.getPage())
+        .isbn(request.getIsbn())
+        .publisher(request.getPublisher())
+        .publishedDate(request.getPublishedDate())
         .build();
 
-    productDetail.setStorage(300);
+    if (Objects.nonNull(request.getStorage())) {
+      productDetail.setStorage(request.getStorage());
+    }
+    if (Objects.nonNull(request.getEbookAddress())) {
+      productDetail.setEbookAddress(request.getEbookAddress());
+    }
 
     return productDetail;
   }
-  public static ProductAuthor getDummyProductAuthor(){
-    Author dummyAuthor = getDummyAuthor();
-    ProductDetail dummyProductDetail = getDummyProductDetail();
 
-    ProductAuthor.Pk pk = new ProductAuthor.Pk(dummyAuthor.getAuthorNo(), dummyProductDetail.getId());
+  public static ProductAuthor getDummyProductAuthor(CreateProductBookRequest request) {
+    Author dummyAuthor = getDummyAuthor();
+    ProductDetail dummyProductDetail = getDummyProductDetail(request);
+
+    ProductAuthor.Pk pk = new ProductAuthor.Pk(dummyAuthor.getAuthorNo(),
+        dummyProductDetail.getId());
 
     ProductAuthor productAuthor = ProductAuthor.builder()
         .pk(pk)
@@ -130,4 +143,72 @@ public class DummyCart {
 
     return productAuthor;
   }
+
+  public static CreateProductBookRequest getDummyProductBookDto() {
+    Image image = Image.builder()
+        .id(1L)
+        .address("c://downloads/dummy_image")
+        .ext("jpg")
+        .build();
+
+    List<Long> authors = new ArrayList<>();
+    authors.add(1L);
+
+    List<Long> categories = new ArrayList<>();
+    categories.add(1L);
+
+    CreateProductBookRequest createProductBookRequest = CreateProductBookRequest.builder()
+        .image(image)
+        .isbn("923-2239-42-1")
+        .page(300)
+        .isSelling(true)
+        .price(12900L)
+        .authorIds(authors)
+        .categoryIds(categories)
+        .longDescription("really looooooooooooong description")
+        .shortDescription("short")
+        .pointMethod(true)
+        .pointRate(5L)
+        .title("dummy title")
+        .publishedDate(LocalDate.of(2023, 1, 1))
+        .publisher("더미 출판사")
+        .build();
+
+    createProductBookRequest.setStorage(400);
+
+    return createProductBookRequest;
+  }
+
+  public static Category getDummyCategory() {
+
+    Category allProduct = Category.builder()
+        .id(1L)
+        .parent(null)
+        .name("전체 상품")
+        .depth(0L)
+        .isExposure(true)
+        .build();
+
+    return Category.builder()
+        .id(101L)
+        .parent(allProduct)
+        .name("국내도서")
+        .depth(allProduct.getDepth() + 1)
+        .isExposure(true)
+        .build();
+  }
+
+  public static CategoryProduct getDummyCategoryProduct(CreateProductBookRequest request) {
+    Product product = getDummyProduct(request);
+    Category category = getDummyCategory();
+
+    CategoryProduct.Pk pk = new Pk(product.getId(), category.getId());
+
+    return CategoryProduct.builder()
+        .pk(pk)
+        .product(product)
+        .category(category)
+        .build();
+  }
+
 }

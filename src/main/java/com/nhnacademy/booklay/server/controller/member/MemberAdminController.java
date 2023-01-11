@@ -23,7 +23,6 @@ public class MemberAdminController {
 
     @GetMapping
     public List<MemberRetrieveResponse> retrieveMembers(){
-        //TODO 2: 1~10까지만 나옴. 수정필요.
         PageRequest page = PageRequest.of(1, 10);
         return memberService.retrieveMembers(page);
     }

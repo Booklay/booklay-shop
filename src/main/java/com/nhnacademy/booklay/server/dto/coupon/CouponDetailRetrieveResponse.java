@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Builder
 public class CouponDetailRetrieveResponse {
     private final Long id;
-    private final Member member;
     private final String name;
     private final String typeName;
     private final int amount;
@@ -22,6 +21,7 @@ public class CouponDetailRetrieveResponse {
     private final int maximumDiscountAmount;
     private final LocalDateTime issuanceDeadlineAt;
     private final Boolean isDuplicatable;
+    private final Boolean isLimited;
 
     public static CouponDetailRetrieveResponse fromEntity(Coupon coupon) {
         return CouponDetailRetrieveResponse.builder()
@@ -31,6 +31,8 @@ public class CouponDetailRetrieveResponse {
             .amount(coupon.getAmount())
             .minimumUseAmount(coupon.getMinimumUseAmount())
             .minimumUseAmount(coupon.getMaximumDiscountAmount())
+            .isDuplicatable(coupon.getIsDuplicatable())
+            .isLimited(coupon.getIsLimited())
             .build();
     }
 }

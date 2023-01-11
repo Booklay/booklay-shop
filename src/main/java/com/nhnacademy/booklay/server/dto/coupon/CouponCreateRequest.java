@@ -10,14 +10,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
 @Getter
 @NoArgsConstructor
 public class CouponCreateRequest {
     @NotBlank
     private String name;
-    private Long memberId;
     @NotNull
     private Long typeCode;
     @NotNull

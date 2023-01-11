@@ -9,7 +9,7 @@ import lombok.Getter;
 public class CouponRetrieveResponse {
     private final Long id;
     private final String name;
-    private final String couponType;
+    private final String typeName;
     private final int amount;
     private final int minimumUseAmount;
     private final int maximumDiscountAmount;
@@ -21,7 +21,7 @@ public class CouponRetrieveResponse {
                                   boolean isLimited) {
         this.id = id;
         this.name = name;
-        this.couponType = couponType.getName();
+        this.typeName = couponType.getName();
         this.amount = amount;
         this.minimumUseAmount = minimumUseAmount;
         this.maximumDiscountAmount = maximumDiscountAmount;

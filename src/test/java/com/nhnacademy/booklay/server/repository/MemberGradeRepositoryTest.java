@@ -7,6 +7,8 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

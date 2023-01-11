@@ -2,17 +2,19 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
-import javax.transaction.Transactional;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 
-import org.aspectj.lang.annotation.Before;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -31,6 +33,8 @@ class ProductAuthorRepositoryTest {
     AuthorRepository authorRepository;
     @Autowired
     ProductDetailRepository productDetailRepository;
+
+    CreateProductBookRequest request = DummyCart.getDummyProductBookDto();
 
   void clearRepo(String entityName, JpaRepository jpaRepository) {
     jpaRepository.deleteAll();
@@ -53,7 +57,7 @@ class ProductAuthorRepositoryTest {
 
   @Test
   void testProductAuthorSave(){
-    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
+    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(request);
 
         entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
         productRepository.save(productAuthor.getProductDetail().getProduct());
@@ -68,7 +72,7 @@ class ProductAuthorRepositoryTest {
 
     @Test
     void testProductAuthorFind() {
-        ProductAuthor productAuthor = DummyCart.getDummyProductAuthor();
+        ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(request);
 
         entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
         productRepository.save(productAuthor.getProductDetail().getProduct());

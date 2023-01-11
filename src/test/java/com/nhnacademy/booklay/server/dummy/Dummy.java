@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
@@ -198,12 +199,13 @@ public class Dummy {
         ReflectionTestUtils.setField(couponRequest, "memberId", null);
         ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
         ReflectionTestUtils.setField(couponRequest, "amount", 5);
-        ReflectionTestUtils.setField(couponRequest, "categoryId", null);
-        ReflectionTestUtils.setField(couponRequest, "productId", null);
+        ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", true);
+        ReflectionTestUtils.setField(couponRequest, "applyItemId", Dummy.getDummyCategory().getId());
         ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
         ReflectionTestUtils.setField(couponRequest, "maximumDiscountAmount", 5000);
         ReflectionTestUtils.setField(couponRequest, "issuanceDeadlineAt", LocalDateTime.now());
         ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
+        ReflectionTestUtils.setField(couponRequest, "quantity", null);
 
         return couponRequest;
     }
@@ -249,5 +251,9 @@ public class Dummy {
         ReflectionTestUtils.setField(memberRequest, "email", "bbbb@gmail.com");
 
         return memberRequest;
+    }
+
+    public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {
+        return CouponRetrieveResponse.fromEntity(Dummy.getDummyCoupon());
     }
 }

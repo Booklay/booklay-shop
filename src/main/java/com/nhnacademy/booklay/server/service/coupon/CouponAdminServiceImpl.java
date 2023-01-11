@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
-import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
@@ -13,20 +12,13 @@ import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  *
@@ -46,34 +38,27 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     public void createCoupon(@Valid CouponCreateRequest couponRequest) {
         CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode()).orElseThrow(() -> new IllegalArgumentException("No Such Coupon Type."));
 
-        Coupon coupon = Coupon.builder()
-            .couponType(couponType)
-            .name(couponRequest.getName())
-            .amount(couponRequest.getAmount())
-            .minimumUseAmount(couponRequest.getMinimumUseAmount())
-            .maximumDiscountAmount(couponRequest.getMaximumDiscountAmount())
-            .issuanceDeadlineAt(couponRequest.getIssuanceDeadlineAt())
-            .isDuplicatable(couponRequest.getIsDuplicatable())
-            .build();
+        Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType);
 
-        if (Objects.nonNull(couponRequest.getCategoryId())) {
-            Long categoryId = couponRequest.getCategoryId();
+        Long applyItemId = couponRequest.getApplyItemId();
 
-            Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(Category.class.toString(), categoryId));
+        setCategoryOrProduct(coupon, couponRequest, applyItemId);
+
+        couponRepository.save(coupon);
+    }
+
+    private void setCategoryOrProduct(Coupon coupon, CouponCreateRequest couponRequest, Long applyItemId) {
+        if(couponRequest.getIsOrderCoupon()) {
+            Category category = categoryRepository.findById(applyItemId)
+                .orElseThrow(() -> new NotFoundException(Category.class.toString(), applyItemId));
 
             coupon.setCategory(category);
-        }
-
-        if (Objects.nonNull(couponRequest.getProductId())) {
-            Long productId = couponRequest.getProductId();
-
-            Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(
-                Product.class.toString(), productId));
+        } else {
+            Product product = productRepository.findById(applyItemId)
+                .orElseThrow(() -> new NotFoundException(Product.class.toString(), applyItemId));
 
             coupon.setProduct(product);
         }
-
-        couponRepository.save(coupon);
     }
 
     @Override

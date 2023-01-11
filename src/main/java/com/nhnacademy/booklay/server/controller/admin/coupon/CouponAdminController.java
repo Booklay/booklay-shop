@@ -34,6 +34,14 @@ public class CouponAdminController {
 
     private final CouponAdminService couponAdminService;
 
+    @PostMapping
+    public ResponseEntity<Object> createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest) {
+        couponAdminService.createCoupon(couponRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(null);
+    }
+
     @GetMapping("/pages")
     public ResponseEntity<PageResponse<CouponRetrieveResponse>> retrieveAllCoupons(Pageable pageable) {
         Page<CouponRetrieveResponse> couponPage = couponAdminService.retrieveAllCoupons(pageable);
@@ -44,14 +52,6 @@ public class CouponAdminController {
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(couponPageResponse);
-    }
-
-    @PostMapping
-    public ResponseEntity<Object> createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest) {
-        couponAdminService.createCoupon(couponRequest);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(null);
     }
 
     @GetMapping("/{couponId}")

@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.controller.admin.coupon;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -11,16 +12,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -63,8 +71,14 @@ class CouponAdminControllerTest {
     @DisplayName("retrieveAllCoupons() - 모든 쿠폰 조회 컨트롤러 테스트")
     void testRetrieveAllCoupons() throws Exception {
 
+        // mocking
+        PageRequest pageRequest = PageRequest.of(0,10);
+        PageImpl<CouponRetrieveResponse> couponRetrieveResponses = new PageImpl<>(List.of(), pageRequest, 1);
+
+        when(couponAdminService.retrieveAllCoupons(any())).thenReturn(couponRetrieveResponses);
+
         // then
-        mockMvc.perform(get(URI_PREFIX + "/pages/0")
+        mockMvc.perform(get(URI_PREFIX + "/pages")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())

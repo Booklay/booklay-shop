@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,6 +54,7 @@ class CategoryAdminControllerTest {
 
     private static final String URI_PREFIX = "/admin/categories";
 
+    //TODO BDD Mockito 사용
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
@@ -80,9 +82,7 @@ class CategoryAdminControllerTest {
     @DisplayName("카테고리 등록 성공")
     void testRegisterCategory() throws Exception {
         //given
-
-        //mocking
-        when(categoryService.retrieveCategory(category.getId())).thenReturn(categoryResponse);
+        given(categoryService.retrieveCategory(category.getId())).willReturn(categoryResponse);
 
         //then
         mockMvc.perform(post(URI_PREFIX)
@@ -134,7 +134,7 @@ class CategoryAdminControllerTest {
         //then
         mockMvc.perform(get(URI_PREFIX + "/" + category.getId())
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isInternalServerError())
             .andDo(print())
             .andReturn();
     }
@@ -154,7 +154,6 @@ class CategoryAdminControllerTest {
             .andDo(print())
             .andReturn();
     }
-
 
     @Test
     @DisplayName("카테고리 수정 성공")
@@ -181,7 +180,7 @@ class CategoryAdminControllerTest {
         //given
         CategoryUpdateRequest emptyRequest = new CategoryUpdateRequest();
 
-        //mocking
+        //when
 
         //then
         mockMvc.perform(put(URI_PREFIX + "/" + category.getId())
@@ -196,9 +195,9 @@ class CategoryAdminControllerTest {
     @Test
     @DisplayName("카테고리 삭제 매핑 테스트")
     void testDeleteCategory() throws Exception {
-        //mocking
+        //given
 
-        //when
+
         mockMvc.perform(delete(URI_PREFIX + "/" + category.getId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isAccepted())
@@ -220,7 +219,7 @@ class CategoryAdminControllerTest {
         //then
         mockMvc.perform(delete(URI_PREFIX + "/" + category.getId())
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isInternalServerError())
             .andDo(print())
             .andReturn();
     }

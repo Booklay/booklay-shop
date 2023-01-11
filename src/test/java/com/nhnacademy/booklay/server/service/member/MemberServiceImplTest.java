@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Gender;
@@ -14,9 +15,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.Collections;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -93,7 +98,17 @@ class MemberServiceImplTest {
     }
 
     @Test
+    @DisplayName("관리자의 회원 전체조회시 Page 반환 테스트")
     void retrieveMembers() {
+        //given
+        given(memberRepository.retrieveAllProducts(any())).willReturn(Page.empty());
+
+        //when
+        Page<MemberRetrieveResponse> pageResponse = memberService.retrieveMembers(PageRequest.of(0, 10));
+
+        //then
+        then(memberRepository).should().retrieveAllProducts(any());
+        assertThat(pageResponse.getTotalElements()).isZero();
     }
 
     @Test

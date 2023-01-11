@@ -38,10 +38,10 @@ public class CouponAdminController {
     private final CouponAdminService couponAdminService;
 
     @GetMapping("/pages")
-    public ResponseEntity<PageResponse<Coupon>> retrieveAllCoupons(Pageable pageable) {
-        Page<Coupon> couponPage = couponAdminService.retrieveAllCoupons(pageable);
+    public ResponseEntity<PageResponse<CouponRetrieveResponse>> retrieveAllCoupons(Pageable pageable) {
+        Page<CouponRetrieveResponse> couponPage = couponAdminService.retrieveAllCoupons(pageable);
 
-        PageResponse<Coupon> couponPageResponse = new PageResponse<>(couponPage.getNumber(), couponPage.getSize(),
+        PageResponse<CouponRetrieveResponse> couponPageResponse = new PageResponse<>(couponPage.getNumber(), couponPage.getSize(),
                 couponPage.getTotalPages(), couponPage.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -64,6 +64,7 @@ public class CouponAdminController {
             couponAdminService.retrieveCoupon(couponId);
 
         return ResponseEntity.status(HttpStatus.OK)
+            .body(couponDetailRetrieveResponse);
     }
 
     @PutMapping("/{couponId}")

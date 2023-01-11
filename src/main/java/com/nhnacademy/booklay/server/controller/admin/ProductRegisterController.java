@@ -35,33 +35,27 @@ public class ProductRegisterController {
   @PostMapping("/register/book")
   public Long postBookRegister(CreateProductBookRequest request) throws Exception {
     //product
-    Long savedProductId = productService.createBookProduct(request);
-    return savedProductId;
+    return productService.createBookProduct(request);
   }
 
   //책 수정
   @PutMapping("/register/book")
   public Long postBookUpdater(CreateProductBookRequest request) throws Exception {
 
-    Long savedId = productService.updateBookProduct(request);
-    //id 넘겨줘서 이걸로 프론트단에서 상세페이지 이동하게? 해야할듯
-    return savedId;
+    return productService.updateBookProduct(request);
   }
 
 
   //구독
   @PostMapping("/register/subscribe")
   public Long postSubscribeRegister(CreateProductSubscribeRequest request) throws Exception {
-    Long savedId = productService.createSubscribeProduct(request);
-
-    return savedId;
+    return  productService.createSubscribeProduct(request);
   }
 
   //구독 수정
   @PutMapping("/update/subscribe")
   public Long postSubscribeUpdate(CreateProductSubscribeRequest request) throws Exception {
-    Long savedId = productService.updateSubscribeProduct(request);
-    return savedId;
+    return productService.updateSubscribeProduct(request);
   }
 
 
@@ -71,12 +65,12 @@ public class ProductRegisterController {
     return tagService.retrieveAllTag(pageable);
   }
   @PostMapping("/tag")
-  public void tagRegister(CreateTagRequest request) {
+  public void tagRegister(CreateTagRequest request) throws Exception {
     tagService.createTag(request);
   }
 
   @PutMapping("/tag")
-  public void tagUpdate(UpdateTagRequest request){
+  public void tagUpdate(UpdateTagRequest request) throws Exception {
     tagService.updateTag(request);
   }
 
@@ -84,19 +78,5 @@ public class ProductRegisterController {
   public void tagDelete(Long id) {
     tagService.deleteTag(id);
   }
-
-  //태그와 상품
-  //연결
-  @PostMapping("/tag/connection")
-  public void tagConnection(){
-
-  }
-  //분리
-  @DeleteMapping("/tag/connection")
-  public void tagDisconnection(){
-
-  }
-
-
 
 }

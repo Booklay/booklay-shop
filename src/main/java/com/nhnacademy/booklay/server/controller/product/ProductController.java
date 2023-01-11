@@ -5,7 +5,6 @@ import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +16,6 @@ public class ProductController {
 
   private final WishlistService wishlistService;
   private final ProductService productService;
-
-  @GetMapping("/{id}")
-  public void viewProduct() {
-//    productService.retrieveById();
-  }
 
   //위시리스트 등록 삭제
   @PostMapping("/wishlist")

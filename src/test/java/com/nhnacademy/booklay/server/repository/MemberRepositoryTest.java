@@ -2,12 +2,12 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -96,7 +96,7 @@ class MemberRepositoryTest {
 
         //when
         PageRequest page = PageRequest.of(1, 10);
-        Page<Member> members = memberRepository.findAllBy(page);
+        Page<MemberRetrieveResponse> members = memberRepository.findAllBy(page);
 
         //then
         assertThat(members).isNotNull();

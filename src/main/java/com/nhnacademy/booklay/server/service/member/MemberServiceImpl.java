@@ -50,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable) {
-        return memberRepository.retrieveAllProducts(pageable);
+        return memberRepository.findAllBy(pageable);
     }
 
     @Override

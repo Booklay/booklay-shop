@@ -2,7 +2,7 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;

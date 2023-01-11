@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
-import org.junit.jupiter.api.BeforeEach;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
- *
- * author 양승아
+ * @author 양승아
  */
 @DataJpaTest
 @ActiveProfiles("test")
@@ -62,26 +61,27 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //when
-        Member expected = memberRepository.findById(member.getMemberId())
+        Member expected = memberRepository.findById(member.getMemberNo())
             .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         //then
-        assertThat(expected.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(expected.getMemberNo()).isEqualTo(member.getMemberNo());
     }
 
     @Test
-    @DisplayName("MemberRepository findByMemberId 테스트")
-    void testMemberFindByMemberId() {
+    @DisplayName("MemberRepository findByMemberNo 테스트")
+    void testMemberFindByMemberNo() {
         //given
         Member member = Dummy.getDummyMember();
         entityManager.persist(member.getGender());
         memberRepository.save(member);
 
         //when
-        Member expected = memberRepository.findByMemberId(member.getMemberId());
+        Member expected = memberRepository.findByMemberNo(member.getMemberNo())
+            .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         //then
-        assertThat(expected.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(expected.getMemberNo()).isEqualTo(member.getMemberNo());
     }
 
     @Test
@@ -98,6 +98,21 @@ class MemberRepositoryTest {
 
         //then
         assertThat(members).isNotNull();
+    }
+
+    @Test
+    @DisplayName("MemberRepository existByMemberId() 테스트")
+    void testExistByMemberId() {
+        //given
+        Member member = Dummy.getDummyMember();
+        entityManager.persist(member.getGender());
+        memberRepository.save(member);
+
+        //when
+        boolean expected = memberRepository.existsByMemberId(member.getMemberId());
+
+        //then
+        assertThat(expected).isEqualTo(true);
     }
 
     @Test

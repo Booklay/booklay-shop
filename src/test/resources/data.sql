@@ -161,20 +161,20 @@ create table coupon
 
 create table member
 (
-    member_no bigint not null
+    member_no  bigint      not null
         primary key auto_increment,
-    gender_no boolean not null,
-    id varchar(30) not null,
-    password char(60) not null,
-    nickname varchar(30) not null,
-    name varchar(50) not null,
-    birthday date not null,
-    phone_no char(11) not null,
-    email varchar(30) not null,
-    created_at datetime not null,
+    gender_no  boolean     not null,
+    member_id  varchar(30) not null,
+    password   char(60)    not null,
+    nickname   varchar(30) not null,
+    name       varchar(50) not null,
+    birthday   date        not null,
+    phone_no   char(11)    not null,
+    email      varchar(30) not null,
+    created_at datetime    not null,
     updated_at datetime null,
     deleted_at datetime null,
-    is_blocked boolean not null,
+    is_blocked boolean     not null,
     constraint FK_gender_TO_member_1
         foreign key (gender_no) references gender (gender_no)
 );

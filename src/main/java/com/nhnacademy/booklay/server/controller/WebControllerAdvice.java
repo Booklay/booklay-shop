@@ -49,6 +49,7 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
         log.warn("handleIllegalArgument", e);
         ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
         return handleExceptionInternal(e, errorCode);
+
     }
 
     @ExceptionHandler({Exception.class})

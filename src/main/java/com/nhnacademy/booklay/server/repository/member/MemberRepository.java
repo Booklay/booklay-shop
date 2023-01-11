@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.repository;
+package com.nhnacademy.booklay.server.repository.member;
 
 import com.nhnacademy.booklay.server.entity.Member;
 import java.util.Optional;

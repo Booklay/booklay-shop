@@ -35,11 +35,10 @@ public class CouponAdminController {
     private final CouponAdminService couponAdminService;
 
     @PostMapping
-    public ResponseEntity<Object> createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest) {
+    public ResponseEntity<Void> createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest) {
         couponAdminService.createCoupon(couponRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/pages")

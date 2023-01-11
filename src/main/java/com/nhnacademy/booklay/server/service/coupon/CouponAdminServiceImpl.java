@@ -58,12 +58,8 @@ public class CouponAdminServiceImpl implements CouponAdminService{
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Coupon> retrieveAllCoupons(Pageable pageable) {
+    public Page<CouponRetrieveResponse> retrieveAllCoupons(Pageable pageable) {
         return couponRepository.findAllBy(pageable);
-
-//        return new PageResponse<>(couponPage.getNumber(), couponPage.getSize(),
-//            couponPage.getTotalPages(), couponPage.getContent());
-
     }
 
     @Override

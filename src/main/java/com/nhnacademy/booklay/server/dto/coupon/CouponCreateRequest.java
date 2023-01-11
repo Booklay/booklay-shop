@@ -29,4 +29,5 @@ public class CouponCreateRequest {
     private LocalDateTime issuanceDeadlineAt;
     @NotNull
     private Boolean isDuplicatable;
+    private int quantity;
 }

@@ -141,31 +141,6 @@ create table image
     ext varchar(5) not null
 );
 
-create table coupon
-(
-    coupon_no bigint not null
-        primary key auto_increment,
-    image_no bigint not null,
-    code tinyint not null,
-    product_no bigint null,
-    category_no bigint null,
-    name varchar(100) not null,
-    amount int not null,
-    minimum_use_amount int not null,
-    maximum_discount_amount int null,
-    issuance_deadline_at datetime not null,
-    is_duplicatable tinyint(1) not null,
-    is_limited tinyint(1) not null,
-    constraint FK_product_TO_coupon_1
-        foreign key (product_no) references product (product_no),
-    constraint FK_category_TO_coupon_1
-        foreign key (category_no) references category (category_no),
-    constraint FK_coupon_type_TO_coupon_1
-        foreign key (code) references coupon_type (code),
-    constraint FK_image_TO_coupon_1
-        foreign key (image_no) references image (image_no)
-);
-
 create table member
 (
     member_no bigint not null
@@ -303,6 +278,55 @@ create table delivery_detail
         foreign key (order_no) references `order` (order_no)
 );
 
+create table post_type
+(
+    post_type_no tinyint not null
+        primary key,
+    type varchar(20) not null
+);
+
+create table product
+(
+    product_no bigint not null
+        primary key auto_increment,
+    thumbnail_no bigint not null,
+    title varchar(255) not null,
+    registed_at datetime not null,
+    price int not null,
+    point_rate int not null,
+    short_description text not null,
+    long_description text not null,
+    is_selling boolean not null,
+    point_method boolean not null,
+    constraint FK_image_TO_product_1
+        foreign key (thumbnail_no) references image (image_no)
+);
+
+create table coupon
+(
+    coupon_no bigint not null
+        primary key auto_increment,
+    image_no bigint not null,
+    code tinyint not null,
+    product_no bigint null,
+    category_no bigint null,
+    name varchar(100) not null,
+    amount int not null,
+    minimum_use_amount int not null,
+    maximum_discount_amount int null,
+    issuance_deadline_at datetime not null,
+    is_duplicatable boolean not null,
+    is_limited boolean not null,
+    constraint FK_product_TO_coupon_1
+        foreign key (product_no) references product (product_no),
+    constraint FK_category_TO_coupon_1
+        foreign key (category_no) references category (category_no),
+    constraint FK_coupon_type_TO_coupon_1
+        foreign key (code) references coupon_type (code),
+    constraint FK_image_TO_coupon_1
+        foreign key (image_no) references image (image_no)
+);
+
 create table order_coupon
 (
     order_coupon_no bigint not null
@@ -332,30 +356,6 @@ create table point_history
     updated_detail varchar(30) not null,
     constraint FK_member_TO_point_history_1
         foreign key (member_no) references member (member_no)
-);
-
-create table post_type
-(
-    post_type_no tinyint not null
-        primary key,
-    type varchar(20) not null
-);
-
-create table product
-(
-    product_no bigint not null
-        primary key auto_increment,
-    thumbnail_no bigint not null,
-    title varchar(255) not null,
-    registed_at datetime not null,
-    price int not null,
-    point_rate int not null,
-    short_description text not null,
-    long_description text not null,
-    is_selling boolean not null,
-    point_method boolean not null,
-    constraint FK_image_TO_product_1
-        foreign key (thumbnail_no) references image (image_no)
 );
 
 create table cart

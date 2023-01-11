@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.controller.admin.coupon;
 
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/coupons")
+@RequestMapping("/admin/coupons")
 public class CouponAdminController {
 
     private final CouponAdminService couponAdminService;
 
     @GetMapping("/pages/{pageNum}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<CouponRetrieveResponse> retrieveAllCoupons(@PathVariable int pageNum) {
+    public ResponseEntity<PageResponse> retrieveAllCoupons(@PathVariable int pageNum) {
         return couponAdminService.retrieveAllCoupons(pageNum);
     }
 

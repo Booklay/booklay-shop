@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,7 +53,6 @@ public class CouponAdminController {
     }
 
     @GetMapping("/{couponId}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CouponDetailRetrieveResponse> retrieveCouponDetail(@PathVariable Long couponId) {
         CouponDetailRetrieveResponse couponDetailRetrieveResponse =
             couponAdminService.retrieveCoupon(couponId);
@@ -64,15 +62,16 @@ public class CouponAdminController {
     }
 
     @PutMapping("/{couponId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateCoupon(@PathVariable Long couponId, @RequestBody
-    CouponUpdateRequest couponRequest) {
+    public ResponseEntity<Void> updateCoupon(@PathVariable Long couponId, @Valid @RequestBody CouponUpdateRequest couponRequest) {
         couponAdminService.updateCoupon(couponId, couponRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{couponId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteCoupon(@PathVariable Long couponId) {
+    public ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
         couponAdminService.deleteCoupon(couponId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

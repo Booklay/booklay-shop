@@ -83,8 +83,9 @@ public class Coupon {
         this.isLimited = isLimited;
     }
 
-    public void update(CouponUpdateRequest couponUpdateRequest) {
+    public void update(CouponUpdateRequest couponUpdateRequest, CouponType couponType) {
         this.name = couponUpdateRequest.getName();
+        this.couponType = couponType;
         this.amount = couponUpdateRequest.getAmount();
         this.minimumUseAmount = couponUpdateRequest.getMinimumUseAmount();
         this.maximumDiscountAmount = couponUpdateRequest.getMaximumDiscountAmount();

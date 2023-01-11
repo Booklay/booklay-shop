@@ -34,7 +34,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void createMember(MemberCreateRequest createDto) {
-        Gender gender = genderRepository.findByName(createDto.getGender()).orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
+        Gender gender = genderRepository.findByName(createDto.getGender())
+                .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
 
         memberRepository.save(createDto.toEntity(gender));
     }
@@ -42,7 +43,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberRetrieveResponse retrieveMember(Long memberNo) {
-        Member member = memberRepository.findByMemberNo(memberNo).orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Member member = memberRepository.findByMemberNo(memberNo)
+                .orElseThrow(() -> new MemberNotFoundException(memberNo));
 
         return MemberRetrieveResponse.fromEntity(member);
     }
@@ -56,17 +58,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
 
-        Member member = memberRepository.findById(memberNo).orElseThrow(() -> new MemberNotFoundException(memberNo));
-        Gender gender = genderRepository.findByName(updateDto.getName()).orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
+        Member member = memberRepository.findById(memberNo)
+                .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Gender gender = genderRepository.findByName(updateDto.getName())
+                .orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
 
         member.updateMember(updateDto, gender);
-        memberRepository.save(member);
 
     }
 
     @Override
     public void deleteMember(Long memberNo) {
-        Member member = memberRepository.findByMemberNo(memberNo).orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Member member = memberRepository.findByMemberNo(memberNo)
+                .orElseThrow(() -> new MemberNotFoundException(memberNo));
         member.setDeletedAt(LocalDateTime.now());
     }
 

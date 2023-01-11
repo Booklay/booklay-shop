@@ -8,8 +8,10 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
+import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +39,12 @@ class CouponAdminServiceImplTest {
     @Mock
     private CouponTypeRepository couponTypeRepository;
 
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
+    private ProductRepository productRepository;
+
     Coupon coupon;
     List<Coupon> couponList;
     CouponCreateRequest couponCreateCoupon;
@@ -57,6 +65,9 @@ class CouponAdminServiceImplTest {
         // given
         when(couponTypeRepository.findById(1L)).thenReturn(
             Optional.ofNullable(Dummy.getDummyCouponType()));
+
+        when(categoryRepository.findById(couponCreateCoupon.getApplyItemId())).thenReturn(
+            Optional.ofNullable(Dummy.getDummyCategory()));
 
         // when
         couponAdminService.createCoupon(couponCreateCoupon);

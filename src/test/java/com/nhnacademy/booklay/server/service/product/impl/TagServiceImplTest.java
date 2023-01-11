@@ -1,19 +1,24 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.BDDMockito.given;
 
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.entity.Tag;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.product.TagRepository;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -21,10 +26,10 @@ class TagServiceImplTest {
 
   //TODO: Mock Test로 바꿀것...
 
-  @Autowired
+  @InjectMocks
   TagServiceImpl tagService;
 
-  @Autowired
+  @Mock
   TagRepository tagRepository;
 
   CreateTagRequest request;
@@ -32,39 +37,50 @@ class TagServiceImplTest {
 
   @BeforeEach
   void setup() {
+
     request = new CreateTagRequest("요즘_도서_태그는_이래!");
+
+    tag = Tag.builder()
+        .name(request.getName())
+        .build();
   }
 
-//  @Test
+  @Test
   void testTagCreate_success() {
     assertDoesNotThrow(() -> tagService.createTag(request));
   }
 
   @Test
-  void testTagCreate_failure() {
+  void testTagCreateFailure_tagNameDuplicated() throws Exception {
+    given(tagRepository.existsByName(request.getName())).willReturn(true);
 
+    assertThatThrownBy(() -> tagService.createTag(request)).isInstanceOf(
+        IllegalArgumentException.class);
   }
 
-//  @Test
-  void testTagUpdate_success() {
-    Tag seed = Tag.builder()
-        .name(request.getName())
+  @Test
+  void testTagUpdate_success() throws Exception {
+    Long ID = 1L;
+
+    ReflectionTestUtils.setField(tag, "id", ID);
+
+    UpdateTagRequest update = new UpdateTagRequest(tag.getId(), "옛날태그");
+
+    Tag newTag = Tag.builder()
+        .name(update.getName())
         .build();
+    ReflectionTestUtils.setField(newTag, "id", ID);
 
-    Tag original = tagRepository.save(seed);
-
-    log.info("출력 : " + original.getId());
-
-    UpdateTagRequest update = new UpdateTagRequest(original.getId(), "옛날태그");
+    given(tagRepository.existsById(tag.getId())).willReturn(true);
+    given(tagRepository.findById(tag.getId())).willReturn(Optional.of(newTag));
 
     tagService.updateTag(update);
 
-    Tag updated = tagRepository.findById(original.getId())
+    Tag expected = tagRepository.findById(tag.getId())
         .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-    assertThat(updated.getId()).isEqualTo(original.getId());
-    assertThat(updated.getName()).isNotEqualTo(original.getName());
-
+    assertThat(expected.getId()).isEqualTo(tag.getId());
+    assertThat(expected.getName()).isNotEqualTo(tag.getName());
   }
 
   @Test
@@ -72,21 +88,22 @@ class TagServiceImplTest {
 
   }
 
-//  @Test
+  @Test
   void testTagDelete_success() {
-    Tag seed = Tag.builder()
-        .name(request.getName())
-        .build();
+    ReflectionTestUtils.setField(tag, "id", 1L);
 
-    Tag original = tagRepository.save(seed);
+    given(tagRepository.existsById(tag.getId())).willReturn(true);
+    tagService.deleteTag(tag.getId());
 
-    tagService.deleteTag(original.getId());
-
-    assertThat(tagRepository.findById(original.getId())).isEmpty();
+    assertThat(tagRepository.findById(tag.getId())).isEmpty();
   }
 
   @Test
   void testTagDelete_failure() {
+    ReflectionTestUtils.setField(tag, "id", 1L);
+    given(tagRepository.existsById(tag.getId())).willReturn(false);
 
+    assertThatThrownBy(()->tagService.deleteTag(tag.getId())).isInstanceOf(NotFoundException.class);
   }
+
 }

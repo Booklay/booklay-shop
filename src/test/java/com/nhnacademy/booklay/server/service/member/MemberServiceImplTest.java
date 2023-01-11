@@ -1,5 +1,13 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -8,6 +16,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,14 +26,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceImplTest {
@@ -95,18 +96,17 @@ class MemberServiceImplTest {
                 .hasMessageContaining("Member Not Found, MemberNo : 2");
 
     }
-
     @Test
     @DisplayName("관리자의 회원 전체조회시 Page 반환 테스트")
     void retrieveMembers() {
         //given
-        given(memberRepository.retrieveAllProducts(any())).willReturn(Page.empty());
+        given(memberRepository.findAllBy(any())).willReturn(Page.empty());
 
         //when
         Page<MemberRetrieveResponse> pageResponse = memberService.retrieveMembers(PageRequest.of(0, 10));
 
         //then
-        then(memberRepository).should().retrieveAllProducts(any());
+        then(memberRepository).should().findAllBy(any());
         assertThat(pageResponse.getTotalElements()).isZero();
     }
 

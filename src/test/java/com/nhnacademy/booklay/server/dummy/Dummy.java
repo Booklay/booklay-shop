@@ -1,5 +1,8 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -7,7 +10,6 @@ import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.entity.DeliveryStatusCode;
 import com.nhnacademy.booklay.server.entity.Gender;
-import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
@@ -185,5 +187,45 @@ public class Dummy {
             .id(1L)
             .name("입금대기중")
             .build();
+    }
+
+    public static CouponType getDummyCouponType() {
+        return CouponType.builder()
+            .id(1L)
+            .name("정율")
+            .build();
+    }
+
+    public static CouponCreateRequest getDummyCouponCreateRequest() {
+        CouponCreateRequest couponRequest = new CouponCreateRequest();
+        ReflectionTestUtils.setField(couponRequest, "name", "이달의 쿠폰");
+        ReflectionTestUtils.setField(couponRequest, "memberId", null);
+        ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
+        ReflectionTestUtils.setField(couponRequest, "amount", 5);
+        ReflectionTestUtils.setField(couponRequest, "categoryId", null);
+        ReflectionTestUtils.setField(couponRequest, "productId", null);
+        ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
+        ReflectionTestUtils.setField(couponRequest, "maximumDiscountAmount", 5000);
+        ReflectionTestUtils.setField(couponRequest, "issuanceDeadlineAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
+
+        return couponRequest;
+    }
+
+    public static CouponTypeCURequest getDummyCouponTypeCURequest() {
+        CouponTypeCURequest couponTypeRequest = new CouponTypeCURequest();
+        ReflectionTestUtils.setField(couponTypeRequest, "id", 1L);
+        ReflectionTestUtils.setField(couponTypeRequest, "name", "정액");
+
+        return couponTypeRequest;
+    }
+
+    public static CouponUpdateRequest getDummyCouponUpdateRequest() {
+        CouponUpdateRequest couponRequest = new CouponUpdateRequest();
+        ReflectionTestUtils.setField(couponRequest, "amount", 5);
+        ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
+        ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
+
+        return couponRequest;
     }
 }

@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -62,6 +63,7 @@ public class Member {
     private LocalDateTime deletedAt;
 
     @Column(name = "is_blocked")
+    @Setter
     private Boolean isBlocked;
 
     @Builder
@@ -77,14 +79,13 @@ public class Member {
         this.isBlocked = isBlocked;
     }
 
-    public void update(Gender gender, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
+    public void updateMember(MemberUpdateRequest request, Gender gender) {
         this.gender = gender;
-        this.password = password;
-        this.nickname = nickname;
-        this.name = name;
-        this.birthday = birthday;
-        this.phoneNo = phoneNo;
-        this.email = email;
-        this.isBlocked = isBlocked;
+        this.password = request.getPassword();
+        this.nickname = request.getNickname();
+        this.name = request.getName();
+        this.birthday = request.getBirthday();
+        this.phoneNo = request.getPhoneNo();
+        this.email = request.getEmail();
     }
 }

@@ -1,73 +1,103 @@
 package com.nhnacademy.booklay.server.controller;
 
-import com.nhnacademy.booklay.server.exception.category.CategoryNotFoundException;
-import com.nhnacademy.booklay.server.exception.category.CreateCategoryFailedException;
-import com.nhnacademy.booklay.server.exception.category.UpdateCategoryFailedException;
-import com.nhnacademy.booklay.server.exception.category.ValidationFailedException;
-import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
-import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
+import com.nhnacademy.booklay.server.dto.ErrorResponse;
+import com.nhnacademy.booklay.server.exception.ApiException;
+import com.nhnacademy.booklay.server.exception.CommonErrorCode;
+import com.nhnacademy.booklay.server.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * 애플리케이션에서 발생하는 전반적인 Error 처리를 위한 컨트롤러입니다.
+ *
+ * @author 조현진
+ */
 @Slf4j
-@ControllerAdvice
-public class WebControllerAdvice {
+@RestControllerAdvice
+public class WebControllerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(CreateCategoryFailedException.class)
-    @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "카테고리 생성 실패.")
-    public String createCategoryFailedException(Exception ex) {
-        return treatException(ex);
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<Object> handleCustomException(ApiException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return handleExceptionInternal(errorCode);
     }
 
-    @ExceptionHandler(UpdateCategoryFailedException.class)
-    @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "카테고리 수정 실패.")
-    public String updateCategoryFailedException(Exception ex) {
-        return treatException(ex);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
+        log.warn("handleIllegalArgument", e);
+        ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
+        return handleExceptionInternal(errorCode, e.getMessage());
     }
 
-    @ExceptionHandler(CategoryNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "존재하지 않는 카테고리에 대한 요청입니다.")
-    public String categoryNotFoundException(Exception ex) {
-        return treatException(ex);
+    @Override
+    public ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException e,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        log.warn("handleIllegalArgument", e);
+        ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
+        return handleExceptionInternal(e, errorCode);
     }
 
-    @ExceptionHandler(ValidationFailedException.class)
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "필수 입력 값이 없거나 잘못된 값이 존재합니다.")
-    public String invalidRequestException(Exception ex) {
-        return treatException(ex);
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<Object> handleAllException(Exception ex) {
+        log.warn("handleAllException", ex);
+        ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
+        return handleExceptionInternal(errorCode);
     }
 
-    @ExceptionHandler(MemberNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "존재하지 않는 멤버에 대한 요청입니다.")
-    public String memberNotFoundException(Exception ex) {
-        return treatException(ex);
+    private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                .body(makeErrorResponse(errorCode));
     }
 
-    @ExceptionHandler(GenderNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "존재하지 않는 성별에 대한 요청입니다.")
-    public String genderNotFoundException(Exception ex) {
-        return treatException(ex);
+    private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
+        return ErrorResponse.builder()
+                .code(errorCode.name())
+                .message(errorCode.getMessage())
+                .build();
     }
 
-    @ExceptionHandler(Exception.class)
-    public String handleException(Exception ex) {
-        return treatException(ex);
+    private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode, String message) {
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                .body(makeErrorResponse(errorCode, message));
     }
 
-    private String treatException(Exception ex) {
-        printInfo(ex);
-        return printError(ex);
+    private ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
+        return ErrorResponse.builder()
+                .code(errorCode.name())
+                .message(message)
+                .build();
     }
 
-    private void printInfo(Exception ex) {
-        log.info("Exception Class : " + ex.getClass());
+    private ResponseEntity<Object> handleExceptionInternal(BindException e, ErrorCode errorCode) {
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                .body(makeErrorResponse(e, errorCode));
     }
 
-    private String printError(Exception ex) {
-        log.error("Exception Message : " + ex.getMessage());
-        return ex.getMessage();
+    private ErrorResponse makeErrorResponse(BindException e, ErrorCode errorCode) {
+        List<ErrorResponse.ValidationError> validationErrorList = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(ErrorResponse.ValidationError::of)
+                .collect(Collectors.toList());
+
+        return ErrorResponse.builder()
+                .code(errorCode.name())
+                .message(errorCode.getMessage())
+                .errors(validationErrorList)
+                .build();
     }
 }

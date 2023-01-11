@@ -65,34 +65,20 @@ class MemberAdminControllerTest {
     }
 
     @Test
-    @DisplayName("Controller 연결 테스트")
-    void testMapping() throws Exception {
+    @DisplayName("관리자의 회원리스트 검색 테스트")
+    void testRetrieveMembers() throws Exception {
         //given
         PageImpl<MemberRetrieveResponse> page = new PageImpl<>(List.of());
+
+        //mocking
         when(memberService.retrieveMembers(any())).thenReturn(page);
 
         //then
-        mockMvc.perform(get(URI_PREFIX))
+        mockMvc.perform(get("/admin/members"))
             .andExpect(status().isOk())
+            .andDo(print())
             .andReturn();
     }
-
-//    @Test
-//    @DisplayName("관리자의 회원리스트 검색 테스트")
-//    void retrieveMembers() throws Exception {
-//        //given
-//        Page<MemberRetrieveResponse> page = Page.empty();
-//
-//        //mocking
-//        when(memberService.getMembers(Pageable.unpaged())).thenReturn(
-//            (List<MemberRetrieveResponse>) page);
-//
-//        //then
-//        mockMvc.perform(get("/admin/members"))
-//            .andExpect(status().isOk())
-//            .andDo(print())
-//            .andReturn();
-//    }
 
     @Test
     @DisplayName("관리자의 단일회원 조회 성공 테스트")

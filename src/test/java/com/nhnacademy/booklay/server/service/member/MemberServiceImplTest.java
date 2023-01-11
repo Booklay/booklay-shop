@@ -13,8 +13,10 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +37,9 @@ class MemberServiceImplTest {
 
     @Mock
     MemberRepository memberRepository;
+
+    @Mock
+    MemberGradeRepository memberGradeRepository;
 
     @Mock
     GenderRepository genderRepository;
@@ -69,6 +74,7 @@ class MemberServiceImplTest {
 
         //then
         then(memberRepository).should().save(any(Member.class));
+        then(memberGradeRepository).should().save(any(MemberGrade.class));
     }
 
     @Test

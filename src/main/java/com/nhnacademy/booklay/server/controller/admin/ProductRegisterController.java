@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.product.request.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
@@ -96,7 +96,4 @@ public class ProductRegisterController {
   public void tagDisconnection(){
 
   }
-
-
-
 }

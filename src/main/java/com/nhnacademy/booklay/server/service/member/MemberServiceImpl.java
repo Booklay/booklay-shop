@@ -7,12 +7,12 @@ import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
-import com.nhnacademy.booklay.server.repository.GenderRepository;
-import com.nhnacademy.booklay.server.repository.MemberRepository;
+import com.nhnacademy.booklay.server.repository.member.GenderRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,8 +49,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MemberRetrieveResponse> retrieveMembers(Pageable pageable) {
-        return MemberRetrieveResponse.fromEntity(memberRepository.findAllBy(pageable));
+    public Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable) {
+        return memberRepository.retrieveAllProducts(pageable);
     }
 
     @Override

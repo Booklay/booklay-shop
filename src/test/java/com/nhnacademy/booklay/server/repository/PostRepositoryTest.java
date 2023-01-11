@@ -4,9 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Post;
-import javax.transaction.Transactional;
 
-import org.junit.jupiter.api.AfterEach;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

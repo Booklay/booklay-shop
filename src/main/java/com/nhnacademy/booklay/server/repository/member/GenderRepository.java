@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.repository;
+package com.nhnacademy.booklay.server.repository.member;
 
 import com.nhnacademy.booklay.server.entity.Gender;
 import java.util.Optional;

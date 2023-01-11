@@ -7,7 +7,6 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,22 +31,18 @@ public class CouponTypeAdminController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<CouponTypeRetrieveResponse> retrieveAllCouponTypes() {
-        List<CouponTypeRetrieveResponse> couponTypeList = couponTypeService.retrieveAllCouponTypes();
-
-        return couponTypeList;
+        return couponTypeService.retrieveAllCouponTypes();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createCouponType(@Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
-
        couponTypeService.createCouponType(couponTypeRequest);
     }
 
     @PutMapping("/{couponTypeId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateCouponType(@PathVariable Long couponTypeId, @Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
-
         couponTypeService.updateCouponType(couponTypeId, couponTypeRequest);
     }
 

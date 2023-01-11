@@ -1,9 +1,7 @@
 package com.nhnacademy.booklay.server.dto.coupon;
 
-import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.entity.Product;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;

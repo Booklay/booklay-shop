@@ -12,9 +12,9 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class MemberUpdateRequest {
     @NotBlank
@@ -28,11 +28,12 @@ public class MemberUpdateRequest {
     @NotNull
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
     @NotBlank
     private String phoneNo;
     @Email
     @NotBlank
     private String email;
+
 }

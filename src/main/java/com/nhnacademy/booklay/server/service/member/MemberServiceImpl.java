@@ -5,20 +5,20 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.exception.member.CreateMemberFailedException;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
-import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
-import com.nhnacademy.booklay.server.exception.member.UpdateMemberFailedException;
 import com.nhnacademy.booklay.server.repository.GenderRepository;
 import com.nhnacademy.booklay.server.repository.MemberRepository;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  * @author 양승아
@@ -28,14 +28,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
+
     private final MemberRepository memberRepository;
     private final GenderRepository genderRepository;
 
     @Override
+    public void createMember(MemberCreateRequest createDto) {
+        Gender gender = genderRepository.findByName(createDto.getGender()).orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
+
+        memberRepository.save(createDto.toEntity(gender));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public MemberRetrieveResponse retrieveMember(Long memberNo) {
-        Member member = memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Member member = memberRepository.findByMemberNo(memberNo).orElseThrow(() -> new MemberNotFoundException(memberNo));
 
         return MemberRetrieveResponse.fromEntity(member);
     }
@@ -47,45 +54,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void createMember(MemberCreateRequest createDto) {
-        if (!memberRepository.existsByMemberId(createDto.getMemberId())) {
-            try {
-                Gender gender = genderRepository.findByName(createDto.getGender())
-                    .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
-                memberRepository.save(createDto.toEntity(gender));
-            } catch (GenderNotFoundException e) {
-                throw new CreateMemberFailedException(createDto.getMemberId());
-            }
-        } else {
-            throw new MemberAlreadyExistedException(createDto.getMemberId());
-        }
-    }
-
-    @Override
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
-        try {
-            Gender gender = genderRepository.findByName(updateDto.getGender())
-                .orElseThrow(() -> new GenderNotFoundException(updateDto.getGender()));
-            Member member = memberRepository.findByMemberNo(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException(memberNo));
-            member.update(
-                gender,
-                updateDto.getPassword(),
-                updateDto.getNickname(),
-                updateDto.getName(),
-                updateDto.getBirthday(),
-                updateDto.getPhoneNo(),
-                updateDto.getEmail(),
-                member.getIsBlocked());
-        } catch (Exception e) {
-            throw new UpdateMemberFailedException(memberNo);
-        }
+
+        Member member = memberRepository.findById(memberNo).orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Gender gender = genderRepository.findByName(updateDto.getName()).orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
+
+        member.updateMember(updateDto, gender);
+        memberRepository.save(member);
+
     }
 
     @Override
     public void deleteMember(Long memberNo) {
-            Member member = memberRepository.findByMemberNo(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException(memberNo));
-            member.setDeletedAt(LocalDateTime.now());
+        Member member = memberRepository.findByMemberNo(memberNo).orElseThrow(() -> new MemberNotFoundException(memberNo));
+        member.setDeletedAt(LocalDateTime.now());
     }
+
 }

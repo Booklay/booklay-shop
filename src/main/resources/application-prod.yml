@@ -1,26 +1,14 @@
+server:
+  port: 9090
+
 spring:
-  config:
-    activate:
-      on-profile: "test"
-  h2:
-    console:
-      enabled: true
-
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MYSQL
-    username: sa
-    password:
-
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
-        globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    defer-datasource-initialization: true
+        format_sql: true
+    database: mysql
 
 booklay:
   secure:
@@ -30,4 +18,4 @@ booklay:
     db_password: 314a5e5a46004ab593c84049d362f835
     url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/500rMJPT021TnyNl/secrets/
     p12_password: 1234
-  pool_size: 2
+  pool_size: 20

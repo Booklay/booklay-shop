@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 public interface MemberService {
     MemberRetrieveResponse retrieveMember(Long memberNo);
 
-    List<MemberRetrieveResponse> retrieveMembers(Pageable pageable);
+    Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable);
 
     void createMember(MemberCreateRequest memberCreateRequest);
 

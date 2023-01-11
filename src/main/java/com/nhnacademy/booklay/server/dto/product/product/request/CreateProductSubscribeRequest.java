@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.product.request;
+package com.nhnacademy.booklay.server.dto.product.product.request;
 
 import com.nhnacademy.booklay.server.entity.Image;
 import java.util.List;

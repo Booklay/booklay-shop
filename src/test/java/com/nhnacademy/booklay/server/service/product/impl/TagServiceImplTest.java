@@ -84,8 +84,21 @@ class TagServiceImplTest {
   }
 
   @Test
-  void testTagUpdate_failure() {
+  void testTagUpdate_failureByNameDuplicated() {
+    UpdateTagRequest update = new UpdateTagRequest(1L, "겹치는_태그");
 
+    given(tagRepository.existsById(update.getId())).willReturn(true);
+    given(tagRepository.existsByName(update.getName())).willReturn(true);
+
+    assertThatThrownBy(()->tagService.updateTag(update)).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void testTagUpdate_failureByIdNotExist() {
+    UpdateTagRequest update = new UpdateTagRequest(1L, "겹치는_태그");
+
+    given(tagRepository.existsById(update.getId())).willReturn(false);
+    assertThatThrownBy(()->tagService.updateTag(update)).isInstanceOf(NotFoundException.class);
   }
 
   @Test

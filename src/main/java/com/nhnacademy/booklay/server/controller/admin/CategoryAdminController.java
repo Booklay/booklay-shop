@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,46 +35,60 @@ public class CategoryAdminController {
     private final CategoryService categoryService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CategoryResponse createCategory(@Valid @RequestBody CategoryCreateRequest createDto) {
+    public ResponseEntity<CategoryResponse> createCategory(
+        @Valid @RequestBody CategoryCreateRequest createDto) {
         try {
             categoryService.createCategory(createDto);
         } catch (AlreadyExistedException | NotFoundException e) {
             throw new CreateFailedException("카테고리 생성 실패");
         }
-        return categoryService.retrieveCategory(createDto.getId());
+
+        CategoryResponse categoryResponse = categoryService.retrieveCategory(createDto.getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(categoryResponse);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Page<CategoryResponse> retrieveCategoryList(Pageable pageable) {
-        return categoryService.retrieveCategory(pageable);
+    public ResponseEntity<Page> retrieveCategoryList(Pageable pageable) {
+
+        Page<CategoryResponse> page = categoryService.retrieveCategory(pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(page);
     }
 
     @GetMapping("/{categoryId}")
-    @ResponseStatus(HttpStatus.OK)
-    public CategoryResponse retrieveCategory(@PathVariable("categoryId") Long id) {
-        return categoryService.retrieveCategory(id);
+    public ResponseEntity<CategoryResponse> retrieveCategory(@PathVariable("categoryId") Long id) {
+        CategoryResponse categoryResponse = categoryService.retrieveCategory(id);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(categoryResponse);
     }
 
     @PutMapping("/{categoryId}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public CategoryResponse updateCategory(@PathVariable(value = "categoryId") Long categoryId,
-                                           @Valid @RequestBody CategoryUpdateRequest updateDto) {
+    public ResponseEntity<CategoryResponse> updateCategory(
+        @PathVariable(value = "categoryId") Long categoryId,
+        @Valid @RequestBody CategoryUpdateRequest updateDto) {
         try {
             categoryService.updateCategory(updateDto, categoryId);
         } catch (NotFoundException e) {
             throw new UpdateFailedException("카테고리 수정 실패");
         }
-        return categoryService.retrieveCategory(updateDto.getId());
+
+        CategoryResponse categoryResponse = categoryService.retrieveCategory(categoryId);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+            .body(categoryResponse);
     }
 
     @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteCategory(@PathVariable("categoryId") Long categoryId) {
+    public ResponseEntity<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         try {
             categoryService.deleteCategory(categoryId);
-            return "{\"result\": \"Success\"}";
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body("{\"result\": \"Success\"}");
         } catch (NotFoundException e) {
             throw new DeleteFailedException("카테고리 삭제 실패");
         }

@@ -3,6 +3,8 @@ package com.nhnacademy.booklay.server.dummy;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -31,17 +33,17 @@ public class Dummy {
     public static Member getDummyMember() {
         Member member = Member.builder()
             .gender(getDummyGender())
-            .id("dummyMemberId")
+            .memberId("dummyMemberId")
             .password("$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu") //1234
             .nickname("메뚜기")
             .name("유재석")
             .birthday(LocalDate.now())
             .phoneNo("01012341234")
-            .email("www.abcd.com")
+            .email("abcd@naver.com")
             .isBlocked(false)
             .build();
 
-        ReflectionTestUtils.setField(member, "memberId", 1L);
+        ReflectionTestUtils.setField(member, "memberNo", 1L);
 
         return member;
     }
@@ -97,7 +99,7 @@ public class Dummy {
         Authority authority = getDummyAuthority();
 
         return MemberAuthority.builder()
-            .pk(new MemberAuthority.Pk(member.getMemberId(), authority.getId()))
+            .pk(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()))
             .member(member)
             .authority(authority)
             .build();
@@ -227,5 +229,31 @@ public class Dummy {
         ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
 
         return couponRequest;
+    }
+    public static MemberCreateRequest getDummyMemberCreateRequest() {
+        MemberCreateRequest memberRequest = new MemberCreateRequest();
+        ReflectionTestUtils.setField(memberRequest, "gender", "M");
+        ReflectionTestUtils.setField(memberRequest, "memberId", "HoDong");
+        ReflectionTestUtils.setField(memberRequest, "password", "$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu");
+        ReflectionTestUtils.setField(memberRequest, "nickname", "천하장사");
+        ReflectionTestUtils.setField(memberRequest, "name", "강호동");
+        ReflectionTestUtils.setField(memberRequest, "birthday", LocalDate.now());
+        ReflectionTestUtils.setField(memberRequest, "phoneNo", "01012341234");
+        ReflectionTestUtils.setField(memberRequest, "email", "aaaa@gmail.com");
+
+        return memberRequest;
+    }
+
+    public static MemberUpdateRequest getDummyMemberUpdateRequest() {
+        MemberUpdateRequest memberRequest = new MemberUpdateRequest();
+        ReflectionTestUtils.setField(memberRequest, "gender", "M");
+        ReflectionTestUtils.setField(memberRequest, "password", "$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu");
+        ReflectionTestUtils.setField(memberRequest, "nickname", "천하장사123");
+        ReflectionTestUtils.setField(memberRequest, "name", "강호동123");
+        ReflectionTestUtils.setField(memberRequest, "birthday", LocalDate.now());
+        ReflectionTestUtils.setField(memberRequest, "phoneNo", "01033333333");
+        ReflectionTestUtils.setField(memberRequest, "email", "bbbb@gmail.com");
+
+        return memberRequest;
     }
 }

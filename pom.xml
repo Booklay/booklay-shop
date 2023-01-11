@@ -53,6 +53,7 @@
             <scope>test</scope>
         </dependency>
 
+<<<<<<< HEAD
         <!--DBCP -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -73,10 +74,16 @@
             <version>3.9.1</version>
         </dependency>
 
+=======
+>>>>>>> feature/memverAdmin-testCode
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/memverAdmin-testCode
     </dependencies>
 
     <build>

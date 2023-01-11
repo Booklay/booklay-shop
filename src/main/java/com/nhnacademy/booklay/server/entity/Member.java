@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,18 +17,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
-
     @Id
     @Column(name = "member_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long memberNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender_no")
     private Gender gender;
 
-    @Column
-    private String id;
+    @Column(name = "id")
+    private String memberId;
 
     @Column
     private String password;
@@ -63,12 +63,13 @@ public class Member {
     private LocalDateTime deletedAt;
 
     @Column(name = "is_blocked")
+    @Setter
     private Boolean isBlocked;
 
     @Builder
-    public Member(Gender gender, String id, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
+    public Member(Gender gender, String memberId, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
         this.gender = gender;
-        this.id = id;
+        this.memberId = memberId;
         this.password = password;
         this.nickname = nickname;
         this.name = name;
@@ -76,5 +77,15 @@ public class Member {
         this.phoneNo = phoneNo;
         this.email = email;
         this.isBlocked = isBlocked;
+    }
+
+    public void updateMember(MemberUpdateRequest request, Gender gender) {
+        this.gender = gender;
+        this.password = request.getPassword();
+        this.nickname = request.getNickname();
+        this.name = request.getName();
+        this.birthday = request.getBirthday();
+        this.phoneNo = request.getPhoneNo();
+        this.email = request.getEmail();
     }
 }

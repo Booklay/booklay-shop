@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.member;
+package com.nhnacademy.booklay.server.dto.member.reponse;
 
 import com.nhnacademy.booklay.server.entity.Member;
 import java.util.List;
@@ -33,8 +33,8 @@ public class MemberRetrieveResponse {
 
     public static MemberRetrieveResponse fromEntity(Member member) {
         return MemberRetrieveResponse.builder()
-            .memberId(member.getMemberId())
-            .id(member.getId())
+            .memberId(member.getMemberNo())
+            .id(member.getMemberId())
             .password(member.getPassword())
             .name(member.getName())
             .nickname(member.getNickname())
@@ -51,8 +51,8 @@ public class MemberRetrieveResponse {
 
     public static List<MemberRetrieveResponse> fromEntity(Page<Member> members) {
         return members.map(h->MemberRetrieveResponse.builder()
-            .memberId(h.getMemberId())
-            .id(h.getId())
+            .memberId(h.getMemberNo())
+            .id(h.getMemberId())
             .password(h.getPassword())
             .name(h.getName())
             .nickname(h.getNickname())

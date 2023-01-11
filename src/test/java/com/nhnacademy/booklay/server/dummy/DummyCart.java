@@ -25,7 +25,7 @@ public class DummyCart {
     CreateProductBookRequest request = getDummyProductBookDto();
     Member dummyMember = Dummy.getDummyMember();
     Product dummyProduct = getDummyProduct(request);
-    Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberId(), dummyProduct.getId());
+    Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberNo(), dummyProduct.getId());
 
     Cart cart = Cart.builder()
         .pk(dummyPk)

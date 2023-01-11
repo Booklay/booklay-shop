@@ -40,7 +40,7 @@ public class DummyNum3 {
 
         Member member = Member.builder()
             .gender(gender)
-            .id("dummyMemberId")
+            .memberId("dummyMemberId")
             .password("$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu") //1234
             .nickname("유재석")
             .name("강호동")

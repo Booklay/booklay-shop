@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
@@ -16,6 +17,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,8 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     private final CouponTypeRepository couponTypeRepository;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+
+    private final int PAGE_SIZE = 10;
 
     @Override
     public void createCoupon(CouponCreateRequest couponRequest) {
@@ -54,12 +58,12 @@ public class CouponAdminServiceImpl implements CouponAdminService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<CouponRetrieveResponse> retrieveAllCoupons(int pageNum) {
-        PageRequest pageRequest = PageRequest.of(pageNum, 10);
-        Page<Coupon> couponPage = couponRepository.findAllBy(pageRequest);
+    public Page<Coupon> retrieveAllCoupons(Pageable pageable) {
+        return couponRepository.findAllBy(pageable);
 
-        return couponPage.getContent().stream().map(CouponRetrieveResponse::fromEntity).collect(
-            Collectors.toList());
+//        return new PageResponse<>(couponPage.getNumber(), couponPage.getSize(),
+//            couponPage.getTotalPages(), couponPage.getContent());
+
     }
 
     @Override

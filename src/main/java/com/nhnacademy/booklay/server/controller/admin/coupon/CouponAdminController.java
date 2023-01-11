@@ -5,11 +5,16 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
+import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
 import java.util.List;
+import javax.validation.ReportAsSingleViolation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,21 +37,33 @@ public class CouponAdminController {
 
     private final CouponAdminService couponAdminService;
 
-    @GetMapping("/pages/{pageNum}")
-    public ResponseEntity<PageResponse> retrieveAllCoupons(@PathVariable int pageNum) {
-        return couponAdminService.retrieveAllCoupons(pageNum);
+    @GetMapping("/pages")
+    public ResponseEntity<PageResponse<Coupon>> retrieveAllCoupons(Pageable pageable) {
+        Page<Coupon> couponPage = couponAdminService.retrieveAllCoupons(pageable);
+
+        PageResponse<Coupon> couponPageResponse = new PageResponse<>(couponPage.getNumber(), couponPage.getSize(),
+                couponPage.getTotalPages(), couponPage.getContent());
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(couponPageResponse);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest) {
+    public ResponseEntity<Object> createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest) {
         couponAdminService.createCoupon(couponRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(null);
     }
 
     @GetMapping("/{couponId}")
     @ResponseStatus(HttpStatus.OK)
-    public CouponDetailRetrieveResponse retrieveCouponDetail(@PathVariable Long couponId) {
-        return couponAdminService.retrieveCoupon(couponId);
+    public ResponseEntity<CouponDetailRetrieveResponse> retrieveCouponDetail(@PathVariable Long couponId) {
+        CouponDetailRetrieveResponse couponDetailRetrieveResponse =
+            couponAdminService.retrieveCoupon(couponId);
+
+        return ResponseEntity.status(HttpStatus.OK)
     }
 
     @PutMapping("/{couponId}")

@@ -71,9 +71,8 @@ class CouponAdminServiceImplTest {
         // given
         PageRequest pageRequest = PageRequest.of(0, 10);
         when(couponRepository.findAllBy(pageRequest)).thenReturn(Page.empty());
-
         // when
-        couponAdminService.retrieveAllCoupons(0);
+        couponAdminService.retrieveAllCoupons(pageRequest);
 
         // then
         BDDMockito.then(couponRepository).should().findAllBy(pageRequest);

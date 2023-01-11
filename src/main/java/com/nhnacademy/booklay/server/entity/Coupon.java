@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table
 @Entity
@@ -36,6 +37,16 @@ public class Coupon {
     @JoinColumn(name = "code")
     private CouponType couponType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_no")
+    @Setter
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_no")
+    @Setter
+    private Category category;
+
     @Column
     private String name;
 
@@ -54,10 +65,13 @@ public class Coupon {
     @Column(name = "is_duplicatable")
     private Boolean isDuplicatable;
 
+    @Column(name = "is_limited")
+    private Boolean isLimited;
+
     @Builder
     public Coupon(Image image, CouponType couponType, String name, int amount, int minimumUseAmount,
                   int maximumDiscountAmount, LocalDateTime issuanceDeadlineAt,
-                  Boolean isDuplicatable) {
+                  Boolean isDuplicatable, Boolean isLimited) {
         this.image = image;
         this.couponType = couponType;
         this.name = name;
@@ -66,6 +80,7 @@ public class Coupon {
         this.maximumDiscountAmount = maximumDiscountAmount;
         this.issuanceDeadlineAt = issuanceDeadlineAt;
         this.isDuplicatable = isDuplicatable;
+        this.isLimited = isLimited;
     }
 
     public void update(CouponUpdateRequest couponUpdateRequest) {

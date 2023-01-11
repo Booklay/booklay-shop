@@ -49,22 +49,16 @@ public class Dummy {
     }
 
     public static Coupon getDummyCoupon() {
-
-        CouponType couponType = CouponType.builder()
-            .name("정액")
-            .build();
-
-        ReflectionTestUtils.setField(couponType, "id", 1L);
-
         Coupon coupon = Coupon.builder()
             .image(DummyCart.getDummyImage())
-            .couponType(couponType)
+            .couponType(Dummy.getDummyCouponType())
             .name("이달의 쿠폰")
             .amount(5)
             .minimumUseAmount(1000)
             .maximumDiscountAmount(3000)
             .issuanceDeadlineAt(LocalDateTime.of(2023, 1, 20, 0, 0, 0))
             .isDuplicatable(false)
+            .isLimited(false)
             .build();
 
         ReflectionTestUtils.setField(coupon, "id", 1L);

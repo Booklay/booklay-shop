@@ -147,12 +147,19 @@ create table coupon
         primary key auto_increment,
     image_no bigint not null,
     code tinyint not null,
+    product_no bigint null,
+    category_no bigint null,
     name varchar(100) not null,
     amount int not null,
     minimum_use_amount int not null,
     maximum_discount_amount int null,
     issuance_deadline_at datetime not null,
-    is_duplicatable boolean not null,
+    is_duplicatable tinyint(1) not null,
+    is_limited tinyint(1) not null,
+    constraint FK_product_TO_coupon_1
+        foreign key (product_no) references product (product_no),
+    constraint FK_category_TO_coupon_1
+        foreign key (category_no) references category (category_no),
     constraint FK_coupon_type_TO_coupon_1
         foreign key (code) references coupon_type (code),
     constraint FK_image_TO_coupon_1
@@ -301,14 +308,11 @@ create table order_coupon
     order_coupon_no bigint not null
         primary key auto_increment,
     coupon_no bigint not null,
-    category_no bigint not null,
     member_no bigint null,
     order_no bigint null,
     coupon_code char(36) not null,
     issued_at datetime null,
     expired_at datetime null,
-    constraint FK_category_TO_order_coupon_1
-        foreign key (category_no) references category (category_no),
     constraint FK_coupon_TO_order_coupon_1
         foreign key (coupon_no) references coupon (coupon_no),
     constraint FK_member_TO_order_coupon_1
@@ -454,7 +458,6 @@ create table product_coupon
     product_coupon_no bigint not null
         primary key auto_increment,
     coupon_no bigint not null,
-    product_no bigint not null,
     member_no bigint null,
     order_product_no bigint null,
     coupon_code char(36) not null,
@@ -465,9 +468,7 @@ create table product_coupon
     constraint FK_member_TO_product_coupon_1
         foreign key (member_no) references member (member_no),
     constraint FK_order_product_TO_product_coupon_1
-        foreign key (order_product_no) references order_product (order_product_no),
-    constraint FK_product_TO_product_coupon_1
-        foreign key (product_no) references product (product_no)
+        foreign key (order_product_no) references order_product (order_product_no)
 );
 
 create table product_detail

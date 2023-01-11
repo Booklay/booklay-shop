@@ -43,7 +43,7 @@ class CouponAdminControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    private static final String URI_PREFIX = "/coupons";
+    private static final String URI_PREFIX = "/admin/coupons";
     ObjectMapper objectMapper;
 
     CouponCreateRequest couponCreateRequest;

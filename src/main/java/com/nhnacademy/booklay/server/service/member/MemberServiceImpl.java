@@ -5,9 +5,11 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +30,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberGradeRepository memberGradeRepository;
     private final GenderRepository genderRepository;
 
     @Override
     public void createMember(MemberCreateRequest createDto) {
         Gender gender = genderRepository.findByName(createDto.getGender())
-                .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
+            .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
 
-        memberRepository.save(createDto.toEntity(gender));
+        Member member = createDto.toEntity(gender);
+        MemberGrade grade = new MemberGrade(member, "화이트");
+
+        memberRepository.save(member);
+        memberGradeRepository.save(grade);
     }
 
     @Override

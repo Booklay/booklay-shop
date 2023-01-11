@@ -1,13 +1,14 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
-import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
+import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Coupon;
+import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +49,7 @@ class CouponAdminServiceImplTest {
 
     Coupon coupon;
     List<Coupon> couponList;
+    CouponType couponType;
     CouponCreateRequest couponCreateCoupon;
     CouponUpdateRequest couponUpdateRequest;
 
@@ -54,19 +57,20 @@ class CouponAdminServiceImplTest {
     void setUp() {
         coupon = Dummy.getDummyCoupon();
         couponList = List.of(coupon);
+        couponType = Dummy.getDummyCouponType();
         couponCreateCoupon = Dummy.getDummyCouponCreateRequest();
         couponUpdateRequest = Dummy.getDummyCouponUpdateRequest();
     }
 
     @Test
-    @DisplayName("createCoupon() - 쿠폰 생성 서비스 테스트")
+    @DisplayName("쿠폰 생성 테스트")
     void testCreateCoupon() {
 
         // given
-        when(couponTypeRepository.findById(1L)).thenReturn(
+        given(couponTypeRepository.findById(couponCreateCoupon.getTypeCode())).willReturn(
             Optional.ofNullable(Dummy.getDummyCouponType()));
 
-        when(categoryRepository.findById(couponCreateCoupon.getApplyItemId())).thenReturn(
+        given(categoryRepository.findById(couponCreateCoupon.getApplyItemId())).willReturn(
             Optional.ofNullable(Dummy.getDummyCategory()));
 
         // when
@@ -77,11 +81,12 @@ class CouponAdminServiceImplTest {
     }
 
     @Test
-    @DisplayName("retrieveAllCoupons() - 모든 쿠폰 조회 서비스 테스트")
+    @DisplayName("모든 쿠폰 조회 테스트")
     void testRetrieveAllCoupons() {
         // given
         PageRequest pageRequest = PageRequest.of(0, 10);
-        when(couponRepository.findAllBy(pageRequest)).thenReturn(Page.empty());
+        given(couponRepository.findAllBy(pageRequest)).willReturn(Page.empty());
+
         // when
         couponAdminService.retrieveAllCoupons(pageRequest);
 
@@ -90,44 +95,51 @@ class CouponAdminServiceImplTest {
     }
 
     @Test
-    @DisplayName("retrieveCoupon() - 쿠폰 단건 조회 서비스 테스트")
+    @DisplayName("쿠폰 단건 조회 테스트")
     void testRetrieveCoupon() {
 
         // given
-        when(couponRepository.findById(1L)).thenReturn(Optional.ofNullable(coupon));
+        Long targetId = 1L;
+        given(couponRepository.findById(targetId)).willReturn(Optional.ofNullable(coupon));
 
         // when
-        CouponDetailRetrieveResponse expected = couponAdminService.retrieveCoupon(1L);
+        couponAdminService.retrieveCoupon(targetId);
 
         // then
-        BDDMockito.then(couponRepository).should().findById(1L);
+        BDDMockito.then(couponRepository).should().findById(targetId);
     }
 
     @Test
-    @DisplayName("updateCoupon() - 쿠폰 수정 서비스 테스트")
+    @DisplayName("쿠폰 수정 테스트")
     void testUpdateCoupon() {
 
         // given
-        when(couponRepository.findById(1L)).thenReturn(Optional.ofNullable(coupon));
+        Long targetId = coupon.getId();
+
+        given(couponRepository.findById(targetId)).willReturn(Optional.ofNullable(coupon));
+        given(couponTypeRepository.findById(couponUpdateRequest.getTypeCode())).willReturn(Optional.ofNullable(couponType));
+        given(productRepository.findById(targetId)).willReturn(
+            Optional.ofNullable(DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto())));
 
         // when
-        couponAdminService.updateCoupon(1L, Dummy.getDummyCouponUpdateRequest());
+        couponAdminService.updateCoupon(coupon.getId(), couponUpdateRequest);
 
         // then
         BDDMockito.then(couponRepository).should().save(any());
     }
 
     @Test
-    @DisplayName("deleteCoupon() - 쿠폰 삭제 서비스 테스트")
+    @DisplayName("쿠폰 삭제 테스트")
     void testDeleteCoupon() {
 
         // given
-        when(couponRepository.existsById(1L)).thenReturn(true);
+        Long targetId = 1L;
+        given(couponRepository.existsById(targetId)).willReturn(true);
 
         // when
-        couponAdminService.deleteCoupon(1L);
+        couponAdminService.deleteCoupon(targetId);
 
         // then
-        BDDMockito.then(couponRepository).should().deleteById(1L);
+        BDDMockito.then(couponRepository).should().deleteById(targetId);
     }
 }

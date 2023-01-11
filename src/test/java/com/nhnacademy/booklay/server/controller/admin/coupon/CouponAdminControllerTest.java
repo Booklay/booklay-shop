@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.controller.admin.coupon;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -11,24 +13,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
-import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
+import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,58 +51,64 @@ class CouponAdminControllerTest {
     MockMvc mockMvc;
 
     private static final String URI_PREFIX = "/admin/coupons";
-    ObjectMapper objectMapper;
 
-    CouponCreateRequest couponCreateRequest;
-    CouponDetailRetrieveResponse couponDetailRetrieveResponse;
-    CouponUpdateRequest couponUpdateRequest;
+    ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        couponCreateRequest = Dummy.getDummyCouponCreateRequest();
-
-        couponDetailRetrieveResponse = CouponDetailRetrieveResponse.fromEntity(Dummy.getDummyCoupon());
-        couponUpdateRequest = Dummy.getDummyCouponUpdateRequest();
     }
 
     @Test
-    @DisplayName("retrieveAllCoupons() - 모든 쿠폰 조회 컨트롤러 테스트")
+    @DisplayName("모든 쿠폰 조회 성공 테스트")
     void testRetrieveAllCoupons() throws Exception {
 
-        // mocking
+        // given
         PageRequest pageRequest = PageRequest.of(0,10);
         PageImpl<CouponRetrieveResponse> couponRetrieveResponses = new PageImpl<>(List.of(), pageRequest, 1);
 
+        // when
         when(couponAdminService.retrieveAllCoupons(any())).thenReturn(couponRetrieveResponses);
 
         // then
         mockMvc.perform(get(URI_PREFIX + "/pages")
+                .queryParam("page", "0")
+                .queryParam("size", "10")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
+
+        Mockito.verify(couponAdminService).retrieveAllCoupons(any());
     }
 
     @Test
-    @DisplayName("createCoupon() - 쿠폰 생성 컨트롤러 테스트")
+    @DisplayName("쿠폰 생성 성공 테스트")
     void testCreateCoupon() throws Exception {
+
+        // given
+        CouponCreateRequest couponRequest = Dummy.getDummyCouponCreateRequest();
+
+        // when
 
         // then
         mockMvc.perform(post(URI_PREFIX)
-            .content(objectMapper.writeValueAsString(couponCreateRequest))
+            .content(objectMapper.writeValueAsString(couponRequest))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andDo(print())
             .andReturn();
+
+        Mockito.verify(couponAdminService).createCoupon(any());
     }
 
     @Test
-    @DisplayName("retrieveCouponDetail() - 쿠폰 단건 조회 컨트롤러 테스트")
+    @DisplayName("쿠폰 단건 조회 성공 테스트")
     void testRetrieveCouponDetail() throws Exception {
 
-        // mocking
-        when(couponAdminService.retrieveCoupon(couponDetailRetrieveResponse.getId())).thenReturn(couponDetailRetrieveResponse);
+        // given
+
+        // when
 
         // then
         mockMvc.perform(get(URI_PREFIX + "/1")
@@ -111,23 +116,57 @@ class CouponAdminControllerTest {
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
+
+        Mockito.verify(couponAdminService).retrieveCoupon(1L);
     }
 
-//    @Test
-    @DisplayName("updateCoupon() - 쿠폰 수정 컨트롤러 테스트")
-    void testUpdateCoupon() throws Exception {
+    @Test
+    @DisplayName("존재하지 않는 쿠폰 조회 시 실패 테스트")
+    void testRetrieveCouponDetailFail() throws Exception {
+
+        // given
+
+        // when
+        when(couponAdminService.retrieveCoupon(1L)).thenThrow(NotFoundException.class);
 
         // then
-        mockMvc.perform(put(URI_PREFIX + "/1"))
+        mockMvc.perform(get(URI_PREFIX + "/1")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isInternalServerError())
+            .andDo(print())
+            .andReturn();
+
+        Mockito.verify(couponAdminService).retrieveCoupon(1L);
+    }
+
+    @Test
+    @DisplayName("쿠폰 수정 성공 테스트")
+    void testUpdateCoupon() throws Exception {
+
+        // given
+        CouponUpdateRequest couponRequest = Dummy.getDummyCouponUpdateRequest();
+
+        // when
+
+
+        // then
+        mockMvc.perform(put(URI_PREFIX + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(couponRequest)))
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
 
+        Mockito.verify(couponAdminService, times(1)).updateCoupon(eq(1L), any());
     }
 
     @Test
     @DisplayName("deleteCoupon() - 쿠폰 삭제 컨트롤러 테스트")
     void deleteCoupon() throws Exception {
+
+        // given
+
+        // when
 
         // then
         mockMvc.perform(delete(URI_PREFIX + "/1"))
@@ -135,7 +174,6 @@ class CouponAdminControllerTest {
             .andDo(print())
             .andReturn();
 
-        BDDMockito.then(couponAdminService).should().deleteCoupon(1L);
-
+        Mockito.verify(couponAdminService).deleteCoupon(1L);
     }
 }

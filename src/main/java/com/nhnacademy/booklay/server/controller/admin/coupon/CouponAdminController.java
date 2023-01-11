@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class CouponAdminController {
     }
 
     @GetMapping("/pages")
-    public ResponseEntity<PageResponse<CouponRetrieveResponse>> retrieveAllCoupons(Pageable pageable) {
+    public ResponseEntity<PageResponse<CouponRetrieveResponse>> retrieveAllCoupons(@PageableDefault Pageable pageable) {
         Page<CouponRetrieveResponse> couponPage = couponAdminService.retrieveAllCoupons(pageable);
 
         PageResponse<CouponRetrieveResponse> couponPageResponse = new PageResponse<>(couponPage.getNumber(), couponPage.getSize(),

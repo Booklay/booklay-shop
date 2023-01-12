@@ -13,11 +13,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.Objects;
+
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 /**
  * Web에 관한 전반적인 설정을 관리합니다.
@@ -46,23 +50,20 @@ public class WebConfig {
      * NHN Secure Manager를 통해 민감정보를 받습니다.
      * booklay.p12인증서를 통해 HTTPS 요청을 보냅니다.
      *
-     * @return
-     * @throws IOException
-     * @throws KeyStoreException
-     * @throws CertificateException
-     * @throws NoSuchAlgorithmException
-     * @throws UnrecoverableKeyException
-     * @throws KeyManagementException
-     *
      * @author 조현진
      */
     @Bean
     public RestTemplate restTemplate() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
         var clientStore = KeyStore.getInstance("PKCS12");
 
-        String file = Objects.requireNonNull(getClass().getClassLoader().getResource("booklay.p12")).getFile();
+        try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream("booklay.p12")) {
+            File tempFile = File.createTempFile(String.valueOf(inputStream.hashCode()), ".tmp");
+            tempFile.deleteOnExit();
 
-        clientStore.load(new FileInputStream(file), p12Password.toCharArray());
+            copyInputStreamToFile(inputStream, tempFile);
+
+            clientStore.load(new FileInputStream(tempFile), p12Password.toCharArray());
+        }
 
         var sslContext = SSLContextBuilder.create()
                 .setProtocol("TLS")

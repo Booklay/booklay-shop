@@ -5,8 +5,6 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponTypeRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

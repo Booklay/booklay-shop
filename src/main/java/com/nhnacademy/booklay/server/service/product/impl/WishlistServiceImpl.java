@@ -6,7 +6,7 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.Wishlist;
 import com.nhnacademy.booklay.server.entity.Wishlist.Pk;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
-import com.nhnacademy.booklay.server.repository.MemberRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.WishlistRepository;
 import com.nhnacademy.booklay.server.service.product.WishlistService;

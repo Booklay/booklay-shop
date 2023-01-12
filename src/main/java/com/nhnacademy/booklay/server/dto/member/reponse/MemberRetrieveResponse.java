@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.dto.member.reponse;
 
+import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,30 @@ public class MemberRetrieveResponse {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
     private Boolean isBlocked;
+
+    /**
+     * dto projection을 위한 생성자
+     *
+     * @author 양승아
+     */
+    public MemberRetrieveResponse(Long memberId, Gender gender, String id, String password,
+                                  String nickname, String name, LocalDate birthday, String phoneNo,
+                                  String email, LocalDateTime createdAt, LocalDateTime updatedAt,
+                                  LocalDateTime deletedAt, Boolean isBlocked) {
+        this.memberId = memberId;
+        this.gender = gender.getName();
+        this.id = id;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+        this.phoneNo = phoneNo;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+        this.isBlocked = isBlocked;
+    }
 
     public static MemberRetrieveResponse fromEntity(Member member) {
         return MemberRetrieveResponse.builder()

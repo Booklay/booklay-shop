@@ -2,6 +2,8 @@ package com.nhnacademy.booklay.server.repository;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
+import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.repository;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Gender;
+import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

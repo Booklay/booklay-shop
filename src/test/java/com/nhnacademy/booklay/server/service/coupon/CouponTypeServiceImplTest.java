@@ -74,7 +74,7 @@ class CouponTypeServiceImplTest {
 
         // given
         CouponTypeCURequest couponTypeRequest = Dummy.getDummyCouponTypeCURequest();
-        when(couponTypeRepository.existsById(couponTypeRequest.getId())).thenReturn(true);
+        given(couponTypeRepository.existsById(couponTypeRequest.getId())).willReturn(true);
 
         // when
         couponTypeService.updateCouponType(couponTypeRequest.getId(), couponTypeRequest);
@@ -90,7 +90,7 @@ class CouponTypeServiceImplTest {
 
         // given
         CouponTypeCURequest couponTypeRequest = Dummy.getDummyCouponTypeCURequest();
-        when(couponTypeRepository.existsById(couponTypeRequest.getId())).thenReturn(false);
+        given(couponTypeRepository.existsById(couponTypeRequest.getId())).willReturn(false);
 
         // when
 
@@ -108,7 +108,7 @@ class CouponTypeServiceImplTest {
 
         // given
         CouponTypeCURequest couponTypeRequest = Dummy.getDummyCouponTypeCURequest();
-        when(couponTypeRepository.existsById(couponTypeRequest.getId())).thenReturn(true);
+        given(couponTypeRepository.existsById(couponTypeRequest.getId())).willReturn(true);
 
         // when
         couponTypeService.deleteCouponType(couponTypeRequest.getId());
@@ -123,7 +123,7 @@ class CouponTypeServiceImplTest {
 
         // given
         CouponTypeCURequest couponTypeRequest = Dummy.getDummyCouponTypeCURequest();
-        when(couponTypeRepository.existsById(couponTypeRequest.getId())).thenReturn(false);
+        given(couponTypeRepository.existsById(couponTypeRequest.getId())).willReturn(false);
 
         // when
 

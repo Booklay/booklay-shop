@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,6 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   @Transactional
   public Author retrieveAuthorById(Long id) throws Exception {
-    return authorRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("author not found"));
+    return authorRepository.findById(id).orElseThrow(()-> new NotFoundException(Author.class, "author not found"));
   }
 }

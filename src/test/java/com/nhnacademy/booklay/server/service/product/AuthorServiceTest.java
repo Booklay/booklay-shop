@@ -1,9 +1,12 @@
 package com.nhnacademy.booklay.server.service.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.service.product.impl.AuthorServiceImpl;
 import java.util.Optional;
@@ -41,11 +44,8 @@ class AuthorServiceTest {
   void testAuthorCreate_Success() {
 
     //when
-    when(authorRepository.save(author)).thenReturn(author);
-
+    given(authorRepository.save(author)).willReturn(author);
     Author expect = authorService.createAuthor(author);
-
-    log.info("출력 : " + expect.getName()+ "  " + expect.getAuthorNo());
 
     //then
     assertThat(expect.getName()).isEqualTo(author.getName());
@@ -55,7 +55,7 @@ class AuthorServiceTest {
   void testAuthorRetrieve_Success() throws Exception {
     //given
     author.setAuthorNo(1L);
-    when(authorRepository.findById(author.getAuthorNo())).thenReturn(Optional.ofNullable(author));
+    given(authorRepository.findById(author.getAuthorNo())).willReturn(Optional.ofNullable(author));
 
     //when
     Author expect = authorService.retrieveAuthorById(author.getAuthorNo());
@@ -64,9 +64,8 @@ class AuthorServiceTest {
   }
 
   @Test
-  void testAuthorRetreieve_Failure() throws Exception {
-    Long id = 3L;
-
-//    assertThat(authorService.retrieveAuthorById(id)).
+  void testAuthorRetrieve_Failure() throws Exception {
+    Long id = 1L;
+    assertThatThrownBy(()-> authorService.retrieveAuthorById(id)).isInstanceOf(NotFoundException.class);
   }
 }

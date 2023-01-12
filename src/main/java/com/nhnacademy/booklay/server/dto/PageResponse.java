@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * Booklay 서비스에서 요청에 대한 응답 결과를 페이지 정보와 함께 제공하는 클래스입니다.
@@ -20,4 +21,11 @@ public class PageResponse<T> {
     private final Integer totalPages; // 총 페이지 수
 
     private final List<T> data;
+
+    public PageResponse(Page<T> page) {
+        this.pageNumber = page.getNumber();
+        this.pageSize = page.getSize();
+        this.totalPages = page.getTotalPages();
+        this.data = page.getContent();
+    }
 }

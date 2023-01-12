@@ -5,7 +5,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
-@Table
+@Table(name="tag")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

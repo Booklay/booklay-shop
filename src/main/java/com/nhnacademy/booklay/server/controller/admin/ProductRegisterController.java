@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
@@ -7,6 +8,7 @@ import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.TagService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,11 +58,12 @@ public class ProductRegisterController {
 
   //태그 자체만
   @GetMapping("/tag")
-  public Page<RetrieveTagResponse> tagPage(Pageable pageable){
-    return tagService.retrieveAllTag(pageable);
+  public PageResponse<RetrieveTagResponse> tagPage(Pageable pageable){
+    Page<RetrieveTagResponse> response =  tagService.retrieveAllTag(pageable);
+    return new PageResponse<>(response);
   }
   @PostMapping("/tag")
-  public void tagRegister(CreateTagRequest request) throws Exception {
+  public void tagRegister(@Valid @RequestBody CreateTagRequest request) throws Exception {
     tagService.createTag(request);
   }
 

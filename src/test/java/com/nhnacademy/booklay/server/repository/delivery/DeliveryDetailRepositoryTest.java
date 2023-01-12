@@ -1,7 +1,5 @@
 package com.nhnacademy.booklay.server.repository.delivery;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.repository.MemberRepository;
@@ -14,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")

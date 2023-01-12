@@ -1,8 +1,5 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -13,8 +10,6 @@ import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +21,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")

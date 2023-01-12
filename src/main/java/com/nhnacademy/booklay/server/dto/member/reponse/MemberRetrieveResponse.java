@@ -1,16 +1,12 @@
 package com.nhnacademy.booklay.server.dto.member.reponse;
 
 import com.nhnacademy.booklay.server.entity.Member;
-import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import org.springframework.data.domain.Page;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

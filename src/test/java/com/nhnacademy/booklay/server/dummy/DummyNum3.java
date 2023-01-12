@@ -1,14 +1,9 @@
 package com.nhnacademy.booklay.server.dummy;
 
-import com.nhnacademy.booklay.server.entity.Gender;
-import com.nhnacademy.booklay.server.entity.Image;
-import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.entity.OwnedEbook;
-import com.nhnacademy.booklay.server.entity.Product;
-import com.nhnacademy.booklay.server.entity.RestockingNotification;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import com.nhnacademy.booklay.server.entity.*;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.LocalDate;
 
 public class DummyNum3 {
 

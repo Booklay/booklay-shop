@@ -1,10 +1,11 @@
 package com.nhnacademy.booklay.server.dto.coupon;
 
 import com.nhnacademy.booklay.server.entity.CouponType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor

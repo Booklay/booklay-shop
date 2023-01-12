@@ -2,27 +2,18 @@ package com.nhnacademy.booklay.server.service.product.impl;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
-import com.nhnacademy.booklay.server.entity.Author;
-import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.entity.CategoryProduct;
+import com.nhnacademy.booklay.server.entity.*;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.entity.Product;
-import com.nhnacademy.booklay.server.entity.ProductAuthor;
-import com.nhnacademy.booklay.server.entity.ProductDetail;
-import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.repository.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
-import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductRepository;
-import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
+import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author 최규태

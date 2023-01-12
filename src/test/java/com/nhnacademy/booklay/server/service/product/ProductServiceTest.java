@@ -1,34 +1,17 @@
 package com.nhnacademy.booklay.server.service.product;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
-import com.nhnacademy.booklay.server.entity.CategoryProduct;
-import com.nhnacademy.booklay.server.entity.Product;
-import com.nhnacademy.booklay.server.entity.ProductAuthor;
-import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.repository.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
-import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductRepository;
-import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
-import com.nhnacademy.booklay.server.service.ImageService;
+import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.impl.ProductServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j

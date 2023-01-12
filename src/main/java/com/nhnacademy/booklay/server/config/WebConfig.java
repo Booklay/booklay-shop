@@ -59,24 +59,24 @@ public class WebConfig {
      */
     @Bean
     public RestTemplate restTemplate() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
-        KeyStore clientStore = KeyStore.getInstance("PKCS12");
+        var clientStore = KeyStore.getInstance("PKCS12");
 
         String file = Objects.requireNonNull(getClass().getClassLoader().getResource("booklay.p12")).getFile();
 
         clientStore.load(new FileInputStream(file), p12Password.toCharArray());
 
-        SSLContext sslContext = SSLContextBuilder.create()
+        var sslContext = SSLContextBuilder.create()
                 .setProtocol("TLS")
                 .loadKeyMaterial(clientStore, p12Password.toCharArray())
                 .loadTrustMaterial(new TrustSelfSignedStrategy())
                 .build();
 
-        SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext);
+        var sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext);
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setSSLSocketFactory(sslConnectionSocketFactory)
                 .build();
 
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        var requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
 
         return new RestTemplate(requestFactory);
     }

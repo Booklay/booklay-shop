@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -35,7 +34,7 @@ public class DatabaseConfig {
     @Bean
     public DataSource dataSource(DatasourceInfo datasourceInfo) {
 
-        BasicDataSource dataSource = new BasicDataSource();
+        var dataSource = new BasicDataSource();
         dataSource.setUrl(datasourceInfo.getDbUrl());
         dataSource.setPassword(datasourceInfo.getPasswword());
         dataSource.setUsername(datasourceInfo.getUsername());
@@ -49,7 +48,7 @@ public class DatabaseConfig {
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        var jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
 
         return jpaTransactionManager;
@@ -62,7 +61,7 @@ public class DatabaseConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("logDataSource") DataSource dataSource) {
-        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+        var emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
         emf.setPackagesToScan("com.nhnacademy.booklay.server.entity");
         emf.setJpaVendorAdapter(jpaVendorAdapters());
@@ -72,14 +71,14 @@ public class DatabaseConfig {
     }
 
     private JpaVendorAdapter jpaVendorAdapters() {
-        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+        var hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
 
         return hibernateJpaVendorAdapter;
     }
 
     private Properties jpaProperties() {
-        Properties jpaProperties = new Properties();
+        var jpaProperties = new Properties();
         jpaProperties.setProperty("hibernate.show_sql", "false");
         jpaProperties.setProperty("hibernate.format_sql", "true");
         jpaProperties.setProperty("hibernate.use_sql_comments", "true");

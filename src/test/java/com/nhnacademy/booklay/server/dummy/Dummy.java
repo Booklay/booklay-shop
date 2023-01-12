@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
@@ -49,22 +50,16 @@ public class Dummy {
     }
 
     public static Coupon getDummyCoupon() {
-
-        CouponType couponType = CouponType.builder()
-            .name("정액")
-            .build();
-
-        ReflectionTestUtils.setField(couponType, "id", 1L);
-
         Coupon coupon = Coupon.builder()
             .image(DummyCart.getDummyImage())
-            .couponType(couponType)
+            .couponType(Dummy.getDummyCouponType())
             .name("이달의 쿠폰")
             .amount(5)
             .minimumUseAmount(1000)
             .maximumDiscountAmount(3000)
             .issuanceDeadlineAt(LocalDateTime.of(2023, 1, 20, 0, 0, 0))
             .isDuplicatable(false)
+            .isLimited(false)
             .build();
 
         ReflectionTestUtils.setField(coupon, "id", 1L);
@@ -200,16 +195,17 @@ public class Dummy {
 
     public static CouponCreateRequest getDummyCouponCreateRequest() {
         CouponCreateRequest couponRequest = new CouponCreateRequest();
+
         ReflectionTestUtils.setField(couponRequest, "name", "이달의 쿠폰");
-        ReflectionTestUtils.setField(couponRequest, "memberId", null);
         ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
         ReflectionTestUtils.setField(couponRequest, "amount", 5);
-        ReflectionTestUtils.setField(couponRequest, "categoryId", null);
-        ReflectionTestUtils.setField(couponRequest, "productId", null);
+        ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", true);
+        ReflectionTestUtils.setField(couponRequest, "applyItemId", Dummy.getDummyCategory().getId());
         ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
         ReflectionTestUtils.setField(couponRequest, "maximumDiscountAmount", 5000);
         ReflectionTestUtils.setField(couponRequest, "issuanceDeadlineAt", LocalDateTime.now());
         ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
+        ReflectionTestUtils.setField(couponRequest, "quantity", null);
 
         return couponRequest;
     }
@@ -217,15 +213,22 @@ public class Dummy {
     public static CouponTypeCURequest getDummyCouponTypeCURequest() {
         CouponTypeCURequest couponTypeRequest = new CouponTypeCURequest();
         ReflectionTestUtils.setField(couponTypeRequest, "id", 1L);
-        ReflectionTestUtils.setField(couponTypeRequest, "name", "정액");
+        ReflectionTestUtils.setField(couponTypeRequest, "name", "정율");
 
         return couponTypeRequest;
     }
 
     public static CouponUpdateRequest getDummyCouponUpdateRequest() {
         CouponUpdateRequest couponRequest = new CouponUpdateRequest();
+
+        ReflectionTestUtils.setField(couponRequest, "name", "이달의 쿠폰");
+        ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
         ReflectionTestUtils.setField(couponRequest, "amount", 5);
+        ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", false);
+        ReflectionTestUtils.setField(couponRequest, "applyItemId", 1L);
         ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
+        ReflectionTestUtils.setField(couponRequest, "maximumDiscountAmount", 5000);
+        ReflectionTestUtils.setField(couponRequest, "issuanceDeadlineAt", LocalDateTime.now());
         ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
 
         return couponRequest;
@@ -255,5 +258,9 @@ public class Dummy {
         ReflectionTestUtils.setField(memberRequest, "email", "bbbb@gmail.com");
 
         return memberRequest;
+    }
+
+    public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {
+        return CouponRetrieveResponse.fromEntity(Dummy.getDummyCoupon());
     }
 }

@@ -2,9 +2,9 @@ package com.nhnacademy.booklay.server.repository.coupon;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
-import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -115,10 +115,9 @@ class CouponRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         // when
-        Page<Coupon> couponPage = couponRepository.findAllBy(pageRequest);
+        Page<CouponRetrieveResponse> couponPage = couponRepository.findAllBy(pageRequest);
 
         // then
         assertThat(couponPage).isNotNull();
-
     }
 }

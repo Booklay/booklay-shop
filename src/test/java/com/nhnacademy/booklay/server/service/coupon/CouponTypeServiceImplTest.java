@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.coupon;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
@@ -16,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -54,12 +57,15 @@ class CouponTypeServiceImplTest {
     void retrieveAllCouponTypes() {
 
         // given
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        given(couponTypeRepository.findAllBy(pageRequest)).willReturn(Page.empty());
+
 
         // when
-        couponTypeService.retrieveAllCouponTypes();
+        couponTypeService.retrieveAllCouponTypes(pageRequest);
 
         // then
-        BDDMockito.then(couponTypeRepository).should().findAll();
+        BDDMockito.then(couponTypeRepository).should().findAllBy(pageRequest);
     }
 
     @Test

@@ -2,7 +2,6 @@ package com.nhnacademy.booklay.server.service.coupon;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeRetrieveResponse;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

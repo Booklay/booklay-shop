@@ -1,19 +1,9 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.entity.Author;
-import com.nhnacademy.booklay.server.entity.Cart;
-import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.entity.CategoryProduct;
+import com.nhnacademy.booklay.server.entity.*;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.entity.Image;
-import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.entity.Post;
-import com.nhnacademy.booklay.server.entity.PostType;
-import com.nhnacademy.booklay.server.entity.Product;
-import com.nhnacademy.booklay.server.entity.ProductAskComment;
-import com.nhnacademy.booklay.server.entity.ProductAuthor;
-import com.nhnacademy.booklay.server.entity.ProductDetail;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

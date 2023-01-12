@@ -1,12 +1,13 @@
 package com.nhnacademy.booklay.server.dto.product.request;
 
 import com.nhnacademy.booklay.server.entity.Image;
-import java.time.LocalDate;
-import java.util.List;
-import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class CreateProductBookRequest {

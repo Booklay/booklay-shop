@@ -1,8 +1,5 @@
 package com.nhnacademy.booklay.server.service.product;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.when;
-
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Author;
@@ -20,6 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)

@@ -1,15 +1,9 @@
 package com.nhnacademy.booklay.server.service.product;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.service.product.impl.AuthorServiceImpl;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)

@@ -6,22 +6,11 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
-import com.nhnacademy.booklay.server.entity.Authority;
-import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.entity.Coupon;
-import com.nhnacademy.booklay.server.entity.CouponType;
-import com.nhnacademy.booklay.server.entity.DeliveryDetail;
-import com.nhnacademy.booklay.server.entity.DeliveryStatusCode;
-import com.nhnacademy.booklay.server.entity.Gender;
-import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.entity.MemberAuthority;
-import com.nhnacademy.booklay.server.entity.MemberGrade;
-import com.nhnacademy.booklay.server.entity.Order;
-import com.nhnacademy.booklay.server.entity.OrderProduct;
-import com.nhnacademy.booklay.server.entity.OrderStatusCode;
+import com.nhnacademy.booklay.server.entity.*;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public class Dummy {
     public static Gender getDummyGender() {

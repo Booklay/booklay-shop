@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
-import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

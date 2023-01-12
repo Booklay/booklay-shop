@@ -9,16 +9,14 @@ import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.GenderRepository;
 import com.nhnacademy.booklay.server.repository.MemberRepository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author 양승아

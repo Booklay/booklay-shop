@@ -1,11 +1,8 @@
 package com.nhnacademy.booklay.server.repository.coupon;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -17,6 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")

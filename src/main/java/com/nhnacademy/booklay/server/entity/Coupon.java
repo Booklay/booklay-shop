@@ -1,14 +1,22 @@
 package com.nhnacademy.booklay.server.entity;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Table
 @Entity
@@ -29,6 +37,16 @@ public class Coupon {
     @JoinColumn(name = "code")
     private CouponType couponType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_no")
+    @Setter
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_no")
+    @Setter
+    private Category category;
+
     @Column
     private String name;
 
@@ -47,10 +65,13 @@ public class Coupon {
     @Column(name = "is_duplicatable")
     private Boolean isDuplicatable;
 
+    @Column(name = "is_limited")
+    private Boolean isLimited;
+
     @Builder
     public Coupon(Image image, CouponType couponType, String name, int amount, int minimumUseAmount,
                   int maximumDiscountAmount, LocalDateTime issuanceDeadlineAt,
-                  Boolean isDuplicatable) {
+                  Boolean isDuplicatable, Boolean isLimited) {
         this.image = image;
         this.couponType = couponType;
         this.name = name;
@@ -59,10 +80,12 @@ public class Coupon {
         this.maximumDiscountAmount = maximumDiscountAmount;
         this.issuanceDeadlineAt = issuanceDeadlineAt;
         this.isDuplicatable = isDuplicatable;
+        this.isLimited = isLimited;
     }
 
-    public void update(CouponUpdateRequest couponUpdateRequest) {
+    public void update(CouponUpdateRequest couponUpdateRequest, CouponType couponType) {
         this.name = couponUpdateRequest.getName();
+        this.couponType = couponType;
         this.amount = couponUpdateRequest.getAmount();
         this.minimumUseAmount = couponUpdateRequest.getMinimumUseAmount();
         this.maximumDiscountAmount = couponUpdateRequest.getMaximumDiscountAmount();

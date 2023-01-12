@@ -5,20 +5,23 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
-import com.nhnacademy.booklay.server.repository.GenderRepository;
-import com.nhnacademy.booklay.server.repository.MemberRepository;
+import com.nhnacademy.booklay.server.repository.member.GenderRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
+ *
  * @author 양승아
  */
 @Slf4j
@@ -28,14 +31,19 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberGradeRepository memberGradeRepository;
     private final GenderRepository genderRepository;
 
     @Override
     public void createMember(MemberCreateRequest createDto) {
         Gender gender = genderRepository.findByName(createDto.getGender())
-                .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
+            .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
 
-        memberRepository.save(createDto.toEntity(gender));
+        Member member = createDto.toEntity(gender);
+        MemberGrade grade = new MemberGrade(member, "화이트");
+
+        memberRepository.save(member);
+        memberGradeRepository.save(grade);
     }
 
     @Override
@@ -49,8 +57,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MemberRetrieveResponse> retrieveMembers(Pageable pageable) {
-        return MemberRetrieveResponse.fromEntity(memberRepository.findAllBy(pageable));
+    public Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable) {
+        return memberRepository.findAllBy(pageable);
     }
 
     @Override

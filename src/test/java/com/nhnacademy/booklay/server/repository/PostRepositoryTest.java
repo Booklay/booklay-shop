@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.repository;
 
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Post;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

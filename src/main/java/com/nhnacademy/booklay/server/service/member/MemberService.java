@@ -3,9 +3,8 @@ package com.nhnacademy.booklay.server.service.member;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 /**
  * @author 양승아
@@ -13,7 +12,7 @@ import java.util.List;
 public interface MemberService {
     MemberRetrieveResponse retrieveMember(Long memberNo);
 
-    List<MemberRetrieveResponse> retrieveMembers(Pageable pageable);
+    Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable);
 
     void createMember(MemberCreateRequest memberCreateRequest);
 

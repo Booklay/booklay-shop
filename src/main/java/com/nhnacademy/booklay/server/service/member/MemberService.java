@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
@@ -21,4 +22,11 @@ public interface MemberService {
     void deleteMember(Long memberNo);
 
     void createMemberAuthority(Long memberNo, String authority);
+
+    void deleteMemberAuthority(Long memberNo, String authorityName);
+
+    void createMemberGrade(Long memberNo, String gradeName);
+
+    Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo, Pageable pageable);
+
 }

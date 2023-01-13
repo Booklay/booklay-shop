@@ -1,31 +1,33 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.product.TagRepository;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.BDDMockito.given;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
-
-  //TODO: Mock Test로 바꿀것...
 
   @InjectMocks
   TagServiceImpl tagService;
@@ -91,7 +93,8 @@ class TagServiceImplTest {
     given(tagRepository.existsById(update.getId())).willReturn(true);
     given(tagRepository.existsByName(update.getName())).willReturn(true);
 
-    assertThatThrownBy(()->tagService.updateTag(update)).isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> tagService.updateTag(update)).isInstanceOf(
+        IllegalArgumentException.class);
   }
 
   @Test
@@ -99,7 +102,7 @@ class TagServiceImplTest {
     UpdateTagRequest update = new UpdateTagRequest(1L, "겹치는_태그");
 
     given(tagRepository.existsById(update.getId())).willReturn(false);
-    assertThatThrownBy(()->tagService.updateTag(update)).isInstanceOf(NotFoundException.class);
+    assertThatThrownBy(() -> tagService.updateTag(update)).isInstanceOf(NotFoundException.class);
   }
 
   @Test
@@ -117,7 +120,22 @@ class TagServiceImplTest {
     ReflectionTestUtils.setField(tag, "id", 1L);
     given(tagRepository.existsById(tag.getId())).willReturn(false);
 
-    assertThatThrownBy(()->tagService.deleteTag(tag.getId())).isInstanceOf(NotFoundException.class);
+    assertThatThrownBy(() -> tagService.deleteTag(tag.getId())).isInstanceOf(
+        NotFoundException.class);
+  }
+
+  @Test
+  void testTagRetrieveAll_success() {
+    //given
+    given(tagRepository.findAllBy(any(), any())).willReturn(Page.empty());
+
+    //when
+    Page<RetrieveTagResponse> pageResponse = tagService.retrieveAllTag(PageRequest.of(0, 10));
+
+    //then
+    BDDMockito.then(tagRepository).should().findAllBy(any(), any());
+
+    assertThat(pageResponse.getTotalElements()).isZero();
   }
 
 }

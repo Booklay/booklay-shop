@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.controller.admin.coupon;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -159,7 +160,7 @@ class CouponAdminControllerTest {
     }
 
     @Test
-    @DisplayName("deleteCoupon() - 쿠폰 삭제 컨트롤러 테스트")
+    @DisplayName("쿠폰 삭제 테스트")
     void deleteCoupon() throws Exception {
 
         // given
@@ -173,5 +174,25 @@ class CouponAdminControllerTest {
             .andReturn();
 
         Mockito.verify(couponAdminService).deleteCoupon(1L);
+    }
+
+    @Test
+    @DisplayName("관리자가 회원에게 쿠폰 발급")
+    void issueCouponToMember() throws Exception {
+
+        // given
+        CouponIssueRequest couponRequest = new CouponIssueRequest(1L, 1L);
+
+        // when
+
+        // then
+        mockMvc.perform(put(URI_PREFIX + "/issue")
+                .content(objectMapper.writeValueAsString(couponRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andDo(print())
+            .andReturn();
+
+        Mockito.verify(couponAdminService).issueCoupon(any());
     }
 }

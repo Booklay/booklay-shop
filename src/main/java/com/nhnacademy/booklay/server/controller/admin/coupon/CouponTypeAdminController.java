@@ -21,7 +21,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/couponTypes")
+@RequestMapping("/admin/couponTypes")
 public class CouponTypeAdminController {
 
     private final CouponTypeService couponTypeService;

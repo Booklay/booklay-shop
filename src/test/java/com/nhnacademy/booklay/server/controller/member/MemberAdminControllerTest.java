@@ -1,7 +1,10 @@
 package com.nhnacademy.booklay.server.controller.member;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,6 +16,7 @@ import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 /**
  * @author 양승아
@@ -75,18 +80,38 @@ class MemberAdminControllerTest {
         when(memberService.retrieveMember(member.getMemberNo())).thenReturn(memberRetrieveResponse);
 
         //then
-        mockMvc.perform(get(URI_PREFIX + "/" + member.getMemberNo()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andDo(print()).andReturn();
+        mockMvc.perform(
+                get(URI_PREFIX + "/" + member.getMemberNo()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
-    //    @Test
+    @Disabled
+    @Test
     @DisplayName("관리자의 단일회원 조회 실패 테스트")
     void retrieveMemberTest_ifNotExistMemberId() throws Exception {
         //mocking
-        when(memberService.retrieveMember(member.getMemberNo())).thenThrow(MemberNotFoundException.class);
+        when(memberService.retrieveMember(member.getMemberNo())).thenThrow(
+            MemberNotFoundException.class);
 
         //then
-        mockMvc.perform(get(URI_PREFIX + "/" + member.getMemberNo()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest()).andDo(print()).andReturn();
+        mockMvc.perform(
+                get(URI_PREFIX + "/" + member.getMemberNo()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest()).andDo(print()).andReturn();
     }
 
+    @Disabled
+    @Test
+    @DisplayName("회원 권한 삭제 성공 테스트")
+    void deleteMemberAuthoritySuccessTest() throws Exception {
+        //given
+        String admin = "admin";
+        //when
+        ResultActions result = mockMvc.perform(
+            delete(URI_PREFIX + "/authority/" + member.getMemberNo() + "/" + admin));
+
+        //then
+        result.andExpect(status().isOk());
+        then(memberService).should(times(1)).deleteMemberAuthority(any(), admin);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
@@ -134,4 +135,46 @@ public class MemberServiceImpl implements MemberService {
         memberAuthorityRepository.save(memberAuthority);
     }
 
+    @Override
+    public void deleteMemberAuthority(Long memberNo, String authorityName) {
+        memberRepository.findByMemberNo(memberNo)
+            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+
+        //TODO 3: custom exception (member authority는 삭제할 수 없음)
+        if (authorityName.equals("member")) {
+            throw new IllegalArgumentException();
+        }
+
+        //TODO 3: Make Custom Exception?
+        Authority authority = authorityRepository.findByName(authorityName)
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
+        //TODO 3: Custom Exception (없는 권한은 삭제할 수 없음)
+        MemberAuthority memberAuthority = memberAuthorityRepository.findById(pk)
+            .orElseThrow(() -> new IllegalArgumentException());
+
+
+        memberAuthorityRepository.deleteById(pk);
+    }
+
+    @Override
+    public void createMemberGrade(Long memberNo, String gradeName) {
+        Member member = memberRepository.findByMemberNo(memberNo)
+            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+
+        MemberGrade memberGrade = new MemberGrade(member, gradeName);
+
+        memberGradeRepository.save(memberGrade);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo,
+                                                                  Pageable pageable) {
+        memberRepository.findByMemberNo(memberNo)
+            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+
+        return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
+    }
 }

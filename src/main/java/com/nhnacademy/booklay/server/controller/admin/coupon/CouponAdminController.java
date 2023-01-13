@@ -58,7 +58,8 @@ public class CouponAdminController {
     }
 
     @PutMapping("/{couponId}")
-    public ResponseEntity<Void> updateCoupon(@PathVariable Long couponId, @Valid @RequestBody CouponUpdateRequest couponRequest) {
+    public ResponseEntity<Void> updateCoupon(@PathVariable Long couponId,
+                                             @Valid @RequestBody CouponUpdateRequest couponRequest) {
         couponAdminService.updateCoupon(couponId, couponRequest);
 
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -72,8 +73,7 @@ public class CouponAdminController {
     }
 
     @PutMapping("/issue")
-    public ResponseEntity<Void> issueCouponToMember(@Valid @RequestBody
-                                                    CouponIssueRequest couponRequest) {
+    public ResponseEntity<Void> issueCouponToMember(@Valid @RequestBody CouponIssueRequest couponRequest) {
         couponAdminService.issueCoupon(couponRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();

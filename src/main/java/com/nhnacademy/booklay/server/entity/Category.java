@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table
+@Table(name = "category")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,7 +17,6 @@ public class Category {
     @Column(name = "category_no")
     private Long id;
 
-    // TODO NotNull -> nullable = true ERD와 SQL 변경 필요
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_no", nullable = true)
     private Category parent;

@@ -40,8 +40,7 @@ public class Cart {
   }
 
   @Builder
-  public Cart(Pk pk, com.nhnacademy.booklay.server.entity.Member member,
-      com.nhnacademy.booklay.server.entity.Product product) {
+  public Cart(Pk pk, Member member, Product product) {
     this.pk = pk;
     this.member = member;
     this.product = product;

@@ -7,7 +7,7 @@ import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorR
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
-import com.nhnacademy.booklay.server.repository.MemberRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import java.util.ArrayList;

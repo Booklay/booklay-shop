@@ -19,6 +19,9 @@ public class AuthController {
 
     public ResponseEntity<MemberLoginResponse> doLogin(@RequestParam String memberId) {
 
+        MemberLoginResponse memberLoginResponse = memberService.retrieveMemberById(memberId)
+                .orElseThrow(IllegalArgumentException::new);
+
         return null;
     }
 }

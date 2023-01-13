@@ -1,10 +1,13 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 /**
  * @author 양승아
@@ -21,4 +24,6 @@ public interface MemberService {
     void deleteMember(Long memberNo);
 
     void createMemberAuthority(Long memberNo, String authority);
+
+    Optional<MemberLoginResponse> retrieveMemberById(String memberId);
 }

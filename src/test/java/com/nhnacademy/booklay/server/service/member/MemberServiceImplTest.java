@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -131,10 +132,32 @@ class MemberServiceImplTest {
     }
 
     @Test
-    void updateMember() {
+    @DisplayName("멤버 등급 생성 테스트")
+    void CreateMemberGradeSuccessTest() {
+        //given
+        given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
+
+        //when
+        memberService.createMemberGrade(member.getMemberNo(), "화이트");
+
+        //then
+        then(memberGradeRepository).should().save(any(MemberGrade.class));
+
     }
 
     @Test
-    void deleteMember() {
+    void retrieveMemberGradesSuccessTest() {
+        //given
+        given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
+        given(memberGradeRepository.findByMember_MemberNo(any(), any())).willReturn(Page.empty());
+
+        //when
+        Page<MemberGradeRetrieveResponse> pageResponse =
+            memberService.retrieveMemberGrades(any(), PageRequest.of(0, 10));
+
+        //then
+        then(memberRepository).should().findByMemberNo(any());
+        then(memberGradeRepository).should().findByMember_MemberNo(any(), any());
+        assertThat(pageResponse.getTotalElements()).isZero();
     }
 }

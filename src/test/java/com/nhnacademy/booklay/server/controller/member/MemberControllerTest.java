@@ -25,6 +25,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,37 +162,39 @@ class MemberControllerTest {
 
         //when
         ResultActions result = mockMvc.perform(put(URI_PREFIX + "/" + member.getMemberNo())
-                .content(objectMapper.writeValueAsString(blankDto))
-                .contentType(MediaType.APPLICATION_JSON));
+            .content(objectMapper.writeValueAsString(blankDto))
+            .contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$['message']").value("Invalid parameter included"));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$['message']").value("Invalid parameter included"));
 
     }
 
-//    @Test
+    @Disabled
+    @Test
     @DisplayName("회원 삭제 성공 테스트")
     void testDeleteMember_successTest() throws Exception {
         mockMvc.perform(delete(URI_PREFIX + "/" + member.getMemberNo()))
-                .andExpect(status().isAccepted())
-                .andDo(print())
-                .andReturn();
+            .andExpect(status().isAccepted())
+            .andDo(print())
+            .andReturn();
 
         verify(memberService, times(1)).deleteMember(member.getMemberNo());
     }
 
-//    @Test
+    @Disabled
+    @Test
     @DisplayName("회원 삭제 실패 테스트")
     void testDeleteMember_failedTest() throws Exception {
         doThrow(MemberNotFoundException.class).when(memberService)
-                .deleteMember(member.getMemberNo());
+            .deleteMember(member.getMemberNo());
 
         mockMvc.perform(delete(URI_PREFIX + "/" + member.getMemberNo()))
-                .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andReturn();
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andReturn();
     }
 
 

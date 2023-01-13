@@ -1,6 +1,19 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
@@ -8,24 +21,18 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoryAdminController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -54,7 +61,7 @@ class CategoryAdminControllerTest {
         objectMapper = new ObjectMapper();
         category = Dummy.getDummyCategory();
 
-        categoryResponse = new CategoryResponse().fromEntity(category);
+        categoryResponse = new CategoryResponse(category);
 
         createDto = new CategoryCreateRequest();
 
@@ -87,7 +94,7 @@ class CategoryAdminControllerTest {
             .andReturn();
     }
 
-//    @Test
+    //    @Test
     @DisplayName("카테고리 등록 실패, 입력값 오류")
     void testCreateCategory_ifCreateRequestIncludeNullOrBlank_throwsValidationFailedException()
         throws Exception {
@@ -118,7 +125,7 @@ class CategoryAdminControllerTest {
             .andReturn();
     }
 
-//    @Test
+    //    @Test
     @DisplayName("단일 카테고리 검색 실패, 존재하지 않는 카테고리 ID")
     void testRetrieveCategory_ifNotExistedCategoryId() throws Exception {
         //mocking
@@ -137,7 +144,9 @@ class CategoryAdminControllerTest {
     @DisplayName("카테고리 리스트 검색 성공")
     void testRetrieveCategoryListWithPageable() throws Exception {
         //given
-        Page<CategoryResponse> page = Page.empty();
+        PageResponse<CategoryResponse> page = new PageResponse<CategoryResponse>(
+            0, 0, 0, List.of()
+        );
 
         //mocking
         when(categoryService.retrieveCategory(Pageable.unpaged())).thenReturn(page);
@@ -167,7 +176,7 @@ class CategoryAdminControllerTest {
 
     }
 
-//    @Test
+    //    @Test
     @DisplayName("카테고리 수정 실패, 입력값 오류")
     void testUpdateCategory_ifUpdateRequestIncludeNullOrBlank_throwsValidationFailedException()
         throws Exception {

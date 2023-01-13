@@ -11,11 +11,15 @@ import static org.mockito.BDDMockito.then;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
+import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
+import com.nhnacademy.booklay.server.repository.AuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.util.Optional;
@@ -42,11 +46,18 @@ class MemberServiceImplTest {
     MemberGradeRepository memberGradeRepository;
 
     @Mock
+    MemberAuthorityRepository memberAuthorityRepository;
+
+    @Mock
+    AuthorityRepository authorityRepository;
+
+    @Mock
     GenderRepository genderRepository;
 
     MemberCreateRequest memberCreateRequest;
     Member member;
     Gender gender;
+    Authority authority;
 
     private static final Long VALID_MEMBER_NO = 1L;
     private static final Long INVALID_MEMBER_NO = 2L;
@@ -59,6 +70,7 @@ class MemberServiceImplTest {
                 .name("M")
                 .build();
         member = memberCreateRequest.toEntity(gender);
+        authority = Dummy.getDummyAuthorityAsMember();
     }
 
 
@@ -68,6 +80,7 @@ class MemberServiceImplTest {
         //given
         given(genderRepository.findByName(anyString())).willReturn(Optional.of(gender));
         given(memberRepository.save(any(Member.class))).willReturn(member);
+        given(authorityRepository.findByName(anyString())).willReturn(Optional.of(authority));
 
         //when
         memberService.createMember(memberCreateRequest);
@@ -75,6 +88,7 @@ class MemberServiceImplTest {
         //then
         then(memberRepository).should().save(any(Member.class));
         then(memberGradeRepository).should().save(any(MemberGrade.class));
+        then(memberAuthorityRepository).should().save(any(MemberAuthority.class));
     }
 
     @Test

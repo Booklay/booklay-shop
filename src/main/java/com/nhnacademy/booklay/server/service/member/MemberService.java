@@ -19,4 +19,6 @@ public interface MemberService {
     void updateMember(Long memberNo, MemberUpdateRequest memberUpdateRequest);
 
     void deleteMember(Long memberNo);
+
+    void createMemberAuthority(Long memberNo, String authority);
 }

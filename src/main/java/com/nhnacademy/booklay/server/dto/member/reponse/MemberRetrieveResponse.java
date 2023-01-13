@@ -4,13 +4,11 @@ import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -68,23 +66,5 @@ public class MemberRetrieveResponse {
             .phoneNo(member.getPhoneNo())
             .isBlocked(member.getIsBlocked())
             .build();
-    }
-
-    public static List<MemberRetrieveResponse> fromEntity(Page<Member> members) {
-        return members.map(h->MemberRetrieveResponse.builder()
-            .memberId(h.getMemberNo())
-            .id(h.getMemberId())
-            .name(h.getName())
-            .nickname(h.getNickname())
-            .birthday(h.getBirthday())
-            .email(h.getEmail())
-            .createdAt(h.getCreatedAt())
-            .updatedAt(h.getUpdatedAt())
-            .deletedAt(h.getDeletedAt())
-            .gender(h.getGender().getName())
-            .phoneNo(h.getPhoneNo())
-            .isBlocked(h.getIsBlocked())
-            .build())
-            .getContent();
     }
 }

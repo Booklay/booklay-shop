@@ -2,12 +2,15 @@ package com.nhnacademy.booklay.server.dto.member.reponse;
 
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
-import lombok.*;
-import org.springframework.data.domain.Page;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,7 +20,6 @@ public class MemberRetrieveResponse {
     private Long memberId;
     private String gender;
     private String id;
-    private String password;
     private String nickname;
     private String name;
     private LocalDate birthday;
@@ -33,14 +35,13 @@ public class MemberRetrieveResponse {
      *
      * @author 양승아
      */
-    public MemberRetrieveResponse(Long memberId, Gender gender, String id, String password,
+    public MemberRetrieveResponse(Long memberId, Gender gender, String id,
                                   String nickname, String name, LocalDate birthday, String phoneNo,
                                   String email, LocalDateTime createdAt, LocalDateTime updatedAt,
                                   LocalDateTime deletedAt, Boolean isBlocked) {
         this.memberId = memberId;
         this.gender = gender.getName();
         this.id = id;
-        this.password = password;
         this.nickname = nickname;
         this.name = name;
         this.birthday = birthday;
@@ -56,7 +57,6 @@ public class MemberRetrieveResponse {
         return MemberRetrieveResponse.builder()
             .memberId(member.getMemberNo())
             .id(member.getMemberId())
-            .password(member.getPassword())
             .name(member.getName())
             .nickname(member.getNickname())
             .birthday(member.getBirthday())
@@ -74,7 +74,6 @@ public class MemberRetrieveResponse {
         return members.map(h->MemberRetrieveResponse.builder()
             .memberId(h.getMemberNo())
             .id(h.getMemberId())
-            .password(h.getPassword())
             .name(h.getName())
             .nickname(h.getNickname())
             .birthday(h.getBirthday())

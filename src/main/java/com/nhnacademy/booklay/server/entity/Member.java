@@ -100,4 +100,15 @@ public class Member {
         this.phoneNo = request.getPhoneNo();
         this.email = request.getEmail();
     }
+
+    public void deleteMember() {
+        this.deletedAt = LocalDateTime.now();
+        this.gender = null;
+        this.password = null;
+        this.birthday = null;
+        this.email = null;
+        this.name = null;
+        this.nickname = null;
+        this.phoneNo = null;
+    }
 }

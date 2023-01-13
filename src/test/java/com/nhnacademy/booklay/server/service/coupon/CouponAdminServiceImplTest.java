@@ -1,6 +1,10 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
@@ -9,7 +13,11 @@ import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
+import com.nhnacademy.booklay.server.repository.coupon.OrderCouponRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,12 +29,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -46,6 +48,12 @@ class CouponAdminServiceImplTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private MemberRepository memberRepository;
+
+    @Mock
+    private OrderCouponRepository orderCouponRepository;
 
     Coupon coupon;
     List<Coupon> couponList;
@@ -141,5 +149,25 @@ class CouponAdminServiceImplTest {
 
         // then
         BDDMockito.then(couponRepository).should().deleteById(targetId);
+    }
+
+    @Test
+    @DisplayName("쿠폰 발급 테스트")
+    void testIssueCoupon() {
+
+        // given
+        Long targetId = 1L;
+        CouponIssueRequest couponRequest = new CouponIssueRequest(targetId, targetId);
+        coupon.setCategory(Dummy.getDummyCategory());
+
+        given(couponRepository.findById(targetId)).willReturn(Optional.ofNullable(coupon));
+        given(memberRepository.findById(targetId)).willReturn(
+            Optional.ofNullable(Dummy.getDummyMember()));
+
+        // when
+        couponAdminService.issueCoupon(couponRequest);
+
+        // then
+        BDDMockito.then(orderCouponRepository).should().save(any());
     }
 }

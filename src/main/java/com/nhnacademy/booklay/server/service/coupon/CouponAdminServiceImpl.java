@@ -45,10 +45,11 @@ public class CouponAdminServiceImpl implements CouponAdminService{
 
     @Override
     public void createCoupon(@Valid CouponCreateRequest couponRequest) {
-        CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode()).orElseThrow(() -> new IllegalArgumentException("No Such Coupon Type."));
+
+        CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode())
+            .orElseThrow(() -> new NotFoundException(CouponType.class.toString(), couponRequest.getTypeCode()));
 
         Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType);
-
         Long applyItemId = couponRequest.getApplyItemId();
         setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(), applyItemId);
 
@@ -69,8 +70,11 @@ public class CouponAdminServiceImpl implements CouponAdminService{
 
     @Override
     public void updateCoupon(Long couponId, CouponUpdateRequest couponRequest) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new NotFoundException(Coupon.class.toString(), couponId));
-        CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode()).orElseThrow(() -> new NotFoundException(CouponType.class.toString(), couponRequest.getTypeCode()));
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(() -> new NotFoundException(Coupon.class.toString(), couponId));
+
+        CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode())
+            .orElseThrow(() -> new NotFoundException(CouponType.class.toString(), couponRequest.getTypeCode()));
 
         coupon.update(couponRequest, couponType);
         setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(), couponRequest.getApplyItemId());
@@ -93,7 +97,8 @@ public class CouponAdminServiceImpl implements CouponAdminService{
 
         String code = UUID.randomUUID().toString().substring(0, 30);
 
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new NotFoundException(Coupon.class.toString(), couponId));
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(() -> new NotFoundException(Coupon.class.toString(), couponId));
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(Member.class.toString(), memberId));
 

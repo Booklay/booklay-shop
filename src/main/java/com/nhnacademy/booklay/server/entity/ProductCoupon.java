@@ -17,14 +17,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "order_coupon")
+@Table(name = "product_coupon")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderCoupon {
+public class ProductCoupon {
 
     @Id
-    @Column(name = "order_coupon_no")
+    @Column(name = "product_coupon_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -39,8 +39,8 @@ public class OrderCoupon {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Setter
-    @JoinColumn(name = "order_no")
-    private Order order;
+    @JoinColumn(name = "order_product_no")
+    private OrderProduct orderProduct;
 
     @Column(name = "coupon_code")
     private String code;
@@ -56,7 +56,7 @@ public class OrderCoupon {
     private LocalDateTime expiredAt;
 
     @Builder
-    public OrderCoupon(Coupon coupon, String code) {
+    public ProductCoupon(Coupon coupon, String code) {
         this.coupon = coupon;
         this.code = code;
     }

@@ -17,10 +17,12 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.entity.Order;
+import com.nhnacademy.booklay.server.entity.OrderCoupon;
 import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.OrderStatusCode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class Dummy {
@@ -270,5 +272,16 @@ public class Dummy {
 
     public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {
         return CouponRetrieveResponse.fromEntity(Dummy.getDummyCoupon());
+    }
+
+    public static OrderCoupon getDummyOrderCoupon() {
+        OrderCoupon orderCoupon = OrderCoupon.builder()
+            .coupon(getDummyCoupon())
+            .code(UUID.randomUUID().toString().substring(0, 30))
+            .build();
+
+        ReflectionTestUtils.setField(orderCoupon, "id", 1L);
+
+        return orderCoupon;
     }
 }

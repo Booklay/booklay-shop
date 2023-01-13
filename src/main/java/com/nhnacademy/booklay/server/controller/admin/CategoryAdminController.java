@@ -1,23 +1,31 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
+import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.exception.controller.DeleteFailedException;
 import com.nhnacademy.booklay.server.exception.controller.UpdateFailedException;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -27,25 +35,46 @@ public class CategoryAdminController {
 
     private final CategoryService categoryService;
 
+    @GetMapping("/test")
+    public ResponseEntity<CategoryResponse> testGet() {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new CategoryResponse(Category.builder()
+                .id(1L)
+                .parent(null)
+                .depth(1L)
+                .name("name")
+                .isExposure(false)
+                .build()));
+    }
+
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(
         @Valid @RequestBody CategoryCreateRequest createDto) {
+
+        log.info("Create Category");
+
+        log.info("Request Check {}", createDto.getName());
+
+        CategoryResponse categoryResponse;
+
         try {
             categoryService.createCategory(createDto);
-        } catch (AlreadyExistedException | NotFoundException e) {
-            throw new CreateFailedException("카테고리 생성 실패");
+        } catch (NotFoundException e) {
+            throw new CreateFailedException("카테고리 생성 실패, 부모 카테고리가 없습니다.");
+        } catch (AlreadyExistedException e) {
+            log.error("카테고리 생성 실패, 이미 존재하는 카테고리 입니다.");
         }
 
-        CategoryResponse categoryResponse = categoryService.retrieveCategory(createDto.getId());
+        categoryResponse = categoryService.retrieveCategory(createDto.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(categoryResponse);
     }
 
     @GetMapping
-    public ResponseEntity<Page> retrieveCategoryList(Pageable pageable) {
+    public ResponseEntity<PageResponse<CategoryResponse>> retrieveCategoryList(Pageable pageable) {
 
-        Page<CategoryResponse> page = categoryService.retrieveCategory(pageable);
+        PageResponse<CategoryResponse> page = categoryService.retrieveCategory(pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(page);

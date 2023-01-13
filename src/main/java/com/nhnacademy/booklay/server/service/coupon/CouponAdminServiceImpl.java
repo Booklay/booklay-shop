@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.coupon;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.coupon.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -76,6 +77,11 @@ public class CouponAdminServiceImpl implements CouponAdminService{
             throw new NotFoundException(Coupon.class.toString(), couponId);
         }
         couponRepository.deleteById(couponId);
+    }
+
+    @Override
+    public void issueCoupon(CouponIssueRequest couponRequest) {
+
     }
 
     private void setCategoryOrProduct(Coupon coupon, boolean isOrderCoupon, Long applyItemId) {

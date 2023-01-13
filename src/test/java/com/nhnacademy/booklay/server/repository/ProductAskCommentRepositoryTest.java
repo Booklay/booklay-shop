@@ -5,6 +5,8 @@ import com.nhnacademy.booklay.server.entity.ProductAskComment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import com.nhnacademy.booklay.server.repository.post.PostRepository;
+import com.nhnacademy.booklay.server.repository.post.ProductAskCommentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

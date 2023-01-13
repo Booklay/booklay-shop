@@ -1,11 +1,13 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
+import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.TagService;
 import javax.validation.Valid;
@@ -27,7 +29,7 @@ public class ProductRegisterController {
 
   private final ProductService productService;
   private final TagService tagService;
-
+  private final AuthorService authorService;
   //책 등록
   @PostMapping("/register/book")
   public Long postBookRegister(CreateProductBookRequest request) throws Exception {
@@ -63,12 +65,12 @@ public class ProductRegisterController {
     return new PageResponse<>(response);
   }
   @PostMapping("/tag")
-  public void tagRegister(@Valid @RequestBody CreateTagRequest request) throws Exception {
+  public void tagRegister(@Valid @RequestBody CreateTagRequest request){
     tagService.createTag(request);
   }
 
   @PutMapping("/tag")
-  public void tagUpdate(UpdateTagRequest request) throws Exception {
+  public void tagUpdate(@Valid @RequestBody UpdateTagRequest request){
     tagService.updateTag(request);
   }
 
@@ -77,4 +79,11 @@ public class ProductRegisterController {
     tagService.deleteTag(id);
   }
 
+
+  //태그 자체만
+  @GetMapping("/author")
+  public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable){
+    Page<RetrieveAuthorResponse> response =  authorService.retrieveAllAuthor(pageable);
+    return new PageResponse<>(response);
+  }
 }

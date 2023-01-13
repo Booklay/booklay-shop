@@ -11,9 +11,7 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
-
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +48,11 @@ class MemberAdminControllerTest {
     void setUp() {
         member = Dummy.getDummyMember();
 
-        memberRetrieveResponse = new MemberRetrieveResponse(member.getMemberNo(), member.getGender().getName(), member.getMemberId(), member.getPassword(), member.getNickname(), member.getName(), member.getBirthday(), member.getPhoneNo(), member.getEmail(), member.getCreatedAt(), member.getUpdatedAt(), member.getDeletedAt(), member.getIsBlocked());
+        memberRetrieveResponse =
+            new MemberRetrieveResponse(member.getMemberNo(), member.getGender().getName(),
+                member.getMemberId(), member.getNickname(), member.getName(), member.getBirthday(),
+                member.getPhoneNo(), member.getEmail(), member.getCreatedAt(),
+                member.getUpdatedAt(), member.getDeletedAt(), member.getIsBlocked());
     }
 
     @Test

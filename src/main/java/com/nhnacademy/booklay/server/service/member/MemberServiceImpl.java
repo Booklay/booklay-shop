@@ -3,12 +3,16 @@ package com.nhnacademy.booklay.server.service.member;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
+import com.nhnacademy.booklay.server.repository.AuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
+import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 /**
  *
@@ -33,6 +35,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MemberGradeRepository memberGradeRepository;
     private final GenderRepository genderRepository;
+    private final AuthorityRepository authorityRepository;
+    private final MemberAuthorityRepository memberAuthorityRepository;
 
     @Override
     public void createMember(MemberCreateRequest createDto) {
@@ -42,8 +46,17 @@ public class MemberServiceImpl implements MemberService {
         Member member = createDto.toEntity(gender);
         MemberGrade grade = new MemberGrade(member, "화이트");
 
+        //TODO 3: Make Custom Exception?
+        Authority authority = authorityRepository.findByName("member")
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        MemberAuthority memberAuthority =
+            new MemberAuthority(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()),
+                member, authority);
+
         memberRepository.save(member);
         memberGradeRepository.save(grade);
+        memberAuthorityRepository.save(memberAuthority);
     }
 
     @Override
@@ -67,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new MemberNotFoundException(memberNo));
         Gender gender = genderRepository.findByName(updateDto.getName())
-                .orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
+            .orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
 
         member.updateMember(updateDto, gender);
 
@@ -76,8 +89,49 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMember(Long memberNo) {
         Member member = memberRepository.findByMemberNo(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException(memberNo));
-        member.setDeletedAt(LocalDateTime.now());
+            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        member.deleteMember();
+    }
+
+    /**
+     * 이미 존재하는 권한 설정 시 에러
+     * admin과 author 권한 동시에 존재 시 에러
+     *
+     * @param memberNo
+     * @param authorityName
+     */
+    @Override
+    public void createMemberAuthority(Long memberNo, String authorityName) {
+        Member member = memberRepository.findByMemberNo(memberNo)
+            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+
+        //TODO 3: Make Custom Exception?
+        Authority authority = authorityRepository.findByName(authorityName)
+            .orElseThrow(() -> new IllegalArgumentException());
+
+
+        MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
+        if (!memberAuthorityRepository.existsById(pk)) {
+            //TODO 4: custom exception 만들기(이미 있는 권한)
+            throw new IllegalArgumentException();
+        }
+
+        Authority adminAuthority = authorityRepository.findByName("admin").get();
+        Authority authorAuthority = authorityRepository.findByName("author").get();
+        MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
+        MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
+
+        //TODO 5: custom exception 만들기(admin과 author권한 동시 존재 불가)
+        if (!authorityName.equals("member") &&
+            (memberAuthorityRepository.existsById(adminPk) ||
+                memberAuthorityRepository.existsById(authorPk))) {
+            throw new IllegalArgumentException();
+        }
+
+        MemberAuthority memberAuthority =
+            new MemberAuthority(pk, member, authority);
+
+        memberAuthorityRepository.save(memberAuthority);
     }
 
 }

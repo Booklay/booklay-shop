@@ -12,10 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author 양승아
@@ -43,6 +42,15 @@ public class MemberAdminController {
     @GetMapping("/{memberNo}")
     public MemberRetrieveResponse retrieveMember(@PathVariable Long memberNo) {
         return memberService.retrieveMember(memberNo);
+    }
+
+    //TODO 4: DTO로 받을 것인지?
+    @PostMapping("/authority/{memberNo}/{authorityName}")
+    public ResponseEntity<Void> updateMemberAuthority(@PathVariable Long memberNo,
+                                                      @PathVariable String authorityName) {
+        memberService.createMemberAuthority(memberNo, authorityName);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .build();
     }
 
 }

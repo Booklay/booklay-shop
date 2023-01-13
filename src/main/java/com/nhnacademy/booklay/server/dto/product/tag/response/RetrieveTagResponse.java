@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.dto.product.tag.response;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 public class RetrieveTagResponse {

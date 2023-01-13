@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
+import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
@@ -64,6 +66,7 @@ public class ProductRegisterController {
     Page<RetrieveTagResponse> response =  tagService.retrieveAllTag(pageable);
     return new PageResponse<>(response);
   }
+
   @PostMapping("/tag")
   public void tagRegister(@Valid @RequestBody CreateTagRequest request){
     tagService.createTag(request);
@@ -80,10 +83,25 @@ public class ProductRegisterController {
   }
 
 
-  //태그 자체만
+  //작가
   @GetMapping("/author")
   public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable){
     Page<RetrieveAuthorResponse> response =  authorService.retrieveAllAuthor(pageable);
     return new PageResponse<>(response);
+  }
+
+  @PostMapping("/author")
+  public void authorRegister(@Valid @RequestBody CreateAuthorRequest request){
+    authorService.createAuthor(request);
+  }
+
+  @PutMapping("/author")
+  public void authorUpdate(@Valid @RequestBody UpdateAuthorRequest request){
+    authorService.updateAuthor(request);
+  }
+
+  @DeleteMapping("/author")
+  public void authorDelete(Long id) {
+    authorService.deleteAuthor(id);
   }
 }

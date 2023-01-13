@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.repository;
+package com.nhnacademy.booklay.server.repository.post;
 
 import com.nhnacademy.booklay.server.entity.ProductAskComment;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -6,7 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table
+@Table(name = "coupon")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

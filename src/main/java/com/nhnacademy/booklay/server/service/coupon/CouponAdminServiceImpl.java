@@ -11,11 +11,13 @@ import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.OrderCoupon;
 import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductCoupon;
 import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
 import com.nhnacademy.booklay.server.repository.coupon.OrderCouponRepository;
+import com.nhnacademy.booklay.server.repository.coupon.ProductCouponRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import java.util.Objects;
@@ -42,6 +44,7 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final OrderCouponRepository orderCouponRepository;
+    private final ProductCouponRepository productCouponRepository;
 
     @Override
     public void createCoupon(@Valid CouponCreateRequest couponRequest) {
@@ -102,11 +105,17 @@ public class CouponAdminServiceImpl implements CouponAdminService{
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(Member.class.toString(), memberId));
 
-        OrderCoupon orderCoupon = new OrderCoupon(coupon, code);
 
-        if(!Objects.isNull(coupon.getCategory())) {
+        if(Objects.nonNull(coupon.getCategory())) {
+            OrderCoupon orderCoupon = new OrderCoupon(coupon, code);
             orderCoupon.setMember(member);
             orderCouponRepository.save(orderCoupon);
+        } else if (Objects.nonNull(coupon.getProduct())){
+            ProductCoupon productCoupon = new ProductCoupon(coupon, code);
+            productCoupon.setMember(member);
+            productCouponRepository.save(productCoupon);
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 

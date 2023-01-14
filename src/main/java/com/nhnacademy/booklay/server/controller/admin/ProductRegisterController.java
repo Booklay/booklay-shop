@@ -9,6 +9,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeR
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.TagService;
@@ -82,6 +83,13 @@ public class ProductRegisterController {
     tagService.deleteTag(id);
   }
 
+
+  //태그-작품 연동
+  @GetMapping("/tag/product")
+  public PageResponse<TagProductResponse> tagProductPage(Pageable pageable, Long productNo){
+    Page<TagProductResponse> response =  tagService.retrieveAllTagWithBoolean(pageable, productNo);
+    return new PageResponse<>(response);
+  }
 
   //작가
   @GetMapping("/author")

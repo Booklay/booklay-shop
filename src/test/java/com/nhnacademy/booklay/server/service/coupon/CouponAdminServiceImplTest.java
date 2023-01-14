@@ -11,6 +11,7 @@ import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
 import com.nhnacademy.booklay.server.repository.coupon.OrderCouponRepository;
@@ -55,6 +56,9 @@ class CouponAdminServiceImplTest {
     @Mock
     private OrderCouponRepository orderCouponRepository;
 
+    @Mock
+    private ImageRepository imageRepository;
+
     Coupon coupon;
     List<Coupon> couponList;
     CouponType couponType;
@@ -80,6 +84,9 @@ class CouponAdminServiceImplTest {
 
         given(categoryRepository.findById(couponCreateCoupon.getApplyItemId())).willReturn(
             Optional.ofNullable(Dummy.getDummyCategory()));
+
+        given(imageRepository.findById(couponCreateCoupon.getImageId())).willReturn(
+            Optional.ofNullable(DummyCart.getDummyImage()));
 
         // when
         couponAdminService.createCoupon(couponCreateCoupon);

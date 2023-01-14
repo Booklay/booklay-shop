@@ -8,12 +8,14 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
+import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.OrderCoupon;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductCoupon;
 import com.nhnacademy.booklay.server.exception.category.NotFoundException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
 import com.nhnacademy.booklay.server.repository.coupon.OrderCouponRepository;
@@ -45,6 +47,7 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     private final MemberRepository memberRepository;
     private final OrderCouponRepository orderCouponRepository;
     private final ProductCouponRepository productCouponRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     public void createCoupon(@Valid CouponCreateRequest couponRequest) {
@@ -52,7 +55,10 @@ public class CouponAdminServiceImpl implements CouponAdminService{
         CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode())
             .orElseThrow(() -> new NotFoundException(CouponType.class.toString(), couponRequest.getTypeCode()));
 
-        Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType);
+        Image image = imageRepository.findById(couponRequest.getImageId())
+            .orElseThrow(() -> new NotFoundException(Image.class.toString(), couponRequest.getImageId()));
+
+        Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType, image);
         Long applyItemId = couponRequest.getApplyItemId();
         setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(), applyItemId);
 

@@ -207,6 +207,7 @@ public class Dummy {
         CouponCreateRequest couponRequest = new CouponCreateRequest();
 
         ReflectionTestUtils.setField(couponRequest, "name", "이달의 쿠폰");
+        ReflectionTestUtils.setField(couponRequest, "imageId", 1L);
         ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
         ReflectionTestUtils.setField(couponRequest, "amount", 5);
         ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", true);

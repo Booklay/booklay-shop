@@ -38,7 +38,7 @@ public class Member {
     @JoinColumn(name = "gender_no")
     private Gender gender;
 
-    @Column(name = "id")
+    @Column(name = "member_id")
     private String memberId;
 
     @Column

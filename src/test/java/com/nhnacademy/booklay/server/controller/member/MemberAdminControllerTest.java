@@ -113,5 +113,4 @@ class MemberAdminControllerTest {
         result.andExpect(status().isOk());
         then(memberService).should(times(1)).deleteMemberAuthority(any(), admin);
     }
-
 }

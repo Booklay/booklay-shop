@@ -9,6 +9,9 @@ spring:
       hibernate:
         format_sql: true
     database: mysql
+  batch:
+    job:
+      enabled: false
 
 cloud:
   auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0

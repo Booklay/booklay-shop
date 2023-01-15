@@ -13,6 +13,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 //@Slf4j
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 public class BirthdayCoupon {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-
+    private final PlatformTransactionManager transactionManager;
     @Bean
     public Job birthdayCouponJob(
         @Qualifier("birthdayCouponStep") Step step){
@@ -34,6 +35,7 @@ public class BirthdayCoupon {
     public Step birthdayCouponStep(BirthdayCouponTasklet birthdayCouponTasklet){
         return stepBuilderFactory.get("birthdayCouponStep")
             .tasklet(birthdayCouponTasklet)
+            .transactionManager(transactionManager)
             .build();
     }
     @Bean

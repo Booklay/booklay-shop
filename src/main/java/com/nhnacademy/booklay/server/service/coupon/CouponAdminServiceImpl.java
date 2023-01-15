@@ -24,7 +24,6 @@ import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import java.util.Objects;
 import java.util.UUID;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,18 +49,34 @@ public class CouponAdminServiceImpl implements CouponAdminService{
     private final ImageRepository imageRepository;
 
     @Override
-    public void createCoupon(@Valid CouponCreateRequest couponRequest) {
+    public void createCoupon(CouponCreateRequest couponRequest) {
 
-        CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode())
-            .orElseThrow(() -> new NotFoundException(CouponType.class.toString(), couponRequest.getTypeCode()));
+        Long typeCode = couponRequest.getTypeCode();
+        Long imageId = couponRequest.getImageId();
 
-        Image image = imageRepository.findById(couponRequest.getImageId())
-            .orElseThrow(() -> new NotFoundException(Image.class.toString(), couponRequest.getImageId()));
+        CouponType couponType = couponTypeRepository.findById(typeCode)
+            .orElseThrow(() -> new NotFoundException(CouponType.class.toString(), typeCode));
+
+        Image image = imageRepository.findById(imageId)
+            .orElseThrow(() -> new NotFoundException(Image.class.toString(), imageId));
 
         Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType, image);
-        Long applyItemId = couponRequest.getApplyItemId();
-        setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(), applyItemId);
 
+        // 수량을 정하지 않으면, 수량 제한이 없음.
+        if(couponRequest.getQuantity() == null) {
+            coupon.setIsLimited(false);
+        } else {
+            coupon.setIsLimited(true);
+        }
+
+        setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(), couponRequest.getApplyItemId());
+
+        // insert
+        if(couponRequest.getIsOrderCoupon()) {
+
+        } else {
+
+        }
         couponRepository.save(coupon);
     }
 

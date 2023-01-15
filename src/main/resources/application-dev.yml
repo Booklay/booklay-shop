@@ -9,6 +9,9 @@ spring:
       hibernate:
         format_sql: true
     database: mysql
+  batch:
+    job:
+      enabled: false
 
 booklay:
   secure:

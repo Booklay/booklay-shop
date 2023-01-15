@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.stroage.response;
+package com.nhnacademy.booklay.server.dto.stroage.response.auth;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

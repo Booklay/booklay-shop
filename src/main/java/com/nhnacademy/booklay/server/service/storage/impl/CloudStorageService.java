@@ -3,12 +3,12 @@ package com.nhnacademy.booklay.server.service.storage.impl;
 import static org.springframework.http.HttpMethod.PUT;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.dto.stroage.request.AccessRequest;
-import com.nhnacademy.booklay.server.dto.stroage.request.Auth;
+import com.nhnacademy.booklay.server.dto.stroage.request.auth.AccessRequest;
+import com.nhnacademy.booklay.server.dto.stroage.request.auth.Auth;
 import com.nhnacademy.booklay.server.dto.stroage.request.FileRequest;
 import com.nhnacademy.booklay.server.dto.stroage.request.FileResolveRequest;
-import com.nhnacademy.booklay.server.dto.stroage.request.PasswordCredentials;
-import com.nhnacademy.booklay.server.dto.stroage.response.AccessResponse;
+import com.nhnacademy.booklay.server.dto.stroage.request.auth.PasswordCredentials;
+import com.nhnacademy.booklay.server.dto.stroage.response.auth.AccessResponse;
 import com.nhnacademy.booklay.server.dto.stroage.response.ObjectFileResponse;
 import com.nhnacademy.booklay.server.service.storage.StorageService;
 import java.io.ByteArrayInputStream;

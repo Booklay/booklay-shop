@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.stroage.response;
+package com.nhnacademy.booklay.server.dto.stroage.response.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;

@@ -54,12 +54,13 @@ public class Coupon {
     private Boolean isDuplicatable;
 
     @Column(name = "is_limited")
+    @Setter
     private Boolean isLimited;
 
     @Builder
     public Coupon(Image image, CouponType couponType, String name, int amount, int minimumUseAmount,
                   int maximumDiscountAmount, LocalDateTime issuanceDeadlineAt,
-                  Boolean isDuplicatable, Boolean isLimited) {
+                  Boolean isDuplicatable) {
         this.image = image;
         this.couponType = couponType;
         this.name = name;
@@ -68,7 +69,6 @@ public class Coupon {
         this.maximumDiscountAmount = maximumDiscountAmount;
         this.issuanceDeadlineAt = issuanceDeadlineAt;
         this.isDuplicatable = isDuplicatable;
-        this.isLimited = isLimited;
     }
 
     public void update(CouponUpdateRequest couponUpdateRequest, CouponType couponType) {

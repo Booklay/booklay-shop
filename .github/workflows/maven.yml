@@ -93,22 +93,22 @@ jobs:
       # Shop Server 2 #
       #################
 
-#      - name: ready for deploy second server (execute shell script)
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.SSH_IP_2 }}
-#          username: ${{ secrets.SSH_ID_2 }}
-#          key: ${{ secrets.SSH_KEY_2 }}
-#          port: ${{ secrets.SSH_PORT_2 }}
-#          script_stop: true
-#          script: "./unhealth.sh"
-#
-#      - name: Sleep for 60 seconds
-#        uses: jakejarvis/wait-action@master
-#        with:
-#          time: '60s'
+      - name: ready for deploy second server (execute shell script) 2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_IP_2 }}
+          username: ${{ secrets.SSH_ID_2 }}
+          key: ${{ secrets.SSH_KEY_2 }}
+          port: ${{ secrets.SSH_PORT_2 }}
+          script_stop: true
+          script: "./unhealth.sh"
 
-      - name: upload file
+      - name: Sleep for 60 seconds 2
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '60s'
+
+      - name: upload file 2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_IP_2 }}
@@ -119,7 +119,7 @@ jobs:
           target: "~/"
           rm: false
 
-      - name: execute startup script
+      - name: execute startup script 2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_IP_2 }}
@@ -129,7 +129,7 @@ jobs:
           script_stop: true
           script: "./startup.sh"
 
-      - name: Sleep for 30 seconds
+      - name: Sleep for 30 seconds 2
         uses: jakejarvis/wait-action@master
         with:
           time: '30s'

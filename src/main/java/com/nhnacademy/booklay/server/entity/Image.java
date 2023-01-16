@@ -17,6 +17,7 @@ public class Image {
 
     @Id
     @Column(name = "image_no")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -26,8 +27,7 @@ public class Image {
     private String ext;
 
     @Builder
-    public Image(Long id, String address, String ext) {
-        this.id = id;
+    public Image(String address, String ext) {
         this.address = address;
         this.ext = ext;
     }

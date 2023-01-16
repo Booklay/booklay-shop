@@ -93,11 +93,11 @@ jobs:
       # Shop Server 2 #
       #################
 
-      - name: ready for deploy first server (execute shell script)
+      - name: ready for deploy second server (execute shell script)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_IP_2 }}
-          username: ${{ secrets.SSH_ID_2}}
+          username: ${{ secrets.SSH_ID_2 }}
           key: ${{ secrets.SSH_KEY_2 }}
           port: ${{ secrets.SSH_PORT_2 }}
           script_stop: true

@@ -10,6 +10,14 @@ spring:
         format_sql: true
     database: mysql
 
+cloud:
+  auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
+  user-name: REDACTED
+  password: REDACTED
+  tenant-id: REDACTED
+  storage-url: https://api-storage.cloud.toast.com/v1/AUTH_REDACTED
+  container: /booklay_storage/
+
 booklay:
   secure:
     appkey: REDACTED

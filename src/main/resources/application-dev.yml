@@ -10,6 +10,14 @@ spring:
         format_sql: true
     database: mysql
 
+cloud:
+  auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
+  user-name: sjun0322@naver.com
+  password: booklay1234
+  tenant-id: fcb81f74e379456b8ca0e091d351a7af
+  storage-url: https://api-storage.cloud.toast.com/v1/AUTH_fcb81f74e379456b8ca0e091d351a7af
+  container: /booklay_storage/
+
 booklay:
   secure:
     appkey: 500rMJPT021TnyNl
@@ -18,5 +26,4 @@ booklay:
     db_password: 314a5e5a46004ab593c84049d362f835
     url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/500rMJPT021TnyNl/secrets/
     p12_password: 1234
-
   pool_size: 2

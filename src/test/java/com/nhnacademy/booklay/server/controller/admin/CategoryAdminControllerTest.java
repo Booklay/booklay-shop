@@ -55,7 +55,6 @@ class CategoryAdminControllerTest {
 
     private static final String URI_PREFIX = "/admin/categories";
 
-    //TODO BDD Mockito 사용
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
@@ -125,7 +124,7 @@ class CategoryAdminControllerTest {
             .andReturn();
     }
 
-    //    @Test
+    @Test
     @DisplayName("단일 카테고리 검색 실패, 존재하지 않는 카테고리 ID")
     void testRetrieveCategory_ifNotExistedCategoryId() throws Exception {
         //mocking
@@ -194,7 +193,6 @@ class CategoryAdminControllerTest {
             .andReturn();
     }
 
-    //TODO 삭제에 대한 예외처리 고민
     @Test
     @DisplayName("카테고리 삭제 매핑 테스트")
     void testDeleteCategory() throws Exception {

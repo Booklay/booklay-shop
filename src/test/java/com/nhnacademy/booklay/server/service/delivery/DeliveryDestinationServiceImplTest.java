@@ -16,7 +16,6 @@ import com.nhnacademy.booklay.server.service.member.DeliveryDestinationServiceIm
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +40,6 @@ class DeliveryDestinationServiceImplTest {
         requestDto = Dummy.getDummyDeliveryDestinationCreateRequest();
     }
 
-    @Disabled
     @Test
     @DisplayName("회원 배송지 조회 시 List 반환 성공 테스트")
     void retrieveDeliveryDestinations() {
@@ -58,7 +56,6 @@ class DeliveryDestinationServiceImplTest {
         assertThat(responses.size()).isZero();
     }
 
-    @Disabled
     @Test
     @DisplayName("배송지 생성 테스트")
     void testCreateMember() {

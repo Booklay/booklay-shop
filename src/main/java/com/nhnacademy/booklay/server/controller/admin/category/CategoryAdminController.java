@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.controller.admin;
+package com.nhnacademy.booklay.server.controller.admin.category;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;

@@ -109,22 +109,25 @@ class MemberServiceImplTest {
     @DisplayName("잘못된 번호로 멤버 조회시 MemberNotFoundException 발생 테스트")
     void testRetrieveMember_whenRetrieveWithInvalidMemberNo() {
         //given
-        given(memberRepository.findByMemberNo(anyLong())).willThrow(new MemberNotFoundException(INVALID_MEMBER_NO));
+        given(memberRepository.findByMemberNo(anyLong())).willThrow(
+            new MemberNotFoundException(INVALID_MEMBER_NO));
 
         //when, then
         assertThatThrownBy(() -> memberService.retrieveMember(INVALID_MEMBER_NO))
-                .isInstanceOf(MemberNotFoundException.class)
-                .hasMessageContaining("Member Not Found, MemberNo : 2");
+            .isInstanceOf(MemberNotFoundException.class)
+            .hasMessageContaining("Member Not Found, MemberNo : 2");
 
     }
+
     @Test
-    @DisplayName("관리자의 회원 전체조회시 Page 반환 테스트")
-    void retrieveMembers() {
+    @DisplayName("관리자의 회원 전체조회시 Page 반환 성공 테스트")
+    void retrieveMembersSuccessTest() {
         //given
         given(memberRepository.findAllBy(any())).willReturn(Page.empty());
 
         //when
-        Page<MemberRetrieveResponse> pageResponse = memberService.retrieveMembers(PageRequest.of(0, 10));
+        Page<MemberRetrieveResponse> pageResponse =
+            memberService.retrieveMembers(PageRequest.of(0, 10));
 
         //then
         then(memberRepository).should().findAllBy(any());
@@ -132,7 +135,7 @@ class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("멤버 등급 생성 테스트")
+    @DisplayName("멤버 등급 생성 성공 테스트")
     void CreateMemberGradeSuccessTest() {
         //given
         given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
@@ -146,6 +149,7 @@ class MemberServiceImplTest {
     }
 
     @Test
+    @DisplayName("멤버 등급 조회시 Page 반환 성공 테스트")
     void retrieveMemberGradesSuccessTest() {
         //given
         given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));

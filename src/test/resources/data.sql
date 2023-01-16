@@ -621,3 +621,11 @@ create table wishlist
         foreign key (product_no) references product (product_no)
 );
 
+create table object_file
+(
+    file_no bigint not null
+        primary key auto_increment,
+    address varchar(255) not null,
+    file_name varchar(255) not null
+);
+

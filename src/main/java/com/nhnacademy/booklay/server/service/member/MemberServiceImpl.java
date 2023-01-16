@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
+import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
@@ -39,8 +40,16 @@ public class MemberServiceImpl implements MemberService {
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
 
+    public void isExistsMemberId(String memberId) {
+        if (memberRepository.existsByMemberId(memberId)) {
+            throw new MemberAlreadyExistedException(memberId);
+        }
+    }
+
     @Override
     public void createMember(MemberCreateRequest createDto) {
+        isExistsMemberId(createDto.getMemberId());
+
         Gender gender = genderRepository.findByName(createDto.getGender())
             .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
 
@@ -48,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
         MemberGrade grade = new MemberGrade(member, "화이트");
 
         //TODO 3: Make Custom Exception?
-        Authority authority = authorityRepository.findByName("member")
+        Authority authority = authorityRepository.findByName("ROLE_MEMBER")
             .orElseThrow(() -> new IllegalArgumentException());
 
         MemberAuthority memberAuthority =

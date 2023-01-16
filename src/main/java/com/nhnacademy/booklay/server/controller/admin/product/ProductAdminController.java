@@ -15,9 +15,12 @@ import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.TagService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
  */
 
 
+@Slf4j
 @RestController
 @RequestMapping("/admin/product")
 @RequiredArgsConstructor
@@ -35,9 +39,15 @@ public class ProductAdminController {
     private final AuthorService authorService;
 
     //책 등록
-    @PostMapping("/register/book")
-    public Long postBookRegister(CreateProductBookRequest request) throws Exception {
+    @PostMapping(value = "/register/book",
+        consumes = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Long postBookRegister(
+        @RequestPart CreateProductBookRequest request,
+        @RequestPart MultipartFile imgFile) throws Exception {
         //product
+        log.info("이미지 시험 출력 : " + imgFile.getContentType() + imgFile.getOriginalFilename());
+        request.setImage(imgFile);
         return productService.createBookProduct(request);
     }
 
@@ -113,5 +123,7 @@ public class ProductAdminController {
         Page<TagProductResponse> response =  tagService.retrieveAllTagWithBoolean(pageable, productNo);
         return new PageResponse<>(response);
     }
+
+
 
 }

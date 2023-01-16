@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class CreateProductBookRequest {
@@ -16,7 +17,7 @@ public class CreateProductBookRequest {
   @Setter
   private Long productId;
   @Setter
-  private Image image;
+  private MultipartFile image;
   @NotNull
   private String title;
   @NotNull
@@ -40,6 +41,7 @@ public class CreateProductBookRequest {
   private int page;
   @NotNull
   private String publisher;
+
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   @NotNull
   private LocalDate publishedDate;

@@ -61,8 +61,9 @@ public class Dummy {
             .maximumDiscountAmount(3000)
             .issuanceDeadlineAt(LocalDateTime.of(2023, 1, 20, 0, 0, 0))
             .isDuplicatable(false)
-            .isLimited(false)
             .build();
+
+        coupon.setIsLimited(true);
 
         ReflectionTestUtils.setField(coupon, "id", 1L);
 
@@ -207,6 +208,7 @@ public class Dummy {
         CouponCreateRequest couponRequest = new CouponCreateRequest();
 
         ReflectionTestUtils.setField(couponRequest, "name", "이달의 쿠폰");
+        ReflectionTestUtils.setField(couponRequest, "imageId", 1L);
         ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
         ReflectionTestUtils.setField(couponRequest, "amount", 5);
         ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", true);

@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.controller.member;
+package com.nhnacademy.booklay.server.controller.admin.member;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;

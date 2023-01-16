@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.nhnacademy.booklay.server.controller.admin.member.MemberAdminController;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -70,7 +71,8 @@ class MemberAdminControllerTest {
         when(memberService.retrieveMembers(any())).thenReturn(page);
 
         //then
-        mockMvc.perform(get("/admin/members")).andExpect(status().isOk()).andDo(print()).andReturn();
+        mockMvc.perform(get("/admin/members")).andExpect(status().isOk()).andDo(print())
+            .andReturn();
     }
 
     @Test
@@ -113,5 +115,4 @@ class MemberAdminControllerTest {
         result.andExpect(status().isOk());
         then(memberService).should(times(1)).deleteMemberAuthority(any(), admin);
     }
-
 }

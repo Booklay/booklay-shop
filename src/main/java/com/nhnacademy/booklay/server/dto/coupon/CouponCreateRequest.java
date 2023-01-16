@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
+import com.nhnacademy.booklay.server.entity.Image;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,28 +20,41 @@ public class CouponCreateRequest {
     @NotBlank
     @Size(max = 100)
     private String name;
+
+    @NotNull
+    private Long imageId;
+
     @NotNull
     private Long typeCode;
+
     @NotNull
     private Integer amount;
+
     @NotNull
     private Boolean isOrderCoupon;
+
     @NotNull
     private Long applyItemId;
+
     @NotNull
     private int minimumUseAmount;
+
     private int maximumDiscountAmount;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime issuanceDeadlineAt;
+
     @NotNull
     private Boolean isDuplicatable;
+
     private Integer quantity;
 
-    public static Coupon toEntity(CouponCreateRequest couponRequest, CouponType couponType) {
+    public static Coupon toEntity(CouponCreateRequest couponRequest, CouponType couponType, Image image) {
         return Coupon.builder()
             .couponType(couponType)
             .name(couponRequest.getName())
+            .image(image)
             .amount(couponRequest.getAmount())
             .minimumUseAmount(couponRequest.getMinimumUseAmount())
             .maximumDiscountAmount(couponRequest.getMaximumDiscountAmount())

@@ -77,7 +77,7 @@ public class CouponAdminController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping("/issue")
+    @PostMapping("/issue")
     public ResponseEntity<Void> issueCouponToMember(@Valid @RequestBody CouponIssueRequest couponRequest) {
         couponAdminService.issueCoupon(couponRequest);
 

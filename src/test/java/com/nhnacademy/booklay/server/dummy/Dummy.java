@@ -4,12 +4,14 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
+import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
+import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.entity.DeliveryStatusCode;
 import com.nhnacademy.booklay.server.entity.Gender;
@@ -49,6 +51,16 @@ public class Dummy {
         ReflectionTestUtils.setField(member, "memberNo", 1L);
 
         return member;
+    }
+
+    public static DeliveryDestination getDummyDeliveryDestination() {
+        return DeliveryDestination.builder()
+            .member(getDummyMember())
+            .name("집")
+            .zipCode("61452")
+            .address("광주광역시 동구 필문대로 309")
+            .isDefaultDestination(true)
+            .build();
     }
 
     public static Coupon getDummyCoupon() {
@@ -262,7 +274,8 @@ public class Dummy {
     public static MemberUpdateRequest getDummyMemberUpdateRequest() {
         MemberUpdateRequest memberRequest = new MemberUpdateRequest();
         ReflectionTestUtils.setField(memberRequest, "gender", "M");
-        ReflectionTestUtils.setField(memberRequest, "password", "$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu");
+        ReflectionTestUtils.setField(memberRequest, "password",
+            "$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu");
         ReflectionTestUtils.setField(memberRequest, "nickname", "천하장사123");
         ReflectionTestUtils.setField(memberRequest, "name", "강호동123");
         ReflectionTestUtils.setField(memberRequest, "birthday", LocalDate.now());
@@ -270,6 +283,17 @@ public class Dummy {
         ReflectionTestUtils.setField(memberRequest, "email", "bbbb@gmail.com");
 
         return memberRequest;
+    }
+
+    public static DeliveryDestinationCreateRequest getDummyDeliveryDestinationCreateRequest() {
+        DeliveryDestinationCreateRequest request = new DeliveryDestinationCreateRequest();
+        ReflectionTestUtils.setField(request, "memberNo", 1L);
+        ReflectionTestUtils.setField(request, "name", "집");
+        ReflectionTestUtils.setField(request, "zipCode", "12345");
+        ReflectionTestUtils.setField(request, "address", "서울특별시 송파구 올림픽로 240");
+        ReflectionTestUtils.setField(request, "isDefaultDestination", true);
+
+        return request;
     }
 
     public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {

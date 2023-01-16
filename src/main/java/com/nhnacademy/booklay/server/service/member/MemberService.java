@@ -1,19 +1,20 @@
 package com.nhnacademy.booklay.server.service.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * @author 양승아
  */
 public interface MemberService {
+    void isExistsMemberId(String memberId);
+
     MemberRetrieveResponse retrieveMember(Long memberNo);
 
     Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable);

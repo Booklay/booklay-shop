@@ -61,8 +61,9 @@ public class Dummy {
             .maximumDiscountAmount(3000)
             .issuanceDeadlineAt(LocalDateTime.of(2023, 1, 20, 0, 0, 0))
             .isDuplicatable(false)
-            .isLimited(false)
             .build();
+
+        coupon.setIsLimited(true);
 
         ReflectionTestUtils.setField(coupon, "id", 1L);
 

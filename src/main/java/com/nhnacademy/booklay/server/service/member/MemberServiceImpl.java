@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
@@ -23,6 +24,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  *
@@ -142,6 +145,11 @@ public class MemberServiceImpl implements MemberService {
             new MemberAuthority(pk, member, authority);
 
         memberAuthorityRepository.save(memberAuthority);
+    }
+
+    @Override
+    public Optional<MemberLoginResponse> retrieveMemberById(String memberId) {
+        return memberRepository.retrieveMemberByUserId(memberId);
     }
 
     @Override

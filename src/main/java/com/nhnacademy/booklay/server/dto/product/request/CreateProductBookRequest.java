@@ -8,13 +8,14 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 public class CreateProductBookRequest {
 
   @Setter
   private Long productId;
-  @NotNull
+  @Setter
   private Image image;
   @NotNull
   private String title;
@@ -39,6 +40,7 @@ public class CreateProductBookRequest {
   private int page;
   @NotNull
   private String publisher;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   @NotNull
   private LocalDate publishedDate;
   @Setter
@@ -51,10 +53,9 @@ public class CreateProductBookRequest {
   private List<Long> categoryIds;
 
   @Builder
-  public CreateProductBookRequest(Image image, String title, Long price, Long pointRate,
+  public CreateProductBookRequest(String title, Long price, Long pointRate,
       String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
       String isbn, int page, String publisher, LocalDate publishedDate, List<Long> authorIds, List<Long> categoryIds) {
-    this.image = image;
     this.title = title;
     this.price = price;
     this.pointRate = pointRate;

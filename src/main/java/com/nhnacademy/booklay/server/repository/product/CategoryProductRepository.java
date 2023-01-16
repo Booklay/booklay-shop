@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.repository;
+package com.nhnacademy.booklay.server.repository.product;
 
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
 import org.springframework.data.jpa.repository.JpaRepository;

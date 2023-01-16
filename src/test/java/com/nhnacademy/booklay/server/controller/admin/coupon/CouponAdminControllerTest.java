@@ -186,7 +186,7 @@ class CouponAdminControllerTest {
         // when
 
         // then
-        mockMvc.perform(put(URI_PREFIX + "/issue")
+        mockMvc.perform(post(URI_PREFIX + "/issue")
                 .content(objectMapper.writeValueAsString(couponRequest))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())

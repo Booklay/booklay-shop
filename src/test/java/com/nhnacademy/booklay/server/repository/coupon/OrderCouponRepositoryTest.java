@@ -46,8 +46,9 @@ class OrderCouponRepositoryTest {
             .maximumDiscountAmount(3000)
             .issuanceDeadlineAt(LocalDateTime.of(2023, 1, 20, 0, 0, 0))
             .isDuplicatable(false)
-            .isLimited(false)
             .build();
+
+        coupon.setIsLimited(true);
 
         orderCoupon = OrderCoupon.builder()
             .coupon(coupon)

@@ -31,10 +31,10 @@ public class ProductTag {
     public static class Pk implements Serializable {
 
         @Column(name = "product_no", nullable = false)
-        private Integer productId;
+        private Long productId;
 
         @Column(name = "tag_no", nullable = false)
-        private Integer tagId;
+        private Long tagId;
 
     }
 

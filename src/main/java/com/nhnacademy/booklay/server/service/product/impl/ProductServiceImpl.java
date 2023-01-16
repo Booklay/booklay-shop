@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookReques
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.entity.*;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.repository.CategoryProductRepository;
+import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.ProductService;

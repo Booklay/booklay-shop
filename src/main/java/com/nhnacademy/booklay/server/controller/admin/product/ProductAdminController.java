@@ -9,6 +9,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeR
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.TagService;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin/product")
 @RequiredArgsConstructor
-public class ProductRegisterController {
+public class ProductAdminController {
 
     private final ProductService productService;
     private final TagService tagService;
@@ -105,4 +106,12 @@ public class ProductRegisterController {
     public void authorDelete(Long id) {
         authorService.deleteAuthor(id);
     }
+
+    //태그-작품 연동
+    @GetMapping("/tag/product")
+    public PageResponse<TagProductResponse> tagProductPage(Pageable pageable, Long productNo){
+        Page<TagProductResponse> response =  tagService.retrieveAllTagWithBoolean(pageable, productNo);
+        return new PageResponse<>(response);
+    }
+
 }

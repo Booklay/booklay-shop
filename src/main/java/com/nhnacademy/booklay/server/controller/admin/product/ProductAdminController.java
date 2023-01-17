@@ -40,7 +40,7 @@ public class ProductAdminController {
     private final AuthorService authorService;
 
     //책 등록
-    @PostMapping(value = "/register/book",
+    @PostMapping(value = "/books",
         consumes = {MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE})
     public Long postBookRegister(
@@ -53,7 +53,7 @@ public class ProductAdminController {
     }
 
     //책 수정
-    @PutMapping("/register/book")
+    @PutMapping("/books")
     public Long postBookUpdater(CreateProductBookRequest request) throws Exception {
 
         return productService.updateBookProduct(request);
@@ -61,13 +61,13 @@ public class ProductAdminController {
 
 
     //구독
-    @PostMapping("/register/subscribe")
+    @PostMapping("/subscribes")
     public Long postSubscribeRegister(CreateProductSubscribeRequest request) throws Exception {
         return productService.createSubscribeProduct(request);
     }
 
     //구독 수정
-    @PutMapping("/update/subscribe")
+    @PutMapping("/subscribes")
     public Long postSubscribeUpdate(CreateProductSubscribeRequest request) throws Exception {
         return productService.updateSubscribeProduct(request);
     }
@@ -119,7 +119,7 @@ public class ProductAdminController {
     }
 
     //태그-작품 연동
-    @GetMapping("/tag/product/{productNo}")
+    @GetMapping("/product/tag/{productNo}")
     public PageResponse<TagProductResponse> tagProductPage(Pageable pageable,
         @PathVariable Long productNo){
 
@@ -130,13 +130,13 @@ public class ProductAdminController {
     }
 
     //태그 작품 연동 생성
-    @PostMapping("/tag/product")
+    @PostMapping("/product/tag")
     public void tagProductConnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
         log.info("출력 : "+request.getProductNo());
         tagService.connectTagProduct(request);
     }
 
-    @DeleteMapping("/tag/product")
+    @DeleteMapping("/product/tag")
     public void tagProductDisconnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
         log.info("출력 : "+request.getProductNo());
         tagService.disconnectTagProduct(request);

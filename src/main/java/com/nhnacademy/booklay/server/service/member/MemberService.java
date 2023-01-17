@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
  * @author 양승아
  */
 public interface MemberService {
-    void isExistsMemberId(String memberId);
+    void checkExistsMemberId(String memberId);
 
     MemberRetrieveResponse retrieveMember(Long memberNo);
 

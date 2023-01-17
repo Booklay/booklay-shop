@@ -54,13 +54,15 @@ public class Dummy {
     }
 
     public static DeliveryDestination getDummyDeliveryDestination() {
-        return DeliveryDestination.builder()
+        DeliveryDestination deliveryDestination = DeliveryDestination.builder()
             .member(getDummyMember())
             .name("집")
             .zipCode("61452")
             .address("광주광역시 동구 필문대로 309")
             .isDefaultDestination(true)
             .build();
+        return deliveryDestination;
+
     }
 
     public static Coupon getDummyCoupon() {

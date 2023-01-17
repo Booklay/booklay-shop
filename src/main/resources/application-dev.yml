@@ -27,3 +27,8 @@ booklay:
     url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/500rMJPT021TnyNl/secrets/
     p12_password: 1234
   pool_size: 2
+
+logging:
+  config: classpath:logback-dev.xml
+
+

@@ -13,14 +13,6 @@ spring:
     job:
       enabled: false
 
-cloud:
-  auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
-  user-name: REDACTED
-  password: REDACTED
-  tenant-id: REDACTED
-  storage-url: https://api-storage.cloud.toast.com/v1/AUTH_REDACTED
-  container: /booklay_storage/
-
 booklay:
   secure:
     appkey: REDACTED
@@ -29,9 +21,8 @@ booklay:
     db_password: REDACTED
     url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/REDACTED/secrets/
     p12_password: 1234
+
   pool_size: 2
 
 logging:
   config: classpath:logback-dev.xml
-
-

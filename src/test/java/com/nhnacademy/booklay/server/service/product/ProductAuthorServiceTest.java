@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.product;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductAuthor.Pk;
@@ -39,6 +40,8 @@ class ProductAuthorServiceTest {
 
   @BeforeEach
   void setup() {
+    Image image = Image.builder().build();
+
     product = Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
@@ -46,7 +49,7 @@ class ProductAuthorServiceTest {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(request.getImage())
+        .image(image)
         .isSelling(request.isSelling())
         .build();
 

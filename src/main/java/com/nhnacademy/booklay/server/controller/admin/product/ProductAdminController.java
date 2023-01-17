@@ -7,16 +7,21 @@ import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorR
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.TagService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -24,24 +29,30 @@ import org.springframework.web.bind.annotation.*;
  */
 
 
+@Slf4j
 @RestController
 @RequestMapping("/admin/product")
 @RequiredArgsConstructor
-public class ProductRegisterController {
+public class ProductAdminController {
 
     private final ProductService productService;
-    private final TagService tagService;
-    private final AuthorService authorService;
+
 
     //책 등록
-    @PostMapping("/register/book")
-    public Long postBookRegister(CreateProductBookRequest request) throws Exception {
+    @PostMapping(value = "/books",
+        consumes = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Long postBookRegister(
+        @RequestPart CreateProductBookRequest request,
+        @RequestPart MultipartFile imgFile) throws Exception {
         //product
+        log.info("이미지 시험 출력 : " + imgFile.getContentType() + imgFile.getOriginalFilename());
+        request.setImage(imgFile);
         return productService.createBookProduct(request);
     }
 
     //책 수정
-    @PutMapping("/register/book")
+    @PutMapping("/books")
     public Long postBookUpdater(CreateProductBookRequest request) throws Exception {
 
         return productService.updateBookProduct(request);
@@ -49,60 +60,15 @@ public class ProductRegisterController {
 
 
     //구독
-    @PostMapping("/register/subscribe")
+    @PostMapping("/subscribes")
     public Long postSubscribeRegister(CreateProductSubscribeRequest request) throws Exception {
         return productService.createSubscribeProduct(request);
     }
 
     //구독 수정
-    @PutMapping("/update/subscribe")
+    @PutMapping("/subscribes")
     public Long postSubscribeUpdate(CreateProductSubscribeRequest request) throws Exception {
         return productService.updateSubscribeProduct(request);
     }
 
-
-    //태그 자체만
-    @GetMapping("/tag")
-    public PageResponse<RetrieveTagResponse> tagPage(Pageable pageable) {
-        Page<RetrieveTagResponse> response = tagService.retrieveAllTag(pageable);
-        return new PageResponse<>(response);
-    }
-
-    @PostMapping("/tag")
-    public void tagRegister(@Valid @RequestBody CreateTagRequest request) {
-        tagService.createTag(request);
-    }
-
-    @PutMapping("/tag")
-    public void tagUpdate(@Valid @RequestBody UpdateTagRequest request) {
-        tagService.updateTag(request);
-    }
-
-    @DeleteMapping("/tag")
-    public void tagDelete(Long id) {
-        tagService.deleteTag(id);
-    }
-
-
-    //작가
-    @GetMapping("/author")
-    public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable) {
-        Page<RetrieveAuthorResponse> response = authorService.retrieveAllAuthor(pageable);
-        return new PageResponse<>(response);
-    }
-
-    @PostMapping("/author")
-    public void authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
-        authorService.createAuthor(request);
-    }
-
-    @PutMapping("/author")
-    public void authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
-        authorService.updateAuthor(request);
-    }
-
-    @DeleteMapping("/author")
-    public void authorDelete(Long id) {
-        authorService.deleteAuthor(id);
-    }
 }

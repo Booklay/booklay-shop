@@ -4,21 +4,25 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookReques
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.entity.*;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.repository.CategoryProductRepository;
+import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author 최규태
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -30,10 +34,12 @@ public class ProductServiceImpl implements ProductService {
   private final AuthorRepository authorRepository;
   private final ProductAuthorRepository productAuthorRepository;
   private final SubscribeRepository subscribeRepository;
+  private final ImageRepository imageRepository;
 
   @Override
   @Transactional
   public Long createBookProduct(CreateProductBookRequest request) throws Exception {
+
     //product
     Product product = splitProduct(request);
     Product savedProduct = productRepository.save(product);
@@ -174,6 +180,17 @@ public class ProductServiceImpl implements ProductService {
 
   //dto 에서 product 분리
   private Product splitProduct(CreateProductBookRequest request) {
+    MultipartFile thumbnail = request.getImage();
+
+    log.info("출력 : " + thumbnail.getOriginalFilename());
+
+    Image imageMake = Image.builder()
+        .address(thumbnail.getOriginalFilename())
+        .ext("jpeg")
+        .build();
+
+    Image image = imageRepository.save(imageMake);
+
     return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
@@ -181,7 +198,7 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(request.getImage())
+        .image(image)
         .isSelling(request.isSelling())
         .build();
   }

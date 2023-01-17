@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.dto.product.author.response;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
-import com.nhnacademy.booklay.server.entity.Member;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

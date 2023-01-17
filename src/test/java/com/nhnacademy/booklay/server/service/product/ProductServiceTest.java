@@ -2,7 +2,7 @@ package com.nhnacademy.booklay.server.service.product;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
-import com.nhnacademy.booklay.server.repository.CategoryProductRepository;
+import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.impl.ProductServiceImpl;

@@ -29,6 +29,12 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         return deliveryDestinationRepository.findAllByMember_MemberNo(memberNo);
     }
 
+    public void checkDeliveryDestinationLimit(Long memberNo) {
+        if (deliveryDestinationRepository.countByMember_MemberNo(memberNo) > 10) {
+            throw new IllegalArgumentException(); //TODO 3: 배송지 10개 넘을 수 없음
+        }
+    }
+
     @Override
     public void createDeliveryDestination(Long memberNo,
                                           DeliveryDestinationCreateRequest requestDto) {
@@ -36,9 +42,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         if (memberOp.isEmpty()) {
             throw new MemberNotFoundException(memberNo);
         }
-        if (deliveryDestinationRepository.countByMember_MemberNo(memberNo) > 10) {
-            throw new IllegalArgumentException(); //TODO 3: 배송지 10개 넘을 수 없음
-        }
+        checkDeliveryDestinationLimit(memberNo);
 
         DeliveryDestination deliveryDestination = requestDto.toEntity(memberOp.get());
 

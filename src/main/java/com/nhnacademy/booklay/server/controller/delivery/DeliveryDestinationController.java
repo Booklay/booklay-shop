@@ -42,7 +42,6 @@ public class DeliveryDestinationController {
     public ResponseEntity<Void> createDeliveryDestination(@Valid @RequestBody
                                                           DeliveryDestinationCreateRequest deliveryDestinationCreateRequest,
                                                           @PathVariable Long memberNo) {
-
         deliveryDestinationService.createDeliveryDestination(memberNo,
             deliveryDestinationCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)

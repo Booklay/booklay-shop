@@ -36,8 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductAdminController {
 
     private final ProductService productService;
-    private final TagService tagService;
-    private final AuthorService authorService;
+
 
     //책 등록
     @PostMapping(value = "/books",
@@ -72,73 +71,4 @@ public class ProductAdminController {
         return productService.updateSubscribeProduct(request);
     }
 
-
-    //태그 자체만
-    @GetMapping("/tag")
-    public PageResponse<RetrieveTagResponse> tagPage(Pageable pageable) {
-        Page<RetrieveTagResponse> response = tagService.retrieveAllTag(pageable);
-        return new PageResponse<>(response);
-    }
-
-    @PostMapping("/tag")
-    public void tagRegister(@Valid @RequestBody CreateTagRequest request) {
-        tagService.createTag(request);
-    }
-
-    @PutMapping("/tag")
-    public void tagUpdate(@Valid @RequestBody UpdateTagRequest request) {
-        tagService.updateTag(request);
-    }
-
-    @DeleteMapping("/tag")
-    public void tagDelete(Long id) {
-        tagService.deleteTag(id);
-    }
-
-
-    //작가
-    @GetMapping("/author")
-    public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable) {
-        Page<RetrieveAuthorResponse> response = authorService.retrieveAllAuthor(pageable);
-        return new PageResponse<>(response);
-    }
-
-    @PostMapping("/author")
-    public void authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
-        authorService.createAuthor(request);
-    }
-
-    @PutMapping("/author")
-    public void authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
-        authorService.updateAuthor(request);
-    }
-
-    @DeleteMapping("/author")
-    public void authorDelete(Long id) {
-        authorService.deleteAuthor(id);
-    }
-
-    //태그-작품 연동
-    @GetMapping("/product/tag/{productNo}")
-    public PageResponse<TagProductResponse> tagProductPage(Pageable pageable,
-        @PathVariable Long productNo){
-
-        log.info("상품 번호 : " + productNo);
-
-        Page<TagProductResponse> response =  tagService.retrieveAllTagWithBoolean(pageable, productNo);
-        return new PageResponse<>(response);
-    }
-
-    //태그 작품 연동 생성
-    @PostMapping("/product/tag")
-    public void tagProductConnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
-        log.info("출력 : "+request.getProductNo());
-        tagService.connectTagProduct(request);
-    }
-
-    @DeleteMapping("/product/tag")
-    public void tagProductDisconnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
-        log.info("출력 : "+request.getProductNo());
-        tagService.disconnectTagProduct(request);
-    }
 }

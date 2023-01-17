@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.web.multipart.MultipartFile;
 
 public class DummyCart {
 
@@ -73,18 +74,16 @@ public class DummyCart {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(request.getImage())
+        .image(getDummyImage())
         .isSelling(request.isSelling())
         .build();
   }
 
   public static Image getDummyImage() {
-    Image image = Image.builder()
-        .id(1L)
-        .ext("dummy")
-        .address("dummy address")
+    return Image.builder()
+        .ext("jpg")
+        .address("dummy_address")
         .build();
-    return image;
   }
 
   public static Author getDummyAuthor() {
@@ -135,11 +134,7 @@ public class DummyCart {
   }
 
   public static CreateProductBookRequest getDummyProductBookDto() {
-    Image image = Image.builder()
-        .id(1L)
-        .address("c://downloads/dummy_image")
-        .ext("jpg")
-        .build();
+    MultipartFile file = null;
 
     List<Long> authors = new ArrayList<>();
     authors.add(1L);
@@ -148,7 +143,6 @@ public class DummyCart {
     categories.add(1L);
 
     CreateProductBookRequest createProductBookRequest = CreateProductBookRequest.builder()
-        .image(image)
         .isbn("923-2239-42-1")
         .page(300)
         .isSelling(true)
@@ -165,6 +159,7 @@ public class DummyCart {
         .build();
 
     createProductBookRequest.setStorage(400);
+    createProductBookRequest.setImage(file);
 
     return createProductBookRequest;
   }

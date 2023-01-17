@@ -23,6 +23,14 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     private final MemberRepository memberRepository;
 
     @Override
+    public DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo) {
+        DeliveryDestination deliveryDestination = deliveryDestinationRepository.findById(addressNo)
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        return DeliveryDestinationRetrieveResponse.fromEntity(deliveryDestination);
+    }
+
+    @Override
     public List<DeliveryDestinationRetrieveResponse> retrieveDeliveryDestinations(Long memberNo) {
         memberRepository.findById(memberNo)
             .orElseThrow(() -> new MemberNotFoundException(memberNo));
@@ -48,4 +56,5 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
 
         deliveryDestinationRepository.save(deliveryDestination);
     }
+
 }

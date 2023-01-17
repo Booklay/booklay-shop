@@ -62,7 +62,6 @@ public class Dummy {
             .isDefaultDestination(true)
             .build();
         return deliveryDestination;
-
     }
 
     public static Coupon getDummyCoupon() {

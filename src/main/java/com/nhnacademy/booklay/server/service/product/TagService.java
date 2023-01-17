@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.product;
 
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
@@ -13,4 +14,6 @@ public interface TagService {
   Page<RetrieveTagResponse> retrieveAllTag(Pageable pageable);
   Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo);
   void deleteTag(Long id);
+  void connectTagProduct(CreateDeleteTagProductRequest request);
+  void disconnectTagProduct(CreateDeleteTagProductRequest request);
 }

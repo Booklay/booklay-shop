@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorR
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
@@ -118,12 +119,26 @@ public class ProductAdminController {
     }
 
     //태그-작품 연동
-    @GetMapping("/tag/product")
-    public PageResponse<TagProductResponse> tagProductPage(Pageable pageable, Long productNo){
+    @GetMapping("/tag/product/{productNo}")
+    public PageResponse<TagProductResponse> tagProductPage(Pageable pageable,
+        @PathVariable Long productNo){
+
+        log.info("상품 번호 : " + productNo);
+
         Page<TagProductResponse> response =  tagService.retrieveAllTagWithBoolean(pageable, productNo);
         return new PageResponse<>(response);
     }
 
+    //태그 작품 연동 생성
+    @PostMapping("/tag/product")
+    public void tagProductConnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
+        log.info("출력 : "+request.getProductNo());
+        tagService.connectTagProduct(request);
+    }
 
-
+    @DeleteMapping("/tag/product")
+    public void tagProductDisconnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
+        log.info("출력 : "+request.getProductNo());
+        tagService.disconnectTagProduct(request);
+    }
 }

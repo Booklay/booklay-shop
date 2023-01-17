@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author 최규태
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -37,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public Long createBookProduct(CreateProductBookRequest request) throws Exception {
+
     //product
     Product product = splitProduct(request);
     Product savedProduct = productRepository.save(product);
@@ -178,7 +181,13 @@ public class ProductServiceImpl implements ProductService {
   //dto 에서 product 분리
   private Product splitProduct(CreateProductBookRequest request) {
     MultipartFile thumbnail = request.getImage();
-    Image imageMake = Image.builder().build();
+
+    log.info("출력 : " + thumbnail.getOriginalFilename());
+
+    Image imageMake = Image.builder()
+        .address(thumbnail.getOriginalFilename())
+        .ext("jpeg")
+        .build();
 
     Image image = imageRepository.save(imageMake);
 

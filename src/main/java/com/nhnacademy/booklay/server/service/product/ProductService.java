@@ -3,6 +3,10 @@ package com.nhnacademy.booklay.server.service.product;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
 
+/**
+ * @author 최규태
+ */
+
 public interface ProductService {
 
   Long createBookProduct(CreateProductBookRequest request) throws Exception;

@@ -8,6 +8,10 @@ import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * @author 최규태
+ */
+
 public interface TagService {
   void createTag(CreateTagRequest request);
   void updateTag(UpdateTagRequest request);

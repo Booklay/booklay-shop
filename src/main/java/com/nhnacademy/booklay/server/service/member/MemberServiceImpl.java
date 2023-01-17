@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.service.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
@@ -18,14 +18,13 @@ import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  *
@@ -43,7 +42,9 @@ public class MemberServiceImpl implements MemberService {
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
 
-    public void isExistsMemberId(String memberId) {
+    private final GetMemberService getMemberService;
+
+    public void checkExistsMemberId(String memberId) {
         if (memberRepository.existsByMemberId(memberId)) {
             throw new MemberAlreadyExistedException(memberId);
         }
@@ -51,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void createMember(MemberCreateRequest createDto) {
-        isExistsMemberId(createDto.getMemberId());
+        checkExistsMemberId(createDto.getMemberId());
 
         Gender gender = genderRepository.findByName(createDto.getGender())
             .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
@@ -75,8 +76,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberRetrieveResponse retrieveMember(Long memberNo) {
-        Member member = memberRepository.findByMemberNo(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Member member = getMember(memberNo);
 
         return MemberRetrieveResponse.fromEntity(member);
     }
@@ -101,8 +101,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(Long memberNo) {
-        Member member = memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Member member = getMember(memberNo);
         member.deleteMember();
     }
 
@@ -115,8 +114,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void createMemberAuthority(Long memberNo, String authorityName) {
-        Member member = memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Member member = getMember(memberNo);
 
         //TODO 3: Make Custom Exception?
         Authority authority = authorityRepository.findByName(authorityName)
@@ -177,8 +175,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void createMemberGrade(Long memberNo, String gradeName) {
-        Member member = memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        Member member = getMember(memberNo);
 
         MemberGrade memberGrade = new MemberGrade(member, gradeName);
 
@@ -194,4 +191,10 @@ public class MemberServiceImpl implements MemberService {
 
         return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
     }
+
+    private Member getMember(Long memberNo) {
+        return memberRepository.findByMemberNo(memberNo)
+            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+    }
+
 }

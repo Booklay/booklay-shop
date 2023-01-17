@@ -23,11 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 /**
  * @author 최규태
  */
-
 
 @Slf4j
 @RestController

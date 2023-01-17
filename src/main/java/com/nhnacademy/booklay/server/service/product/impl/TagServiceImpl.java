@@ -24,6 +24,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author 최규태
+ */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -94,12 +98,11 @@ public class TagServiceImpl implements TagService {
     List<RetrieveTagResponse> basicContent = basicPageDto.getContent();
     List<TagProductResponse> contents = new ArrayList<>();
 
-    for (int i = 0; i < basicContent.size(); i++) {
-      RetrieveTagResponse response = basicContent.get(i);
-
+    for (RetrieveTagResponse response : basicContent) {
       ProductTag.Pk ptPk = new Pk(productNo, response.getId());
 
       Boolean isRegistered = productTagRepository.existsById(ptPk);
+      log.info("실험" + isRegistered);
 
       TagProductResponse tagProductDto = new TagProductResponse(response.getId(),
           response.getName(), isRegistered);

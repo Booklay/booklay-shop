@@ -13,6 +13,10 @@ import com.nhnacademy.booklay.server.service.product.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author 최규태
+ */
+
 @Service
 @RequiredArgsConstructor
 public class WishlistServiceImpl implements WishlistService {
@@ -43,6 +47,7 @@ public class WishlistServiceImpl implements WishlistService {
     if(!wishlistRepository.existsById(pk)){
       throw new NotFoundException(Wishlist.Pk.class, "wishlist not found");
     }
+
     wishlistRepository.deleteById(pk);
   }
 

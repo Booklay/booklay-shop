@@ -28,3 +28,6 @@ booklay:
     p12_password: 1234
 
   pool_size: 20
+
+logging:
+  config: classpath:logback-prod.xml

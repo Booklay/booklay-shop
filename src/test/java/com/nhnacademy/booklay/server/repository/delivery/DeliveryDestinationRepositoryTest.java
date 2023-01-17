@@ -47,7 +47,7 @@ class DeliveryDestinationRepositoryTest {
     void setUp() {
 
         clearRepo("delivery_destination", deliveryDestinationRepository);
-        clearRepo("member_no", memberRepository);
+        clearRepo("member", memberRepository);
 
         //given
         deliveryDestination = Dummy.getDummyDeliveryDestination();
@@ -69,12 +69,4 @@ class DeliveryDestinationRepositoryTest {
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
     }
 
-    @Test
-    void testDeliveryDestinationFindAllByMember_MemberNo() {
-
-    }
-
-    @Test
-    void testDeliveryDestinationCountByMember_MemberNo() {
-    }
 }

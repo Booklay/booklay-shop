@@ -12,4 +12,6 @@ public interface DeliveryDestinationService {
 
     void createDeliveryDestination(Long memberNo,
                                    DeliveryDestinationCreateRequest deliveryDestinationCreateRequest);
+
+    DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo);
 }

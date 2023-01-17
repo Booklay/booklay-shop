@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,4 +70,18 @@ class DeliveryDestinationRepositoryTest {
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
     }
 
+    @Disabled
+    @Test
+    @DisplayName("DeliveryDestination find test")
+    void testDeliveryDestinationFindByTest() {
+        //given
+        deliveryDestinationRepository.save(deliveryDestination);
+
+        //when
+        DeliveryDestination expected = deliveryDestinationRepository.findById(
+            deliveryDestination.getId()).orElseThrow(() -> new IllegalArgumentException());
+
+        //then
+        assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
+    }
 }

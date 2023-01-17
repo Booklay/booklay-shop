@@ -27,11 +27,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeliveryDestinationController {
     private final DeliveryDestinationService deliveryDestinationService;
 
-    @GetMapping("/{memberNo}")
+    @GetMapping("/list/{memberNo}")
     public ResponseEntity<List<DeliveryDestinationRetrieveResponse>> retrieveDeliveryDestinations(
         @PathVariable Long memberNo) {
         List<DeliveryDestinationRetrieveResponse> response =
             deliveryDestinationService.retrieveDeliveryDestinations(memberNo);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response);
+    }
+
+    @GetMapping("/{addressNo}")
+    public ResponseEntity<DeliveryDestinationRetrieveResponse> retrieveDeliveryDestination(
+        @PathVariable Long addressNo) {
+        DeliveryDestinationRetrieveResponse response =
+            deliveryDestinationService.retrieveDeliveryDestination(addressNo);
 
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)

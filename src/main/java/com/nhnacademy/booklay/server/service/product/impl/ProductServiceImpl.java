@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public Long createBookProduct(CreateProductBookRequest request) throws Exception {
+  public Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception {
 
     //product
     Product product = splitProduct(request);
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public Long createSubscribeProduct(CreateProductSubscribeRequest request) {
+  public Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
 
@@ -97,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public Long updateBookProduct(CreateProductBookRequest request) throws Exception {
+  public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     //TODO : 예외처리 만들것
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
@@ -135,7 +135,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public Long updateSubscribeProduct(CreateProductSubscribeRequest request) throws Exception {
+  public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception {
     //TODO :예외처리 만들것
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
@@ -188,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
   //book a.k.a product detail
 
   //dto 에서 product 분리
-  private Product splitProduct(CreateProductBookRequest request) {
+  private Product splitProduct(CreateUpdateProductBookRequest request) {
     MultipartFile thumbnail = request.getImage();
 
     log.info("출력 : " + thumbnail.getOriginalFilename());
@@ -231,7 +231,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   //dto 에서 product_detail 분리
-  private ProductDetail splitDetail(CreateProductBookRequest request, Product savedProduct) {
+  private ProductDetail splitDetail(CreateUpdateProductBookRequest request, Product savedProduct) {
     //product detail
     return ProductDetail.builder()
         .product(savedProduct)
@@ -245,7 +245,13 @@ public class ProductServiceImpl implements ProductService {
   //subscribe
 
   //dto 에서 product 분리
-  private Product splitProductSubscribe(CreateProductSubscribeRequest request) {
+  private Product splitProductSubscribe(CreateUpdateProductSubscribeRequest request) {
+    Image requestImage = Image.builder()
+        .address(request.getImage().getOriginalFilename())
+        .ext("jpeg")
+        .build();
+
+    Image image = imageRepository.save(requestImage);
     return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
@@ -253,16 +259,17 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(request.getImage())
+        .image(image)
         .isSelling(request.isSelling())
         .build();
   }
 
-  private Subscribe splitSubscribe(Product product, CreateProductSubscribeRequest request) {
+  //TODO: toIntExact 수정해야한다
+  private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
     return Subscribe.builder()
         .product(product)
-        .subscribeWeek(request.getSubscribeWeek())
-        .subscribeDay(request.getSubscribeDay())
+        .subscribeWeek(Math.toIntExact(request.getSubscribeWeek()))
+        .subscribeDay(Math.toIntExact(request.getSubscribeDay()))
         .build();
   }
 }

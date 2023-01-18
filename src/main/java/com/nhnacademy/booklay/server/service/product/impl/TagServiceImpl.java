@@ -1,9 +1,9 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
-import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import com.nhnacademy.booklay.server.entity.Product;
@@ -42,7 +42,6 @@ public class TagServiceImpl implements TagService {
   @Override
   @Transactional
   public void createTag(CreateTagRequest request) {
-    //같은 name 으로도 등록되면 안되는거 아닌가?, 예외처리 만들어주자
     tagNameValidator(request.getName());
 
     Tag tag = Tag.builder()
@@ -74,7 +73,10 @@ public class TagServiceImpl implements TagService {
   public void deleteTag(DeleteIdRequest id) {
     Long requestId = id.getId();
     tagExistValidator(requestId);
-    productTagRepository.deleteByPk_TagId(requestId);
+
+    if (productTagRepository.existsByPk_TagId(requestId)) {
+      productTagRepository.deleteByPk_TagId(requestId);
+    }
     tagRepository.deleteById(requestId);
   }
 
@@ -121,7 +123,7 @@ public class TagServiceImpl implements TagService {
   }
 
   @Override
-  public void connectTagProduct(CreateDeleteTagProductRequest request) {
+  public void createTagProduct(CreateDeleteTagProductRequest request) {
     log.info("제품 번호 : " + request.getProductNo());
     log.info("태그 번호 : " + request.getTagId());
 
@@ -145,7 +147,7 @@ public class TagServiceImpl implements TagService {
   }
 
   @Override
-  public void disconnectTagProduct(CreateDeleteTagProductRequest request) {
+  public void deleteTagProduct(CreateDeleteTagProductRequest request) {
     ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
     if (!productRepository.existsById(request.getProductNo())) {
       throw new NotFoundException(Product.class, "product not found");

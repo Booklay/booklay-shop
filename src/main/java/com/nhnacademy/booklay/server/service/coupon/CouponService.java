@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.service.coupon;
 
-import com.nhnacademy.booklay.server.entity.CouponTemplate;
+import com.nhnacademy.booklay.server.entity.Coupon;
 
 public interface CouponService {
-    void createAndIssueCouponByTemplate(CouponTemplate couponTemplate, Long memberId);
+    Coupon retrieveCoupon(Long couponId);
 }

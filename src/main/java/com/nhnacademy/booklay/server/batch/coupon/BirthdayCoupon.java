@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.batch.coupon;
 
 import com.nhnacademy.booklay.server.service.coupon.CouponBirthdaySettingService;
-import com.nhnacademy.booklay.server.service.coupon.CouponService;
+import com.nhnacademy.booklay.server.service.coupon.CouponComplexService;
 import com.nhnacademy.booklay.server.service.coupon.CouponTemplateService;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class BirthdayCoupon {
     }
     @Bean
     public BirthdayCouponTasklet birthdayCouponTasklet(CouponTemplateService couponTemplateService,
-                                                       CouponService couponService,
+                                                       CouponComplexService couponService,
                                                        CouponBirthdaySettingService couponBirthdaySettingService,
                                                        MemberService memberService){
         return new BirthdayCouponTasklet(couponTemplateService, couponService, couponBirthdaySettingService, memberService);

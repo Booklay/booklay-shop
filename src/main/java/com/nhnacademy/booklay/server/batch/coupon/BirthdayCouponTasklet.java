@@ -3,7 +3,7 @@ package com.nhnacademy.booklay.server.batch.coupon;
 import com.nhnacademy.booklay.server.dto.member.BirthdayMemberDto;
 import com.nhnacademy.booklay.server.entity.CouponTemplate;
 import com.nhnacademy.booklay.server.service.coupon.CouponBirthdaySettingService;
-import com.nhnacademy.booklay.server.service.coupon.CouponService;
+import com.nhnacademy.booklay.server.service.coupon.CouponComplexService;
 import com.nhnacademy.booklay.server.service.coupon.CouponTemplateService;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 public class BirthdayCouponTasklet implements Tasklet, StepExecutionListener {
 
     private final CouponTemplateService couponTemplateService;
-    private final CouponService couponService;
+    private final CouponComplexService couponService;
     private final CouponBirthdaySettingService couponBirthdaySettingService;
     private final MemberService memberService;
 

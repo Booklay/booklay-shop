@@ -24,6 +24,11 @@ public class CouponTypeServiceImpl implements CouponTypeService{
     }
 
     @Override
+    public CouponType retrieveCouponType(Long couponTypeId){
+        return couponTypeRepository.findById(couponTypeId).orElseThrow(() -> new NotFoundException(CouponType.class.toString(), couponTypeId));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<CouponTypeRetrieveResponse> retrieveAllCouponTypes(Pageable pageable) {
         return couponTypeRepository.findAllBy(pageable);

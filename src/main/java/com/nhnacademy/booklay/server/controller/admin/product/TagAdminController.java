@@ -76,12 +76,12 @@ public class TagAdminController {
   @PostMapping("/product")
   public void tagProductConnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
     log.info("출력 : "+request.getProductNo());
-    tagService.connectTagProduct(request);
+    tagService.createTagProduct(request);
   }
 
   @DeleteMapping("/product")
   public void tagProductDisconnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
     log.info("출력 : "+request.getProductNo());
-    tagService.disconnectTagProduct(request);
+    tagService.deleteTagProduct(request);
   }
 }

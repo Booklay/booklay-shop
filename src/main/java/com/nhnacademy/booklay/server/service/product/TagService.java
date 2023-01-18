@@ -19,6 +19,6 @@ public interface TagService {
   Page<RetrieveTagResponse> retrieveAllTag(Pageable pageable);
   Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo);
   void deleteTag(DeleteIdRequest id);
-  void connectTagProduct(CreateDeleteTagProductRequest request);
-  void disconnectTagProduct(CreateDeleteTagProductRequest request);
+  void createTagProduct(CreateDeleteTagProductRequest request);
+  void deleteTagProduct(CreateDeleteTagProductRequest request);
 }

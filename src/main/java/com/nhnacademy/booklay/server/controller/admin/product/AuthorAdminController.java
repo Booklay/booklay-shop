@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.controller.admin.product;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -49,8 +50,8 @@ public class AuthorAdminController {
   }
 
   @DeleteMapping
-  public void authorDelete(Long id) {
-    authorService.deleteAuthor(id);
+  public void authorDelete(@Valid @RequestBody DeleteIdRequest request) {
+    authorService.deleteAuthor(request);
   }
 
 }

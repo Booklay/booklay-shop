@@ -4,9 +4,11 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import com.nhnacademy.booklay.server.service.product.TagService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +52,7 @@ public class TagAdminController {
   }
 
   @DeleteMapping
-  public void tagDelete(Long id) {
+  public void tagDelete(@Valid @RequestBody DeleteIdRequest id) {
     tagService.deleteTag(id);
   }
 
@@ -62,6 +64,11 @@ public class TagAdminController {
     log.info("상품 번호 : " + productNo);
 
     Page<TagProductResponse> response =  tagService.retrieveAllTagWithBoolean(pageable, productNo);
+
+    List<TagProductResponse> tplist = response.getContent();
+    for(TagProductResponse i : tplist){
+      log.info("컨트롤러에서 시험 출력 : " + i.getId() + i.getName() + i.isRegistered());
+    }
     return new PageResponse<>(response);
   }
 

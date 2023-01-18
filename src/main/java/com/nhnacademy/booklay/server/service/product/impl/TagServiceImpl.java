@@ -1,8 +1,9 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import com.nhnacademy.booklay.server.entity.Product;
@@ -70,9 +71,11 @@ public class TagServiceImpl implements TagService {
 
   @Override
   @Transactional
-  public void deleteTag(Long id) {
-    tagExistValidator(id);
-    tagRepository.deleteById(id);
+  public void deleteTag(DeleteIdRequest id) {
+    Long requestId = id.getId();
+    tagExistValidator(requestId);
+    productTagRepository.deleteByPk_TagId(requestId);
+    tagRepository.deleteById(requestId);
   }
 
   private void tagExistValidator(Long id) {
@@ -96,21 +99,24 @@ public class TagServiceImpl implements TagService {
         RetrieveTagResponse.class);
 
     List<RetrieveTagResponse> basicContent = basicPageDto.getContent();
-    List<TagProductResponse> contents = new ArrayList<>();
+    List<TagProductResponse> convertedContent = new ArrayList<>();
 
     for (RetrieveTagResponse response : basicContent) {
       ProductTag.Pk ptPk = new Pk(productNo, response.getId());
 
       Boolean isRegistered = productTagRepository.existsById(ptPk);
-      log.info("실험" + isRegistered);
 
       TagProductResponse tagProductDto = new TagProductResponse(response.getId(),
           response.getName(), isRegistered);
 
-      contents.add(tagProductDto);
+      convertedContent.add(tagProductDto);
     }
 
-    return new PageImpl<TagProductResponse>(contents, basicPageDto.getPageable(),
+    for (TagProductResponse i : convertedContent) {
+      log.info("시험 출력 : " + i.getId() + i.getName() + i.isRegistered());
+    }
+
+    return new PageImpl<TagProductResponse>(convertedContent, basicPageDto.getPageable(),
         basicPageDto.getTotalElements());
   }
 

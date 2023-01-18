@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.product;
 
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -17,7 +18,7 @@ public interface AuthorService{
 
   void updateAuthor(UpdateAuthorRequest request);
 
-  void deleteAuthor(Long id);
+  void deleteAuthor(DeleteIdRequest request);
 
   Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable);
 }

@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.service.member;
 
-import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCreateRequest;
+import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -23,6 +23,14 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     private final MemberRepository memberRepository;
 
     @Override
+    public DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo) {
+        DeliveryDestination deliveryDestination = deliveryDestinationRepository.findById(addressNo)
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        return DeliveryDestinationRetrieveResponse.fromEntity(deliveryDestination);
+    }
+
+    @Override
     public List<DeliveryDestinationRetrieveResponse> retrieveDeliveryDestinations(Long memberNo) {
         memberRepository.findById(memberNo)
             .orElseThrow(() -> new MemberNotFoundException(memberNo));
@@ -35,9 +43,10 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         }
     }
 
+    //TODO 8: 기본배송지 설정 시 기존 기본배송지 삭제
     @Override
     public void createDeliveryDestination(Long memberNo,
-                                          DeliveryDestinationCreateRequest requestDto) {
+                                          DeliveryDestinationCURequest requestDto) {
         Optional<Member> memberOp = memberRepository.findByMemberNo(memberNo);
         if (memberOp.isEmpty()) {
             throw new MemberNotFoundException(memberNo);
@@ -48,4 +57,5 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
 
         deliveryDestinationRepository.save(deliveryDestination);
     }
+
 }

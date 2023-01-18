@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.service.member;
 
-import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCreateRequest;
+import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import java.util.List;
 
@@ -11,5 +11,7 @@ public interface DeliveryDestinationService {
     List<DeliveryDestinationRetrieveResponse> retrieveDeliveryDestinations(Long memberNo);
 
     void createDeliveryDestination(Long memberNo,
-                                   DeliveryDestinationCreateRequest deliveryDestinationCreateRequest);
+                                   DeliveryDestinationCURequest deliveryDestinationCURequest);
+
+    DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo);
 }

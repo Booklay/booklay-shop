@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
@@ -77,7 +78,8 @@ class AuthorServiceTest {
     ReflectionTestUtils.setField(author, "authorNo", 1L);
 
     given(authorRepository.existsById(author.getAuthorNo())).willReturn(true);
-    authorService.deleteAuthor(author.getAuthorNo());
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorNo());
+    authorService.deleteAuthor(deleteIdRequest);
 
     assertThat(authorRepository.findById(author.getAuthorNo())).isEmpty();
   }
@@ -87,7 +89,9 @@ class AuthorServiceTest {
     ReflectionTestUtils.setField(author, "authorNo", 1L);
     given(authorRepository.existsById(author.getAuthorNo())).willReturn(false);
 
-    assertThatThrownBy(() -> authorService.deleteAuthor(author.getAuthorNo())).isInstanceOf(
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorNo());
+
+    assertThatThrownBy(() -> authorService.deleteAuthor(deleteIdRequest)).isInstanceOf(
         NotFoundException.class);
   }
 }

@@ -2,20 +2,30 @@ package com.nhnacademy.booklay.server.service.product.impl;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
-import com.nhnacademy.booklay.server.entity.*;
+import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.entity.CategoryProduct;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
+import com.nhnacademy.booklay.server.entity.Image;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductAuthor;
+import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.ImageRepository;
-import com.nhnacademy.booklay.server.repository.product.*;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Objects;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -131,7 +141,6 @@ public class ProductServiceImpl implements ProductService {
       throw new IllegalArgumentException();
     }
 
-
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
 
@@ -204,8 +213,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   //product_author 등록
-  private void productAuthorRegister(List<Long> authorIdList, ProductDetail productDetail)
-      throws Exception {
+  private void productAuthorRegister(List<Long> authorIdList, ProductDetail productDetail) {
     for (int i = 0; i < authorIdList.size(); i++) {
       Author foundAuthor = authorRepository.findById(authorIdList.get(i))
           .orElseThrow(() -> new IllegalArgumentException());

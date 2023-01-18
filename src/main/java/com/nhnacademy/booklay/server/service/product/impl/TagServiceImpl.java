@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
+  private static final String NOT_FOUNT = "product not found";
   private final TagRepository tagRepository;
   private final ProductTagRepository productTagRepository;
   private final ProductRepository productRepository;
@@ -95,7 +96,7 @@ public class TagServiceImpl implements TagService {
   @Override
   public Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo) {
     if (!productRepository.existsById(productNo)) {
-      throw new NotFoundException(Product.class, "Product not found");
+      throw new NotFoundException(Product.class, NOT_FOUNT);
     }
     Page<RetrieveTagResponse> basicPageDto = tagRepository.findAllBy(pageable,
         RetrieveTagResponse.class);
@@ -118,7 +119,7 @@ public class TagServiceImpl implements TagService {
       log.info("시험 출력 : " + i.getId() + i.getName() + i.isRegistered());
     }
 
-    return new PageImpl<TagProductResponse>(convertedContent, basicPageDto.getPageable(),
+    return new PageImpl<>(convertedContent, basicPageDto.getPageable(),
         basicPageDto.getTotalElements());
   }
 
@@ -129,11 +130,11 @@ public class TagServiceImpl implements TagService {
 
     ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
     if (!productRepository.existsById(request.getProductNo())) {
-      throw new NotFoundException(Product.class, "product not found");
+      throw new NotFoundException(Product.class, NOT_FOUNT);
     }
     Product product = productRepository.findById(request.getProductNo()).orElseThrow();
     if (!tagRepository.existsById(request.getTagId())) {
-      throw new NotFoundException(Tag.class, "product not found");
+      throw new NotFoundException(Tag.class, NOT_FOUNT);
     }
     Tag tag = tagRepository.findById(request.getTagId()).orElseThrow();
 
@@ -150,10 +151,10 @@ public class TagServiceImpl implements TagService {
   public void deleteTagProduct(CreateDeleteTagProductRequest request) {
     ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
     if (!productRepository.existsById(request.getProductNo())) {
-      throw new NotFoundException(Product.class, "product not found");
+      throw new NotFoundException(Product.class, NOT_FOUNT);
     }
     if (!tagRepository.existsById(request.getTagId())) {
-      throw new NotFoundException(Tag.class, "product not found");
+      throw new NotFoundException(Tag.class, "tag not found");
     }
 
     productTagRepository.deleteById(pk);

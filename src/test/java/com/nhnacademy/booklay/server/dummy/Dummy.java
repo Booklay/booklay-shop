@@ -288,7 +288,6 @@ public class Dummy {
 
     public static DeliveryDestinationCURequest getDummyDeliveryDestinationCreateRequest() {
         DeliveryDestinationCURequest request = new DeliveryDestinationCURequest();
-        ReflectionTestUtils.setField(request, "memberNo", 1L);
         ReflectionTestUtils.setField(request, "name", "집");
         ReflectionTestUtils.setField(request, "zipCode", "12345");
         ReflectionTestUtils.setField(request, "address", "서울특별시 송파구 올림픽로 240");

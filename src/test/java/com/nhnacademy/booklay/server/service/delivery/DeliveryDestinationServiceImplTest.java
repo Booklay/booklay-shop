@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCreateRequest;
+import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
@@ -31,7 +31,7 @@ class DeliveryDestinationServiceImplTest {
     DeliveryDestinationRepository deliveryDestinationRepository;
     @Mock
     MemberRepository memberRepository;
-    DeliveryDestinationCreateRequest requestDto;
+    DeliveryDestinationCURequest requestDto;
     Member member;
 
     @BeforeEach

@@ -4,9 +4,11 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import com.nhnacademy.booklay.server.service.product.TagService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author 최규태
+ */
 
 @Slf4j
 @RestController
@@ -46,7 +52,7 @@ public class TagAdminController {
   }
 
   @DeleteMapping
-  public void tagDelete(Long id) {
+  public void tagDelete(@Valid @RequestBody DeleteIdRequest id) {
     tagService.deleteTag(id);
   }
 
@@ -58,6 +64,11 @@ public class TagAdminController {
     log.info("상품 번호 : " + productNo);
 
     Page<TagProductResponse> response =  tagService.retrieveAllTagWithBoolean(pageable, productNo);
+
+    List<TagProductResponse> tplist = response.getContent();
+    for(TagProductResponse i : tplist){
+      log.info("컨트롤러에서 시험 출력 : " + i.getId() + i.getName() + i.isRegistered());
+    }
     return new PageResponse<>(response);
   }
 
@@ -65,12 +76,12 @@ public class TagAdminController {
   @PostMapping("/product")
   public void tagProductConnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
     log.info("출력 : "+request.getProductNo());
-    tagService.connectTagProduct(request);
+    tagService.createTagProduct(request);
   }
 
   @DeleteMapping("/product")
   public void tagProductDisconnect(@Valid @RequestBody CreateDeleteTagProductRequest request){
     log.info("출력 : "+request.getProductNo());
-    tagService.disconnectTagProduct(request);
+    tagService.deleteTagProduct(request);
   }
 }

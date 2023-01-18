@@ -13,6 +13,10 @@ import com.nhnacademy.booklay.server.service.product.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author 최규태
+ */
+
 @Service
 @RequiredArgsConstructor
 public class WishlistServiceImpl implements WishlistService {
@@ -40,18 +44,19 @@ public class WishlistServiceImpl implements WishlistService {
     Wishlist.Pk pk = new Pk(request.getMemberId(), request.getProductId());
 
     //없는걸 지우려고하면 안되니까...
-    if(!wishlistRepository.existsById(pk)){
+    if (!wishlistRepository.existsById(pk)) {
       throw new NotFoundException(Wishlist.Pk.class, "wishlist not found");
     }
+
     wishlistRepository.deleteById(pk);
   }
 
 
-  public void wishlistValidation(CreateWishlistRequest request){
-    if(!memberRepository.existsById(request.getMemberId())){
-      throw new NotFoundException(Member.class,"member not found");
+  public void wishlistValidation(CreateWishlistRequest request) {
+    if (!memberRepository.existsById(request.getMemberId())) {
+      throw new NotFoundException(Member.class, "member not found");
     }
-    if(!productRepository.existsById(request.getProductId())){
+    if (!productRepository.existsById(request.getProductId())) {
       throw new NotFoundException(Product.class, "product not found");
     }
   }

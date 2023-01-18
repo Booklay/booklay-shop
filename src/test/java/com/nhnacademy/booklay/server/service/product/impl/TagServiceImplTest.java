@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
+import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.TagRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,9 @@ class TagServiceImplTest {
 
   @Mock
   TagRepository tagRepository;
+
+  @Mock
+  ProductTagRepository productTagRepository;
 
   CreateTagRequest request;
   Tag tag;
@@ -110,7 +115,9 @@ class TagServiceImplTest {
     ReflectionTestUtils.setField(tag, "id", 1L);
 
     given(tagRepository.existsById(tag.getId())).willReturn(true);
-    tagService.deleteTag(tag.getId());
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(tag.getId());
+    log.info("시험 출력 : "+deleteIdRequest.getId());
+    tagService.deleteTag(deleteIdRequest);
 
     assertThat(tagRepository.findById(tag.getId())).isEmpty();
   }
@@ -120,7 +127,9 @@ class TagServiceImplTest {
     ReflectionTestUtils.setField(tag, "id", 1L);
     given(tagRepository.existsById(tag.getId())).willReturn(false);
 
-    assertThatThrownBy(() -> tagService.deleteTag(tag.getId())).isInstanceOf(
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(tag.getId());
+
+    assertThatThrownBy(() -> tagService.deleteTag(deleteIdRequest)).isInstanceOf(
         NotFoundException.class);
   }
 

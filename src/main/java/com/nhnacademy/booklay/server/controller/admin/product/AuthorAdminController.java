@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.controller.admin.product;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -17,6 +18,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
+/**
+ * @author 최규태
+ */
 
 @Slf4j
 @RestController
@@ -44,8 +50,8 @@ public class AuthorAdminController {
   }
 
   @DeleteMapping
-  public void authorDelete(Long id) {
-    authorService.deleteAuthor(id);
+  public void authorDelete(@Valid @RequestBody DeleteIdRequest request) {
+    authorService.deleteAuthor(request);
   }
 
 }

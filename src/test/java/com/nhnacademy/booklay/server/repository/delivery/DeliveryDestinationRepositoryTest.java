@@ -2,11 +2,12 @@ package com.nhnacademy.booklay.server.repository.delivery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCreateRequest;
+import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ class DeliveryDestinationRepositoryTest {
     MemberRepository memberRepository;
 
     DeliveryDestination deliveryDestination;
-    DeliveryDestinationCreateRequest deliveryDestinationCreateRequest;
+    DeliveryDestinationCURequest deliveryDestinationCURequest;
 
     void clearRepo(String entityName, JpaRepository jpaRepository) {
         jpaRepository.deleteAll();
@@ -51,7 +52,7 @@ class DeliveryDestinationRepositoryTest {
 
         //given
         deliveryDestination = Dummy.getDummyDeliveryDestination();
-        deliveryDestinationCreateRequest = Dummy.getDummyDeliveryDestinationCreateRequest();
+        deliveryDestinationCURequest = Dummy.getDummyDeliveryDestinationCreateRequest();
 
         entityManager.persist(deliveryDestination.getMember().getGender());
         memberRepository.save(deliveryDestination.getMember());
@@ -69,4 +70,18 @@ class DeliveryDestinationRepositoryTest {
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
     }
 
+    @Disabled
+    @Test
+    @DisplayName("DeliveryDestination find test")
+    void testDeliveryDestinationFindByTest() {
+        //given
+        deliveryDestinationRepository.save(deliveryDestination);
+
+        //when
+        DeliveryDestination expected = deliveryDestinationRepository.findById(
+            deliveryDestination.getId()).orElseThrow(() -> new IllegalArgumentException());
+
+        //then
+        assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
+    }
 }

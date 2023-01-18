@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
-import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCreateRequest;
+import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
@@ -62,7 +62,6 @@ public class Dummy {
             .isDefaultDestination(true)
             .build();
         return deliveryDestination;
-
     }
 
     public static Coupon getDummyCoupon() {
@@ -287,9 +286,8 @@ public class Dummy {
         return memberRequest;
     }
 
-    public static DeliveryDestinationCreateRequest getDummyDeliveryDestinationCreateRequest() {
-        DeliveryDestinationCreateRequest request = new DeliveryDestinationCreateRequest();
-        ReflectionTestUtils.setField(request, "memberNo", 1L);
+    public static DeliveryDestinationCURequest getDummyDeliveryDestinationCreateRequest() {
+        DeliveryDestinationCURequest request = new DeliveryDestinationCURequest();
         ReflectionTestUtils.setField(request, "name", "집");
         ReflectionTestUtils.setField(request, "zipCode", "12345");
         ReflectionTestUtils.setField(request, "address", "서울특별시 송파구 올림픽로 240");

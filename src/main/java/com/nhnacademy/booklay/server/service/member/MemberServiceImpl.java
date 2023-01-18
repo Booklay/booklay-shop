@@ -35,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-
     private final MemberRepository memberRepository;
     private final MemberGradeRepository memberGradeRepository;
     private final GenderRepository genderRepository;

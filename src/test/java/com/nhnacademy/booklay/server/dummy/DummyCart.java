@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.dummy;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.entity.*;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
 
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DummyCart {
 
   public static Cart getDummyCart() {
-    CreateProductBookRequest request = getDummyProductBookDto();
+    CreateUpdateProductBookRequest request = getDummyProductBookDto();
     Member dummyMember = Dummy.getDummyMember();
     Product dummyProduct = getDummyProduct(request);
     Cart.Pk dummyPk = new Cart.Pk(dummyMember.getMemberNo(), dummyProduct.getId());
@@ -66,7 +66,7 @@ public class DummyCart {
     return comment;
   }
 
-  public static Product getDummyProduct(CreateProductBookRequest request) {
+  public static Product getDummyProduct(CreateUpdateProductBookRequest request) {
     return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
@@ -97,7 +97,7 @@ public class DummyCart {
     return author;
   }
 
-  public static ProductDetail getDummyProductDetail(CreateProductBookRequest request) {
+  public static ProductDetail getDummyProductDetail(CreateUpdateProductBookRequest request) {
     Product dummyProduct = getDummyProduct(request);
     ProductDetail productDetail = ProductDetail.builder()
         .product(dummyProduct)
@@ -117,7 +117,7 @@ public class DummyCart {
     return productDetail;
   }
 
-  public static ProductAuthor getDummyProductAuthor(CreateProductBookRequest request) {
+  public static ProductAuthor getDummyProductAuthor(CreateUpdateProductBookRequest request) {
     Author dummyAuthor = getDummyAuthor();
     ProductDetail dummyProductDetail = getDummyProductDetail(request);
 
@@ -133,7 +133,7 @@ public class DummyCart {
     return productAuthor;
   }
 
-  public static CreateProductBookRequest getDummyProductBookDto() {
+  public static CreateUpdateProductBookRequest getDummyProductBookDto() {
     MultipartFile file = null;
 
     List<Long> authors = new ArrayList<>();
@@ -142,7 +142,7 @@ public class DummyCart {
     List<Long> categories = new ArrayList<>();
     categories.add(1L);
 
-    CreateProductBookRequest createProductBookRequest = CreateProductBookRequest.builder()
+    CreateUpdateProductBookRequest createProductBookRequest = CreateUpdateProductBookRequest.builder()
         .isbn("923-2239-42-1")
         .page(300)
         .isSelling(true)
@@ -183,7 +183,7 @@ public class DummyCart {
         .build();
   }
 
-  public static CategoryProduct getDummyCategoryProduct(CreateProductBookRequest request) {
+  public static CategoryProduct getDummyCategoryProduct(CreateUpdateProductBookRequest request) {
     Product product = getDummyProduct(request);
     Category category = getDummyCategory();
 

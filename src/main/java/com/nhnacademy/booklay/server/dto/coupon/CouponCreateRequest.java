@@ -52,6 +52,7 @@ public class CouponCreateRequest {
 
     private Integer quantity;
 
+
     public static Coupon toEntity(CouponCreateRequest couponRequest, CouponType couponType, Image image) {
         return Coupon.builder()
             .couponType(couponType)

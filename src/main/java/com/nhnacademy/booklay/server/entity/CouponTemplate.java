@@ -73,7 +73,7 @@ public class CouponTemplate {
     }
 
     public CouponCreateRequest toCouponCreateRequest() {
-        return new CouponCreateRequest(name, typeCode, amount
+        return new CouponCreateRequest(name, imageNo, typeCode, amount
             , isOrderCoupon, applyItemId, minimumUseAmount, maximumDiscountAmount,
             LocalDateTime.now().plusDays(validateTerm),isDuplicatable, 1);
     }

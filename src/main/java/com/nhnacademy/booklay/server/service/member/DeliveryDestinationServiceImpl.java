@@ -43,19 +43,22 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         }
     }
 
-    //TODO 8: 기본배송지 설정 시 기존 기본배송지 삭제
     @Override
     public void createDeliveryDestination(Long memberNo,
                                           DeliveryDestinationCURequest requestDto) {
-        Optional<Member> memberOp = memberRepository.findByMemberNo(memberNo);
-        if (memberOp.isEmpty()) {
-            throw new MemberNotFoundException(memberNo);
+        Member member = memberRepository.findByMemberNo(memberNo)
+            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+
+        Optional<DeliveryDestination> deliveryDestinationOp =
+            deliveryDestinationRepository.findByIsDefaultDestination(true);
+        if (deliveryDestinationOp.isPresent()) {
+            deliveryDestinationOp.get().setIsDefaultDestination(false);
         }
+
         checkDeliveryDestinationLimit(memberNo);
 
-        DeliveryDestination deliveryDestination = requestDto.toEntity(memberOp.get());
+        DeliveryDestination deliveryDestination = requestDto.toEntity(member);
 
         deliveryDestinationRepository.save(deliveryDestination);
     }
-
 }

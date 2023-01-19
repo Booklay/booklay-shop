@@ -30,6 +30,7 @@ public class DeliveryDestinationController {
     @GetMapping("/list/{memberNo}")
     public ResponseEntity<List<DeliveryDestinationRetrieveResponse>> retrieveDeliveryDestinations(
         @PathVariable Long memberNo) {
+
         List<DeliveryDestinationRetrieveResponse> response =
             deliveryDestinationService.retrieveDeliveryDestinations(memberNo);
 

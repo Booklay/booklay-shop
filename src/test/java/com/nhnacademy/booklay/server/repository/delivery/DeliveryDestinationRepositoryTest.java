@@ -3,9 +3,11 @@ package com.nhnacademy.booklay.server.repository.delivery;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
+import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -83,5 +85,18 @@ class DeliveryDestinationRepositoryTest {
 
         //then
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
+    }
+
+    @Test
+    void testFindAllBy() {
+        //given
+        deliveryDestinationRepository.save(deliveryDestination);
+
+        //when
+        List<DeliveryDestinationRetrieveResponse> expected =
+            deliveryDestinationRepository.findAllByMember_MemberNo(
+                deliveryDestination.getMember().getMemberNo());
+
+        assertThat(expected).isNotNull();
     }
 }

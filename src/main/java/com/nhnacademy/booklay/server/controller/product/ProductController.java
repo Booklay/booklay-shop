@@ -30,14 +30,11 @@ public class ProductController {
   public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
       throws JsonProcessingException {
     Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
-
-    ObjectMapper mapper = new ObjectMapper();
-    List<RetrieveProductResponse> content = response.getContent();
-    for(int i=0; i<content.size(); i++){
-      RetrieveProductResponse response1 = content.get(i);
-
-      log.info("출투더력 : "+mapper.writeValueAsString(response1));
-    }
     return new PageResponse<>(response);
+  }
+
+  @GetMapping("/view")
+  public String retrieveDetailView(){
+    return null;
   }
 }

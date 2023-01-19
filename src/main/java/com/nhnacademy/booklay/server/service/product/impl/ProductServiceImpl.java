@@ -1,7 +1,10 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
@@ -20,10 +23,14 @@ import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
@@ -132,11 +140,68 @@ public class ProductServiceImpl implements ProductService {
     return null;
   }
 
+  //상품(책 구독 모두) 게시판식 조회
+  @Override
+  @Transactional
+  public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) {
+    Page<Product> products = productRepository.findAllBy(pageable, Product.class);
+
+    List<Product> productsContent = products.getContent();
+
+    List<RetrieveProductResponse> assembledContent = new ArrayList<>();
+//    RetrieveProductResponse element = null;
+
+    for (int i = 0; i < productsContent.size(); i++) {
+      Product product = productsContent.get(i);
+
+      //책 상품이라면
+      if (productDetailRepository.existsProductDetailByProduct(product)) {
+        ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
+        List<ProductAuthor> productAuthors = productAuthorRepository.findAllByProductDetail(
+            productDetail);
+
+        //작가 정보 DTO
+        List<RetrieveAuthorResponse> authors = new ArrayList<>();
+
+        for (int j = 0; j < productAuthors.size(); j++) {
+          ProductAuthor productAuthor = productAuthors.get(j);
+          Author author = productAuthor.getAuthor();
+
+          RetrieveAuthorResponse authorResponse = new RetrieveAuthorResponse(author.getAuthorNo(),
+              author.getName());
+          if (Objects.nonNull(author.getMember())) {
+            MemberForAuthorResponse memberResponse = new MemberForAuthorResponse(
+                author.getMember().getMemberNo(), author.getMember().getMemberId());
+            authorResponse.setMember(memberResponse);
+          }
+
+          authors.add(authorResponse);
+
+        }
+        RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
+            authors);
+
+        assembledContent.add(element);
+      }
+
+      //구독 상품 이라면
+      if (subscribeRepository.existsSubscribeByProduct(product)) {
+        Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+
+        RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
+
+        assembledContent.add(element);
+      }
+    }
+
+    return new PageImpl<>(assembledContent, products.getPageable(),
+        products.getTotalElements());
+  }
+
 
   @Override
   @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception {
-    //TODO :예외처리 만들것
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
@@ -150,13 +215,11 @@ public class ProductServiceImpl implements ProductService {
 
     //subscribe
     Subscribe subscribe = splitSubscribe(savedProduct, request);
-    subscribe.setId(request.getSubscribeId());
 
     if (Objects.nonNull(request.getPublisher())) {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    //TODO : 에외처리 만들것
     if (!subscribeRepository.existsById(subscribe.getId())) {
       throw new IllegalArgumentException();
     }

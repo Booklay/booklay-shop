@@ -1,19 +1,19 @@
 package com.nhnacademy.booklay.server.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import com.nhnacademy.booklay.server.dto.category.response.CategoryStep;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Slf4j
 @DataJpaTest
@@ -26,10 +26,6 @@ class CategoryRepositoryTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @BeforeEach
-    void setUp() {
-        categoryRepository.save(Dummy.getDummyCategory().getParent());
-    }
 
     @Test
     @DisplayName("CategoryRepository save 테스트")
@@ -113,4 +109,23 @@ class CategoryRepositoryTest {
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"))
         ).isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    @DisplayName("카테고리 리포지토리 계층 카테고리 테스트")
+    void testCategoryStep() {
+
+        CategoryStep categoryStepResponse = categoryRepository.findStepById(1L)
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        for (CategoryStep categoryStep1 : categoryStepResponse.getCategories()) {
+            log.info("Categories : {}", categoryStep1.getName());
+
+            for (CategoryStep categoryStep2 : categoryStep1.getCategories()) {
+                log.info("Categories : {}", categoryStep2.getName());
+            }
+        }
+
+    }
+
+
 }

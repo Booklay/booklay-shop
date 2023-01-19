@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
-import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryStep;
 import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.exception.controller.DeleteFailedException;
 import com.nhnacademy.booklay.server.exception.controller.UpdateFailedException;
@@ -12,10 +12,10 @@ import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
 import javax.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,22 +29,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/admin/categories")
 public class CategoryAdminController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/test")
-    public ResponseEntity<CategoryResponse> testGet() {
+    public CategoryAdminController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @GetMapping("/steps/{categoryId}")
+    public ResponseEntity<CategoryStep> retrieveStep(@PathVariable Long categoryId) {
+
+        CategoryStep categoryStep = categoryService.retrieveCategoryStep(categoryId);
+
+
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new CategoryResponse(Category.builder()
-                .id(1L)
-                .parent(null)
-                .depth(1L)
-                .name("name")
-                .isExposure(false)
-                .build()));
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(categoryStep);
+
     }
 
     @PostMapping
@@ -97,6 +100,7 @@ public class CategoryAdminController {
         } catch (NotFoundException e) {
             throw new UpdateFailedException("카테고리 수정 실패");
         }
+
 
         CategoryResponse categoryResponse = categoryService.retrieveCategory(categoryId);
 

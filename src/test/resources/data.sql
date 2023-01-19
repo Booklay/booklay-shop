@@ -629,3 +629,31 @@ create table object_file
     file_name varchar(255) not null
 );
 
+insert into category values (0,0,'없음',0,false);
+
+insert into category values (1,0,'전체상품',0,true);
+
+insert into category values (101,1,'국내도서',1,true);
+insert into category values (102,1,'외국도서',1,true);
+insert into category values (103,1,'EBOOK',1,true);
+
+insert into category values (101001,101,'소설',2,true);
+insert into category values (101002,101,'인문학',2,true);
+insert into category values (101003,101,'IT',2,true);
+insert into category values (101004,101,'경제,경영',2,true);
+insert into category values (101005,101,'자기 계발',2,true);
+
+insert into category values (2,0,'게시판',0,true);
+
+insert into category values (201,2,'마이페이지',1,true);
+insert into category values (202,2,'고객센터',1,true);
+
+insert into category values (201001,201,'주문내역',2,true);
+insert into category values (201002,201,'위시리스트',2,true);
+insert into category values (201003,201,'쿠폰',2,true);
+insert into category values (201004,201,'내정보',2,true);
+
+insert into category values (202001,202,'FAQ',2,true);
+insert into category values (202002,202,'1:1 문의',2,true);
+insert into category values (202003,202,'공지사항',2,true);
+insert into category values (202004,202,'1:1 채팅문의',2,true);

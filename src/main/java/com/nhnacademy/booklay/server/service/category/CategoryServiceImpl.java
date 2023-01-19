@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryStep;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
@@ -25,10 +26,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    private static final String NOT_FOUND_MESSAGE = "존재하지 않는 카테고리 ID에 대한 요청입니다.";
+
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
+    @Override
     public void createCategory(CategoryCreateRequest createRequest) {
 
         if (categoryRepository.existsById(createRequest.getId())) {
@@ -46,14 +50,16 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(createRequest.toEntity(parentCategory));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public CategoryResponse retrieveCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new NotFoundException(Category.class, "존재하지 않는 카테고리 ID에 대한 요청입니다."));
+            .orElseThrow(() -> new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
 
         return new CategoryResponse(category);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public PageResponse<CategoryResponse> retrieveCategory(Pageable pageable) {
 
@@ -63,6 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
         return new PageResponse<>(page);
     }
 
+    @Override
     public void updateCategory(CategoryUpdateRequest updateDto, Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new NotFoundException(Category.class,
@@ -77,13 +84,31 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
+    @Override
     public void deleteCategory(Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
-            throw new NotFoundException(Category.class, "존재하지 않는 카테고리 ID에 대한 요청입니다.");
+            throw new NotFoundException(Category.class, NOT_FOUND_MESSAGE);
         }
         categoryRepository.deleteById(categoryId);
         log.info("Delete Category ID : " + categoryId);
+    }
 
+    @Override
+    public CategoryStep retrieveCategoryStep(Long topCategoryId) {
+
+        CategoryStep categoryStep = categoryRepository.findStepById(topCategoryId)
+            .orElseThrow(
+                () -> new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
+
+        for (CategoryStep categoryStep1 : categoryStep.getCategories()) {
+            log.info("Categories : {}", categoryStep1.getName());
+
+            for (CategoryStep categoryStep2 : categoryStep1.getCategories()) {
+                log.info("Categories : {}", categoryStep2.getName());
+            }
+        }
+
+        return categoryStep;
     }
 
 }

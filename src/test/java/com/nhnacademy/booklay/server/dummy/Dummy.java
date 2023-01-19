@@ -287,13 +287,7 @@ public class Dummy {
     }
 
     public static DeliveryDestinationCURequest getDummyDeliveryDestinationCreateRequest() {
-        DeliveryDestinationCURequest request = new DeliveryDestinationCURequest();
-        ReflectionTestUtils.setField(request, "name", "집");
-        ReflectionTestUtils.setField(request, "zipCode", "12345");
-        ReflectionTestUtils.setField(request, "address", "서울특별시 송파구 올림픽로 240");
-        ReflectionTestUtils.setField(request, "isDefaultDestination", true);
-
-        return request;
+        return new DeliveryDestinationCURequest("집", "12345", "서울특별시 송파구 올림픽로 240", true);
     }
 
     public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {

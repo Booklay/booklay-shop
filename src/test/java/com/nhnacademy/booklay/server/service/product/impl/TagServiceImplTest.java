@@ -116,7 +116,6 @@ class TagServiceImplTest {
 
     given(tagRepository.existsById(tag.getId())).willReturn(true);
     DeleteIdRequest deleteIdRequest = new DeleteIdRequest(tag.getId());
-    log.info("시험 출력 : "+deleteIdRequest.getId());
     tagService.deleteTag(deleteIdRequest);
 
     assertThat(tagRepository.findById(tag.getId())).isEmpty();

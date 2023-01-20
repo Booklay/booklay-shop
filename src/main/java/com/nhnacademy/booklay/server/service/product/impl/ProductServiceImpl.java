@@ -1,21 +1,41 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductSubscribeRequest;
-import com.nhnacademy.booklay.server.entity.*;
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.RetrieveIdRequest;
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
+import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.entity.CategoryProduct;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
+import com.nhnacademy.booklay.server.entity.Image;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductAuthor;
+import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.ImageRepository;
-import com.nhnacademy.booklay.server.repository.product.*;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -25,6 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
@@ -38,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public Long createBookProduct(CreateProductBookRequest request) throws Exception {
+  public Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception {
 
     //product
     Product product = splitProduct(request);
@@ -66,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public Long createSubscribeProduct(CreateProductSubscribeRequest request) {
+  public Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
 
@@ -87,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public Long updateBookProduct(CreateProductBookRequest request) throws Exception {
+  public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     //TODO : 예외처리 만들것
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
@@ -122,15 +143,79 @@ public class ProductServiceImpl implements ProductService {
     return null;
   }
 
+  //상품(책 구독 모두) 게시판식 조회
+  @Override
+  @Transactional
+  public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) {
+    Page<Product> products = productRepository.findAllBy(pageable, Product.class);
+
+    List<Product> productsContent = products.getContent();
+
+    List<RetrieveProductResponse> assembledContent = new ArrayList<>();
+//    RetrieveProductResponse element = null;
+
+    for (int i = 0; i < productsContent.size(); i++) {
+      Product product = productsContent.get(i);
+
+      //책 상품이라면
+      if (productDetailRepository.existsProductDetailByProduct(product)) {
+        ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
+        List<ProductAuthor> productAuthors = productAuthorRepository.findAllByProductDetail(
+            productDetail);
+
+        //작가 정보 DTO
+        List<RetrieveAuthorResponse> authors = retrieveAuthorList(productDetail);
+
+        //합체
+        RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
+            authors);
+
+        //컨텐츠에 주입
+        assembledContent.add(element);
+      }
+
+      //구독 상품 이라면
+      if (subscribeRepository.existsSubscribeByProduct(product)) {
+        Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+
+        RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
+
+        assembledContent.add(element);
+      }
+    }
+
+    return new PageImpl<>(assembledContent, products.getPageable(),
+        products.getTotalElements());
+  }
+
+  @Override
+  public RetrieveProductViewResponse retrieveProductView(RetrieveIdRequest request) {
+    Long productId = request.getId();
+
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+
+    if (productDetailRepository.existsProductDetailByProduct(product)) {
+      ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
+
+      List<ProductAuthor> productAuthors = productAuthorRepository.findAllByProductDetail(
+          productDetail);
+      //작가 정보 DTO
+      List<RetrieveAuthorResponse> authors = retrieveAuthorList(productDetail);
+    }
+
+    if (subscribeRepository.existsSubscribeByProduct(product)) {
+      Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+    }
+    return null;
+  }
 
   @Override
   @Transactional
-  public Long updateSubscribeProduct(CreateProductSubscribeRequest request) throws Exception {
-    //TODO :예외처리 만들것
+  public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
-
 
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
@@ -141,13 +226,11 @@ public class ProductServiceImpl implements ProductService {
 
     //subscribe
     Subscribe subscribe = splitSubscribe(savedProduct, request);
-    subscribe.setId(request.getSubscribeId());
 
     if (Objects.nonNull(request.getPublisher())) {
       subscribe.setPublisher(request.getPublisher());
     }
 
-    //TODO : 에외처리 만들것
     if (!subscribeRepository.existsById(subscribe.getId())) {
       throw new IllegalArgumentException();
     }
@@ -179,7 +262,7 @@ public class ProductServiceImpl implements ProductService {
   //book a.k.a product detail
 
   //dto 에서 product 분리
-  private Product splitProduct(CreateProductBookRequest request) {
+  private Product splitProduct(CreateUpdateProductBookRequest request) {
     MultipartFile thumbnail = request.getImage();
 
     log.info("출력 : " + thumbnail.getOriginalFilename());
@@ -204,8 +287,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   //product_author 등록
-  private void productAuthorRegister(List<Long> authorIdList, ProductDetail productDetail)
-      throws Exception {
+  private void productAuthorRegister(List<Long> authorIdList, ProductDetail productDetail) {
     for (int i = 0; i < authorIdList.size(); i++) {
       Author foundAuthor = authorRepository.findById(authorIdList.get(i))
           .orElseThrow(() -> new IllegalArgumentException());
@@ -223,7 +305,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   //dto 에서 product_detail 분리
-  private ProductDetail splitDetail(CreateProductBookRequest request, Product savedProduct) {
+  private ProductDetail splitDetail(CreateUpdateProductBookRequest request, Product savedProduct) {
     //product detail
     return ProductDetail.builder()
         .product(savedProduct)
@@ -237,7 +319,13 @@ public class ProductServiceImpl implements ProductService {
   //subscribe
 
   //dto 에서 product 분리
-  private Product splitProductSubscribe(CreateProductSubscribeRequest request) {
+  private Product splitProductSubscribe(CreateUpdateProductSubscribeRequest request) {
+    Image requestImage = Image.builder()
+        .address(request.getImage().getOriginalFilename())
+        .ext("jpeg")
+        .build();
+
+    Image image = imageRepository.save(requestImage);
     return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
@@ -245,16 +333,41 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(request.getImage())
+        .image(image)
         .isSelling(request.isSelling())
         .build();
   }
 
-  private Subscribe splitSubscribe(Product product, CreateProductSubscribeRequest request) {
+  //TODO: toIntExact 수정해야한다
+  private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
     return Subscribe.builder()
         .product(product)
-        .subscribeWeek(request.getSubscribeWeek())
-        .subscribeDay(request.getSubscribeDay())
+        .subscribeWeek(Math.toIntExact(request.getSubscribeWeek()))
+        .subscribeDay(Math.toIntExact(request.getSubscribeDay()))
         .build();
+  }
+
+  private List<RetrieveAuthorResponse> retrieveAuthorList(ProductDetail productDetail) {
+    List<ProductAuthor> productAuthors = productAuthorRepository.findAllByProductDetail(
+        productDetail);
+    //작가 정보 DTO
+    List<RetrieveAuthorResponse> authors = new ArrayList<>();
+
+    for (int j = 0; j < productAuthors.size(); j++) {
+      ProductAuthor productAuthor = productAuthors.get(j);
+      Author author = productAuthor.getAuthor();
+
+      RetrieveAuthorResponse authorResponse = new RetrieveAuthorResponse(author.getAuthorNo(),
+          author.getName());
+      if (Objects.nonNull(author.getMember())) {
+        MemberForAuthorResponse memberResponse = new MemberForAuthorResponse(
+            author.getMember().getMemberNo(), author.getMember().getMemberId());
+        authorResponse.setMember(memberResponse);
+      }
+
+      authors.add(authorResponse);
+    }
+
+    return authors;
   }
 }

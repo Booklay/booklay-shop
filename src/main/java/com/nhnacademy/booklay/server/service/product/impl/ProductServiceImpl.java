@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
+import com.nhnacademy.booklay.server.dto.category.response.ProductBoardCategoryResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.RetrieveIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -152,10 +153,10 @@ public class ProductServiceImpl implements ProductService {
     List<Product> productsContent = products.getContent();
 
     List<RetrieveProductResponse> assembledContent = new ArrayList<>();
-//    RetrieveProductResponse element = null;
 
     for (int i = 0; i < productsContent.size(); i++) {
       Product product = productsContent.get(i);
+      List<ProductBoardCategoryResponse> categories = categoryProductRepository.findCategoryProductsByPkProductId(product);
 
       //책 상품이라면
       if (productDetailRepository.existsProductDetailByProduct(product)) {
@@ -168,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 
         //합체
         RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
-            authors);
+            authors, categories);
 
         //컨텐츠에 주입
         assembledContent.add(element);
@@ -178,7 +179,7 @@ public class ProductServiceImpl implements ProductService {
       if (subscribeRepository.existsSubscribeByProduct(product)) {
         Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
 
-        RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
+        RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe, categories);
 
         assembledContent.add(element);
       }

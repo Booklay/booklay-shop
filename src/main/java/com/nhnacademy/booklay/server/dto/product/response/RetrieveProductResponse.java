@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.dto.product.response;
 
+import com.nhnacademy.booklay.server.dto.category.response.ProductBoardCategoryResponse;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
@@ -33,9 +34,10 @@ public class RetrieveProductResponse {
   private String publisher;
 
   private List<RetrieveAuthorResponse> authors;
+  private List<ProductBoardCategoryResponse> categories;
 
   public RetrieveProductResponse(Product product, ProductDetail productDetail,
-      List<RetrieveAuthorResponse> authorsNo) {
+      List<RetrieveAuthorResponse> authorsNo, List<ProductBoardCategoryResponse> categories) {
     this.productId = product.getId();
     this.title = product.getTitle();
     this.price = product.getPrice();
@@ -45,9 +47,11 @@ public class RetrieveProductResponse {
     this.shortDescription = product.getShortDescription();
     this.publisher = productDetail.getPublisher();
     this.authors = authorsNo;
+    this.categories = categories;
   }
 
-  public RetrieveProductResponse(Product product, Subscribe subscribe) {
+  public RetrieveProductResponse(Product product, Subscribe subscribe,
+      List<ProductBoardCategoryResponse> categories) {
     this.productId = product.getId();
     this.title = product.getTitle();
     this.price = product.getPrice();
@@ -56,5 +60,6 @@ public class RetrieveProductResponse {
     this.pointMethod = product.isPointMethod();
     this.shortDescription = product.getShortDescription();
     this.publisher = subscribe.getPublisher();
+    this.categories = categories;
   }
 }

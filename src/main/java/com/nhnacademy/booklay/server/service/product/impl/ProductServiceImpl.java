@@ -1,10 +1,12 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.RetrieveIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
@@ -14,6 +16,7 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
@@ -161,26 +164,13 @@ public class ProductServiceImpl implements ProductService {
             productDetail);
 
         //작가 정보 DTO
-        List<RetrieveAuthorResponse> authors = new ArrayList<>();
+        List<RetrieveAuthorResponse> authors = retrieveAuthorList(productDetail);
 
-        for (int j = 0; j < productAuthors.size(); j++) {
-          ProductAuthor productAuthor = productAuthors.get(j);
-          Author author = productAuthor.getAuthor();
-
-          RetrieveAuthorResponse authorResponse = new RetrieveAuthorResponse(author.getAuthorNo(),
-              author.getName());
-          if (Objects.nonNull(author.getMember())) {
-            MemberForAuthorResponse memberResponse = new MemberForAuthorResponse(
-                author.getMember().getMemberNo(), author.getMember().getMemberId());
-            authorResponse.setMember(memberResponse);
-          }
-
-          authors.add(authorResponse);
-
-        }
+        //합체
         RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
             authors);
 
+        //컨텐츠에 주입
         assembledContent.add(element);
       }
 
@@ -198,10 +188,31 @@ public class ProductServiceImpl implements ProductService {
         products.getTotalElements());
   }
 
+  @Override
+  public RetrieveProductViewResponse retrieveProductView(RetrieveIdRequest request) {
+    Long productId = request.getId();
+
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+
+    if (productDetailRepository.existsProductDetailByProduct(product)) {
+      ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
+
+      List<ProductAuthor> productAuthors = productAuthorRepository.findAllByProductDetail(
+          productDetail);
+      //작가 정보 DTO
+      List<RetrieveAuthorResponse> authors = retrieveAuthorList(productDetail);
+    }
+
+    if (subscribeRepository.existsSubscribeByProduct(product)) {
+      Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+    }
+    return null;
+  }
 
   @Override
   @Transactional
-  public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception {
+  public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
@@ -334,5 +345,29 @@ public class ProductServiceImpl implements ProductService {
         .subscribeWeek(Math.toIntExact(request.getSubscribeWeek()))
         .subscribeDay(Math.toIntExact(request.getSubscribeDay()))
         .build();
+  }
+
+  private List<RetrieveAuthorResponse> retrieveAuthorList(ProductDetail productDetail) {
+    List<ProductAuthor> productAuthors = productAuthorRepository.findAllByProductDetail(
+        productDetail);
+    //작가 정보 DTO
+    List<RetrieveAuthorResponse> authors = new ArrayList<>();
+
+    for (int j = 0; j < productAuthors.size(); j++) {
+      ProductAuthor productAuthor = productAuthors.get(j);
+      Author author = productAuthor.getAuthor();
+
+      RetrieveAuthorResponse authorResponse = new RetrieveAuthorResponse(author.getAuthorNo(),
+          author.getName());
+      if (Objects.nonNull(author.getMember())) {
+        MemberForAuthorResponse memberResponse = new MemberForAuthorResponse(
+            author.getMember().getMemberNo(), author.getMember().getMemberId());
+        authorResponse.setMember(memberResponse);
+      }
+
+      authors.add(authorResponse);
+    }
+
+    return authors;
   }
 }

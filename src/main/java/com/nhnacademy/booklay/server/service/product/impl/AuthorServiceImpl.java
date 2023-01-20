@@ -50,8 +50,7 @@ public class AuthorServiceImpl implements AuthorService {
 
   @Override
   public void updateAuthor(UpdateAuthorRequest request) {
-    authorRepository.findById(request.getId())
-        .orElseThrow(() -> new NotFoundException(Author.class, "Author not found"));
+    authorRepository.findById(request.getId());
 
     Author author = Author.builder()
         .name(request.getName())
@@ -98,7 +97,7 @@ public class AuthorServiceImpl implements AuthorService {
       contents.add(element);
     }
 
-    return new PageImpl<RetrieveAuthorResponse>(contents, authors.getPageable(),
+    return new PageImpl<>(contents, authors.getPageable(),
         authors.getTotalElements());
   }
 }

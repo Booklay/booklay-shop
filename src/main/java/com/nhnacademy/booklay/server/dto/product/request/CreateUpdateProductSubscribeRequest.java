@@ -1,21 +1,20 @@
 package com.nhnacademy.booklay.server.dto.product.request;
 
-import com.nhnacademy.booklay.server.entity.Image;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class CreateProductSubscribeRequest {
+public class CreateUpdateProductSubscribeRequest {
 
-  @Setter
   private Long productId;
   @NotNull
-  private Image image;
-  @NotNull
   private String title;
+  @Setter
+  private MultipartFile image;
   @NotNull
   private Long price;
   @NotNull
@@ -28,23 +27,26 @@ public class CreateProductSubscribeRequest {
   private boolean isSelling;
   @NotNull
   private boolean pointMethod;
+
   @NotNull
   private List<Long> categoryIds;
 
-  @Setter
   private Long subscribeId;
   @NotNull
-  private int subscribeWeek;
+  @Length(max = 4)
+  private Long subscribeWeek;
   @NotNull
-  private int subscribeDay;
-  @Setter
+  @Length(max = 7)
+  private Long subscribeDay;
+  @NotNull
   private String publisher;
+  private List<Long> childProducts;
 
-
-  public CreateProductSubscribeRequest(Image image, String title, Long price, Long pointRate,
-      String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
-      List<Long> categoryIds, int subscribeWeek, int subscribeDay) {
-    this.image = image;
+  public CreateUpdateProductSubscribeRequest(Long productId, String title, Long price,
+      Long pointRate, String shortDescription, String longDescription, boolean isSelling,
+      boolean pointMethod, List<Long> categoryIds, Long subscribeId, Long subscribeWeek,
+      Long subscribeDay, String publisher, List<Long> childProducts) {
+    this.productId = productId;
     this.title = title;
     this.price = price;
     this.pointRate = pointRate;
@@ -53,7 +55,10 @@ public class CreateProductSubscribeRequest {
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
     this.categoryIds = categoryIds;
+    this.subscribeId = subscribeId;
     this.subscribeWeek = subscribeWeek;
     this.subscribeDay = subscribeDay;
+    this.publisher = publisher;
+    this.childProducts = childProducts;
   }
 }

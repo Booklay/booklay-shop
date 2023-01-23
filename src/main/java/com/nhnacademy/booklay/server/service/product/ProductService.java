@@ -24,5 +24,5 @@ public interface ProductService {
 
   Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable);
 
-  RetrieveProductViewResponse retrieveProductView(RetrieveIdRequest request);
+  RetrieveProductViewResponse retrieveProductView(Long productNo);
 }

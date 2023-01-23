@@ -1,5 +1,9 @@
 package com.nhnacademy.booklay.server.dto.product.response;
 
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.entity.Subscribe;
 import java.time.LocalDate;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -43,18 +47,55 @@ public class RetrieveProductViewResponse {
   private String ebookAddress;
   @Setter
   private int storage;
-  private List<Long> authorIds;
-  private List<Long> categoryIds;
+  private List<RetrieveAuthorResponse> authors;
 
   //구독 상품 상세
   private Long subscribeId;
   @Length(max = 4)
-  private Long subscribeWeek;
+  private Integer subscribeWeek;
   @Length(max = 7)
-  private Long subscribeDay;
+  private Integer subscribeDay;
   private List<Long> childProducts;
 
   //책 구독 상품 상세 공통
   @NotNull
   private String publisher;
+
+  public RetrieveProductViewResponse(Product product, ProductDetail productDetail, List<RetrieveAuthorResponse> authors) {
+    this.productId = product.getId();
+    this.image = null;
+    this.title = product.getTitle();
+    this.price = product.getPrice();
+    this.pointRate = product.getPointRate();
+    this.shortDescription = product.getShortDescription();
+    this.longDescription = product.getLongDescription();
+    this.isSelling = product.isSelling();
+    this.pointMethod = product.isPointMethod();
+
+    this.productDetailId = productDetail.getId();
+    this.isbn = productDetail.getIsbn();
+    this.page = productDetail.getPage();
+    this.publishedDate = productDetail.getPublishedDate();
+    this.ebookAddress = productDetail.getEbookAddress();
+    this.storage = productDetail.getStorage();
+    this.authors = authors;
+    this.publisher = productDetail.getPublisher();
+  }
+
+  public RetrieveProductViewResponse(Product product, Subscribe subscribe) {
+    this.productId = product.getId();
+    this.image = null;
+    this.title = product.getTitle();
+    this.price = product.getPrice();
+    this.pointRate = product.getPointRate();
+    this.shortDescription = product.getShortDescription();
+    this.longDescription = product.getLongDescription();
+    this.isSelling = product.isSelling();
+    this.pointMethod = product.isPointMethod();
+    this.subscribeId = subscribe.getId();
+    this.subscribeWeek = subscribe.getSubscribeWeek();
+    this.subscribeDay = subscribe.getSubscribeDay();
+//    this.childProducts = childProducts;
+    this.publisher = subscribe.getPublisher();
+  }
 }

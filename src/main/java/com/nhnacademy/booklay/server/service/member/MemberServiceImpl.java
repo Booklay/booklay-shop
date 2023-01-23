@@ -75,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberRetrieveResponse retrieveMember(Long memberNo) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMember(memberNo);
 
         return MemberRetrieveResponse.fromEntity(member);
     }
@@ -88,9 +88,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
+        Member member = getMemberService.getMember(memberNo);
 
-        Member member = memberRepository.findById(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException(memberNo));
         Gender gender = genderRepository.findByName(updateDto.getName())
             .orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
 
@@ -100,7 +99,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(Long memberNo) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMember(memberNo);
         member.deleteMember();
     }
 
@@ -113,7 +112,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void createMemberAuthority(Long memberNo, String authorityName) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMember(memberNo);
 
         //TODO 3: Make Custom Exception?
         Authority authority = authorityRepository.findByName(authorityName)
@@ -151,8 +150,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMemberAuthority(Long memberNo, String authorityName) {
-        memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        getMemberService.getMember(memberNo);
 
         //TODO 3: custom exception (member authority는 삭제할 수 없음)
         if (authorityName.equals("member")) {
@@ -174,7 +172,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void createMemberGrade(Long memberNo, String gradeName) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMember(memberNo);
 
         MemberGrade memberGrade = new MemberGrade(member, gradeName);
 
@@ -185,8 +183,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo,
                                                                   Pageable pageable) {
-        memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        getMemberService.getMember(memberNo);
 
         return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
     }

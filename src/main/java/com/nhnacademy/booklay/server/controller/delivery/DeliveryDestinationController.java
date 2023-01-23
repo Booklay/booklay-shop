@@ -2,7 +2,7 @@ package com.nhnacademy.booklay.server.controller.delivery;
 
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
-import com.nhnacademy.booklay.server.service.member.DeliveryDestinationService;
+import com.nhnacademy.booklay.server.service.delivery.DeliveryDestinationService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DeliveryDestinationController {
     private final DeliveryDestinationService deliveryDestinationService;
+
+    @PostMapping("/create/{memberNo}")
+    public ResponseEntity<Void> createDeliveryDestination(@Valid @RequestBody
+                                                          DeliveryDestinationCURequest requestDto,
+                                                          @PathVariable Long memberNo) {
+        deliveryDestinationService.createDeliveryDestination(memberNo,
+            requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .build();
+    }
 
     @GetMapping("/list/{memberNo}")
     public ResponseEntity<List<DeliveryDestinationRetrieveResponse>> retrieveDeliveryDestinations(
@@ -50,19 +61,24 @@ public class DeliveryDestinationController {
             .body(response);
     }
 
-    @PostMapping("/create/{memberNo}")
-    public ResponseEntity<Void> createDeliveryDestination(@Valid @RequestBody
-                                                          DeliveryDestinationCURequest deliveryDestinationCURequest,
-                                                          @PathVariable Long memberNo) {
-        deliveryDestinationService.createDeliveryDestination(memberNo,
-            deliveryDestinationCURequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
+    @PostMapping("/update/{memberNo}/{addressNo}")
+    public ResponseEntity<Void> updateDeliveryDestination(
+        @Valid @RequestBody DeliveryDestinationCURequest requestDto,
+        @PathVariable Long memberNo,
+        @PathVariable Long addressNo) {
+        deliveryDestinationService.updateDeliveryDestination(memberNo, addressNo, requestDto);
+        return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
-//    @PostMapping("/update/{memberNo}/{addressNo}")
-//    public ResponseEntity<Void> updateDeliveryDestination(@Valid @RequestBody DeliveryDestinationCURequest deliveryDestinationCURequest,
-//                                                          @PathVariable Long memberNo,
-//                                                          @PathVariable Long addressNo) {
-//        //TODO 7: 기본 배송지 다르면 기존의 기본배송지 해제하고 새로 등록
-//    }
+
+    @DeleteMapping("/delete/{memberNo}/{addressNo}")
+    public ResponseEntity<Void> deleteDeliveryDestination(@PathVariable Long memberNo,
+                                                          @PathVariable Long addressNo) {
+        deliveryDestinationService.deleteDeliveryDestination(memberNo, addressNo);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
+    }
+
+
 }

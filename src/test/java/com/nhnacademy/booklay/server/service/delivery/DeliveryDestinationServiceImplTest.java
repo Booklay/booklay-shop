@@ -10,9 +10,8 @@ import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRe
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
+import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepositoryRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
-import com.nhnacademy.booklay.server.service.member.DeliveryDestinationServiceImpl;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +27,7 @@ class DeliveryDestinationServiceImplTest {
     @InjectMocks
     DeliveryDestinationServiceImpl deliveryDestinationService;
     @Mock
-    DeliveryDestinationRepository deliveryDestinationRepository;
+    DeliveryDestinationRepositoryRepository deliveryDestinationRepository;
     @Mock
     MemberRepository memberRepository;
     DeliveryDestinationCURequest requestDto;
@@ -45,14 +44,16 @@ class DeliveryDestinationServiceImplTest {
     void retrieveDeliveryDestinations() {
         //given
         given(memberRepository.findById(any())).willReturn(Optional.of(member));
-        given(deliveryDestinationRepository.findAllByMember_MemberNo(any())).willReturn(List.of());
+        given(
+            deliveryDestinationRepository.retrieveDeliveryDestinationByMemberNo(any())).willReturn(
+            List.of());
 
         //when
         List<DeliveryDestinationRetrieveResponse> responses =
             deliveryDestinationService.retrieveDeliveryDestinations(any());
 
         //then
-        then(deliveryDestinationRepository).should().findAllByMember_MemberNo(any());
+        then(deliveryDestinationRepository).should().retrieveDeliveryDestinationByMemberNo(any());
         assertThat(responses.size()).isZero();
     }
 

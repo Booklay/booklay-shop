@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.service.member;
+package com.nhnacademy.booklay.server.service.delivery;
 
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
@@ -14,4 +14,9 @@ public interface DeliveryDestinationService {
                                    DeliveryDestinationCURequest deliveryDestinationCURequest);
 
     DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo);
+
+    void updateDeliveryDestination(Long memberNo, Long addressNo,
+                                   DeliveryDestinationCURequest requestDto);
+
+    void deleteDeliveryDestination(Long memberNo, Long addressNo);
 }

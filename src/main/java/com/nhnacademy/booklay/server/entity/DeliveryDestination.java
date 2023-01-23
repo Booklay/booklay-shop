@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.entity;
 
+import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -47,11 +48,18 @@ public class DeliveryDestination {
     private Boolean isDefaultDestination;
 
     @Builder
-    public DeliveryDestination(Member member, String name, String zipCode, String address, Boolean isDefaultDestination) {
+    public DeliveryDestination(Member member, String name, String zipCode, String address,
+                               Boolean isDefaultDestination) {
         this.member = member;
         this.name = name;
         this.zipCode = zipCode;
         this.address = address;
         this.isDefaultDestination = isDefaultDestination;
+    }
+
+    public void update(DeliveryDestinationCURequest requestDto) {
+        this.name = requestDto.getName();
+        this.zipCode = requestDto.getZipCode();
+        this.isDefaultDestination = requestDto.getIsDefaultDestination();
     }
 }

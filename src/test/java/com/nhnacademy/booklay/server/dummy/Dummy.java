@@ -22,6 +22,7 @@ import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.entity.OrderCoupon;
 import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.OrderStatusCode;
+import com.nhnacademy.booklay.server.entity.PointHistory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -49,6 +50,7 @@ public class Dummy {
             .build();
 
         ReflectionTestUtils.setField(member, "memberNo", 1L);
+        ReflectionTestUtils.setField(member, "createdAt", LocalDateTime.now());
 
         return member;
     }
@@ -303,5 +305,19 @@ public class Dummy {
         ReflectionTestUtils.setField(orderCoupon, "id", 1L);
 
         return orderCoupon;
+    }
+
+    public static PointHistory getDummyPointHistory() {
+        PointHistory pointHistory = PointHistory.builder()
+            .member(getDummyMember())
+            .point(100)
+            .totalPoint(150)
+            .updatedDetail("상품구매")
+            .build();
+
+        ReflectionTestUtils.setField(pointHistory, "id", 1L);
+        ReflectionTestUtils.setField(pointHistory, "updatedAt", LocalDateTime.now());
+
+        return pointHistory;
     }
 }

@@ -25,7 +25,7 @@ class DeliveryDestinationRepositoryTest {
     TestEntityManager entityManager;
 
     @Autowired
-    DeliveryDestinationRepository deliveryDestinationRepository;
+    DeliveryDestinationRepositoryRepository deliveryDestinationRepository;
 
     @Autowired
     MemberRepository memberRepository;
@@ -61,8 +61,8 @@ class DeliveryDestinationRepositoryTest {
     }
 
     @Test
-    @DisplayName("DeliveryDestination save test ")
-    void testDeliveryDestinationSave() {
+    @DisplayName("DeliveryDestination save success test ")
+    void DeliveryDestinationSaveSuccessTest() {
         //given
 
         //when
@@ -74,8 +74,8 @@ class DeliveryDestinationRepositoryTest {
 
     @Disabled
     @Test
-    @DisplayName("DeliveryDestination find test")
-    void testDeliveryDestinationFindByTest() {
+    @DisplayName("findById success test")
+    void deliveryDestinationFindBySuccessTest() {
         //given
         deliveryDestinationRepository.save(deliveryDestination);
 
@@ -88,15 +88,31 @@ class DeliveryDestinationRepositoryTest {
     }
 
     @Test
-    void testFindAllBy() {
+    @DisplayName("retrieveDeliveryDestinationByMemberNo success test")
+    void retrieveDeliveryDestinationByMemberNoSuccessTest() {
         //given
         deliveryDestinationRepository.save(deliveryDestination);
 
         //when
         List<DeliveryDestinationRetrieveResponse> expected =
-            deliveryDestinationRepository.findAllByMember_MemberNo(
+            deliveryDestinationRepository.retrieveDeliveryDestinationByMemberNo(
                 deliveryDestination.getMember().getMemberNo());
 
         assertThat(expected).isNotNull();
+    }
+
+    @Test
+    @DisplayName("findByIsDefaultDestination success test")
+    void findByIsDefaultDestinationSuccessTest() {
+        //given
+        deliveryDestinationRepository.save(deliveryDestination);
+
+        //when
+        DeliveryDestination expected =
+            deliveryDestinationRepository.findByIsDefaultDestination(
+                    deliveryDestination.getIsDefaultDestination())
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
     }
 }

@@ -98,8 +98,8 @@ class MemberControllerTest {
 
         //then
         result.andExpect(status().isOk())
-               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("$['id']").value(member.getMemberId()))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$['memberId']").value(member.getMemberId()))
                .andExpect(jsonPath("$['name']").value("유재석"));
 
         then(memberService).should(times(1)).retrieveMember(member.getMemberNo());

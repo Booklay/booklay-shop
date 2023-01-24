@@ -25,6 +25,8 @@ public class Cart {
   @MapsId("productId")
   private Product product;
 
+  @Column(name = "count")
+  private Integer count;
 
   @Embeddable
   @EqualsAndHashCode
@@ -40,9 +42,10 @@ public class Cart {
   }
 
   @Builder
-  public Cart(Pk pk, Member member, Product product) {
+  public Cart(Pk pk, Member member, Product product, Integer count) {
     this.pk = pk;
     this.member = member;
     this.product = product;
+    this.count = count;
   }
 }

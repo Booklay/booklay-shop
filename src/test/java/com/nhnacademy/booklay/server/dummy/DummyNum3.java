@@ -49,7 +49,7 @@ public class DummyNum3 {
     public static RestockingNotification getDummyRestockingNotification() {
 
         RestockingNotification restockingNotification = RestockingNotification.builder()
-            .product(getDummyProductForDummy())
+            .product(DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto()))
             .member(getDummyMemberForDummy())
             .build();
 
@@ -60,7 +60,7 @@ public class DummyNum3 {
 
     public static OwnedEbook getDummyOwnedEbook() {
         OwnedEbook ownedEbook = OwnedEbook.builder()
-            .product(getDummyProductForDummy())
+            .product(DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto()))
             .member(getDummyMemberForDummy())
             .build();
 

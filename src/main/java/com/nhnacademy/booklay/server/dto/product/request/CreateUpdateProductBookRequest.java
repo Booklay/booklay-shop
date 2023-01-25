@@ -1,21 +1,20 @@
 package com.nhnacademy.booklay.server.dto.product.request;
 
-import com.nhnacademy.booklay.server.entity.Image;
+import java.time.LocalDate;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class CreateProductBookRequest {
+public class CreateUpdateProductBookRequest {
 
-  @Setter
   private Long productId;
-  @NotNull
-  private Image image;
+  @Setter
+  private MultipartFile image;
   @NotNull
   private String title;
   @NotNull
@@ -31,7 +30,6 @@ public class CreateProductBookRequest {
   @NotNull
   private boolean pointMethod;
 
-  @Setter
   private Long productDetailId;
   @NotNull
   private String isbn;
@@ -39,6 +37,8 @@ public class CreateProductBookRequest {
   private int page;
   @NotNull
   private String publisher;
+
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   @NotNull
   private LocalDate publishedDate;
   @Setter
@@ -51,10 +51,12 @@ public class CreateProductBookRequest {
   private List<Long> categoryIds;
 
   @Builder
-  public CreateProductBookRequest(Image image, String title, Long price, Long pointRate,
-      String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
-      String isbn, int page, String publisher, LocalDate publishedDate, List<Long> authorIds, List<Long> categoryIds) {
-    this.image = image;
+  public CreateUpdateProductBookRequest(Long productId, String title, Long price,
+      Long pointRate, String shortDescription, String longDescription, boolean isSelling,
+      boolean pointMethod, Long productDetailId, String isbn, int page, String publisher,
+      LocalDate publishedDate, String ebookAddress, int storage, List<Long> authorIds,
+      List<Long> categoryIds) {
+    this.productId = productId;
     this.title = title;
     this.price = price;
     this.pointRate = pointRate;
@@ -62,10 +64,13 @@ public class CreateProductBookRequest {
     this.longDescription = longDescription;
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
+    this.productDetailId = productDetailId;
     this.isbn = isbn;
     this.page = page;
     this.publisher = publisher;
     this.publishedDate = publishedDate;
+    this.ebookAddress = ebookAddress;
+    this.storage = storage;
     this.authorIds = authorIds;
     this.categoryIds = categoryIds;
   }

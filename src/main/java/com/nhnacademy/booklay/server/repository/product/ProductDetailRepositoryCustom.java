@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.repository.product;
 
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import java.util.List;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -8,4 +9,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface ProductDetailRepositoryCustom {
 
   List<RetrieveAuthorResponse> findAuthorsByProductDetailId(Long id);
+
+  RetrieveProductBookResponse findProductBookDateByDetailId(Long id);
 }

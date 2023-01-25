@@ -75,21 +75,21 @@ class AuthorServiceTest {
 
   @Test
   void testAuthorDelete_success() {
-    ReflectionTestUtils.setField(author, "authorNo", 1L);
+    ReflectionTestUtils.setField(author, "authorId", 1L);
 
-    given(authorRepository.existsById(author.getAuthorNo())).willReturn(true);
-    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorNo());
+    given(authorRepository.existsById(author.getAuthorId())).willReturn(true);
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorId());
     authorService.deleteAuthor(deleteIdRequest);
 
-    assertThat(authorRepository.findById(author.getAuthorNo())).isEmpty();
+    assertThat(authorRepository.findById(author.getAuthorId())).isEmpty();
   }
 
   @Test
   void testAuthorDelete_failure() {
     ReflectionTestUtils.setField(author, "authorNo", 1L);
-    given(authorRepository.existsById(author.getAuthorNo())).willReturn(false);
+    given(authorRepository.existsById(author.getAuthorId())).willReturn(true);
 
-    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorNo());
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorId());
 
     assertThatThrownBy(() -> authorService.deleteAuthor(deleteIdRequest)).isInstanceOf(
         NotFoundException.class);

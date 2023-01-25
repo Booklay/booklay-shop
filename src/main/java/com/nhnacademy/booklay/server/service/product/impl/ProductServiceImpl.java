@@ -225,7 +225,7 @@ public class ProductServiceImpl implements ProductService {
       Author foundAuthor = authorRepository.findById(authorIdList.get(i))
           .orElseThrow(IllegalArgumentException::new);
 
-      ProductAuthor.Pk pk = new ProductAuthor.Pk(productDetail.getId(), foundAuthor.getAuthorNo());
+      ProductAuthor.Pk pk = new ProductAuthor.Pk(productDetail.getId(), foundAuthor.getAuthorId());
 
       ProductAuthor productAuthor = ProductAuthor.builder()
           .pk(pk)
@@ -280,32 +280,6 @@ public class ProductServiceImpl implements ProductService {
         .build();
   }
 
-  //작가 목록 뽑기
-  private List<RetrieveAuthorResponse> retrieveAuthorList(ProductDetail productDetail) {
-    List<ProductAuthor> productAuthors = productAuthorRepository.findAllByProductDetail(
-        productDetail);
-    //작가 정보 DTO
-    List<RetrieveAuthorResponse> authors = new ArrayList<>();
-
-    for (int j = 0; j < productAuthors.size(); j++) {
-      ProductAuthor productAuthor = productAuthors.get(j);
-      Author author = productAuthor.getAuthor();
-
-      RetrieveAuthorResponse authorResponse = new RetrieveAuthorResponse(author.getAuthorNo(),
-          author.getName());
-      if (Objects.nonNull(author.getMember())) {
-        MemberForAuthorResponse memberResponse = new MemberForAuthorResponse(
-            author.getMember().getMemberNo(), author.getMember().getMemberId());
-        authorResponse.setMember(memberResponse);
-      }
-
-      authors.add(authorResponse);
-    }
-
-    return authors;
-  }
-
-
   //상품(책 구독 모두) 게시판식 조회
   @Override
   @Transactional
@@ -320,11 +294,12 @@ public class ProductServiceImpl implements ProductService {
       Product product = productsContent.get(i);
 //      if (product.isSelling()) { //soft delete 용 나중에 관리자 페이지 하면서 풀어줄것
         //책 상품이라면
-        if (productDetailRepository.existsProductDetailByProduct(product)) {
-          ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
-
+        if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
+          ProductDetail productDetail = productDetailRepository.findProductDetailByProductId(product.getId());
+          log.info("PD 아이디 출력"+productDetail.getId());
           //작가 정보 DTO
-          List<RetrieveAuthorResponse> authors = retrieveAuthorList(productDetail);
+          List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(productDetail.getId());
+
           //합체
           RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
               authors);
@@ -353,11 +328,11 @@ public class ProductServiceImpl implements ProductService {
     List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(
         product.getId());
 
-    if (productDetailRepository.existsProductDetailByProduct(product)) {
+    if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
       ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
 
       //작가 정보 DTO
-      List<RetrieveAuthorResponse> authors = retrieveAuthorList(productDetail);
+      List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(productDetail.getId());
 
       return new RetrieveProductViewResponse(product, productDetail, authors, productTags);
     }

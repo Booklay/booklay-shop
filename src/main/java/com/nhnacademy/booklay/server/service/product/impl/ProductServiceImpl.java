@@ -109,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
+  @Transactional
   public RetrieveProductBookResponse retrieveBookData(Long id) {
 
     return productDetailRepository.findProductBookDateByDetailId(id);

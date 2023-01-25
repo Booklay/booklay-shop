@@ -11,7 +11,9 @@ import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QProduct;
 import com.nhnacademy.booklay.server.entity.QProductAuthor;
 import com.nhnacademy.booklay.server.entity.QProductDetail;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import java.util.List;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -64,16 +66,7 @@ public class ProductDetailRepositoryImpl extends QuerydslRepositorySupport imple
             productDetail.publisher,
             productDetail.publishedDate,
             productDetail.ebookAddress,
-            productDetail.storage,
-            from(productDetail).innerJoin(productAuthor).on(productDetail.id.eq(productAuthor.productDetail.id))
-                .innerJoin(author).on(productAuthor.author.authorId.eq(author.authorId))
-                .where(productDetail.id.eq(id))
-                .select(author.authorId),
-            from(productDetail).innerJoin(product).on(productDetail.product.id.eq(product.id))
-                .innerJoin(categoryProduct).on(product.id.eq(categoryProduct.product.id))
-                .innerJoin(category).on(categoryProduct.category.id.eq(category.id))
-                .where(productDetail.id.eq(id))
-                .select(category.id)
+            productDetail.storage
         )).fetchOne();
   }
 }

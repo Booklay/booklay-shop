@@ -3,9 +3,12 @@ package com.nhnacademy.booklay.server.dto.product.response;
 import java.time.LocalDate;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Getter
 public class RetrieveProductBookResponse {
   @NotNull
   private Long productId;
@@ -29,7 +32,7 @@ public class RetrieveProductBookResponse {
   @NotNull
   private String isbn;
   @NotNull
-  private int page;
+  private Integer page;
   @NotNull
   private String publisher;
 
@@ -39,9 +42,31 @@ public class RetrieveProductBookResponse {
   @Setter
   private String ebookAddress;
   @Setter
-  private int storage;
-  @NotNull
+  private Integer storage;
+
+  @Setter
   private List<Long> authorIds;
-  @NotNull
+  @Setter
   private List<Long> categoryIds;
+
+  public RetrieveProductBookResponse(Long productId, String title, Long price, Long pointRate,
+      String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
+      Long productDetailId, String isbn, Integer page, String publisher, LocalDate publishedDate,
+      String ebookAddress, Integer storage) {
+    this.productId = productId;
+    this.title = title;
+    this.price = price;
+    this.pointRate = pointRate;
+    this.shortDescription = shortDescription;
+    this.longDescription = longDescription;
+    this.isSelling = isSelling;
+    this.pointMethod = pointMethod;
+    this.productDetailId = productDetailId;
+    this.isbn = isbn;
+    this.page = page;
+    this.publisher = publisher;
+    this.publishedDate = publishedDate;
+    this.ebookAddress = ebookAddress;
+    this.storage = storage;
+  }
 }

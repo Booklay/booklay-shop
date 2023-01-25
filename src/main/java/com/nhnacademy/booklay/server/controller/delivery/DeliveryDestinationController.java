@@ -1,7 +1,11 @@
 package com.nhnacademy.booklay.server.controller.delivery;
 
+import com.nhnacademy.booklay.server.dto.ErrorResponse;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
+import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationLimitExceededException;
+import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationNotFoundException;
+import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.service.delivery.DeliveryDestinationService;
 import java.util.List;
 import javax.validation.Valid;
@@ -11,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/delivery/destination")
 @RequiredArgsConstructor
 public class DeliveryDestinationController {
+    private static final String DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE = "DeliveryDestinationNotFound";
+    private static final String DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE = "DeliveryDestinationLimitExceeded";
+
     private final DeliveryDestinationService deliveryDestinationService;
 
     @PostMapping("/create/{memberNo}")
@@ -78,6 +86,19 @@ public class DeliveryDestinationController {
 
         return ResponseEntity.status(HttpStatus.OK)
             .build();
+    }
+    @ExceptionHandler(DeliveryDestinationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDeliveryDestinationNotFoundException(
+        DeliveryDestinationNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE).message(ex.getMessage()).build());
+    }
+
+    @ExceptionHandler(DeliveryDestinationLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleDeliveryDestinationLimitExceededException(
+        DeliveryDestinationLimitExceededException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE).message(ex.getMessage()).build());
     }
 
 

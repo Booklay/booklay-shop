@@ -2,9 +2,10 @@ package com.nhnacademy.booklay.server.controller.cart;
 
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.cart.CartServiceAndKeyDto;
 import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.service.cart.CartService;
+import com.nhnacademy.booklay.server.service.cart.MemberCartService;
 import com.nhnacademy.booklay.server.service.cart.RDBCartService;
 import com.nhnacademy.booklay.server.service.cart.RedisCartService;
 import java.util.List;
@@ -35,10 +36,10 @@ public class CartController {
     private static final String STRING_PRODUCT_NO_LIST = "productNoList";
     //todo @ModelAttribute Member 추가해줄것
     @GetMapping
-    public ResponseEntity<List<CartDto>> getCart(@ModelAttribute("member")Member member,
+    public ResponseEntity<List<CartRetrieveResponse>> getCart(@ModelAttribute("member")Member member,
                                                  @RequestParam(STRING_CART_ID) String cartId){
         CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(member, cartId);
-        List<CartDto> cartList = cartServiceAndKeyDto.getCartService().getAllCartItems(
+        List<CartRetrieveResponse> cartList = cartServiceAndKeyDto.getCartService().getAllCartItems(
             cartServiceAndKeyDto.getKey());
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
@@ -87,13 +88,25 @@ public class CartController {
             .build();
     }
 
+    @GetMapping("login/{cartId}")
+    public ResponseEntity<Void> moveRedisToRDB(@ModelAttribute("member")Member member,
+                                               @PathVariable String cartId){
+        List<CartRetrieveResponse> allCartItems = redisCartService.getAllCartItems(cartId);
+        redisCartService.deleteAllCartItems(cartId);
+        for (CartRetrieveResponse cartRetrieveResponse : allCartItems){
+            rdbCartService.setCartItem(cartId, new CartDto(cartRetrieveResponse.getProductNo(), cartRetrieveResponse.getProductCount()));
+        }
+        return ResponseEntity.ok()
+            .build();
+    }
+
     @GetMapping("uuid/{uuid}")
     public ResponseEntity<Integer> uuidCheck(@PathVariable String uuid){
         return ResponseEntity.ok(redisCartService.checkUUID(uuid));
     }
 
     private CartServiceAndKeyDto getCartServiceAndKeyDto(Member member, String cartId){
-        CartService cartService;
+        MemberCartService cartService;
         String key;
         if(Objects.isNull(member)){
             cartService = redisCartService;

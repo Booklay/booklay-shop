@@ -7,10 +7,6 @@ import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequ
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.entity.Product;
-import com.nhnacademy.booklay.server.entity.ProductTag;
-import com.nhnacademy.booklay.server.entity.ProductTag.Pk;
-import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
@@ -76,7 +72,7 @@ public class AuthorServiceImpl implements AuthorService {
   public void deleteAuthor(DeleteIdRequest request) {
     Long id = request.getId();
 
-    Author author = authorRepository.findById(request.getId())
+    Author author = authorRepository.findById(id)
         .orElseThrow(() -> new NotFoundException(Author.class, "author not found"));
 
     authorRepository.delete(author);
@@ -91,9 +87,10 @@ public class AuthorServiceImpl implements AuthorService {
     List<RetrieveAuthorResponse> contents = new ArrayList<>();
 
     for (Author author : content) {
-      RetrieveAuthorResponse element = new RetrieveAuthorResponse(author.getAuthorId(), author.getName());
+      RetrieveAuthorResponse element = new RetrieveAuthorResponse(author.getAuthorId(),
+          author.getName());
 
-      if(Objects.nonNull(author.getMember())) {
+      if (Objects.nonNull(author.getMember())) {
         Member member = author.getMember();
         MemberForAuthorResponse memberDto = new MemberForAuthorResponse(member.getMemberNo(),
             member.getMemberId());

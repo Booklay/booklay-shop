@@ -98,20 +98,19 @@ class MemberServiceImplTest {
     @DisplayName("멤버 조회 테스트")
     void testRetrieveMember() {
         //given
-//        given(memberRepository.findByMemberNo(anyLong())).willReturn(Optional.of(member));
-        given(getMemberService.getMember(any())).willReturn(member);
+        given(getMemberService.getMemberNo(any())).willReturn(member);
         //when
         memberService.retrieveMember(VALID_MEMBER_NO);
 
         //then
-        then(getMemberService).should().getMember(VALID_MEMBER_NO);
+        then(getMemberService).should().getMemberNo(VALID_MEMBER_NO);
     }
 
     @Test
     @DisplayName("잘못된 번호로 멤버 조회시 MemberNotFoundException 발생 테스트")
     void testRetrieveMember_whenRetrieveWithInvalidMemberNo() {
         //given
-        given(getMemberService.getMember(any())).willThrow(
+        given(getMemberService.getMemberNo(any())).willThrow(
             new MemberNotFoundException(INVALID_MEMBER_NO));
 
         //when, then
@@ -140,7 +139,7 @@ class MemberServiceImplTest {
     @DisplayName("멤버 등급 생성 성공 테스트")
     void CreateMemberGradeSuccessTest() {
         //given
-        given(getMemberService.getMember(any())).willReturn(member);
+        given(getMemberService.getMemberNo(any())).willReturn(member);
 
         //when
         memberService.createMemberGrade(member.getMemberNo(), "화이트");
@@ -155,7 +154,7 @@ class MemberServiceImplTest {
     void retrieveMemberGradesSuccessTest() {
         //given
 //        given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
-        given(getMemberService.getMember(any())).willReturn(member);
+        given(getMemberService.getMemberNo(any())).willReturn(member);
         given(memberGradeRepository.findByMember_MemberNo(any(), any())).willReturn(Page.empty());
 
         //when
@@ -163,7 +162,7 @@ class MemberServiceImplTest {
             memberService.retrieveMemberGrades(any(), PageRequest.of(0, 10));
 
         //then
-        then(getMemberService).should().getMember(any());
+        then(getMemberService).should().getMemberNo(any());
         then(memberGradeRepository).should().findByMember_MemberNo(any(), any());
         assertThat(pageResponse.getTotalElements()).isZero();
     }

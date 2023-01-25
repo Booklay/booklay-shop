@@ -12,8 +12,13 @@ public class GetMemberService {
 
     private final MemberRepository memberRepository;
 
-    public Member getMember(Long memberNo) {
+    public Member getMemberNo(Long memberNo) {
         return memberRepository.findByMemberNo(memberNo)
             .orElseThrow(() -> new MemberNotFoundException(memberNo));
+    }
+
+    public Member getMemberId(String memberId) {
+        return memberRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

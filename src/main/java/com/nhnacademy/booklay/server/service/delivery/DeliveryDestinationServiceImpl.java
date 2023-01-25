@@ -7,7 +7,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationLimitExceededException;
 import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
-import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepositoryRepository;
+import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class DeliveryDestinationServiceImpl implements DeliveryDestinationService {
-    private final DeliveryDestinationRepositoryRepository deliveryDestinationRepository;
+    private final DeliveryDestinationRepository deliveryDestinationRepository;
     private final MemberRepository memberRepository;
     private final GetMemberService getMemberService;
 
@@ -74,7 +74,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     @Override
     public void updateDeliveryDestination(Long memberNo, Long addressNo,
                                           DeliveryDestinationCURequest requestDto) {
-        getMemberService.getMember(memberNo);
+        getMemberService.getMemberNo(memberNo);
         DeliveryDestination deliveryDestination = checkExistsDeliveryDestination(addressNo);
 
         releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination());
@@ -84,14 +84,14 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
 
     @Override
     public void deleteDeliveryDestination(Long memberNo, Long addressNo) {
-        getMemberService.getMember(memberNo);
+        getMemberService.getMemberNo(memberNo);
         DeliveryDestination deliveryDestination = checkExistsDeliveryDestination(addressNo);
 
         deliveryDestinationRepository.delete(deliveryDestination);
     }
 
     private void checkDeliveryDestinationLimit(Long memberNo) {
-        if (deliveryDestinationRepository.countByMember_MemberNo(memberNo) > 10) {
+        if (deliveryDestinationRepository.countByMember_MemberNo(memberNo) >= 10) {
             throw new DeliveryDestinationLimitExceededException();
         }
     }

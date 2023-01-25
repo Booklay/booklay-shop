@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,19 +31,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class PointHistoryController {
     private final PointHistoryService pointHistoryService;
 
+    @PostMapping
+    public ResponseEntity<Void> createPointHistory(
+        @Valid @RequestBody PointHistoryCreateRequest pointHistoryCreateRequest) {
+        pointHistoryService.createPointHistory(pointHistoryCreateRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .build();
+    }
+
     @GetMapping("/{memberNo}")
     public ResponseEntity<PageResponse<PointHistoryRetrieveResponse>> retrievePointHistory(
         Pageable pageable) {
         Page<PointHistoryRetrieveResponse> responsePage =
             pointHistoryService.retrievePointHistorys(pageable);
 
-        PageResponse<PointHistoryRetrieveResponse> pointHistoryRetrieveResponsePageResponse
-            = new PageResponse<>(responsePage.getNumber(), responsePage.getSize(),
-            responsePage.getTotalPages(), responsePage.getContent());
+        PageResponse<PointHistoryRetrieveResponse> response = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(pointHistoryRetrieveResponsePageResponse);
+            .body(response);
     }
 
     @GetMapping("/total/{memberNo}")
@@ -56,12 +64,14 @@ public class PointHistoryController {
             .body(totalPointRetrieveResponse);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createPointHistory(
-        @Valid @RequestBody PointHistoryCreateRequest pointHistoryCreateRequest) {
-        pointHistoryService.createPointHistory(pointHistoryCreateRequest);
+    @PostMapping("/present/{memberNo}")
+    public ResponseEntity<Void> presentPoint(@PathVariable Long memberNo,
+                                             @Valid @RequestBody
+                                             PointPresentRequest pointPresentRequest) {
+        pointHistoryService.presentPoint(memberNo, pointPresentRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
+
 }

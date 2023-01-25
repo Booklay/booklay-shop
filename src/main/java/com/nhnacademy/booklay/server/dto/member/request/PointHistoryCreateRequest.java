@@ -4,9 +4,11 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +26,7 @@ public class PointHistoryCreateRequest {
         return PointHistory.builder()
             .member(member)
             .point(this.point)
-            .totalPoint(currentTotalPoint)
+            .totalPoint(currentTotalPoint + this.point)
             .updatedDetail(this.updatedDetail)
             .build();
     }

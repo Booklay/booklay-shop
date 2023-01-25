@@ -25,7 +25,7 @@ class DeliveryDestinationRepositoryTest {
     TestEntityManager entityManager;
 
     @Autowired
-    DeliveryDestinationRepositoryRepository deliveryDestinationRepository;
+    DeliveryDestinationRepository deliveryDestinationRepository;
 
     @Autowired
     MemberRepository memberRepository;

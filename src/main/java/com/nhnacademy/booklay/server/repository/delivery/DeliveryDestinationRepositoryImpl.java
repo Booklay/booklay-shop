@@ -9,10 +9,10 @@ import com.querydsl.core.types.Projections;
 import java.util.List;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-public class DeliveryDestinationRepositoryRepositoryImpl extends QuerydslRepositorySupport
+public class DeliveryDestinationRepositoryImpl extends QuerydslRepositorySupport
     implements
     DeliveryDestinationRepositoryCustom {
-    public DeliveryDestinationRepositoryRepositoryImpl() {
+    public DeliveryDestinationRepositoryImpl() {
         super(DeliveryDestination.class);
     }
 

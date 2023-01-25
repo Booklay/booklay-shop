@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DeliveryDestinationRepositoryRepository
+public interface DeliveryDestinationRepository
     extends JpaRepository<DeliveryDestination, Long>, DeliveryDestinationRepositoryCustom {
     Optional<DeliveryDestination> findByIsDefaultDestination(Boolean isDefaultDestination);
 

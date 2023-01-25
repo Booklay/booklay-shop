@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.repository.mypage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
@@ -73,6 +74,7 @@ class PointHistoryRepositoryTest {
     @DisplayName("PointHistoryRepository findAllBy 성공 테스트")
     void findAllBy_successTest() {
         //given
+        pointHistoryRepository.save(pointHistory);
         PageRequest page = PageRequest.of(1, 10);
 
         //when
@@ -83,17 +85,17 @@ class PointHistoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("PointHistoryRepository findPointHistoryByOrderByUpdatedAtDesc 테스트")
-    void findPointHistoryByOrderByUpdatedAtDesc_successTest() {
+    @DisplayName("PointHistoryRepository")
+    void retrieveLatestPointHistory() {
         //given
         pointHistoryRepository.save(pointHistory);
 
         //when
-        PointHistory expected = pointHistoryRepository.findPointHistoryByOrderByUpdatedAtDesc()
+        TotalPointRetrieveResponse expected = pointHistoryRepository.retrieveLatestPointHistory(
+                pointHistory.getMember().getMemberNo())
             .orElseThrow(() -> new IllegalArgumentException());
 
         //then
-        assertThat(expected.getPoint()).isEqualTo(pointHistory.getPoint());
+        assertThat(expected.getTotalPoint()).isEqualTo(pointHistory.getTotalPoint());
     }
-
 }

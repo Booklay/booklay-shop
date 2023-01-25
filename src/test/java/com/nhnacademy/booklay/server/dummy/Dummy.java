@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -319,5 +320,13 @@ public class Dummy {
         ReflectionTestUtils.setField(pointHistory, "updatedAt", LocalDateTime.now());
 
         return pointHistory;
+    }
+
+    public static PointHistoryCreateRequest getDummyPointHistoryCreateRequest() {
+        return PointHistoryCreateRequest.builder()
+            .memberNo(getDummyMember().getMemberNo())
+            .point(3000)
+            .updatedDetail("test용")
+            .build();
     }
 }

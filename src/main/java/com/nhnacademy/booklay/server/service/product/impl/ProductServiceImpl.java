@@ -211,6 +211,16 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
+  public Product retrieveProductByProductNo(Long productNo) {
+    return productRepository.findById(productNo).orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
+  }
+
+  @Override
+  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
+    return productRepository.findAllById(productNoList);
+  }
+
+  @Override
   @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     if (!productRepository.existsById(request.getProductId())) {

@@ -5,6 +5,8 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBook
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
+import com.nhnacademy.booklay.server.entity.Product;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,4 +27,7 @@ public interface ProductService {
   Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable);
 
   RetrieveProductViewResponse retrieveProductView(RetrieveIdRequest request);
+
+  Product retrieveProductByProductNo(Long productNo);
+  List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 }

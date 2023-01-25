@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -22,6 +23,7 @@ import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.entity.OrderCoupon;
 import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.OrderStatusCode;
+import com.nhnacademy.booklay.server.entity.PointHistory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -49,6 +51,7 @@ public class Dummy {
             .build();
 
         ReflectionTestUtils.setField(member, "memberNo", 1L);
+        ReflectionTestUtils.setField(member, "createdAt", LocalDateTime.now());
 
         return member;
     }
@@ -287,13 +290,7 @@ public class Dummy {
     }
 
     public static DeliveryDestinationCURequest getDummyDeliveryDestinationCreateRequest() {
-        DeliveryDestinationCURequest request = new DeliveryDestinationCURequest();
-        ReflectionTestUtils.setField(request, "name", "집");
-        ReflectionTestUtils.setField(request, "zipCode", "12345");
-        ReflectionTestUtils.setField(request, "address", "서울특별시 송파구 올림픽로 240");
-        ReflectionTestUtils.setField(request, "isDefaultDestination", true);
-
-        return request;
+        return new DeliveryDestinationCURequest("집", "12345", "서울특별시 송파구 올림픽로 240", true);
     }
 
     public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {
@@ -309,5 +306,27 @@ public class Dummy {
         ReflectionTestUtils.setField(orderCoupon, "id", 1L);
 
         return orderCoupon;
+    }
+
+    public static PointHistory getDummyPointHistory() {
+        PointHistory pointHistory = PointHistory.builder()
+            .member(getDummyMember())
+            .point(100)
+            .totalPoint(150)
+            .updatedDetail("상품구매")
+            .build();
+
+        ReflectionTestUtils.setField(pointHistory, "id", 1L);
+        ReflectionTestUtils.setField(pointHistory, "updatedAt", LocalDateTime.now());
+
+        return pointHistory;
+    }
+
+    public static PointHistoryCreateRequest getDummyPointHistoryCreateRequest() {
+        return PointHistoryCreateRequest.builder()
+            .memberNo(getDummyMember().getMemberNo())
+            .point(3000)
+            .updatedDetail("test용")
+            .build();
     }
 }

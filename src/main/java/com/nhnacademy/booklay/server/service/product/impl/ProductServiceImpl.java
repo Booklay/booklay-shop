@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.product.impl;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
@@ -105,6 +106,12 @@ public class ProductServiceImpl implements ProductService {
     subscribeRepository.save(subscribe);
 
     return savedProduct.getId();
+  }
+
+  @Override
+  public RetrieveProductBookResponse retrieveBookData(Long id) {
+
+    return productDetailRepository.findProductBookDateByDetailId(id);
   }
 
   @Override

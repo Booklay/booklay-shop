@@ -10,7 +10,7 @@ import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRe
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepositoryRepository;
+import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ class DeliveryDestinationServiceImplTest {
     @InjectMocks
     DeliveryDestinationServiceImpl deliveryDestinationService;
     @Mock
-    DeliveryDestinationRepositoryRepository deliveryDestinationRepository;
+    DeliveryDestinationRepository deliveryDestinationRepository;
     @Mock
     MemberRepository memberRepository;
     DeliveryDestinationCURequest requestDto;

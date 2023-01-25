@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.repository;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
@@ -33,7 +33,7 @@ class ProductAuthorRepositoryTest {
     @Autowired
     ProductDetailRepository productDetailRepository;
 
-    CreateProductBookRequest request = DummyCart.getDummyProductBookDto();
+    CreateUpdateProductBookRequest request = DummyCart.getDummyProductBookDto();
 
   void clearRepo(String entityName, JpaRepository jpaRepository) {
     jpaRepository.deleteAll();

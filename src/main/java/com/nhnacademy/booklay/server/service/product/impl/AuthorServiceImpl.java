@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -49,8 +50,7 @@ public class AuthorServiceImpl implements AuthorService {
 
   @Override
   public void updateAuthor(UpdateAuthorRequest request) {
-    authorRepository.findById(request.getAuthorNo())
-        .orElseThrow(() -> new NotFoundException(Author.class, "Author not found"));
+    authorRepository.findById(request.getId());
 
     Author author = Author.builder()
         .name(request.getName())
@@ -67,7 +67,8 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
-  public void deleteAuthor(Long id) {
+  public void deleteAuthor(DeleteIdRequest request) {
+    Long id = request.getId();
     if(!authorRepository.existsById(id)){
       throw new NotFoundException(Author.class,"Delete target Author not found");
     }
@@ -96,7 +97,7 @@ public class AuthorServiceImpl implements AuthorService {
       contents.add(element);
     }
 
-    return new PageImpl<RetrieveAuthorResponse>(contents, authors.getPageable(),
+    return new PageImpl<>(contents, authors.getPageable(),
         authors.getTotalElements());
   }
 }

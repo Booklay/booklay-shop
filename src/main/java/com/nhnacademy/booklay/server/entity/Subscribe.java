@@ -12,9 +12,10 @@ public class Subscribe {
 
     @Id
     @Column(name = "subscribe_no")
-    @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
@@ -30,8 +31,7 @@ public class Subscribe {
     private String publisher;
 
     @Builder
-    public Subscribe(Long id, Product product, int subscribeWeek, int subscribeDay) {
-        this.id = id;
+    public Subscribe(Product product, int subscribeWeek, int subscribeDay) {
         this.product = product;
         this.subscribeWeek = subscribeWeek;
         this.subscribeDay = subscribeDay;

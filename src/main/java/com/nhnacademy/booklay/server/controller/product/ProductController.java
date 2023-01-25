@@ -1,11 +1,20 @@
 package com.nhnacademy.booklay.server.controller.product;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateWishlistRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.RetrieveIdRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import com.nhnacademy.booklay.server.service.product.WishlistService;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,25 +22,25 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 최규태
  */
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
-  private final WishlistService wishlistService;
   private final ProductService productService;
 
-  //위시리스트 등록 삭제
-  @PostMapping("/wishlist")
-  public void createWishlist(CreateWishlistRequest request) {
-    wishlistService.createWishlist(request);
-
+  @GetMapping
+  public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
+      throws JsonProcessingException {
+    Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
+    return new PageResponse<>(response);
   }
 
-  @DeleteMapping("/wishlist")
-  public void deleteWishlist(CreateWishlistRequest request) {
-    wishlistService.deleteWishlist(request);
+  @GetMapping("/view")
+  public String retrieveDetailView(@Valid @RequestBody RetrieveIdRequest request){
+
+    RetrieveProductViewResponse response = productService.retrieveProductView(request);
+    return null;
   }
-
-
 }

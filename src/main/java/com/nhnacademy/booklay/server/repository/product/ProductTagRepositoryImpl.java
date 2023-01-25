@@ -22,17 +22,9 @@ public class ProductTagRepositoryImpl extends QuerydslRepositorySupport implemen
     QProductTag productTag = QProductTag.productTag;
     QTag tag = QTag.tag;
 
-    List<RetrieveTagResponse> result = from(productTag)
+    return from(productTag)
         .innerJoin(tag).on(productTag.tag.id.eq(tag.id))
         .where(productTag.product.id.eq(id))
         .select(Projections.constructor(RetrieveTagResponse.class, tag.id, tag.name)).fetch();
-
-//        .join(tag).on(productTag.tag.id.eq(tag.id))
-//        .where(productTag.product.id.eq(id))
-//        .select(Projections.constructor(RetrieveTagResponse.class,
-//            tag.id,
-//            tag.name))
-//        .fetchOne();
-    return null;
   }
 }

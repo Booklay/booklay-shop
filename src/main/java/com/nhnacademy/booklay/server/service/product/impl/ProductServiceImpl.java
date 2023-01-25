@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBook
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
@@ -191,7 +192,7 @@ public class ProductServiceImpl implements ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
-    List<ProductTag> productTags = productTagRepository.findAllByPk_ProductId(product.getId());
+    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(product.getId());
 
     if (productDetailRepository.existsProductDetailByProduct(product)) {
       ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
@@ -199,13 +200,13 @@ public class ProductServiceImpl implements ProductService {
       //작가 정보 DTO
       List<RetrieveAuthorResponse> authors = retrieveAuthorList(productDetail);
 
-      return new RetrieveProductViewResponse(product, productDetail, authors);
+      return new RetrieveProductViewResponse(product, productDetail, authors, productTags);
     }
 
     if (subscribeRepository.existsSubscribeByProduct(product)) {
       Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
 
-      return new RetrieveProductViewResponse(product, subscribe);
+      return new RetrieveProductViewResponse(product, subscribe, productTags);
     }
     return null;
   }

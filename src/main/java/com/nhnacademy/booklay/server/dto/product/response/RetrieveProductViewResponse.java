@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dto.product.response;
 
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
@@ -37,6 +38,8 @@ public class RetrieveProductViewResponse {
   @NotNull
   private boolean pointMethod;
 
+  private List<RetrieveTagResponse> productTags;
+
   //책 상세
   private Long productDetailId;
   private String isbn;
@@ -61,7 +64,8 @@ public class RetrieveProductViewResponse {
   @NotNull
   private String publisher;
 
-  public RetrieveProductViewResponse(Product product, ProductDetail productDetail, List<RetrieveAuthorResponse> authors) {
+  public RetrieveProductViewResponse(Product product, ProductDetail productDetail,
+      List<RetrieveAuthorResponse> authors, List<RetrieveTagResponse> productTags) {
     this.productId = product.getId();
     this.image = null;
     this.title = product.getTitle();
@@ -71,6 +75,7 @@ public class RetrieveProductViewResponse {
     this.longDescription = product.getLongDescription();
     this.isSelling = product.isSelling();
     this.pointMethod = product.isPointMethod();
+    this.productTags = productTags;
 
     this.productDetailId = productDetail.getId();
     this.isbn = productDetail.getIsbn();
@@ -82,7 +87,8 @@ public class RetrieveProductViewResponse {
     this.publisher = productDetail.getPublisher();
   }
 
-  public RetrieveProductViewResponse(Product product, Subscribe subscribe) {
+  public RetrieveProductViewResponse(Product product, Subscribe subscribe,
+      List<RetrieveTagResponse> productTags) {
     this.productId = product.getId();
     this.image = null;
     this.title = product.getTitle();
@@ -92,6 +98,8 @@ public class RetrieveProductViewResponse {
     this.longDescription = product.getLongDescription();
     this.isSelling = product.isSelling();
     this.pointMethod = product.isPointMethod();
+    this.productTags = productTags;
+
     this.subscribeId = subscribe.getId();
     this.subscribeWeek = subscribe.getSubscribeWeek();
     this.subscribeDay = subscribe.getSubscribeDay();

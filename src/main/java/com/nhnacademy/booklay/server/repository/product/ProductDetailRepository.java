@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductDetailRepository extends JpaRepository<ProductDetail, Long>, ProductDetailRepositoryCustom {
 
-  boolean existsProductDetailByProduct(Product product);
+  boolean existsProductDetailByProductId(Long id);
 
   ProductDetail findProductDetailByProduct(Product product);
+
+  ProductDetail findProductDetailByProductId(Long id);
 }

@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.QAuthor;
+import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QProductAuthor;
 import com.nhnacademy.booklay.server.entity.QProductDetail;
 import com.querydsl.core.types.Projections;
@@ -20,12 +21,15 @@ public class ProductDetailRepositoryImpl extends QuerydslRepositorySupport imple
     QProductDetail productDetail = QProductDetail.productDetail;
     QProductAuthor productAuthor = QProductAuthor.productAuthor;
     QAuthor author = QAuthor.author;
+    QMember member = QMember.member;
 
     return from(productDetail)
         .innerJoin(productAuthor).on(productDetail.id.eq(productAuthor.productDetail.id))
         .innerJoin(author).on(productAuthor.author.authorNo.eq(author.authorNo))
+        .leftJoin(member).on(author.member.memberNo.eq(member.memberNo))
         .where(productDetail.id.eq(id))
-        .select(Projections.constructor(RetrieveAuthorResponse.class, author.authorNo, author.name, Projections.constructor(
-            MemberForAuthorResponse.class, author.member.memberNo, author.member.memberId))).fetch();
+        .select(Projections.constructor(RetrieveAuthorResponse.class, author.authorNo, author.name
+            ,(Projections.constructor(MemberForAuthorResponse.class ,member.memberNo, member.memberId))
+        )).fetch();
   }
 }

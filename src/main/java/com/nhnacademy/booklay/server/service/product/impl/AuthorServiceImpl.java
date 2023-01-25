@@ -7,9 +7,14 @@ import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequ
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductTag;
+import com.nhnacademy.booklay.server.entity.ProductTag.Pk;
+import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +36,7 @@ public class AuthorServiceImpl implements AuthorService {
 
   private final AuthorRepository authorRepository;
   private final MemberRepository memberRepository;
+  private final ProductAuthorRepository productAuthorRepository;
 
   @Override
   public void createAuthor(CreateAuthorRequest request) {
@@ -72,6 +78,9 @@ public class AuthorServiceImpl implements AuthorService {
     if(!authorRepository.existsById(id)){
       throw new NotFoundException(Author.class,"Delete target Author not found");
     }
+    if(productAuthorRepository.existsByPk_AuthorId(id)){
+      productAuthorRepository.deleteByPk_AuthorId(id);
+    }
     authorRepository.deleteById(id);
   }
 
@@ -84,7 +93,7 @@ public class AuthorServiceImpl implements AuthorService {
     List<RetrieveAuthorResponse> contents = new ArrayList<>();
 
     for (Author author : content) {
-      RetrieveAuthorResponse element = new RetrieveAuthorResponse(author.getAuthorNo(), author.getName());
+      RetrieveAuthorResponse element = new RetrieveAuthorResponse(author.getAuthorId(), author.getName());
 
       if(Objects.nonNull(author.getMember())) {
         Member member = author.getMember();

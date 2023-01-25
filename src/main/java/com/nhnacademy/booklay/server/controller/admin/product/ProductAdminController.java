@@ -2,10 +2,13 @@ package com.nhnacademy.booklay.server.controller.admin.product;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +40,13 @@ public class ProductAdminController {
     log.info("이미지 시험 출력 : " + imgFile.getContentType() + imgFile.getOriginalFilename());
     request.setImage(imgFile);
     return productService.createBookProduct(request);
+  }
+
+  //책 수정용 조회
+  @GetMapping("/books/{productId}")
+  public RetrieveProductBookResponse getBookData(@PathVariable Long productId){
+    productService.retrieveBookData(productId);
+    return null;
   }
 
   //책 수정

@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.mypage;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.PointHistory;
@@ -45,4 +46,17 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
         pointHistoryRepository.save(pointHistory);
     }
+
+    @Override
+    public TotalPointRetrieveResponse retrieveTotalPoint(Long memberNo) {
+        PointHistory recentlyPointHistory =
+            pointHistoryRepository.findPointHistoryByOrderByUpdatedAtDesc()
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        return TotalPointRetrieveResponse.builder()
+            .member(memberNo)
+            .totalPoint(recentlyPointHistory.getTotalPoint())
+            .build();
+    }
+
 }

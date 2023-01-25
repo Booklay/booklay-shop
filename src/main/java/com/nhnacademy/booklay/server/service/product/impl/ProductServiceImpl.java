@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
@@ -181,7 +180,7 @@ public class ProductServiceImpl implements ProductService {
       CategoryProduct.Pk pk = new Pk(product.getId(), categories.get(i));
 
       Category category = categoryRepository.findById(categories.get(i))
-          .orElseThrow(() -> new IllegalArgumentException("catrgory not found"));
+          .orElseThrow(() -> new IllegalArgumentException("category not found"));
 
       CategoryProduct categoryProduct = CategoryProduct.builder()
           .pk(pk)
@@ -293,26 +292,28 @@ public class ProductServiceImpl implements ProductService {
     for (int i = 0; i < productsContent.size(); i++) {
       Product product = productsContent.get(i);
 //      if (product.isSelling()) { //soft delete 용 나중에 관리자 페이지 하면서 풀어줄것
-        //책 상품이라면
-        if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-          ProductDetail productDetail = productDetailRepository.findProductDetailByProductId(product.getId());
-          log.info("PD 아이디 출력"+productDetail.getId());
-          //작가 정보 DTO
-          List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(productDetail.getId());
+      //책 상품이라면
+      if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
+        ProductDetail productDetail = productDetailRepository.findProductDetailByProductId(
+            product.getId());
+        log.info("PD 아이디 출력" + productDetail.getId());
+        //작가 정보 DTO
+        List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(
+            productDetail.getId());
 
-          //합체
-          RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
-              authors);
-          //컨텐츠에 주입
-          assembledContent.add(element);
-        }
+        //합체
+        RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
+            authors);
+        //컨텐츠에 주입
+        assembledContent.add(element);
+      }
 
-        //구독 상품 이라면
-        if (subscribeRepository.existsSubscribeByProduct(product)) {
-          Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-          RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
-          assembledContent.add(element);
-        }
+      //구독 상품 이라면
+      if (subscribeRepository.existsSubscribeByProduct(product)) {
+        Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+        RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
+        assembledContent.add(element);
+      }
 //      }
     }
 
@@ -332,7 +333,8 @@ public class ProductServiceImpl implements ProductService {
       ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
 
       //작가 정보 DTO
-      List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(productDetail.getId());
+      List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(
+          productDetail.getId());
 
       return new RetrieveProductViewResponse(product, productDetail, authors, productTags);
     }

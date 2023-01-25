@@ -32,7 +32,7 @@ public class MemberAuthority {
         this.member = member;
         this.authority = authority;
     }
-
+    @Getter
     @Embeddable
     @EqualsAndHashCode
     @AllArgsConstructor

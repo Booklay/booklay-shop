@@ -4,6 +4,8 @@ import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCUR
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationLimitExceededException;
+import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepositoryRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
@@ -65,9 +67,8 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     }
 
     private DeliveryDestination checkExistsDeliveryDestination(Long addressNo) {
-        //TODO 3: 존재하지 않는 배송지
         return deliveryDestinationRepository.findById(addressNo)
-            .orElseThrow(() -> new IllegalArgumentException());
+            .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));
     }
 
     @Override
@@ -89,11 +90,11 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         deliveryDestinationRepository.delete(deliveryDestination);
     }
 
-
     private void checkDeliveryDestinationLimit(Long memberNo) {
         if (deliveryDestinationRepository.countByMember_MemberNo(memberNo) > 10) {
-            throw new IllegalArgumentException(); //TODO 3: 배송지 10개 넘을 수 없음
+            throw new DeliveryDestinationLimitExceededException();
         }
     }
+
 
 }

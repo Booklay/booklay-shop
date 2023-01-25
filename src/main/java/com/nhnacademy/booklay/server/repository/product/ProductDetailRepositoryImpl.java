@@ -25,10 +25,10 @@ public class ProductDetailRepositoryImpl extends QuerydslRepositorySupport imple
 
     return from(productDetail)
         .innerJoin(productAuthor).on(productDetail.id.eq(productAuthor.productDetail.id))
-        .innerJoin(author).on(productAuthor.author.authorNo.eq(author.authorNo))
+        .innerJoin(author).on(productAuthor.author.authorId.eq(author.authorId))
         .leftJoin(member).on(author.member.memberNo.eq(member.memberNo))
         .where(productDetail.id.eq(id))
-        .select(Projections.constructor(RetrieveAuthorResponse.class, author.authorNo, author.name
+        .select(Projections.constructor(RetrieveAuthorResponse.class, author.authorId, author.name
             ,(Projections.constructor(MemberForAuthorResponse.class ,member.memberNo, member.memberId))
         )).fetch();
   }

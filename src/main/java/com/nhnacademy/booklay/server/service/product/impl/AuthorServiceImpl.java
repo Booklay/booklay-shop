@@ -75,13 +75,11 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   public void deleteAuthor(DeleteIdRequest request) {
     Long id = request.getId();
-    if(!authorRepository.existsById(id)){
-      throw new NotFoundException(Author.class,"Delete target Author not found");
-    }
-    if(productAuthorRepository.existsByPk_AuthorId(id)){
-      productAuthorRepository.deleteByPk_AuthorId(id);
-    }
-    authorRepository.deleteById(id);
+
+    Author author = authorRepository.findById(request.getId())
+        .orElseThrow(() -> new NotFoundException(Author.class, "author not found"));
+
+    authorRepository.delete(author);
   }
 
   @Override

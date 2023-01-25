@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DeliveryDestinationRetrieveResponse {
     private Long id;
-    private Long memberNo;
+    private Long member;
     private String name;
     private String zipCode;
     private String address;
@@ -23,7 +23,7 @@ public class DeliveryDestinationRetrieveResponse {
         DeliveryDestination deliveryDestination) {
         return DeliveryDestinationRetrieveResponse.builder()
             .id(deliveryDestination.getId())
-            .memberNo(deliveryDestination.getMember().getMemberNo())
+            .member(deliveryDestination.getMember().getMemberNo())
             .address(deliveryDestination.getAddress())
             .name(deliveryDestination.getName())
             .zipCode(deliveryDestination.getZipCode())

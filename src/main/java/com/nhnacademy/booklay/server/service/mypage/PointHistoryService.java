@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PointHistoryService {
-    Page<PointHistoryRetrieveResponse> retrievePointHistorys(Pageable pageable);
+    Page<PointHistoryRetrieveResponse> retrievePointHistorys(Long memberNo, Pageable pageable);
 
     void createPointHistory(PointHistoryCreateRequest pointHistoryCreateRequest);
 

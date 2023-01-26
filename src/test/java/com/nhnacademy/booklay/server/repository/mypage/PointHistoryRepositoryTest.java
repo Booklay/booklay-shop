@@ -71,22 +71,27 @@ class PointHistoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("PointHistoryRepository findAllBy 성공 테스트")
-    void findAllBy_successTest() {
+    @DisplayName("PointHistoryRepository retrievePointHistoryByMemberNo 성공 테스트")
+    void retrievePointHistoryByMemberNo_successTest() {
         //given
         pointHistoryRepository.save(pointHistory);
-        PageRequest page = PageRequest.of(1, 10);
+        pointHistoryRepository.save(new PointHistory(pointHistory.getMember(), 10, 10, "1"));
+        pointHistoryRepository.save(new PointHistory(pointHistory.getMember(), 10, 20, "2"));
+        pointHistoryRepository.save(new PointHistory(pointHistory.getMember(), 10, 30, "3"));
+
+        PageRequest page = PageRequest.of(0, 3);
 
         //when
-        Page<PointHistoryRetrieveResponse> points = pointHistoryRepository.findAllBy(page);
+        Page<PointHistoryRetrieveResponse> result =
+            pointHistoryRepository.retrievePointHistoryByMemberNo(pointHistory.getMember().getMemberNo(), page);
 
         //then
-        assertThat(points).isNotNull();
+        assertThat(result.getSize()).isEqualTo(3);
     }
 
     @Test
-    @DisplayName("PointHistoryRepository")
-    void retrieveLatestPointHistory() {
+    @DisplayName("PointHistoryRepository retrieveLatestPointHistory 성공 테스트")
+    void retrieveLatestPointHistory_successTest() {
         //given
         pointHistoryRepository.save(pointHistory);
 

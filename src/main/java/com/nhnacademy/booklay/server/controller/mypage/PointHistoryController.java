@@ -42,9 +42,9 @@ public class PointHistoryController {
 
     @GetMapping("/{memberNo}")
     public ResponseEntity<PageResponse<PointHistoryRetrieveResponse>> retrievePointHistory(
-        Pageable pageable) {
+        @PathVariable Long memberNo, Pageable pageable) {
         Page<PointHistoryRetrieveResponse> responsePage =
-            pointHistoryService.retrievePointHistorys(pageable);
+            pointHistoryService.retrievePointHistorys(memberNo, pageable);
 
         PageResponse<PointHistoryRetrieveResponse> response = new PageResponse<>(responsePage);
 

@@ -33,7 +33,7 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
         TotalPointRetrieveResponse recentlyPointHistory =
             pointHistoryRepository.retrieveLatestPointHistory(requestDto.getMemberNo())
-                .orElseThrow(() -> new IllegalArgumentException());
+                .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
 
         Integer currentTotalPoint = recentlyPointHistory.getTotalPoint();
 
@@ -48,8 +48,9 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PointHistoryRetrieveResponse> retrievePointHistorys(Pageable pageable) {
-        return pointHistoryRepository.findAllBy(pageable);
+    public Page<PointHistoryRetrieveResponse> retrievePointHistorys(Long memberNo, Pageable pageable) {
+        return pointHistoryRepository.retrievePointHistoryByMemberNo(memberNo, pageable);
+        //TODO : query dsl 작성
     }
 
     @Override
@@ -69,13 +70,13 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         createPointHistory(PointHistoryCreateRequest.builder()
             .memberNo(memberNo)
             .point(-(requestDto.getTargetPoint()))
-            .updatedDetail("포인트 선물하기")
+            .updatedDetail( targetMember.getMemberId() + "에게 포인트 선물하기")
             .build());
 
         createPointHistory(PointHistoryCreateRequest.builder()
             .memberNo(targetMember.getMemberNo())
             .point(requestDto.getTargetPoint())
-            .updatedDetail("포인트 선물받기")
+            .updatedDetail( member.getMemberId() + "에게 포인트 선물받기")
             .build());
     }
 }

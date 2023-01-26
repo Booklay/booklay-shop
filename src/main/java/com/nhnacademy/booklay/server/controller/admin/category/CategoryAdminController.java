@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
-import com.nhnacademy.booklay.server.dto.category.response.CategoryStep;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryStepResponse;
 import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.exception.controller.DeleteFailedException;
 import com.nhnacademy.booklay.server.exception.controller.UpdateFailedException;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -39,10 +38,9 @@ public class CategoryAdminController {
     }
 
     @GetMapping("/steps/{categoryId}")
-    public ResponseEntity<CategoryStep> retrieveStep(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryStepResponse> retrieveStep(@PathVariable Long categoryId) {
 
-        CategoryStep categoryStep = categoryService.retrieveCategoryStep(categoryId);
-
+        CategoryStepResponse categoryStep = categoryService.retrieveCategoryStep(categoryId);
 
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
@@ -102,18 +100,17 @@ public class CategoryAdminController {
         }
 
 
-        CategoryResponse categoryResponse = categoryService.retrieveCategory(categoryId);
+        CategoryResponse categoryResponse = categoryService.retrieveCategory(updateDto.getId());
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.OK)
             .body(categoryResponse);
     }
 
     @DeleteMapping("/{categoryId}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         try {
             categoryService.deleteCategory(categoryId);
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
+            return ResponseEntity.status(HttpStatus.OK)
                 .body("{\"result\": \"Success\"}");
         } catch (NotFoundException e) {
             throw new DeleteFailedException("카테고리 삭제 실패");

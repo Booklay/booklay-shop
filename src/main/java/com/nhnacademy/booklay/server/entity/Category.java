@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.entity;
 
+import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,9 +29,8 @@ public class Category {
     @JoinColumn(name = "parent_category_no", nullable = true)
     private Category parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Category> categories;
-
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    private List<Category> categories = new ArrayList<>();
 
     @Column
     private String name;

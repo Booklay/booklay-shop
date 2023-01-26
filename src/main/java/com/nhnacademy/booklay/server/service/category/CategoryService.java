@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
-import com.nhnacademy.booklay.server.dto.category.response.CategoryStep;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryStepResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
@@ -19,5 +19,5 @@ public interface CategoryService {
 
     void deleteCategory(Long categoryId);
 
-    CategoryStep retrieveCategoryStep(Long topCategoryId);
+    CategoryStepResponse retrieveCategoryStep(Long topCategoryId);
 }

@@ -3,7 +3,7 @@ package com.nhnacademy.booklay.server.service.product;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
-import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.impl.ProductServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -19,27 +19,28 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class ProductServiceTest {
 
-  @InjectMocks
-  ProductServiceImpl productService;
-  @Mock
-  ProductRepository productRepository;
-  @Mock
-  CategoryRepository categoryRepository;
-  @Mock
-  ProductDetailRepository productDetailRepository;
-  @Mock
-  CategoryProductRepository categoryProductRepository;
-  @Mock
-  AuthorRepository authorRepository;
-  @Mock
-  ProductAuthorRepository productAuthorRepository;
-  @Mock
-  SubscribeRepository subscribeRepository;
+    @InjectMocks
+    ProductServiceImpl productService;
+    @Mock
+    ProductRepository productRepository;
+    @Mock
+    CategoryRepository categoryRepository;
+    @Mock
+    ProductDetailRepository productDetailRepository;
+    @Mock
+    CategoryProductRepository categoryProductRepository;
+    @Mock
+    AuthorRepository authorRepository;
+    @Mock
+    ProductAuthorRepository productAuthorRepository;
+    @Mock
+    SubscribeRepository subscribeRepository;
 
-  CreateUpdateProductBookRequest request = DummyCart.getDummyProductBookDto();
-  @BeforeEach
-  void setup(){
-  }
+    CreateUpdateProductBookRequest request = DummyCart.getDummyProductBookDto();
+
+    @BeforeEach
+    void setup() {
+    }
 
 //  @Test
 //  void testProductBookCreate_Success() throws Exception {

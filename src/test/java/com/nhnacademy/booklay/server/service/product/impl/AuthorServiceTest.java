@@ -28,10 +28,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
 class AuthorServiceTest {
 
   @InjectMocks
@@ -75,21 +75,21 @@ class AuthorServiceTest {
 
   @Test
   void testAuthorDelete_success() {
-    ReflectionTestUtils.setField(author, "authorNo", 1L);
+    ReflectionTestUtils.setField(author, "authorId", 1L);
 
-    given(authorRepository.existsById(author.getAuthorNo())).willReturn(true);
-    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorNo());
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorId());
+
+    given(authorRepository.findById(author.getAuthorId())).willReturn(Optional.of(author));
+
     authorService.deleteAuthor(deleteIdRequest);
 
-    assertThat(authorRepository.findById(author.getAuthorNo())).isEmpty();
+    then(authorRepository).should().delete(author);
   }
 
   @Test
   void testAuthorDelete_failure() {
-    ReflectionTestUtils.setField(author, "authorNo", 1L);
-    given(authorRepository.existsById(author.getAuthorNo())).willReturn(false);
-
-    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorNo());
+    ReflectionTestUtils.setField(author, "authorId", 1L);
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorId());
 
     assertThatThrownBy(() -> authorService.deleteAuthor(deleteIdRequest)).isInstanceOf(
         NotFoundException.class);

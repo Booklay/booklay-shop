@@ -71,14 +71,14 @@ public class TagServiceImpl implements TagService {
 
   @Override
   @Transactional
-  public void deleteTag(DeleteIdRequest id) {
-    Long requestId = id.getId();
-    tagExistValidator(requestId);
+  public void deleteTag(DeleteIdRequest request) {
+    Long id = request.getId();
+    tagExistValidator(id);
 
-    if (productTagRepository.existsByPk_TagId(requestId)) {
-      productTagRepository.deleteByPk_TagId(requestId);
+    if (productTagRepository.existsByPk_TagId(id)) {
+      productTagRepository.deleteByPk_TagId(id);
     }
-    tagRepository.deleteById(requestId);
+    tagRepository.deleteById(id);
   }
 
   private void tagExistValidator(Long id) {

@@ -32,6 +32,7 @@ public class Product {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 
   @Column(name = "registed_at")
+  @Setter
   private LocalDateTime registedAt;
 
   @Column

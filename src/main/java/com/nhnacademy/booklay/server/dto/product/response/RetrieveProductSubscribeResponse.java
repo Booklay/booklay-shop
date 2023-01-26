@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.product.request;
+package com.nhnacademy.booklay.server.dto.product.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,8 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class CreateUpdateProductSubscribeRequest {
+public class RetrieveProductSubscribeResponse {
 
+  @NotNull
   private Long productId;
   @NotNull
   private String title;
@@ -30,27 +31,30 @@ public class CreateUpdateProductSubscribeRequest {
   @NotNull
   private boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
-  @Setter
+  @NotNull
   private LocalDateTime registedAt;
 
   @NotNull
+  @Setter
   private List<Long> categoryIds;
 
+  @NotNull
   private Long subscribeId;
   @NotNull
   @Length(max = 4)
-  private Long subscribeWeek;
+  private Integer subscribeWeek;
   @NotNull
   @Length(max = 7)
-  private Long subscribeDay;
+  private Integer subscribeDay;
   @NotNull
   private String publisher;
+  @Setter
   private List<Long> childProducts;
 
-  public CreateUpdateProductSubscribeRequest(Long productId, String title, Long price,
-      Long pointRate, String shortDescription, String longDescription, boolean isSelling,
-      boolean pointMethod, List<Long> categoryIds, Long subscribeId, Long subscribeWeek,
-      Long subscribeDay, String publisher, List<Long> childProducts) {
+  public RetrieveProductSubscribeResponse(Long productId, String title, Long price, Long pointRate,
+      String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
+      LocalDateTime registedAt, Long subscribeId, Integer subscribeWeek, Integer subscribeDay,
+      String publisher) {
     this.productId = productId;
     this.title = title;
     this.price = price;
@@ -59,11 +63,10 @@ public class CreateUpdateProductSubscribeRequest {
     this.longDescription = longDescription;
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
-    this.categoryIds = categoryIds;
+    this.registedAt = registedAt;
     this.subscribeId = subscribeId;
     this.subscribeWeek = subscribeWeek;
     this.subscribeDay = subscribeDay;
     this.publisher = publisher;
-    this.childProducts = childProducts;
   }
 }

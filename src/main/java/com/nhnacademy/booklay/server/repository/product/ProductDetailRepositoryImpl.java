@@ -40,33 +40,16 @@ public class ProductDetailRepositoryImpl extends QuerydslRepositorySupport imple
   }
 
   @Override
-  public RetrieveProductBookResponse findProductBookDateByDetailId(Long id) {
+  public List<Long> findAuthorIdsByProductDetailId(Long id) {
     QProductDetail productDetail = QProductDetail.productDetail;
-    QProduct product = QProduct.product;
     QProductAuthor productAuthor = QProductAuthor.productAuthor;
     QAuthor author = QAuthor.author;
-    QCategoryProduct categoryProduct = QCategoryProduct.categoryProduct;
-    QCategory category = QCategory.category;
 
     return from(productDetail)
-        .innerJoin(product).on(productDetail.product.id.eq(product.id))
+        .innerJoin(productAuthor).on(productDetail.id.eq(productAuthor.productDetail.id))
+        .innerJoin(author).on(productAuthor.author.authorId.eq(author.authorId))
         .where(productDetail.id.eq(id))
-        .select(Projections.constructor(RetrieveProductBookResponse.class,
-            product.id,
-            product.title,
-            product.price,
-            product.pointRate,
-            product.shortDescription,
-            product.longDescription,
-            product.isSelling,
-            product.pointMethod,
-            productDetail.id,
-            productDetail.isbn,
-            productDetail.page,
-            productDetail.publisher,
-            productDetail.publishedDate,
-            productDetail.ebookAddress,
-            productDetail.storage
-        )).fetchOne();
+        .select(author.authorId)
+        .fetch();
   }
 }

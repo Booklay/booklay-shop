@@ -1,17 +1,16 @@
-package com.nhnacademy.booklay.server.dto.product.request;
+package com.nhnacademy.booklay.server.dto.product.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
-public class CreateUpdateProductSubscribeRequest {
+public class RetrieveProductSubscribeResponse {
 
+  @NotNull
   private Long productId;
   @NotNull
   private String title;
@@ -30,12 +29,13 @@ public class CreateUpdateProductSubscribeRequest {
   @NotNull
   private boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
-  @Setter
+  @NotNull
   private LocalDateTime registedAt;
 
   @NotNull
   private List<Long> categoryIds;
 
+  @NotNull
   private Long subscribeId;
   @NotNull
   @Length(max = 4)
@@ -47,23 +47,24 @@ public class CreateUpdateProductSubscribeRequest {
   private String publisher;
   private List<Long> childProducts;
 
-  public CreateUpdateProductSubscribeRequest(Long productId, String title, Long price,
-      Long pointRate, String shortDescription, String longDescription, boolean isSelling,
-      boolean pointMethod, List<Long> categoryIds, Long subscribeId, Long subscribeWeek,
-      Long subscribeDay, String publisher, List<Long> childProducts) {
+  public RetrieveProductSubscribeResponse(Long productId, String title, MultipartFile image,
+      Long price, Long pointRate, String shortDescription, String longDescription,
+      boolean isSelling,
+      boolean pointMethod, LocalDateTime registedAt, Long subscribeId,
+      Long subscribeWeek, Long subscribeDay, String publisher) {
     this.productId = productId;
     this.title = title;
+    this.image = image;
     this.price = price;
     this.pointRate = pointRate;
     this.shortDescription = shortDescription;
     this.longDescription = longDescription;
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
-    this.categoryIds = categoryIds;
+    this.registedAt = registedAt;
     this.subscribeId = subscribeId;
     this.subscribeWeek = subscribeWeek;
     this.subscribeDay = subscribeDay;
     this.publisher = publisher;
-    this.childProducts = childProducts;
   }
 }

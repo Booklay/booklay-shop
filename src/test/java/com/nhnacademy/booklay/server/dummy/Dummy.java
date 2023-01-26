@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.dummy;
 
+import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
@@ -309,5 +310,20 @@ public class Dummy {
         ReflectionTestUtils.setField(orderCoupon, "id", 1L);
 
         return orderCoupon;
+    }
+
+    public static CartAddRequest getDummyGuestCartAddRequest() {
+        CartAddRequest request = new CartAddRequest();
+        ReflectionTestUtils.setField(request, "cartId", "290c59b9-5d20-433e-8e69-983e42d2b905");
+        ReflectionTestUtils.setField(request, "productNo", 4L);
+        ReflectionTestUtils.setField(request, "count", 3);
+        return request;
+    }
+    public static CartAddRequest getDummyMemberCartAddRequest() {
+        CartAddRequest request = new CartAddRequest();
+        ReflectionTestUtils.setField(request, "cartId", "5");
+        ReflectionTestUtils.setField(request, "productNo", 4L);
+        ReflectionTestUtils.setField(request, "count", 3);
+        return request;
     }
 }

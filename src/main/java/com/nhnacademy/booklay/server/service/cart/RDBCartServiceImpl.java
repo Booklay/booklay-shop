@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.service.cart;
 
-import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Cart;
 import java.util.List;
@@ -24,10 +24,10 @@ public class RDBCartServiceImpl implements RDBCartService {
     }
 
     @Override
-    public void setCartItem(String key, CartDto cartDto) {
+    public void setCartItem(CartAddRequest cartAddRequest) {
         Cart cart = Cart.builder()
-            .pk(new Cart.Pk(Long.parseLong(key), cartDto.getProductNo()))
-            .count(cartDto.getCount())
+            .pk(new Cart.Pk(Long.parseLong(cartAddRequest.getCartId()), cartAddRequest.getProductNo()))
+            .count(cartAddRequest.getCount())
             .build();
         cartService.saveCart(cart);
     }

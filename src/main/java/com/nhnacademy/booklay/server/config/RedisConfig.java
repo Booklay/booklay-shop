@@ -1,5 +1,10 @@
 package com.nhnacademy.booklay.server.config;
 
+import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.service.cart.RedisCartService;
+import com.nhnacademy.booklay.server.service.cart.RedisServiceImpl;
+import com.nhnacademy.booklay.server.service.product.ProductService;
+import com.nhnacademy.booklay.server.service.product.impl.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,21 +16,21 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@Profile("redis")
+//@Profile("redis")
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.data.redis.port}")
-    Integer port;
+    @Value("${booklay.redis.host}")
+    private String host;
 
-    @Value("${spring.data.redis.host}")
-    String host;
+    @Value("${booklay.redis.port}")
+    private Integer port;
 
-    @Value("${spring.data.redis.password}")
-    String password;
+    @Value("${booklay.redis.database}")
+    private Integer database;
 
-    @Value("${spring.data.redis.database}")
-    Integer database;
+    @Value("${booklay.redis.password}")
+    private String password;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -38,10 +43,10 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    @Bean("redisTemplate")
+    public RedisTemplate<String, CartDto> redisTemplate() {
 
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        RedisTemplate<String, CartDto> redisTemplate = new RedisTemplate<>();
 
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -51,5 +56,4 @@ public class RedisConfig {
 
         return redisTemplate;
     }
-
 }

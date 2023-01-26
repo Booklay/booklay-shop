@@ -1,21 +1,18 @@
-package com.nhnacademy.booklay.server.dto.product.request;
+package com.nhnacademy.booklay.server.dto.product.response;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class CreateUpdateProductBookRequest {
+public class RetrieveProductBookResponse {
 
+  @NotNull
   private Long productId;
-  @Setter
-  private MultipartFile image;
   @NotNull
   private String title;
   @NotNull
@@ -31,14 +28,15 @@ public class CreateUpdateProductBookRequest {
   @NotNull
   private boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
-  @Setter
+  @NotNull
   private LocalDateTime registedAt;
 
+  @NotNull
   private Long productDetailId;
   @NotNull
   private String isbn;
   @NotNull
-  private int page;
+  private Integer page;
   @NotNull
   private String publisher;
 
@@ -48,18 +46,17 @@ public class CreateUpdateProductBookRequest {
   @Setter
   private String ebookAddress;
   @Setter
-  private int storage;
-  @NotNull
+  private Integer storage;
+
+  @Setter
   private List<Long> authorIds;
-  @NotNull
+  @Setter
   private List<Long> categoryIds;
 
-  @Builder
-  public CreateUpdateProductBookRequest(Long productId, String title, Long price,
-      Long pointRate, String shortDescription, String longDescription, boolean isSelling,
-      boolean pointMethod, Long productDetailId, String isbn, int page, String publisher,
-      LocalDate publishedDate, String ebookAddress, int storage, List<Long> authorIds,
-      List<Long> categoryIds) {
+  public RetrieveProductBookResponse(Long productId, String title, Long price, Long pointRate,
+      String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
+      LocalDateTime registedAt, Long productDetailId, String isbn, Integer page, String publisher,
+      LocalDate publishedDate, String ebookAddress, Integer storage) {
     this.productId = productId;
     this.title = title;
     this.price = price;
@@ -68,6 +65,7 @@ public class CreateUpdateProductBookRequest {
     this.longDescription = longDescription;
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
+    this.registedAt = registedAt;
     this.productDetailId = productDetailId;
     this.isbn = isbn;
     this.page = page;
@@ -75,7 +73,5 @@ public class CreateUpdateProductBookRequest {
     this.publishedDate = publishedDate;
     this.ebookAddress = ebookAddress;
     this.storage = storage;
-    this.authorIds = authorIds;
-    this.categoryIds = categoryIds;
   }
 }

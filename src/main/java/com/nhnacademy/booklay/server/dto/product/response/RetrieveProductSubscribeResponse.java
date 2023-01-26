@@ -32,7 +32,7 @@ public class RetrieveProductSubscribeResponse {
   private boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
   @NotNull
-  private LocalDateTime registedAt;
+  private LocalDateTime createdAt;
 
   @NotNull
   @Setter
@@ -53,7 +53,7 @@ public class RetrieveProductSubscribeResponse {
 
   public RetrieveProductSubscribeResponse(Long productId, String title, Long price, Long pointRate,
       String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
-      LocalDateTime registedAt, Long subscribeId, Integer subscribeWeek, Integer subscribeDay,
+      LocalDateTime createdAt, Long subscribeId, Integer subscribeWeek, Integer subscribeDay,
       String publisher) {
     this.productId = productId;
     this.title = title;
@@ -63,7 +63,7 @@ public class RetrieveProductSubscribeResponse {
     this.longDescription = longDescription;
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
-    this.registedAt = registedAt;
+    this.createdAt = createdAt;
     this.subscribeId = subscribeId;
     this.subscribeWeek = subscribeWeek;
     this.subscribeDay = subscribeDay;

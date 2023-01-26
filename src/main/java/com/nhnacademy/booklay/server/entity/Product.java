@@ -31,9 +31,9 @@ public class Product {
   @CreatedDate
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 
-  @Column(name = "registed_at")
+  @Column(name = "created_at")
   @Setter
-  private LocalDateTime registedAt;
+  private LocalDateTime createdAt;
 
   @Column
   private Long price;
@@ -52,6 +52,9 @@ public class Product {
 
   @Column(name="point_method")
   private boolean pointMethod;
+
+  @Column(name="is_deleted")
+  private boolean isDeleted = true;
 
   @Builder
   public Product(Image image, String title, Long price, Long pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {

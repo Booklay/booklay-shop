@@ -29,7 +29,7 @@ public class RetrieveProductBookResponse {
   private boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
   @NotNull
-  private LocalDateTime registedAt;
+  private LocalDateTime createdAt;
 
   @NotNull
   private Long productDetailId;
@@ -55,7 +55,7 @@ public class RetrieveProductBookResponse {
 
   public RetrieveProductBookResponse(Long productId, String title, Long price, Long pointRate,
       String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
-      LocalDateTime registedAt, Long productDetailId, String isbn, Integer page, String publisher,
+      LocalDateTime createdAt, Long productDetailId, String isbn, Integer page, String publisher,
       LocalDate publishedDate, String ebookAddress, Integer storage) {
     this.productId = productId;
     this.title = title;
@@ -65,7 +65,7 @@ public class RetrieveProductBookResponse {
     this.longDescription = longDescription;
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
-    this.registedAt = registedAt;
+    this.createdAt = createdAt;
     this.productDetailId = productDetailId;
     this.isbn = isbn;
     this.page = page;

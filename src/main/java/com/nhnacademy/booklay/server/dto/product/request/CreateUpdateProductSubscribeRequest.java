@@ -31,7 +31,7 @@ public class CreateUpdateProductSubscribeRequest {
   private boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
   @Setter
-  private LocalDateTime registedAt;
+  private LocalDateTime createdAt;
 
   @NotNull
   private List<Long> categoryIds;

@@ -3,11 +3,13 @@ package com.nhnacademy.booklay.server.dto.product.response;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+@Getter
 public class RetrieveProductSubscribeResponse {
 
   @NotNull
@@ -33,28 +35,28 @@ public class RetrieveProductSubscribeResponse {
   private LocalDateTime registedAt;
 
   @NotNull
+  @Setter
   private List<Long> categoryIds;
 
   @NotNull
   private Long subscribeId;
   @NotNull
   @Length(max = 4)
-  private Long subscribeWeek;
+  private Integer subscribeWeek;
   @NotNull
   @Length(max = 7)
-  private Long subscribeDay;
+  private Integer subscribeDay;
   @NotNull
   private String publisher;
+  @Setter
   private List<Long> childProducts;
 
-  public RetrieveProductSubscribeResponse(Long productId, String title, MultipartFile image,
-      Long price, Long pointRate, String shortDescription, String longDescription,
-      boolean isSelling,
-      boolean pointMethod, LocalDateTime registedAt, Long subscribeId,
-      Long subscribeWeek, Long subscribeDay, String publisher) {
+  public RetrieveProductSubscribeResponse(Long productId, String title, Long price, Long pointRate,
+      String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
+      LocalDateTime registedAt, Long subscribeId, Integer subscribeWeek, Integer subscribeDay,
+      String publisher) {
     this.productId = productId;
     this.title = title;
-    this.image = image;
     this.price = price;
     this.pointRate = pointRate;
     this.shortDescription = shortDescription;

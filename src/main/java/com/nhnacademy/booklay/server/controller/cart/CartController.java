@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.controller.cart;
 
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.cart.CartServiceAndKeyDto;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -14,15 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +24,7 @@ public class CartController {
 
     private final RDBCartService rdbCartService;
     private final RedisCartService redisCartService;
-    private static final String STRING_CART_ID= "CART_ID";
+    private static final String STRING_CART_ID= "cartId";
     private static final String STRING_PRODUCT_NO = "productNo";
     private static final String STRING_PRODUCT_NO_LIST = "productNoList";
     //todo @ModelAttribute Member 추가해줄것
@@ -48,16 +41,15 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> setCart(@ModelAttribute("member")Member member,
-                                        @RequestParam(STRING_CART_ID) String cartId,
-                                        @RequestBody CartDto cartDto){
-        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(member, cartId);
-        cartServiceAndKeyDto.getCartService().setCartItem(cartServiceAndKeyDto.getKey(), cartDto);
+                                        @RequestBody CartAddRequest cartAddRequest){
+        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(member, cartAddRequest.getCartId());
+        cartServiceAndKeyDto.getCartService().setCartItem(cartAddRequest);
         return ResponseEntity.ok()
             .build();
     }
 
     //fixme mapping 방식 고려 필요
-    @PutMapping
+    @DeleteMapping
     public ResponseEntity<Void> deleteCart(@ModelAttribute("member")Member member,
                                            @RequestParam(STRING_CART_ID) String cartId,
                                            @RequestParam(STRING_PRODUCT_NO) Long productNo){
@@ -68,7 +60,7 @@ public class CartController {
             .build();
     }
 
-    @PutMapping("all")
+    @DeleteMapping("all")
     public ResponseEntity<Void> deleteAllCart(@ModelAttribute("member")Member member,
                                               @RequestParam(STRING_CART_ID) String cartId){
         CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(member, cartId);
@@ -94,13 +86,13 @@ public class CartController {
         List<CartRetrieveResponse> allCartItems = redisCartService.getAllCartItems(cartId);
         redisCartService.deleteAllCartItems(cartId);
         for (CartRetrieveResponse cartRetrieveResponse : allCartItems){
-            rdbCartService.setCartItem(cartId, new CartDto(cartRetrieveResponse.getProductNo(), cartRetrieveResponse.getProductCount()));
+            rdbCartService.setCartItem(new CartAddRequest(cartId, cartRetrieveResponse.getProductNo(), cartRetrieveResponse.getProductCount()));
         }
         return ResponseEntity.ok()
             .build();
     }
 
-    @GetMapping("uuid/{uuid}")
+    @GetMapping("/uuid/{uuid}")
     public ResponseEntity<Integer> uuidCheck(@PathVariable String uuid){
         return ResponseEntity.ok(redisCartService.checkUUID(uuid));
     }
@@ -108,7 +100,7 @@ public class CartController {
     private CartServiceAndKeyDto getCartServiceAndKeyDto(Member member, String cartId){
         MemberCartService cartService;
         String key;
-        if(Objects.isNull(member)){
+        if(Objects.isNull(member) || member.getMemberNo() == null){
             cartService = redisCartService;
             key = cartId;
         }else {

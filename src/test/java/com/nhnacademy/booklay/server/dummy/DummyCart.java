@@ -68,6 +68,7 @@ public class DummyCart {
 
   public static Product getDummyProduct(CreateUpdateProductBookRequest request) {
     return Product.builder()
+        .image(getDummyImage())
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
         .pointRate(request.getPointRate())

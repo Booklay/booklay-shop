@@ -32,7 +32,7 @@ public class CreateUpdateProductBookRequest {
   private boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
   @Setter
-  private LocalDateTime registedAt;
+  private LocalDateTime createdAt;
 
   private Long productDetailId;
   @NotNull

@@ -132,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
 
     Product product = splitProduct(request);
     product.setId(request.getProductId());
-    product.setRegistedAt(request.getRegistedAt());
+    product.setCreatedAt(request.getRegistedAt());
     Product updateProduct = productRepository.save(product);
 
     categoryProductRepository.deleteAllByProductId(updateProduct.getId());
@@ -178,7 +178,7 @@ public class ProductServiceImpl implements ProductService {
 
     Product product = splitProductSubscribe(request);
     product.setId(request.getProductId());
-    product.setRegistedAt(request.getRegistedAt());
+    product.setCreatedAt(request.getRegistedAt());
     Product savedProduct = productRepository.save(product);
 
     //category_product

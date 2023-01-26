@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryStep;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -109,23 +110,5 @@ class CategoryRepositoryTest {
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"))
         ).isInstanceOf(IllegalArgumentException.class);
     }
-
-    @Test
-    @DisplayName("카테고리 리포지토리 계층 카테고리 테스트")
-    void testCategoryStep() {
-
-        CategoryStep categoryStepResponse = categoryRepository.findStepById(1L)
-            .orElseThrow(() -> new IllegalArgumentException());
-
-        for (CategoryStep categoryStep1 : categoryStepResponse.getCategories()) {
-            log.info("Categories : {}", categoryStep1.getName());
-
-            for (CategoryStep categoryStep2 : categoryStep1.getCategories()) {
-                log.info("Categories : {}", categoryStep2.getName());
-            }
-        }
-
-    }
-
-
+    
 }

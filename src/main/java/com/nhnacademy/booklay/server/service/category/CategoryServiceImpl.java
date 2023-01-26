@@ -4,11 +4,12 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
-import com.nhnacademy.booklay.server.dto.category.response.CategoryStep;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryStepResponse;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
-import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,9 +43,11 @@ public class CategoryServiceImpl implements CategoryService {
 
         Optional<Category> parentCategory = Optional.empty();
 
-        if (createRequest.getParentCategoryId() != 0) {
-            parentCategory =
-                categoryRepository.findById(createRequest.getParentCategoryId());
+        if (Objects.nonNull(createRequest.getParentCategoryId())) {
+            if (createRequest.getParentCategoryId() != 0) {
+                parentCategory =
+                    categoryRepository.findById(createRequest.getParentCategoryId());
+            }
         }
 
         categoryRepository.save(createRequest.toEntity(parentCategory));
@@ -53,8 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public CategoryResponse retrieveCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
+        Category category = categoryFindById(categoryId);
 
         return new CategoryResponse(category);
     }
@@ -70,18 +72,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void updateCategory(CategoryUpdateRequest updateDto, Long categoryId) {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw new NotFoundException(Category.class,
-                "존재하지 않는 카테고리 ID 입니다.");
+    public void updateCategory(CategoryUpdateRequest updateRequest, Long categoryId) {
+        Category category = categoryFindById(categoryId);
+
+        Optional<Category> parentCategory = Optional.empty();
+
+        if (updateRequest.getParentCategoryId() != 0) {
+            parentCategory =
+                categoryRepository.findById(updateRequest.getParentCategoryId());
         }
 
-        Category parentCategory = categoryRepository.findById(updateDto.getParentCategoryId())
-            .orElseThrow(() -> new NotFoundException(Category.class,
-                "존재하지 않는 상위 카테고리 ID 입니다."));
-
-        categoryRepository.save(updateDto.toEntity(parentCategory));
-
+        categoryRepository.delete(category);
+        categoryRepository.save(updateRequest.toEntity(parentCategory));
     }
 
     @Override
@@ -93,22 +95,21 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Delete Category ID : " + categoryId);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public CategoryStep retrieveCategoryStep(Long topCategoryId) {
+    public CategoryStepResponse retrieveCategoryStep(Long topCategoryId) {
 
-        CategoryStep categoryStep = categoryRepository.findStepById(topCategoryId)
-            .orElseThrow(
-                () -> new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
+        Category category = categoryFindById(topCategoryId);
 
-        for (CategoryStep categoryStep1 : categoryStep.getCategories()) {
-            log.info("Categories : {}", categoryStep1.getName());
+        return CategoryStepResponse.builder()
+            .category(category)
+            .build();
+    }
 
-            for (CategoryStep categoryStep2 : categoryStep1.getCategories()) {
-                log.info("Categories : {}", categoryStep2.getName());
-            }
-        }
+    private Category categoryFindById(Long categoryId) {
 
-        return categoryStep;
+        return categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
     }
 
 }

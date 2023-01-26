@@ -170,7 +170,7 @@ class CategoryAdminControllerTest {
         mockMvc.perform(put(URI_PREFIX + "/" + category.getId())
                 .content(objectMapper.writeValueAsString(updateDto))
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isAccepted())
+            .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
 
@@ -201,7 +201,7 @@ class CategoryAdminControllerTest {
 
         mockMvc.perform(delete(URI_PREFIX + "/" + category.getId())
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isAccepted())
+            .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
 

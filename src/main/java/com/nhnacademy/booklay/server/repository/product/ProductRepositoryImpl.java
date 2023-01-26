@@ -12,6 +12,9 @@ import com.querydsl.core.types.Projections;
 import java.util.List;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+/**
+ * author: 최규태
+ */
 public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     ProductRepositoryCustom {
 
@@ -19,6 +22,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     super(Product.class);
   }
 
+  //수정용 책 조회
   @Override
   public RetrieveProductBookResponse findProductBookDataByProductId(Long id) {
     QProduct product = QProduct.product;
@@ -47,13 +51,33 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
         )).fetchOne();
   }
 
+  //수정용 구독 조회
   @Override
   public RetrieveProductSubscribeResponse findProductSubscribeDataByProductId(Long id) {
     QProduct product = QProduct.product;
     QSubscribe subscribe = QSubscribe.subscribe;
-    return null;
+
+    return from(product)
+        .innerJoin(subscribe).on(subscribe.product.id.eq(product.id))
+        .where(product.id.eq(id))
+        .select(Projections.constructor(RetrieveProductSubscribeResponse.class,
+            product.id,
+            product.title,
+            product.price,
+            product.pointRate,
+            product.shortDescription,
+            product.longDescription,
+            product.isSelling,
+            product.pointMethod,
+            product.registedAt,
+            subscribe.id,
+            subscribe.subscribeWeek,
+            subscribe.subscribeDay,
+            subscribe.publisher
+        )).fetchOne();
   }
 
+  //상품 카테고리 조회
   @Override
   public List<Long> findCategoryIdsByProductId(Long id) {
     QProduct product = QProduct.product;

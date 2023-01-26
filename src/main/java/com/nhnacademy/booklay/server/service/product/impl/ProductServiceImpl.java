@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBook
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
@@ -161,12 +162,23 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
+  public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
+    RetrieveProductSubscribeResponse response = productRepository.findProductSubscribeDataByProductId(id);
+    response.setCategoryIds(productRepository.findCategoryIdsByProductId(response.getProductId()));
+
+    return response;
+  }
+
+  @Override
+  @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
 
     Product product = splitProductSubscribe(request);
+    product.setId(request.getProductId());
+    product.setRegistedAt(request.getRegistedAt());
     Product savedProduct = productRepository.save(product);
 
     //category_product
@@ -175,6 +187,7 @@ public class ProductServiceImpl implements ProductService {
 
     //subscribe
     Subscribe subscribe = splitSubscribe(savedProduct, request);
+    subscribe.setId(request.getSubscribeId());
 
     if (Objects.nonNull(request.getPublisher())) {
       subscribe.setPublisher(request.getPublisher());

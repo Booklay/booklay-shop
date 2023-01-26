@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.controller.admin.product;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,10 +67,19 @@ public class ProductAdminController {
     return productService.createSubscribeProduct(request);
   }
 
-  //구독 수정
-  @PutMapping("/subscribes")
-  public Long postSubscribeUpdate(CreateUpdateProductSubscribeRequest request) throws Exception {
-    return productService.updateSubscribeProduct(request);
+  //구독 수정용 조회
+  @GetMapping("/subscribes/{productId}")
+  public RetrieveProductSubscribeResponse getSubscribeData(@PathVariable Long productId) {
+    return productService.retrieveSubscribeData(productId);
   }
 
+  //구독 수정
+  @PutMapping(value = "/subscribes",
+      consumes = {MediaType.APPLICATION_JSON_VALUE,
+          MediaType.MULTIPART_FORM_DATA_VALUE})
+  public Long postSubscribeUpdater(@RequestPart CreateUpdateProductSubscribeRequest request,
+      @RequestPart MultipartFile imgFile) throws Exception {
+    request.setImage(imgFile);
+    return productService.updateSubscribeProduct(request);
+  }
 }

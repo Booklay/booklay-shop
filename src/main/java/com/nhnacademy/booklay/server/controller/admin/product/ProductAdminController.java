@@ -36,23 +36,23 @@ public class ProductAdminController {
   public Long postBookRegister(
       @RequestPart CreateUpdateProductBookRequest request,
       @RequestPart MultipartFile imgFile) throws Exception {
-    //product
-    log.info("이미지 시험 출력 : " + imgFile.getContentType() + imgFile.getOriginalFilename());
     request.setImage(imgFile);
     return productService.createBookProduct(request);
   }
 
   //책 수정용 조회
   @GetMapping("/books/{productId}")
-  public RetrieveProductBookResponse getBookData(@PathVariable Long productId){
-    productService.retrieveBookData(productId);
-    return null;
+  public RetrieveProductBookResponse getBookData(@PathVariable Long productId) {
+    return productService.retrieveBookData(productId);
   }
 
   //책 수정
-  @PutMapping("/books")
-  public Long postBookUpdater(CreateUpdateProductBookRequest request) throws Exception {
-
+  @PutMapping(value = "/books",
+      consumes = {MediaType.APPLICATION_JSON_VALUE,
+          MediaType.MULTIPART_FORM_DATA_VALUE})
+  public Long postBookUpdater(@RequestPart CreateUpdateProductBookRequest request,
+      @RequestPart MultipartFile imgFile) throws Exception {
+    request.setImage(imgFile);
     return productService.updateBookProduct(request);
   }
 
@@ -62,7 +62,7 @@ public class ProductAdminController {
       MediaType.MULTIPART_FORM_DATA_VALUE})
   public Long postSubscribeRegister(@RequestPart CreateUpdateProductSubscribeRequest request,
       @RequestPart MultipartFile imgFile) throws Exception {
-      request.setImage(imgFile);
+    request.setImage(imgFile);
     return productService.createSubscribeProduct(request);
   }
 

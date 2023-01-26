@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dto.product.request;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
@@ -29,6 +30,9 @@ public class CreateUpdateProductBookRequest {
   private boolean isSelling;
   @NotNull
   private boolean pointMethod;
+  @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
+  @Setter
+  private LocalDateTime registedAt;
 
   private Long productDetailId;
   @NotNull

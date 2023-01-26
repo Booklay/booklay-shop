@@ -1,15 +1,16 @@
 package com.nhnacademy.booklay.server.dto.product.response;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 public class RetrieveProductBookResponse {
+
   @NotNull
   private Long productId;
   @NotNull
@@ -26,6 +27,9 @@ public class RetrieveProductBookResponse {
   private boolean isSelling;
   @NotNull
   private boolean pointMethod;
+  @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
+  @NotNull
+  private LocalDateTime registedAt;
 
   @NotNull
   private Long productDetailId;
@@ -51,8 +55,8 @@ public class RetrieveProductBookResponse {
 
   public RetrieveProductBookResponse(Long productId, String title, Long price, Long pointRate,
       String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
-      Long productDetailId, String isbn, Integer page, String publisher, LocalDate publishedDate,
-      String ebookAddress, Integer storage) {
+      LocalDateTime registedAt, Long productDetailId, String isbn, Integer page, String publisher,
+      LocalDate publishedDate, String ebookAddress, Integer storage) {
     this.productId = productId;
     this.title = title;
     this.price = price;
@@ -61,6 +65,7 @@ public class RetrieveProductBookResponse {
     this.longDescription = longDescription;
     this.isSelling = isSelling;
     this.pointMethod = pointMethod;
+    this.registedAt = registedAt;
     this.productDetailId = productDetailId;
     this.isbn = isbn;
     this.page = page;

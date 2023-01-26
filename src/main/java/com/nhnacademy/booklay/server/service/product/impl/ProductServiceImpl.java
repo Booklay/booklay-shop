@@ -59,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
   private final ImageRepository imageRepository;
   private final ProductTagRepository productTagRepository;
 
+  //상품 생성
   @Override
   @Transactional
   public Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception {
@@ -87,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
     return savedProduct.getId();
   }
 
+  //구독 생성
   @Override
   @Transactional
   public Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
@@ -108,11 +110,16 @@ public class ProductServiceImpl implements ProductService {
     return savedProduct.getId();
   }
 
+  //수정 위해서 조회
   @Override
   @Transactional
   public RetrieveProductBookResponse retrieveBookData(Long id) {
+    RetrieveProductBookResponse response = productRepository.findProductBookDataByProductId(id);
+    response.setAuthorIds(
+        productDetailRepository.findAuthorIdsByProductDetailId(response.getProductDetailId()));
+    response.setCategoryIds(productRepository.findCategoryIdsByProductId(response.getProductId()));
 
-    return productDetailRepository.findProductBookDateByDetailId(id);
+    return response;
   }
 
   @Override
@@ -124,6 +131,7 @@ public class ProductServiceImpl implements ProductService {
 
     Product product = splitProduct(request);
     product.setId(request.getProductId());
+    product.setRegistedAt(request.getRegistedAt());
     Product updateProduct = productRepository.save(product);
 
     categoryProductRepository.deleteAllByProductId(updateProduct.getId());

@@ -10,5 +10,5 @@ public interface ProductDetailRepositoryCustom {
 
   List<RetrieveAuthorResponse> findAuthorsByProductDetailId(Long id);
 
-  RetrieveProductBookResponse findProductBookDateByDetailId(Long id);
+  List<Long> findAuthorIdsByProductDetailId(Long id);
 }

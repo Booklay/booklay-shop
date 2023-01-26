@@ -10,7 +10,7 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
-import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponRepository;
 import com.nhnacademy.booklay.server.repository.coupon.CouponTypeRepository;
@@ -132,7 +132,8 @@ class CouponAdminServiceImplTest {
         Long targetId = coupon.getId();
 
         given(couponRepository.findById(targetId)).willReturn(Optional.ofNullable(coupon));
-        given(couponTypeRepository.findById(couponUpdateRequest.getTypeCode())).willReturn(Optional.ofNullable(couponType));
+        given(couponTypeRepository.findById(couponUpdateRequest.getTypeCode())).willReturn(
+            Optional.ofNullable(couponType));
         given(productRepository.findById(targetId)).willReturn(
             Optional.ofNullable(DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto())));
 

@@ -24,9 +24,9 @@ public class RetrieveProductBookResponse {
   @NotNull
   private String longDescription;
   @NotNull
-  private boolean isSelling;
+  private Boolean isSelling;
   @NotNull
-  private boolean pointMethod;
+  private Boolean pointMethod;
   @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
   @NotNull
   private LocalDateTime createdAt;
@@ -54,7 +54,7 @@ public class RetrieveProductBookResponse {
   private List<Long> categoryIds;
 
   public RetrieveProductBookResponse(Long productId, String title, Long price, Long pointRate,
-      String shortDescription, String longDescription, boolean isSelling, boolean pointMethod,
+      String shortDescription, String longDescription, Boolean isSelling, Boolean pointMethod,
       LocalDateTime createdAt, Long productDetailId, String isbn, Integer page, String publisher,
       LocalDate publishedDate, String ebookAddress, Integer storage) {
     this.productId = productId;

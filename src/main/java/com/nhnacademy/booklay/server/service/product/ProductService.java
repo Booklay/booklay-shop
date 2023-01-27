@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.product;
 
+import com.nhnacademy.booklay.server.dto.product.RetrieveIdRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
@@ -32,7 +33,6 @@ public interface ProductService {
   Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable);
 
   RetrieveProductViewResponse retrieveProductView(Long productId);
-  RetrieveProductViewResponse retrieveProductView(RetrieveIdRequest request);
 
   Product retrieveProductByProductNo(Long productNo);
   List<Product> retrieveProductListByProductNoList(List<Long> productNoList);

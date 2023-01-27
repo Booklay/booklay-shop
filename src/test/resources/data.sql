@@ -291,13 +291,14 @@ create table product
         primary key auto_increment,
     thumbnail_no bigint not null,
     title varchar(255) not null,
-    registed_at datetime not null,
+    created_at datetime not null,
     price int not null,
     point_rate int not null,
     short_description text not null,
     long_description text not null,
     is_selling boolean not null,
     point_method boolean not null,
+    is_deleted boolean not null default true,
     constraint FK_image_TO_product_1
         foreign key (thumbnail_no) references image (image_no)
 );

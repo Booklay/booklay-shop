@@ -68,6 +68,7 @@ public class DummyCart {
 
   public static Product getDummyProduct(CreateUpdateProductBookRequest request) {
     return Product.builder()
+        .image(getDummyImage())
         .price(request.getPrice())
         .pointMethod(request.isPointMethod())
         .pointRate(request.getPointRate())
@@ -92,7 +93,7 @@ public class DummyCart {
         .name("작가님")
         .build();
 
-    author.setAuthorNo(1L);
+    author.setAuthorId(1L);
 
     return author;
   }
@@ -121,7 +122,7 @@ public class DummyCart {
     Author dummyAuthor = getDummyAuthor();
     ProductDetail dummyProductDetail = getDummyProductDetail(request);
 
-    ProductAuthor.Pk pk = new ProductAuthor.Pk(dummyAuthor.getAuthorNo(),
+    ProductAuthor.Pk pk = new ProductAuthor.Pk(dummyAuthor.getAuthorId(),
         dummyProductDetail.getId());
 
     ProductAuthor productAuthor = ProductAuthor.builder()

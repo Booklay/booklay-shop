@@ -18,6 +18,12 @@ public class RetrieveAuthorResponse {
   String name;
 
 
+  public RetrieveAuthorResponse(Long authorNo, String name, MemberForAuthorResponse member) {
+    this.authorNo = authorNo;
+    this.name = name;
+    this.member = member;
+  }
+
   public RetrieveAuthorResponse(Long authorNo, String name) {
     this.authorNo = authorNo;
     this.name = name;

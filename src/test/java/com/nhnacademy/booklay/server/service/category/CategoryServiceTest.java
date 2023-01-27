@@ -7,7 +7,7 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
-import com.nhnacademy.booklay.server.repository.CategoryRepository;
+import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 @MockBean(JpaMetamodelMappingContext.class)
 class CategoryServiceTest {
 
+    private static final String NOT_FOUND_MESSAGE = "존재하지 않는 카테고리 ID에 대한 요청입니다.";
     @Mock
     CategoryRepository categoryRepository;
     @InjectMocks
@@ -107,15 +108,14 @@ class CategoryServiceTest {
 
         //mocking
         when(categoryRepository.findById(createRequest.getParentCategoryId())).thenThrow(
-            new NotFoundException(Category.class,
-                "존재하지 않는 상위 카테고리 ID 입니다."));
+            new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
 
         //when
 
         //then
         assertThatThrownBy(() -> categoryService.createCategory(createRequest))
             .isInstanceOf(NotFoundException.class)
-            .hasMessageContaining("존재하지 않는 상위 카테고리 ID 입니다.");
+            .hasMessageContaining(NOT_FOUND_MESSAGE);
     }
 
 
@@ -148,17 +148,18 @@ class CategoryServiceTest {
         //then
         assertThatThrownBy(() -> categoryService.retrieveCategory(category.getId()))
             .isInstanceOf(NotFoundException.class)
-            .hasMessageContaining("존재하지 않는 카테고리 ID에 대한 요청입니다.");
+            .hasMessageContaining(NOT_FOUND_MESSAGE);
     }
 
     @Test
     @DisplayName("카테고리 수정 성공")
     void testUpdateCategory() {
         //mocking
-        when(categoryRepository.existsById(category.getId())).thenReturn(true);
-
         when(categoryRepository.findById(parentCategory.getId())).thenReturn(
             Optional.ofNullable(parentCategory));
+
+        when(categoryRepository.findById(category.getId()))
+            .thenReturn(Optional.ofNullable(category));
 
         //when
 
@@ -172,38 +173,32 @@ class CategoryServiceTest {
     void testUpdateCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
         //given
 
-        //mocking
-        when(categoryRepository.existsById(updateRequest.getId()))
-            .thenReturn(false);
-
         //when
 
         //then
         assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
             .isInstanceOf(NotFoundException.class)
-            .hasMessageContaining("존재하지 않는 카테고리 ID 입니다.");
+            .hasMessageContaining(NOT_FOUND_MESSAGE);
 
     }
 
     @Test
     @DisplayName("카테고리 수정 실패, 존재하지 않는 부모 카테고리")
     void testUpdateCategory_ifNotExistedParentCategoryId_thenThrowsUpdateCategoryFailedException() {
+
         //given
-
-        //mocking
-        when(categoryRepository.existsById(updateRequest.getId()))
-            .thenReturn(true);
-
         when(categoryRepository.findById(updateRequest.getParentCategoryId()))
-            .thenThrow(new NotFoundException(Category.class,
-                "존재하지 않는 상위 카테고리 ID 입니다."));
+            .thenThrow(new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
+
+        when(categoryRepository.findById(category.getId()))
+            .thenReturn(Optional.ofNullable(category));
 
         //when
 
         //then
         assertThatThrownBy(() -> categoryService.updateCategory(updateRequest, category.getId()))
             .isInstanceOf(NotFoundException.class)
-            .hasMessageContaining("존재하지 않는 상위 카테고리 ID 입니다.");
+            .hasMessageContaining(NOT_FOUND_MESSAGE);
     }
 
     @Test
@@ -221,7 +216,7 @@ class CategoryServiceTest {
 
         assertThatThrownBy(() -> categoryService.deleteCategory(category.getId()))
             .isInstanceOf(NotFoundException.class)
-            .hasMessageContaining("존재하지 않는 카테고리 ID에 대한 요청입니다.");
+            .hasMessageContaining(NOT_FOUND_MESSAGE);
 
     }
 }

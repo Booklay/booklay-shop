@@ -13,6 +13,7 @@ public class Subscribe {
     @Id
     @Column(name = "subscribe_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     private Long id;
 
     @Setter

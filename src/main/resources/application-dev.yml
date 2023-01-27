@@ -33,7 +33,5 @@ booklay:
     password:
     database: 0
 
-logging:
-  config: classpath:logback-dev.xml
 
 

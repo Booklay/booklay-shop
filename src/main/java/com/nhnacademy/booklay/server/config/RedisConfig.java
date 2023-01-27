@@ -1,14 +1,9 @@
 package com.nhnacademy.booklay.server.config;
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
-import com.nhnacademy.booklay.server.service.cart.RedisCartService;
-import com.nhnacademy.booklay.server.service.cart.RedisServiceImpl;
-import com.nhnacademy.booklay.server.service.product.ProductService;
-import com.nhnacademy.booklay.server.service.product.impl.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;

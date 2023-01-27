@@ -3,7 +3,6 @@ package com.nhnacademy.booklay.server.service.cart;
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
-import com.nhnacademy.booklay.server.entity.Cart;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RedisServiceImpl implements RedisCartService {
+public class RedisCartServiceImpl implements RedisCartService {
 
     private final RedisTemplate<String, CartDto> redisTemplate;
     private final ProductService productService;

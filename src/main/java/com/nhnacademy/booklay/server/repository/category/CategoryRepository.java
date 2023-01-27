@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.repository;
+package com.nhnacademy.booklay.server.repository.category;
 
 
 import com.nhnacademy.booklay.server.entity.Category;
@@ -11,4 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     <T> Page<T> findAllBy(Pageable pageable, Class<T> type);
+
 }

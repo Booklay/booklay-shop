@@ -1,10 +1,12 @@
 package com.nhnacademy.booklay.server.dto.product.request;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -27,6 +29,9 @@ public class CreateUpdateProductSubscribeRequest {
   private boolean isSelling;
   @NotNull
   private boolean pointMethod;
+  @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
+  @Setter
+  private LocalDateTime createdAt;
 
   @NotNull
   private List<Long> categoryIds;

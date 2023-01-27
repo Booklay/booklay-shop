@@ -19,7 +19,7 @@
 
         <!--롤링 정책-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>booklay_shop_dev.log.%d{yyyy-MM-dd}_%i.zip</fileNamePattern>
+            <fileNamePattern>${USER_HOME}/booklay/shop/logs/rollings/booklay_shop_dev.log.%d{yyyy-MM-dd}_%i.zip</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>50MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>

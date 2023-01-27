@@ -337,6 +337,8 @@ public class ProductServiceImpl implements ProductService {
 
     for (int i = 0; i < productsContent.size(); i++) {
       Product product = productsContent.get(i);
+
+      //TODO : query dsl 이용해서 뽑아오는 방식을 통해서 depth 줄일것
       if (!product.isDeleted()) {
         //책 상품이라면
         if (productDetailRepository.existsProductDetailByProductId(product.getId())) {

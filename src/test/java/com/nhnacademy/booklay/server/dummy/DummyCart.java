@@ -70,13 +70,13 @@ public class DummyCart {
     return Product.builder()
         .image(getDummyImage())
         .price(request.getPrice())
-        .pointMethod(request.isPointMethod())
+        .pointMethod(request.getPointMethod())
         .pointRate(request.getPointRate())
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .image(getDummyImage())
-        .isSelling(request.isSelling())
+        .isSelling(request.getIsSelling())
         .build();
   }
 

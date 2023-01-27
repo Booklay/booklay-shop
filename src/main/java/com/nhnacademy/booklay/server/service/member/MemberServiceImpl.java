@@ -10,8 +10,13 @@ import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
+import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
+import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
+import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
+import com.nhnacademy.booklay.server.exception.member.MemberAuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
@@ -59,9 +64,8 @@ public class MemberServiceImpl implements MemberService {
         Member member = createDto.toEntity(gender);
         MemberGrade grade = new MemberGrade(member, "화이트");
 
-        //TODO 3: Make Custom Exception?
         Authority authority = authorityRepository.findByName("ROLE_MEMBER")
-            .orElseThrow(() -> new IllegalArgumentException());
+            .orElseThrow(() -> new AuthorityNotFoundException("ROLE_MEMBER"));
 
         MemberAuthority memberAuthority =
             new MemberAuthority(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()),
@@ -75,7 +79,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberRetrieveResponse retrieveMember(Long memberNo) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMemberNo(memberNo);
 
         return MemberRetrieveResponse.fromEntity(member);
     }
@@ -83,14 +87,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable) {
-        return memberRepository.findAllBy(pageable);
+        return memberRepository.retrieveAll(pageable);
     }
 
     @Override
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
+        Member member = getMemberService.getMemberNo(memberNo);
 
-        Member member = memberRepository.findById(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException(memberNo));
         Gender gender = genderRepository.findByName(updateDto.getName())
             .orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
 
@@ -100,7 +103,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(Long memberNo) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMemberNo(memberNo);
         member.deleteMember();
     }
 
@@ -113,17 +116,15 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void createMemberAuthority(Long memberNo, String authorityName) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMemberNo(memberNo);
 
-        //TODO 3: Make Custom Exception?
         Authority authority = authorityRepository.findByName(authorityName)
-            .orElseThrow(() -> new IllegalArgumentException());
+            .orElseThrow(() -> new AuthorityNotFoundException(authorityName));
 
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
         if (!memberAuthorityRepository.existsById(pk)) {
-            //TODO 4: custom exception 만들기(이미 있는 권한)
-            throw new IllegalArgumentException();
+            throw new AlreadyExistAuthorityException(authorityName);
         }
 
         Authority adminAuthority = authorityRepository.findByName("admin").get();
@@ -131,11 +132,10 @@ public class MemberServiceImpl implements MemberService {
         MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
         MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
 
-        //TODO 5: custom exception 만들기(admin과 author권한 동시 존재 불가)
         if (!authorityName.equals("member") &&
             (memberAuthorityRepository.existsById(adminPk) ||
                 memberAuthorityRepository.existsById(authorPk))) {
-            throw new IllegalArgumentException();
+            throw new AdminAndAuthorAuthorityCannotExistTogetherException();
         }
 
         MemberAuthority memberAuthority =
@@ -151,22 +151,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMemberAuthority(Long memberNo, String authorityName) {
-        memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        getMemberService.getMemberNo(memberNo);
 
-        //TODO 3: custom exception (member authority는 삭제할 수 없음)
         if (authorityName.equals("member")) {
-            throw new IllegalArgumentException();
+            throw new MemberAuthorityCannotBeDeletedException();
         }
 
-        //TODO 3: Make Custom Exception?
         Authority authority = authorityRepository.findByName(authorityName)
-            .orElseThrow(() -> new IllegalArgumentException());
+            .orElseThrow(() -> new AuthorityNotFoundException(authorityName));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
-        //TODO 3: Custom Exception (없는 권한은 삭제할 수 없음)
-        MemberAuthority memberAuthority = memberAuthorityRepository.findById(pk)
-            .orElseThrow(() -> new IllegalArgumentException());
+        memberAuthorityRepository.findById(pk)
+            .orElseThrow(() -> new MemberAuthorityNotFoundException());
 
 
         memberAuthorityRepository.deleteById(pk);
@@ -174,7 +170,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void createMemberGrade(Long memberNo, String gradeName) {
-        Member member = getMember(memberNo);
+        Member member = getMemberService.getMemberNo(memberNo);
 
         MemberGrade memberGrade = new MemberGrade(member, gradeName);
 
@@ -185,8 +181,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo,
                                                                   Pageable pageable) {
-        memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+        getMemberService.getMemberNo(memberNo);
 
         return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
     }

@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MemberRetrieveResponse {
-    private Long memberId;
+    private Long memberNo;
     private String gender;
-    private String id;
+    private String memberId;
     private String nickname;
     private String name;
     private LocalDate birthday;
@@ -27,33 +27,10 @@ public class MemberRetrieveResponse {
     private LocalDateTime deletedAt;
     private Boolean isBlocked;
 
-    /**
-     * dto projection을 위한 생성자
-     *
-     * @author 양승아
-     */
-    public MemberRetrieveResponse(Long memberId, Gender gender, String id,
-                                  String nickname, String name, LocalDate birthday, String phoneNo,
-                                  String email, LocalDateTime createdAt, LocalDateTime updatedAt,
-                                  LocalDateTime deletedAt, Boolean isBlocked) {
-        this.memberId = memberId;
-        this.gender = gender.getName();
-        this.id = id;
-        this.nickname = nickname;
-        this.name = name;
-        this.birthday = birthday;
-        this.phoneNo = phoneNo;
-        this.email = email;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-        this.isBlocked = isBlocked;
-    }
-
     public static MemberRetrieveResponse fromEntity(Member member) {
         return MemberRetrieveResponse.builder()
-            .memberId(member.getMemberNo())
-            .id(member.getMemberId())
+            .memberNo(member.getMemberNo())
+            .memberId(member.getMemberId())
             .name(member.getName())
             .nickname(member.getNickname())
             .birthday(member.getBirthday())

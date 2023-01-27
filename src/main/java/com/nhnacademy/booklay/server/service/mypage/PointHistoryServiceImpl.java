@@ -37,7 +37,6 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
         Integer currentTotalPoint = recentlyPointHistory.getTotalPoint();
 
-        //TODO 3: 가진 포인트보다 더 큰 포인트를 선물할 수 없음
         if (currentTotalPoint + requestDto.getPoint() < 0) {
             throw new IllegalArgumentException();
         }
@@ -50,7 +49,6 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     @Transactional(readOnly = true)
     public Page<PointHistoryRetrieveResponse> retrievePointHistorys(Long memberNo, Pageable pageable) {
         return pointHistoryRepository.retrievePointHistoryByMemberNo(memberNo, pageable);
-        //TODO : query dsl 작성
     }
 
     @Override

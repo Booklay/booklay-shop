@@ -66,6 +66,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         return deliveryDestinationRepository.retrieveDeliveryDestinationByMemberNo(memberNo);
     }
 
+    @Transactional(readOnly = true)
     private DeliveryDestination checkExistsDeliveryDestination(Long addressNo) {
         return deliveryDestinationRepository.findById(addressNo)
             .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));

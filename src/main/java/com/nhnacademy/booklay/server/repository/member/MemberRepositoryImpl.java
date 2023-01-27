@@ -1,14 +1,20 @@
 package com.nhnacademy.booklay.server.repository.member;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.QAuthority;
 import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QMemberAuthority;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPQLQuery;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.Optional;
+import org.springframework.data.support.PageableExecutionUtils;
 
 public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom {
 
@@ -34,5 +40,32 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
                 .fetchOne();
 
         return Optional.ofNullable(memberLoginResponse);
+    }
+
+    @Override
+    public Page<MemberRetrieveResponse> retrieveAll(Pageable pageable) {
+        QMember member = QMember.member;
+
+        List<MemberRetrieveResponse> content = from(member)
+            .select(Projections.constructor(MemberRetrieveResponse.class,
+                member.memberNo,
+                member.gender.name,
+                member.memberId,
+                member.nickname,
+                member.name,
+                member.birthday,
+                member.phoneNo,
+                member.email,
+                member.createdAt,
+                member.updatedAt,
+                member.deletedAt,
+                member.isBlocked))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        JPQLQuery<Long> count = from(member)
+            .select(member.count());
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
     }
 }

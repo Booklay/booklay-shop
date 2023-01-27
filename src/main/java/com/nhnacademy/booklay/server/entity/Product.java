@@ -54,7 +54,8 @@ public class Product {
   private boolean pointMethod;
 
   @Column(name="is_deleted")
-  private boolean isDeleted = true;
+  @Setter
+  private boolean isDeleted = false;
 
   @Builder
   public Product(Image image, String title, Long price, Long pointRate, String shortDescription, String longDescription, boolean isSelling, boolean pointMethod) {

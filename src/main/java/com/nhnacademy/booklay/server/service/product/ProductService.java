@@ -30,4 +30,6 @@ public interface ProductService {
   Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable);
 
   RetrieveProductViewResponse retrieveProductView(Long productId);
+
+  void softDelete(Long productId);
 }

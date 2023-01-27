@@ -8,6 +8,7 @@ import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +58,6 @@ public class ProductAdminController {
     return productService.updateBookProduct(request);
   }
 
-
   //구독 등록
   @PostMapping(value = "/subscribes", consumes = {MediaType.APPLICATION_JSON_VALUE,
       MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -81,5 +81,10 @@ public class ProductAdminController {
       @RequestPart MultipartFile imgFile) throws Exception {
     request.setImage(imgFile);
     return productService.updateSubscribeProduct(request);
+  }
+
+  @DeleteMapping("/{productId}")
+  public void softDeleteProduct(@PathVariable Long productId){
+    productService.softDelete(productId);
   }
 }

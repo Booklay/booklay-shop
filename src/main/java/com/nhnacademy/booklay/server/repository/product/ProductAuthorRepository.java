@@ -13,5 +13,7 @@ public interface ProductAuthorRepository extends JpaRepository<ProductAuthor, Pr
   @Query(value = "delete from ProductAuthor as pd where pd.pk.bookId=?1")
   void deleteAllByProductDetailId(Long id);
 
-  List<ProductAuthor> findAllByProductDetail(ProductDetail productDetail);
+  void deleteByPk_AuthorId(Long id);
+
+  boolean existsByPk_AuthorId(Long id);
 }

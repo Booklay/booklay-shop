@@ -31,7 +31,7 @@ public class PointHistoryRepositoryImpl extends QuerydslRepositorySupport
         TotalPointRetrieveResponse responsePoint = from(pointHistory)
             .innerJoin(member).on(pointHistory.member.memberNo.eq(member.memberNo))
             .where(pointHistory.member.memberNo.eq(memberNo))
-            .orderBy(pointHistory.updatedAt.desc())
+            .orderBy(pointHistory.updatedAt.asc())
             .select(Projections.constructor(TotalPointRetrieveResponse.class,
                 pointHistory.member.memberNo,
                 pointHistory.totalPoint))

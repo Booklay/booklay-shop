@@ -183,6 +183,17 @@ public class ProductServiceImpl implements ProductService {
 
   //구독 상품 수정
   @Override
+  public Product retrieveProductByProductNo(Long productNo) {
+    return productRepository.findById(productNo).orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
+  }
+
+  @Override
+  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
+    return productRepository.findAllById(productNoList);
+  }
+
+  @Override
+  @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();

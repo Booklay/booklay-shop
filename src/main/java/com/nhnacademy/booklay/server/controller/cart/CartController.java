@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.controller.cart;
 
 
-import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.cart.CartServiceAndKeyDto;
@@ -9,13 +8,14 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.service.cart.MemberCartService;
 import com.nhnacademy.booklay.server.service.cart.RDBCartService;
 import com.nhnacademy.booklay.server.service.cart.RedisCartService;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,7 +48,6 @@ public class CartController {
             .build();
     }
 
-    //fixme mapping 방식 고려 필요
     @DeleteMapping
     public ResponseEntity<Void> deleteCart(@ModelAttribute("member")Member member,
                                            @RequestParam(STRING_CART_ID) String cartId,
@@ -69,7 +68,7 @@ public class CartController {
             .build();
     }
 
-    @PutMapping("buy")
+    @DeleteMapping("/buy")
     public ResponseEntity<Void> deleteCarts(@ModelAttribute("member")Member member,
                                             @RequestParam(STRING_CART_ID) String cartId,
                                            @RequestParam(STRING_PRODUCT_NO_LIST) List<Long> productNoList){

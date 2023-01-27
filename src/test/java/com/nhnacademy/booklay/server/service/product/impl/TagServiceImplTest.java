@@ -271,5 +271,6 @@ class TagServiceImplTest {
 
     //then
     assertThatThrownBy(()->tagService.deleteTagProduct(deleteTagProductRequest)).isInstanceOf(NotFoundException.class);
+
   }
 }

@@ -62,7 +62,6 @@ public class ProductServiceImpl implements ProductService {
 
   //상품 생성
   @Override
-  @Transactional
   public Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception {
 
     //product
@@ -91,7 +90,6 @@ public class ProductServiceImpl implements ProductService {
 
   //구독 생성
   @Override
-  @Transactional
   public Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
@@ -113,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
 
   //수정 위해서 책 상품 조회
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public RetrieveProductBookResponse retrieveBookData(Long id) {
     RetrieveProductBookResponse response = productRepository.findProductBookDataByProductId(id);
     response.setAuthorIds(
@@ -125,7 +123,6 @@ public class ProductServiceImpl implements ProductService {
 
   //책 상품 수정
   @Override
-  @Transactional
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
@@ -162,7 +159,6 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  @Transactional
   public void softDelete(Long productId) {
     Product targetProduct = productRepository.findById(productId)
         .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
@@ -176,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
 
   //수정 위해서 구독 상품 조회
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
     RetrieveProductSubscribeResponse response = productRepository.findProductSubscribeDataByProductId(
         id);
@@ -187,7 +183,6 @@ public class ProductServiceImpl implements ProductService {
 
   //구독 상품 수정
   @Override
-  @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
@@ -327,7 +322,7 @@ public class ProductServiceImpl implements ProductService {
 
   //상품(책 구독 모두) 게시판식 조회
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) {
     Page<Product> products = productRepository.findAllBy(pageable, Product.class);
 
@@ -371,6 +366,7 @@ public class ProductServiceImpl implements ProductService {
 
   //상품 상세 보기 조회
   @Override
+  @Transactional(readOnly = true)
   public RetrieveProductViewResponse retrieveProductView(Long productId) {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));

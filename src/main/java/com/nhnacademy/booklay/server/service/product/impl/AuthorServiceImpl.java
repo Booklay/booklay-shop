@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
 
   private final AuthorRepository authorRepository;
   private final MemberRepository memberRepository;
+  private final ProductAuthorRepository productAuthorRepository;
 
   @Override
   public void createAuthor(CreateAuthorRequest request) {
@@ -69,10 +71,11 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   public void deleteAuthor(DeleteIdRequest request) {
     Long id = request.getId();
-    if(!authorRepository.existsById(id)){
-      throw new NotFoundException(Author.class,"Delete target Author not found");
-    }
-    authorRepository.deleteById(id);
+
+    Author author = authorRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(Author.class, "author not found"));
+
+    authorRepository.delete(author);
   }
 
   @Override
@@ -84,9 +87,10 @@ public class AuthorServiceImpl implements AuthorService {
     List<RetrieveAuthorResponse> contents = new ArrayList<>();
 
     for (Author author : content) {
-      RetrieveAuthorResponse element = new RetrieveAuthorResponse(author.getAuthorNo(), author.getName());
+      RetrieveAuthorResponse element = new RetrieveAuthorResponse(author.getAuthorId(),
+          author.getName());
 
-      if(Objects.nonNull(author.getMember())) {
+      if (Objects.nonNull(author.getMember())) {
         Member member = author.getMember();
         MemberForAuthorResponse memberDto = new MemberForAuthorResponse(member.getMemberNo(),
             member.getMemberId());

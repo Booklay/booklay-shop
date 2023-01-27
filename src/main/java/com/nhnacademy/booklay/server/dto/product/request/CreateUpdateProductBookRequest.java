@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dto.product.request;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
@@ -26,9 +27,12 @@ public class CreateUpdateProductBookRequest {
   @NotNull
   private String longDescription;
   @NotNull
-  private boolean isSelling;
+  private Boolean isSelling;
   @NotNull
-  private boolean pointMethod;
+  private Boolean pointMethod;
+  @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
+  @Setter
+  private LocalDateTime createdAt;
 
   private Long productDetailId;
   @NotNull
@@ -44,7 +48,7 @@ public class CreateUpdateProductBookRequest {
   @Setter
   private String ebookAddress;
   @Setter
-  private int storage;
+  private Integer storage;
   @NotNull
   private List<Long> authorIds;
   @NotNull
@@ -52,8 +56,8 @@ public class CreateUpdateProductBookRequest {
 
   @Builder
   public CreateUpdateProductBookRequest(Long productId, String title, Long price,
-      Long pointRate, String shortDescription, String longDescription, boolean isSelling,
-      boolean pointMethod, Long productDetailId, String isbn, int page, String publisher,
+      Long pointRate, String shortDescription, String longDescription, Boolean isSelling,
+      Boolean pointMethod, Long productDetailId, String isbn, int page, String publisher,
       LocalDate publishedDate, String ebookAddress, int storage, List<Long> authorIds,
       List<Long> categoryIds) {
     this.productId = productId;

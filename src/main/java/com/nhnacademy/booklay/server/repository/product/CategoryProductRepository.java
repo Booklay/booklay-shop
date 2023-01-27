@@ -11,6 +11,6 @@ public interface CategoryProductRepository extends
 
   @Modifying
   @Transactional
-  @Query(value="delete from CategoryProduct as cp where cp.pk.productId=?1")
+  @Query(value = "delete from CategoryProduct as cp where cp.pk.productId=?1")
   void deleteAllByProductId(Long id);
 }

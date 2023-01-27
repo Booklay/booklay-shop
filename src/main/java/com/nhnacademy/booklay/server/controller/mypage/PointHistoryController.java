@@ -74,4 +74,12 @@ public class PointHistoryController {
             .build();
     }
 
+    @PostMapping("/coupon/{memberNo}/{couponId}")
+    public ResponseEntity<Void> convertPointCoupon(@PathVariable Long memberNo,
+                                                   @PathVariable Long couponId) {
+        //TODO : 쿠폰 확인, 쿠폰 사용 체크, 포인트 적립
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
+    }
+
 }

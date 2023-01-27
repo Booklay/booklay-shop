@@ -124,14 +124,14 @@ class MemberServiceImplTest {
     @DisplayName("관리자의 회원 전체조회시 Page 반환 성공 테스트")
     void retrieveMembersSuccessTest() {
         //given
-        given(memberRepository.findAllBy(any())).willReturn(Page.empty());
+        given(memberRepository.retrieveAll(any())).willReturn(Page.empty());
 
         //when
         Page<MemberRetrieveResponse> pageResponse =
             memberService.retrieveMembers(PageRequest.of(0, 10));
 
         //then
-        then(memberRepository).should().findAllBy(any());
+        then(memberRepository).should().retrieveAll(any());
         assertThat(pageResponse.getTotalElements()).isZero();
     }
 

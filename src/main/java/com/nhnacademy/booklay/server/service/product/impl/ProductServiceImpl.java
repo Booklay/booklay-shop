@@ -18,8 +18,8 @@ import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
-import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.ImageRepository;
+import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
@@ -111,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
     return savedProduct.getId();
   }
 
-  //수정 위해서 조회
+  //수정 위해서 책 상품 조회
   @Override
   @Transactional
   public RetrieveProductBookResponse retrieveBookData(Long id) {
@@ -123,6 +123,7 @@ public class ProductServiceImpl implements ProductService {
     return response;
   }
 
+  //책 상품 수정
   @Override
   @Transactional
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
@@ -162,13 +163,29 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
+  public void softDelete(Long productId) {
+    Product targetProduct = productRepository.findById(productId)
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+
+    targetProduct.setDeleted(true);
+
+    productRepository.save(targetProduct);
+
+    log.info("변동 확인용 출력 : " + productRepository.findById(productId).get().isDeleted());
+  }
+
+  //수정 위해서 구독 상품 조회
+  @Override
+  @Transactional
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    RetrieveProductSubscribeResponse response = productRepository.findProductSubscribeDataByProductId(id);
+    RetrieveProductSubscribeResponse response = productRepository.findProductSubscribeDataByProductId(
+        id);
     response.setCategoryIds(productRepository.findCategoryIdsByProductId(response.getProductId()));
 
     return response;
   }
 
+  //구독 상품 수정
   @Override
   @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
@@ -237,13 +254,13 @@ public class ProductServiceImpl implements ProductService {
 
     return Product.builder()
         .price(request.getPrice())
-        .pointMethod(request.isPointMethod())
+        .pointMethod(request.getPointMethod())
         .pointRate(request.getPointRate())
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .image(image)
-        .isSelling(request.isSelling())
+        .isSelling(request.getIsSelling())
         .build();
   }
 
@@ -289,13 +306,13 @@ public class ProductServiceImpl implements ProductService {
     Image image = imageRepository.save(requestImage);
     return Product.builder()
         .price(request.getPrice())
-        .pointMethod(request.isPointMethod())
+        .pointMethod(request.getPointMethod())
         .pointRate(request.getPointRate())
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .image(image)
-        .isSelling(request.isSelling())
+        .isSelling(request.getIsSelling())
         .build();
   }
 
@@ -320,36 +337,37 @@ public class ProductServiceImpl implements ProductService {
 
     for (int i = 0; i < productsContent.size(); i++) {
       Product product = productsContent.get(i);
-//      if (product.isSelling()) { //soft delete 용 나중에 관리자 페이지 하면서 풀어줄것
-      //책 상품이라면
-      if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-        ProductDetail productDetail = productDetailRepository.findProductDetailByProductId(
-            product.getId());
-        log.info("PD 아이디 출력" + productDetail.getId());
-        //작가 정보 DTO
-        List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(
-            productDetail.getId());
+      if (!product.isDeleted()) {
+        //책 상품이라면
+        if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
+          ProductDetail productDetail = productDetailRepository.findProductDetailByProductId(
+              product.getId());
+          log.info("PD 아이디 출력" + productDetail.getId());
+          //작가 정보 DTO
+          List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(
+              productDetail.getId());
 
-        //합체
-        RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
-            authors);
-        //컨텐츠에 주입
-        assembledContent.add(element);
-      }
+          //합체
+          RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
+              authors);
+          //컨텐츠에 주입
+          assembledContent.add(element);
+        }
 
-      //구독 상품 이라면
-      if (subscribeRepository.existsSubscribeByProduct(product)) {
-        Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-        RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
-        assembledContent.add(element);
+        //구독 상품 이라면
+        if (subscribeRepository.existsSubscribeByProduct(product)) {
+          Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+          RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
+          assembledContent.add(element);
+        }
       }
-//      }
     }
 
     return new PageImpl<>(assembledContent, products.getPageable(),
         products.getTotalElements());
   }
 
+  //상품 상세 보기 조회
   @Override
   public RetrieveProductViewResponse retrieveProductView(Long productId) {
     Product product = productRepository.findById(productId)

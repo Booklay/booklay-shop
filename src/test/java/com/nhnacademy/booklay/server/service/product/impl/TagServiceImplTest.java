@@ -232,33 +232,44 @@ class TagServiceImplTest {
     CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
     Product product = DummyCart.getDummyProduct(request1);
     tag.setId(1L);
-    CreateDeleteTagProductRequest createTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+    CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
 
     given(tagRepository.findById(tag.getId())).willReturn(Optional.of(tag));
     given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
-
-    //when
-    tagService.createTagProduct(createTagProductRequest);
-
-    //then
-    BDDMockito.then(productTagRepository).should().save(any());
-  }
-
-  @Test
-  void testDeleteTagProduct_failure(){
-    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
-    Product product = DummyCart.getDummyProduct(request1);
-    tag.setId(1L);
-    CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
-    ProductTag.Pk pk = new Pk(tag.getId(), product.getId());
-
-    given(tagRepository.existsById(tag.getId())).willReturn(true);
-    given(productRepository.existsById(product.getId())).willReturn(true);
 
     //when
     tagService.deleteTagProduct(deleteTagProductRequest);
 
     //then
     BDDMockito.then(productTagRepository).should().deleteById(any());
+  }
+
+  @Test
+  void testDeleteTagProduct_failureByTag(){
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+    ProductTag.Pk pk = new Pk(tag.getId(), product.getId());
+
+    given(tagRepository.findById(tag.getId())).willThrow(new NotFoundException(Tag.class, "tag not found"));
+    given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+
+    //then
+    assertThatThrownBy(()->tagService.deleteTagProduct(deleteTagProductRequest)).isInstanceOf(NotFoundException.class);
+  }
+
+  @Test
+  void testDeleteTagProduct_failureByProduct(){
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+    ProductTag.Pk pk = new Pk(tag.getId(), product.getId());
+
+    given(productRepository.findById(product.getId())).willThrow(new NotFoundException(Product.class, "product not found"));
+
+    //then
+    assertThatThrownBy(()->tagService.deleteTagProduct(deleteTagProductRequest)).isInstanceOf(NotFoundException.class);
   }
 }

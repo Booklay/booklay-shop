@@ -138,12 +138,8 @@ public class TagServiceImpl implements TagService {
   @Override
   public void deleteTagProduct(CreateDeleteTagProductRequest request) {
     ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
-    if (!productRepository.existsById(request.getProductNo())) {
-      throw new NotFoundException(Product.class, NOT_FOUNT);
-    }
-    if (!tagRepository.existsById(request.getTagId())) {
-      throw new NotFoundException(Tag.class, "tag not found");
-    }
+    productRepository.findById(request.getProductNo()).orElseThrow(()->new NotFoundException(Product.class, "product not found"));
+    tagRepository.findById(request.getTagId()).orElseThrow(()->new NotFoundException(Tag.class, "tag not found"));
 
     productTagRepository.deleteById(pk);
   }

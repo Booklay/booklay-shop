@@ -5,13 +5,26 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.when;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
+import com.nhnacademy.booklay.server.dummy.Dummy;
+import com.nhnacademy.booklay.server.dummy.DummyCart;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductTag;
+import com.nhnacademy.booklay.server.entity.ProductTag.Pk;
 import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
+import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.TagRepository;
 import java.util.Optional;
@@ -24,7 +37,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @Slf4j
@@ -39,6 +55,9 @@ class TagServiceImplTest {
 
   @Mock
   ProductTagRepository productTagRepository;
+
+  @Mock
+  ProductRepository productRepository;
 
   CreateTagRequest request;
   Tag tag;
@@ -133,7 +152,7 @@ class TagServiceImplTest {
   }
 
   @Test
-  void testTagRetrieveAll_success() {
+  void testRetrieveTagPage_success(){
     //given
     given(tagRepository.findAllBy(any(), any())).willReturn(Page.empty());
 
@@ -146,4 +165,112 @@ class TagServiceImplTest {
     assertThat(pageResponse.getTotalElements()).isZero();
   }
 
+  @Test
+  void testRetrieveTagPageWithBoolean_success(){
+//given
+    given(productRepository.existsById(any())).willReturn(true);
+
+    given(tagRepository.findAllBy(any(), any())).willReturn(Page.empty());
+
+    //when
+    Page<TagProductResponse> pageResponse = tagService.retrieveAllTagWithBoolean(PageRequest.of(0, 10), any());
+
+    //then
+    BDDMockito.then(tagRepository).should().findAllBy(any(), any());
+
+    assertThat(pageResponse.getTotalElements()).isZero();
+  }
+
+  @Test
+  void testCreateTagProduct_success(){
+    //given
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest createTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+
+    given(tagRepository.findById(tag.getId())).willReturn(Optional.of(tag));
+    given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+
+    //when
+    tagService.createTagProduct(createTagProductRequest);
+
+    //then
+    BDDMockito.then(productTagRepository).should().save(any());
+  }
+
+  @Test
+  void testCreateTagProduct_failureByTagNotFound(){
+    //given
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest createTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+
+    given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+    given(tagRepository.findById(tag.getId())).willThrow(new NotFoundException(Tag.class, "tag not found"));
+
+    //then
+    assertThatThrownBy(()->tagService.createTagProduct(createTagProductRequest)).isInstanceOf(NotFoundException.class);
+  }
+
+  @Test
+  void testCreateTagProduct_failureByProductNotFound(){
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest createTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+
+    given(productRepository.findById(product.getId())).willThrow(new NotFoundException(Product.class, "product not found"));
+
+    assertThatThrownBy(()->tagService.createTagProduct(createTagProductRequest)).isInstanceOf(NotFoundException.class);
+  }
+
+  @Test
+  void testDeleteTagProduct_success(){
+    //given
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+
+    given(tagRepository.findById(tag.getId())).willReturn(Optional.of(tag));
+    given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+
+    //when
+    tagService.deleteTagProduct(deleteTagProductRequest);
+
+    //then
+    BDDMockito.then(productTagRepository).should().deleteById(any());
+  }
+
+  @Test
+  void testDeleteTagProduct_failureByTag(){
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+    ProductTag.Pk pk = new Pk(tag.getId(), product.getId());
+
+    given(tagRepository.findById(tag.getId())).willThrow(new NotFoundException(Tag.class, "tag not found"));
+    given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+
+    //then
+    assertThatThrownBy(()->tagService.deleteTagProduct(deleteTagProductRequest)).isInstanceOf(NotFoundException.class);
+  }
+
+  @Test
+  void testDeleteTagProduct_failureByProduct(){
+    CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
+    Product product = DummyCart.getDummyProduct(request1);
+    tag.setId(1L);
+    CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
+    ProductTag.Pk pk = new Pk(tag.getId(), product.getId());
+
+    given(productRepository.findById(product.getId())).willThrow(new NotFoundException(Product.class, "product not found"));
+
+    //then
+    assertThatThrownBy(()->tagService.deleteTagProduct(deleteTagProductRequest)).isInstanceOf(NotFoundException.class);
+
+  }
 }

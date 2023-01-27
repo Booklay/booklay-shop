@@ -37,7 +37,7 @@ public class ProductRepositoryTest {
     Product expected = productRepository.save(product);
 
     //then
-    assertThat(expected.isDeleted()).isEqualTo(true);
+    assertThat(expected.isDeleted()).isFalse();
 
   }
 }

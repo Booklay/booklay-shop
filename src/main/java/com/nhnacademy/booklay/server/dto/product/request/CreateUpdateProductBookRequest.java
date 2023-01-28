@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class CreateUpdateProductBookRequest {
 
   private Long productId;
@@ -54,28 +57,4 @@ public class CreateUpdateProductBookRequest {
   @NotNull
   private List<Long> categoryIds;
 
-  @Builder
-  public CreateUpdateProductBookRequest(Long productId, String title, Long price,
-      Long pointRate, String shortDescription, String longDescription, Boolean isSelling,
-      Boolean pointMethod, Long productDetailId, String isbn, int page, String publisher,
-      LocalDate publishedDate, String ebookAddress, int storage, List<Long> authorIds,
-      List<Long> categoryIds) {
-    this.productId = productId;
-    this.title = title;
-    this.price = price;
-    this.pointRate = pointRate;
-    this.shortDescription = shortDescription;
-    this.longDescription = longDescription;
-    this.isSelling = isSelling;
-    this.pointMethod = pointMethod;
-    this.productDetailId = productDetailId;
-    this.isbn = isbn;
-    this.page = page;
-    this.publisher = publisher;
-    this.publishedDate = publishedDate;
-    this.ebookAddress = ebookAddress;
-    this.storage = storage;
-    this.authorIds = authorIds;
-    this.categoryIds = categoryIds;
-  }
 }

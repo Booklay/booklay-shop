@@ -28,18 +28,18 @@ class RestockingNotificationRepositoryTest {
     void testRestockingNotificationSave() {
         //given
         RestockingNotification restockingNotification = DummyNum3.getDummyRestockingNotification();
-        entityManager.persist(restockingNotification.getProduct().getImage());
+        entityManager.persist(restockingNotification.getProduct().getObjectFile());
         entityManager.persist(restockingNotification.getProduct());
         entityManager.persist(restockingNotification.getMember().getGender());
         entityManager.persist(restockingNotification.getMember());
 
         //when
-        RestockingNotification expected = restockingNotificationRepository.save(restockingNotification);
+        RestockingNotification expected =
+            restockingNotificationRepository.save(restockingNotification);
         //then
         assertThat(expected.getProduct()).isEqualTo(restockingNotification.getProduct());
 
     }
-
 
 
     @Test
@@ -47,7 +47,7 @@ class RestockingNotificationRepositoryTest {
     void testMemberFindById() {
         //given
         RestockingNotification restockingNotification = DummyNum3.getDummyRestockingNotification();
-        entityManager.persist(restockingNotification.getProduct().getImage());
+        entityManager.persist(restockingNotification.getProduct().getObjectFile());
         entityManager.persist(restockingNotification.getProduct());
         entityManager.persist(restockingNotification.getMember().getGender());
         entityManager.persist(restockingNotification.getMember());
@@ -55,7 +55,9 @@ class RestockingNotificationRepositoryTest {
         restockingNotificationRepository.save(restockingNotification);
 
         //when
-        RestockingNotification expected = restockingNotificationRepository.findById(restockingNotification.getPk()).orElseThrow(() -> new IllegalArgumentException("RestockingNotification not found"));
+        RestockingNotification expected =
+            restockingNotificationRepository.findById(restockingNotification.getPk()).orElseThrow(
+                () -> new IllegalArgumentException("RestockingNotification not found"));
 
         //then
         assertThat(expected.getPk()).isEqualTo(restockingNotification.getPk());

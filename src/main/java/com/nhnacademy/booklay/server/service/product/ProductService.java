@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.product;
 
-import com.nhnacademy.booklay.server.dto.product.RetrieveIdRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
@@ -18,24 +17,25 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-  Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception;
+    Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception;
 
-  Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
+    Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
 
-  Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception;
+    Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception;
 
-  Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
+    Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
 
-  RetrieveProductBookResponse retrieveBookData(Long id);
+    RetrieveProductBookResponse retrieveBookData(Long id);
 
-  RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
+    RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
 
-  Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable);
+    Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable);
 
-  RetrieveProductViewResponse retrieveProductView(Long productId);
+    RetrieveProductViewResponse retrieveProductView(Long productId);
 
-  Product retrieveProductByProductNo(Long productNo);
-  List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
+    Product retrieveProductByProductNo(Long productNo);
 
-  void softDelete(Long productId);
+    List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
+
+    void softDelete(Long productId);
 }

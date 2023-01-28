@@ -1,10 +1,22 @@
 package com.nhnacademy.booklay.server.entity;
 
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
-import lombok.*;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table(name = "coupon")
 @Entity
@@ -19,7 +31,7 @@ public class Coupon {
 
     @OneToOne
     @JoinColumn(name = "image_no")
-    private Image image;
+    private ObjectFile objectFile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code")
@@ -58,10 +70,11 @@ public class Coupon {
     private Boolean isLimited;
 
     @Builder
-    public Coupon(Image image, CouponType couponType, String name, int amount, int minimumUseAmount,
+    public Coupon(ObjectFile objectFile, CouponType couponType, String name, int amount,
+                  int minimumUseAmount,
                   int maximumDiscountAmount, LocalDateTime issuanceDeadlineAt,
                   Boolean isDuplicatable) {
-        this.image = image;
+        this.objectFile = objectFile;
         this.couponType = couponType;
         this.name = name;
         this.amount = amount;

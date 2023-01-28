@@ -86,7 +86,7 @@ class CouponAdminServiceImplTest {
             Optional.ofNullable(Dummy.getDummyCategory()));
 
         given(imageRepository.findById(couponCreateCoupon.getImageId())).willReturn(
-            Optional.ofNullable(DummyCart.getDummyImage()));
+            Optional.ofNullable(DummyCart.getDummyFile()));
 
         // when
         couponAdminService.createCoupon(couponCreateCoupon);

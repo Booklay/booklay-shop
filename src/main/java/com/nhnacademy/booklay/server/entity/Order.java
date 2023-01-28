@@ -1,15 +1,24 @@
 package com.nhnacademy.booklay.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Table
 @Entity
@@ -61,7 +70,9 @@ public class Order {
     private Boolean isBlinded;
 
     @Builder
-    public Order(Member member, OrderStatusCode orderStatusCode, Long productPriceSum, Long deliveryPrice, Long discountPrice, Long pointUsePrice, Long paymentPrice, Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded) {
+    public Order(Member member, OrderStatusCode orderStatusCode, Long productPriceSum,
+                 Long deliveryPrice, Long discountPrice, Long pointUsePrice, Long paymentPrice,
+                 Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded) {
         this.member = member;
         this.orderStatusCode = orderStatusCode;
         this.productPriceSum = productPriceSum;

@@ -8,7 +8,6 @@ import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCan
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
-import com.nhnacademy.booklay.server.service.member.GetMemberService;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;

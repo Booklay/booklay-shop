@@ -5,7 +5,6 @@ import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCUR
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationLimitExceededException;
 import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationNotFoundException;
-import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.service.delivery.DeliveryDestinationService;
 import java.util.List;
 import javax.validation.Valid;

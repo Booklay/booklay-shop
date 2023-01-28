@@ -165,9 +165,9 @@ public class ProductServiceImpl implements ProductService {
 
     targetProduct.setDeleted(true);
 
-    productRepository.save(targetProduct);
+    Product deletedProduct = productRepository.save(targetProduct);
 
-    log.info("변동 확인용 출력 : " + productRepository.findById(productId).get().isDeleted());
+    log.info("변동 확인용 출력 : " + deletedProduct.isDeleted());
   }
 
   //수정 위해서 구독 상품 조회

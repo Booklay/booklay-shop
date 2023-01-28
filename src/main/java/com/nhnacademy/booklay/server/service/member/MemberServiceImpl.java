@@ -18,6 +18,7 @@ import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedExcept
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
@@ -32,7 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author 양승아
  */
 @Slf4j
@@ -58,18 +58,18 @@ public class MemberServiceImpl implements MemberService {
     public void createMember(MemberCreateRequest createDto) {
         checkExistsMemberId(createDto.getMemberId());
 
-        Gender gender = genderRepository.findByName(createDto.getGender())
-            .orElseThrow(() -> new GenderNotFoundException(createDto.getGender()));
+        Gender gender = genderRepository.findByName(createDto.getGender()).orElseThrow(
+            () -> new GenderNotFoundException(createDto.getGender()));
 
         Member member = createDto.toEntity(gender);
         MemberGrade grade = new MemberGrade(member, "화이트");
 
-        Authority authority = authorityRepository.findByName("ROLE_MEMBER")
-            .orElseThrow(() -> new AuthorityNotFoundException("ROLE_MEMBER"));
+        Authority authority = authorityRepository.findByName("ROLE_MEMBER").orElseThrow(
+            () -> new AuthorityNotFoundException("ROLE_MEMBER"));
 
         MemberAuthority memberAuthority =
             new MemberAuthority(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()),
-                member, authority);
+                                member, authority);
 
         memberRepository.save(member);
         memberGradeRepository.save(grade);
@@ -94,8 +94,8 @@ public class MemberServiceImpl implements MemberService {
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        Gender gender = genderRepository.findByName(updateDto.getName())
-            .orElseThrow(() -> new GenderNotFoundException(updateDto.getName()));
+        Gender gender = genderRepository.findByName(updateDto.getName()).orElseThrow(
+            () -> new GenderNotFoundException(updateDto.getName()));
 
         member.updateMember(updateDto, gender);
 
@@ -118,28 +118,29 @@ public class MemberServiceImpl implements MemberService {
     public void createMemberAuthority(Long memberNo, String authorityName) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        Authority authority = authorityRepository.findByName(authorityName)
-            .orElseThrow(() -> new AuthorityNotFoundException(authorityName));
-
+        Authority authority = authorityRepository.findByName(authorityName).orElseThrow(
+            () -> new AuthorityNotFoundException(authorityName));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
         if (!memberAuthorityRepository.existsById(pk)) {
             throw new AlreadyExistAuthorityException(authorityName);
         }
 
-        Authority adminAuthority = authorityRepository.findByName("admin").get();
-        Authority authorAuthority = authorityRepository.findByName("author").get();
+        Authority adminAuthority = authorityRepository.findByName("admin").orElseThrow(
+            () -> new NotFoundException(Authority.class, "authority admin not found"));
+
+        Authority authorAuthority = authorityRepository.findByName("author").orElseThrow(
+            () -> new NotFoundException(Authority.class, "author not found"));
+
         MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
         MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
 
-        if (!authorityName.equals("member") &&
-            (memberAuthorityRepository.existsById(adminPk) ||
-                memberAuthorityRepository.existsById(authorPk))) {
+        if (!authorityName.equals("member") && (memberAuthorityRepository.existsById(adminPk) ||
+            memberAuthorityRepository.existsById(authorPk))) {
             throw new AdminAndAuthorAuthorityCannotExistTogetherException();
         }
 
-        MemberAuthority memberAuthority =
-            new MemberAuthority(pk, member, authority);
+        MemberAuthority memberAuthority = new MemberAuthority(pk, member, authority);
 
         memberAuthorityRepository.save(memberAuthority);
     }
@@ -157,15 +158,14 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberAuthorityCannotBeDeletedException();
         }
 
-        Authority authority = authorityRepository.findByName(authorityName)
-            .orElseThrow(() -> new AuthorityNotFoundException(authorityName));
+        Authority authority = authorityRepository.findByName(authorityName).orElseThrow(
+            () -> new AuthorityNotFoundException(authorityName));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
-        memberAuthorityRepository.findById(pk)
-            .orElseThrow(() -> new MemberAuthorityNotFoundException());
+        MemberAuthority memberAuthority = memberAuthorityRepository.findById(pk).orElseThrow(
+            () -> new NotFoundException(MemberAuthority.class, "member authority not found"));
 
-
-        memberAuthorityRepository.deleteById(pk);
+        memberAuthorityRepository.delete(memberAuthority);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class MemberServiceImpl implements MemberService {
 
     private Member getMember(Long memberNo) {
         return memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+                               .orElseThrow(() -> new MemberNotFoundException(memberNo));
     }
 
 }

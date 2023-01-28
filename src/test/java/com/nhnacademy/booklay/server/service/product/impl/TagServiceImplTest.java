@@ -234,9 +234,6 @@ class TagServiceImplTest {
     tag.setId(1L);
     CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
 
-    given(tagRepository.findById(tag.getId())).willReturn(Optional.of(tag));
-    given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
-
     //when
     tagService.deleteTagProduct(deleteTagProductRequest);
 
@@ -246,17 +243,18 @@ class TagServiceImplTest {
 
   @Test
   void testDeleteTagProduct_failureByTag(){
+
+    //given
     CreateUpdateProductBookRequest request1 = DummyCart.getDummyProductBookDto();
     Product product = DummyCart.getDummyProduct(request1);
     tag.setId(1L);
     CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
-    ProductTag.Pk pk = new Pk(tag.getId(), product.getId());
 
-    given(tagRepository.findById(tag.getId())).willThrow(new NotFoundException(Tag.class, "tag not found"));
-    given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+    //when
+    tagService.deleteTagProduct(deleteTagProductRequest);
 
     //then
-    assertThatThrownBy(()->tagService.deleteTagProduct(deleteTagProductRequest)).isInstanceOf(NotFoundException.class);
+    then(productTagRepository).should().deleteById(any());
   }
 
   @Test
@@ -267,10 +265,11 @@ class TagServiceImplTest {
     CreateDeleteTagProductRequest deleteTagProductRequest = new CreateDeleteTagProductRequest(tag.getId(), product.getId());
     ProductTag.Pk pk = new Pk(tag.getId(), product.getId());
 
-    given(productRepository.findById(product.getId())).willThrow(new NotFoundException(Product.class, "product not found"));
+    //when
+    tagService.deleteTagProduct(deleteTagProductRequest);
 
     //then
-    assertThatThrownBy(()->tagService.deleteTagProduct(deleteTagProductRequest)).isInstanceOf(NotFoundException.class);
+    then(productTagRepository).should().deleteById(any());
 
   }
 }

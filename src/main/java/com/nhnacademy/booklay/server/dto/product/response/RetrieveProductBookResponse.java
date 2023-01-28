@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
+@AllArgsConstructor
 public class RetrieveProductBookResponse {
 
   @NotNull
@@ -52,26 +54,4 @@ public class RetrieveProductBookResponse {
   private List<Long> authorIds;
   @Setter
   private List<Long> categoryIds;
-
-  public RetrieveProductBookResponse(Long productId, String title, Long price, Long pointRate,
-      String shortDescription, String longDescription, Boolean isSelling, Boolean pointMethod,
-      LocalDateTime createdAt, Long productDetailId, String isbn, Integer page, String publisher,
-      LocalDate publishedDate, String ebookAddress, Integer storage) {
-    this.productId = productId;
-    this.title = title;
-    this.price = price;
-    this.pointRate = pointRate;
-    this.shortDescription = shortDescription;
-    this.longDescription = longDescription;
-    this.isSelling = isSelling;
-    this.pointMethod = pointMethod;
-    this.createdAt = createdAt;
-    this.productDetailId = productDetailId;
-    this.isbn = isbn;
-    this.page = page;
-    this.publisher = publisher;
-    this.publishedDate = publishedDate;
-    this.ebookAddress = ebookAddress;
-    this.storage = storage;
-  }
 }

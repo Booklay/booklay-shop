@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 @DataJpaTest
-public class TagRepositoryTest {
+class TagRepositoryTest {
 
   @Autowired
   TagRepository repository;

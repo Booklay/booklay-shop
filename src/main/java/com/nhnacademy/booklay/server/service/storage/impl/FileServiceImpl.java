@@ -8,45 +8,60 @@ import com.nhnacademy.booklay.server.repository.ObjectFileRepository;
 import com.nhnacademy.booklay.server.service.storage.FileService;
 import com.nhnacademy.booklay.server.service.storage.StorageService;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class FileServiceImpl implements FileService {
-    
+
     private final StorageService storageService;
     private final ObjectFileRepository objectFileRepository;
 
-    public void uploadFile(final MultipartFile image) throws IOException {
-        FileRequest request = storageService.uploadImage(image);
-
-        objectFileRepository.save(
-            ObjectFile.builder()
-                .fileAddress(request.getFileAddress())
-                .build()
-        );
-    }
 
     @Override
-    public ObjectFileResponse uploadFile(MultipartFile image, FileResolveRequest fileResolveRequest)
+    public ObjectFile uploadFile(@RequestPart final MultipartFile file)
+        throws IOException {
+
+        Optional<String> contentType =
+            Arrays.stream(Objects.requireNonNull(file.getContentType()).split("/")).findFirst();
+
+        Optional<String> originalFilename = Optional.ofNullable(file.getOriginalFilename());
+        Optional<String> fileExtension = Optional.empty();
+
+        if (originalFilename.isPresent()) {
+            fileExtension = originalFilename.filter(f -> f.contains("."))
+                .map(f -> f.substring(originalFilename.get().lastIndexOf(".") + 1));
+        }
+
+        if (contentType.isPresent() && fileExtension.isPresent()) {
+            FileResolveRequest fileResolveRequest = FileResolveRequest.builder()
+                .fileExtension(fileExtension.get())
+                .fileType(contentType.get())
+                .build();
+
+            return uploadFileResolve(file, fileResolveRequest);
+        }
+
+        throw new IOException("파일이 손상되었거나 지원하지 않는 형식입니다.");
+    }
+
+    public ObjectFile uploadFileResolve(MultipartFile image, FileResolveRequest fileResolveRequest)
         throws IOException {
         FileRequest request = storageService.uploadImage(image, fileResolveRequest);
 
-        ObjectFile objectFile = objectFileRepository.save(
+        return objectFileRepository.save(
             ObjectFile.builder()
                 .fileAddress(request.getFileAddress())
                 .fileName(request.getFileName())
                 .build()
-        );
-
-        return new ObjectFileResponse(
-            objectFile.getId(),
-            objectFile.getFileName(),
-            objectFile.getFileAddress()
         );
     }
 

@@ -127,11 +127,6 @@ public class CloudStorageService implements StorageService {
     }
 
     @Override
-    public FileRequest uploadImage(final MultipartFile image) throws IOException {
-        return null;
-    }
-
-    @Override
     public String downloadFile(ObjectFileResponse fileResponse) throws IOException {
 
         accessResponse = objectMapper.readValue(requestToken(), AccessResponse.class);

@@ -39,9 +39,9 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name : Run SonarQube
-        run : mvn sonar:sonar
-          -Dsonar.projectKey=booklay_shop
-          -Dsonar.host.url=${{secrets.SONAR_HOST}}
+        run : mvn sonar:sonar \
+          -Dsonar.projectKey=booklay_shop \
+          -Dsonar.host.url=${{secrets.SONAR_HOST}} \
           -Dsonar.login=${{secrets.SONAR_TOKEN}}
 
       #################

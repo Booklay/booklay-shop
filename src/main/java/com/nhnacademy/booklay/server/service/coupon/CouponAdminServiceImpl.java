@@ -71,12 +71,6 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(),
             couponRequest.getApplyItemId());
 
-        // insert
-        if (couponRequest.getIsOrderCoupon()) {
-
-        } else {
-
-        }
         couponRepository.save(coupon);
     }
 

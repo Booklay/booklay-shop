@@ -61,13 +61,11 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     @Override
     @Transactional(readOnly = true)
     public List<DeliveryDestinationRetrieveResponse> retrieveDeliveryDestinations(Long memberNo) {
-        memberRepository.findById(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
         return deliveryDestinationRepository.retrieveDeliveryDestinationByMemberNo(memberNo);
     }
 
     @Transactional(readOnly = true)
-    private DeliveryDestination checkExistsDeliveryDestination(Long addressNo) {
+    public DeliveryDestination checkExistsDeliveryDestination(Long addressNo) {
         return deliveryDestinationRepository.findById(addressNo)
             .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));
     }

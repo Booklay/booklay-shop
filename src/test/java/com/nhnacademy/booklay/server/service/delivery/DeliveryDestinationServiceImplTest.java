@@ -43,7 +43,6 @@ class DeliveryDestinationServiceImplTest {
     @DisplayName("회원 배송지 조회 시 List 반환 성공 테스트")
     void retrieveDeliveryDestinations() {
         //given
-        given(memberRepository.findById(any())).willReturn(Optional.of(member));
         given(
             deliveryDestinationRepository.retrieveDeliveryDestinationByMemberNo(any())).willReturn(
             List.of());

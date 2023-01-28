@@ -41,8 +41,8 @@ jobs:
       - name : Run SonarQube
         run : mvn sonar:sonar \
           -Dsonar.projectKey=booklay_shop \
-          -Dsonar.host.url=${{secrets.SONAR_HOST}} \
-          -Dsonar.login=${{secrets.SONAR_TOKEN}}
+          -Dsonar.host.url=${{ secrets.SONAR_HOST }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       #################
       # Shop Server 1 #

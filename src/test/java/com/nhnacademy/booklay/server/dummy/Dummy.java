@@ -70,7 +70,7 @@ public class Dummy {
 
     public static Coupon getDummyCoupon() {
         Coupon coupon = Coupon.builder()
-            .image(DummyCart.getDummyImage())
+            .objectFile(DummyCart.getDummyFile())
             .couponType(Dummy.getDummyCouponType())
             .name("이달의 쿠폰")
             .amount(5)
@@ -229,7 +229,8 @@ public class Dummy {
         ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
         ReflectionTestUtils.setField(couponRequest, "amount", 5);
         ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", true);
-        ReflectionTestUtils.setField(couponRequest, "applyItemId", Dummy.getDummyCategory().getId());
+        ReflectionTestUtils.setField(couponRequest, "applyItemId",
+            Dummy.getDummyCategory().getId());
         ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
         ReflectionTestUtils.setField(couponRequest, "maximumDiscountAmount", 5000);
         ReflectionTestUtils.setField(couponRequest, "issuanceDeadlineAt", LocalDateTime.now());
@@ -262,11 +263,13 @@ public class Dummy {
 
         return couponRequest;
     }
+
     public static MemberCreateRequest getDummyMemberCreateRequest() {
         MemberCreateRequest memberRequest = new MemberCreateRequest();
         ReflectionTestUtils.setField(memberRequest, "gender", "M");
         ReflectionTestUtils.setField(memberRequest, "memberId", "HoDong");
-        ReflectionTestUtils.setField(memberRequest, "password", "$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu");
+        ReflectionTestUtils.setField(memberRequest, "password",
+            "$2a$12$5KoVJnK1WF2h4h4T3FmifeO3ZLtAjiayJ783EfvTs7zSIz2GUhnMu");
         ReflectionTestUtils.setField(memberRequest, "nickname", "천하장사");
         ReflectionTestUtils.setField(memberRequest, "name", "강호동");
         ReflectionTestUtils.setField(memberRequest, "birthday", LocalDate.now());
@@ -338,6 +341,7 @@ public class Dummy {
         ReflectionTestUtils.setField(request, "count", 3);
         return request;
     }
+
     public static CartAddRequest getDummyMemberCartAddRequest() {
         CartAddRequest request = new CartAddRequest();
         ReflectionTestUtils.setField(request, "cartId", "5");

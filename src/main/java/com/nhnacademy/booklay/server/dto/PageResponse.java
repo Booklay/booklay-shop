@@ -1,9 +1,8 @@
 package com.nhnacademy.booklay.server.dto;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**

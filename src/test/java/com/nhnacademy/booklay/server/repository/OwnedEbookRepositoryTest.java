@@ -28,7 +28,7 @@ class OwnedEbookRepositoryTest {
     void testRestockingNotificationSave() {
         //given
         OwnedEbook ownedEbook = DummyNum3.getDummyOwnedEbook();
-        entityManager.persist(ownedEbook.getProduct().getImage());
+        entityManager.persist(ownedEbook.getProduct().getObjectFile());
         entityManager.persist(ownedEbook.getProduct());
         entityManager.persist(ownedEbook.getMember().getGender());
         entityManager.persist(ownedEbook.getMember());
@@ -41,20 +41,20 @@ class OwnedEbookRepositoryTest {
     }
 
 
-
     @Test
     @DisplayName("RestockingNotificationRepository findById 테스트")
     void testMemberFindById() {
         //given
         OwnedEbook ownedEbook = DummyNum3.getDummyOwnedEbook();
-        entityManager.persist(ownedEbook.getProduct().getImage());
+        entityManager.persist(ownedEbook.getProduct().getObjectFile());
         entityManager.persist(ownedEbook.getProduct());
         entityManager.persist(ownedEbook.getMember().getGender());
         entityManager.persist(ownedEbook.getMember());
         ownedEbookRepository.save(ownedEbook);
 
         //when
-        OwnedEbook expected = ownedEbookRepository.findById(ownedEbook.getId()).orElseThrow(() -> new IllegalArgumentException("RestockingNotification not found"));
+        OwnedEbook expected = ownedEbookRepository.findById(ownedEbook.getId())
+            .orElseThrow(() -> new IllegalArgumentException("RestockingNotification not found"));
 
         //then
         assertThat(expected.getMember()).isEqualTo(ownedEbook.getMember());

@@ -8,14 +8,14 @@ import java.time.LocalDate;
 public class DummyNum3 {
 
 
-    private static Product getDummyProductForDummy(){
-        Image image = Image.builder()
-            .address("")
-            .ext("")
+    private static Product getDummyProductForDummy() {
+        ObjectFile objectFile = ObjectFile.builder()
+            .fileAddress("")
+            .fileName("")
             .build();
-        ReflectionTestUtils.setField(image, "id", 1L);
+        ReflectionTestUtils.setField(objectFile, "id", 1L);
         Product product = Product.builder()
-            .image(image)
+            .objectFile(objectFile)
             .price(1L)
             .pointRate(1L)
             .isSelling(true)
@@ -27,7 +27,7 @@ public class DummyNum3 {
         return product;
     }
 
-    private static Member getDummyMemberForDummy(){
+    private static Member getDummyMemberForDummy() {
         Gender gender = Gender.builder()
             .id(1L)
             .name("M")
@@ -46,6 +46,7 @@ public class DummyNum3 {
             .build();
         return member;
     }
+
     public static RestockingNotification getDummyRestockingNotification() {
 
         RestockingNotification restockingNotification = RestockingNotification.builder()
@@ -53,7 +54,8 @@ public class DummyNum3 {
             .member(getDummyMemberForDummy())
             .build();
 
-        ReflectionTestUtils.setField(restockingNotification, "pk", new RestockingNotification.Pk(1L, 1L));
+        ReflectionTestUtils.setField(restockingNotification, "pk",
+            new RestockingNotification.Pk(1L, 1L));
 
         return restockingNotification;
     }

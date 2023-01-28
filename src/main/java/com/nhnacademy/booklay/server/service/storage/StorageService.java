@@ -10,8 +10,6 @@ public interface StorageService {
 
     FileRequest uploadImage(MultipartFile file, FileResolveRequest fileResolveRequest)
         throws IOException;
-
-    FileRequest uploadImage(MultipartFile image) throws IOException;
-
+    
     String downloadFile(final ObjectFileResponse image) throws IOException;
 }

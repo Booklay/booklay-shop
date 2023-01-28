@@ -58,7 +58,7 @@ public class StorageController {
                 .fileType(contentType.get())
                 .build();
 
-            fileService.uploadFile(file, fileResolveRequest);
+            fileService.uploadFileResolve(file, fileResolveRequest);
 
             return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class ProductRepositoryTest {
+class ProductRepositoryTest {
 
   @Autowired
   TestEntityManager entityManager;

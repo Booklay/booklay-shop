@@ -1,12 +1,15 @@
 package com.nhnacademy.booklay.server.repository.product;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -26,12 +29,8 @@ class AuthorRepositoryTest {
 
   @Test
   void testFindAllBy_Success(){
-    Author author = Author.builder()
-        .name("최작가")
-        .build();
+    Page result = authorRepository.findAllBy(any(), any());
 
-    authorRepository.save(author);
-
-    Page<Author> page = authorRepository.findAllBy(PageRequest.of(0,20), Author.class);
+    assertThat(result.getTotalElements()).isZero();
   }
 }

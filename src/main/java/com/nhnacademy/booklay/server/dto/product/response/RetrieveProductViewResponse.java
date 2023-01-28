@@ -7,7 +7,6 @@ import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import java.time.LocalDate;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

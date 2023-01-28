@@ -46,7 +46,6 @@ public class MemberAdminController {
         return memberService.retrieveMember(memberNo);
     }
 
-    //TODO 4: DTO로 받을 것인지?
     @PostMapping("/authority/{memberNo}/{authorityName}")
     public ResponseEntity<Void> updateMemberAuthority(@PathVariable Long memberNo,
                                                       @PathVariable String authorityName) {

@@ -32,6 +32,6 @@ class AuthorRepositoryTest {
 
     authorRepository.save(author);
 
-    Page<Author> page = authorRepository.findAllBy(PageRequest.of(0,20), Author.class);
+    Page<RetrieveAuthorResponse> page = authorRepository.findAllBy(PageRequest.of(0,20));
   }
 }

@@ -33,9 +33,9 @@ public interface ProductService {
 
     RetrieveProductViewResponse retrieveProductView(Long productId);
 
-    Product retrieveProductByProductNo(Long productNo);
-
     List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
+
+    Product retrieveProductByProductNo(Long productNo);
 
     void softDelete(Long productId);
 }

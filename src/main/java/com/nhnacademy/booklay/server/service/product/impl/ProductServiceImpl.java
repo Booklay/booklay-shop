@@ -18,7 +18,6 @@ import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
-import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
@@ -59,7 +58,6 @@ public class ProductServiceImpl implements ProductService {
   private final AuthorRepository authorRepository;
   private final ProductAuthorRepository productAuthorRepository;
   private final SubscribeRepository subscribeRepository;
-  private final ImageRepository imageRepository;
   private final ProductTagRepository productTagRepository;
   private final FileService fileService;
 
@@ -82,7 +80,6 @@ public class ProductServiceImpl implements ProductService {
     if (Objects.nonNull(request.getEbookAddress())) {
       productDetail.setEbookAddress(request.getEbookAddress());
     }
-
     ProductDetail savedDetail = productDetailRepository.save(productDetail);
 
     //product_author
@@ -97,22 +94,17 @@ public class ProductServiceImpl implements ProductService {
       throws IOException {
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
-
     //category_product
     saveProductCategory(request.getCategoryIds(), savedProduct);
-
     //subscribe
     Subscribe subscribe = splitSubscribe(savedProduct, request);
 
     if (request.getPublisher() != null) {
       subscribe.setPublisher(request.getPublisher());
     }
-
     subscribeRepository.save(subscribe);
-
     return savedProduct.getId();
   }
-
   //수정 위해서 책 상품 조회
   @Override
   @Transactional(readOnly = true)
@@ -122,17 +114,14 @@ public class ProductServiceImpl implements ProductService {
         productDetailRepository.findAuthorIdsByProductDetailId(response.getProductDetailId()));
     response.setCategoryIds(
         productRepository.findCategoryIdsByProductId(response.getProductId()));
-
     return response;
   }
-
   //책 상품 수정
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
-
     Product product = splitProduct(request);
     product.setId(request.getProductId());
     product.setCreatedAt(request.getCreatedAt());
@@ -157,7 +146,6 @@ public class ProductServiceImpl implements ProductService {
     }
     ProductDetail updatedDetail = productDetailRepository.save(productDetail);
 
-    //싹 밀었다가 다시 다 등록하는걸로 생각하는데 그게 맞나?
     productAuthorRepository.deleteAllByProductDetailId(updatedDetail.getId());
     productAuthorRegister(request.getAuthorIds(), updatedDetail);
     return null;
@@ -187,17 +175,6 @@ public class ProductServiceImpl implements ProductService {
   }
 
   //구독 상품 수정
-  @Override
-  public Product retrieveProductByProductNo(Long productNo) {
-    return productRepository.findById(productNo)
-        .orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
-  }
-
-  @Override
-  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
-    return productRepository.findAllById(productNoList);
-  }
-
   @Override
   @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request)
@@ -408,5 +385,17 @@ public class ProductServiceImpl implements ProductService {
       return new RetrieveProductViewResponse(product, subscribe, productTags);
     }
     return null;
+  }
+
+
+  @Override
+  public Product retrieveProductByProductNo(Long productNo) {
+    return productRepository.findById(productNo)
+        .orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
+  }
+
+  @Override
+  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
+    return productRepository.findAllById(productNoList);
   }
 }

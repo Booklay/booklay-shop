@@ -2,7 +2,6 @@ package com.nhnacademy.booklay.server.service.product.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -23,8 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -67,8 +64,9 @@ class AuthorServiceTest {
 
   @Test
   void testAuthorCreate_Success() {
-    if(Objects.nonNull(requestWithoutMember.getMemberNo())){
-      given(memberRepository.findById(requestWithoutMember.getMemberNo())).willReturn(Optional.ofNullable(member));
+    if (Objects.nonNull(requestWithoutMember.getMemberNo())) {
+      given(memberRepository.findById(requestWithoutMember.getMemberNo())).willReturn(
+          Optional.ofNullable(member));
       author.setMember(member);
     }
 
@@ -79,8 +77,9 @@ class AuthorServiceTest {
 
   @Test
   void testAuthorCreateWithMember_success() {
-    if(Objects.nonNull(requestWithMember.getMemberNo())){
-      given(memberRepository.findById(requestWithMember.getMemberNo())).willReturn(Optional.ofNullable(member));
+    if (Objects.nonNull(requestWithMember.getMemberNo())) {
+      given(memberRepository.findById(requestWithMember.getMemberNo())).willReturn(
+          Optional.ofNullable(member));
       author.setMember(member);
     }
 
@@ -90,12 +89,13 @@ class AuthorServiceTest {
   }
 
   @Test
-  void testAuthorUpdateWithoutMember_success(){
+  void testAuthorUpdateWithoutMember_success() {
     UpdateAuthorRequest request = new UpdateAuthorRequest(1L, "최규태");
 
     given(authorRepository.findById(request.getId())).willReturn(any());
-    if(Objects.nonNull(request.getMemberNo())){
-      given(memberRepository.findById(request.getMemberNo())).willReturn(Optional.ofNullable(member));
+    if (Objects.nonNull(request.getMemberNo())) {
+      given(memberRepository.findById(request.getMemberNo())).willReturn(
+          Optional.ofNullable(member));
       author.setMember(member);
     }
 
@@ -105,13 +105,14 @@ class AuthorServiceTest {
   }
 
   @Test
-  void testAuthorUpdateWithMember_success(){
+  void testAuthorUpdateWithMember_success() {
     UpdateAuthorRequest request = new UpdateAuthorRequest(1L, "최규태");
     request.setMemberNo(1L);
 
     given(authorRepository.findById(request.getId())).willReturn(Optional.ofNullable(author));
-    if(Objects.nonNull(request.getMemberNo())){
-      given(memberRepository.findById(request.getMemberNo())).willReturn(Optional.ofNullable(member));
+    if (Objects.nonNull(request.getMemberNo())) {
+      given(memberRepository.findById(request.getMemberNo())).willReturn(
+          Optional.ofNullable(member));
       author.setMember(member);
     }
 

@@ -18,8 +18,6 @@ import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
-import com.nhnacademy.booklay.server.exception.member.MemberAuthorityNotFoundException;
-import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
@@ -193,7 +191,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void blockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
-
         member.setIsBlocked(true);
 
         BlockedMemberDetail blockedMemberDetail = new BlockedMemberDetail(member, request.getReason());

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
-import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +47,6 @@ public class BlockedMemberDetailRepositoryTest {
 
     @BeforeEach
     void setUp() {
-
         clearRepo("member", memberRepository);
         clearRepo("blocked_member_detail", blockedMemberDetailRepository);
 

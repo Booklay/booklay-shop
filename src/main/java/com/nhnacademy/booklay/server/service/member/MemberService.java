@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.member;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import java.util.Optional;
@@ -35,4 +36,5 @@ public interface MemberService {
 
     Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo, Pageable pageable);
 
+    void blockMember(Long memberNo, MemberBlockRequest request);
 }

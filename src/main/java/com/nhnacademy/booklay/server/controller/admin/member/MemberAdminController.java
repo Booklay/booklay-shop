@@ -3,7 +3,9 @@ package com.nhnacademy.booklay.server.controller.admin.member;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.service.member.MemberService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -81,6 +84,14 @@ public class MemberAdminController {
     public ResponseEntity<Void> createMemberGrade(@PathVariable Long memberNo,
                                                   @PathVariable String gradeName) {
         memberService.createMemberGrade(memberNo, gradeName);
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
+    }
+
+    @PostMapping("/block/{memberNo}")
+    public ResponseEntity<Void> memberBlock(@Valid @RequestBody MemberBlockRequest request,
+                                            @PathVariable Long memberNo) {
+        memberService.blockMember(memberNo, request);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }

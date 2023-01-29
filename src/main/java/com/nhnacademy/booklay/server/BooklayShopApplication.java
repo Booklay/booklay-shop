@@ -11,5 +11,4 @@ public class BooklayShopApplication {
   public static void main(String[] args) {
     SpringApplication.run(BooklayShopApplication.class, args);
   }
-
 }

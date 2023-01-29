@@ -3,9 +3,11 @@ package com.nhnacademy.booklay.server.service.member;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
+import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
@@ -20,6 +22,7 @@ import com.nhnacademy.booklay.server.exception.member.MemberAuthorityNotFoundExc
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
+import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
@@ -45,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
     private final GenderRepository genderRepository;
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
+    private final BlockedMemberDetailRepository blockedMemberDetailRepository;
 
     private final GetMemberService getMemberService;
 
@@ -186,9 +190,14 @@ public class MemberServiceImpl implements MemberService {
         return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
     }
 
-    private Member getMember(Long memberNo) {
-        return memberRepository.findByMemberNo(memberNo)
-                               .orElseThrow(() -> new MemberNotFoundException(memberNo));
-    }
+    @Override
+    public void blockMember(Long memberNo, MemberBlockRequest request) {
+        Member member = getMemberService.getMemberNo(memberNo);
 
+        member.setIsBlocked(true);
+
+        BlockedMemberDetail blockedMemberDetail = new BlockedMemberDetail(member, request.getReason());
+
+        blockedMemberDetailRepository.save(blockedMemberDetail);
+    }
 }

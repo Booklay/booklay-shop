@@ -3,7 +3,6 @@ package com.nhnacademy.booklay.server.dto.product.response;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class RetrieveProductSubscribeResponse {
 
   @NotNull
@@ -54,4 +52,23 @@ public class RetrieveProductSubscribeResponse {
   private String publisher;
   @Setter
   private List<Long> childProducts;
+
+  public RetrieveProductSubscribeResponse(Long productId, String title, Long price, Long pointRate,
+      String shortDescription, String longDescription, Boolean isSelling, Boolean pointMethod,
+      LocalDateTime createdAt, Long subscribeId, Integer subscribeWeek, Integer subscribeDay,
+      String publisher) {
+    this.productId = productId;
+    this.title = title;
+    this.price = price;
+    this.pointRate = pointRate;
+    this.shortDescription = shortDescription;
+    this.longDescription = longDescription;
+    this.isSelling = isSelling;
+    this.pointMethod = pointMethod;
+    this.createdAt = createdAt;
+    this.subscribeId = subscribeId;
+    this.subscribeWeek = subscribeWeek;
+    this.subscribeDay = subscribeDay;
+    this.publisher = publisher;
+  }
 }

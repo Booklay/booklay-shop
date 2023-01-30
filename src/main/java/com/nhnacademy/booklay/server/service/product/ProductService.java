@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.product;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
@@ -36,6 +37,8 @@ public interface ProductService {
     List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 
     Product retrieveProductByProductNo(Long productNo);
+
+    Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable, Long subscribeId);
 
     void softDelete(Long productId);
 }

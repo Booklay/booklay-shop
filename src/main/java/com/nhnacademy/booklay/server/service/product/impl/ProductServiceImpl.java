@@ -3,12 +3,14 @@ package com.nhnacademy.booklay.server.service.product.impl;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
@@ -20,6 +22,7 @@ import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.BookSubscribeRepository;
 import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
@@ -60,6 +63,7 @@ public class ProductServiceImpl implements ProductService {
   private final SubscribeRepository subscribeRepository;
   private final ProductTagRepository productTagRepository;
   private final FileService fileService;
+  private final BookSubscribeRepository bookSubscribeRepository;
 
   //상품 생성
   @Override
@@ -105,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
     subscribeRepository.save(subscribe);
     return savedProduct.getId();
   }
+
   //수정 위해서 책 상품 조회
   @Override
   @Transactional(readOnly = true)
@@ -116,6 +121,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.findCategoryIdsByProductId(response.getProductId()));
     return response;
   }
+
   //책 상품 수정
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
@@ -387,6 +393,28 @@ public class ProductServiceImpl implements ProductService {
     return null;
   }
 
+
+  @Override
+  public Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
+      Long subscribeId) {
+    Page<RetrieveBookForSubscribeResponse> thisPage = productRepository.findAllBooksForSubscribeBy(
+        pageable);
+    List<RetrieveBookForSubscribeResponse> pageContent = thisPage.getContent();
+
+    for (RetrieveBookForSubscribeResponse response : pageContent) {
+      BookSubscribe.Pk pk = new BookSubscribe.Pk(subscribeId, response.getProductId());
+      Boolean isRegistered = bookSubscribeRepository.existsById(pk);
+
+      List<String> authorNames = productRepository.findAuthorNameByProductId(
+          response.getProductId());
+
+      response.setAuthors(authorNames);
+      response.setIsRegistered(isRegistered);
+    }
+
+    return new PageImpl<>(pageContent, thisPage.getPageable(),
+        thisPage.getTotalElements());
+  }
 
   @Override
   public Product retrieveProductByProductNo(Long productNo) {

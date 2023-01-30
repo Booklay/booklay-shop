@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveRes
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
@@ -121,18 +122,18 @@ public class MemberServiceImpl implements MemberService {
      * admin과 author 권한 동시에 존재 시 에러
      *
      * @param memberNo
-     * @param authorityName
+     * @param request
      */
     @Override
-    public void createMemberAuthority(Long memberNo, String authorityName) {
+    public void createMemberAuthority(Long memberNo, MemberAuthorityUpdateRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        Authority authority = authorityRepository.findByName(authorityName).orElseThrow(
-            () -> new AuthorityNotFoundException(authorityName));
+        Authority authority = authorityRepository.findByName(request.getAuthorityName()).orElseThrow(
+            () -> new AuthorityNotFoundException(request.getAuthorityName()));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
         if (!memberAuthorityRepository.existsById(pk)) {
-            throw new AlreadyExistAuthorityException(authorityName);
+            throw new AlreadyExistAuthorityException(request.getAuthorityName());
         }
 
         Authority adminAuthority = authorityRepository.findByName("admin").orElseThrow(
@@ -144,7 +145,7 @@ public class MemberServiceImpl implements MemberService {
         MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
         MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
 
-        if (!authorityName.equals("member") && (memberAuthorityRepository.existsById(adminPk) ||
+        if (!request.getAuthorityName().equals("member") && (memberAuthorityRepository.existsById(adminPk) ||
             memberAuthorityRepository.existsById(authorPk))) {
             throw new AdminAndAuthorAuthorityCannotExistTogetherException();
         }

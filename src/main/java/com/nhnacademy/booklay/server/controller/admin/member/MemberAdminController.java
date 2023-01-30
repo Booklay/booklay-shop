@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,10 +52,11 @@ public class MemberAdminController {
         return memberService.retrieveMember(memberNo);
     }
 
-    @PostMapping("/authority/{memberNo}/{authorityName}")
+    @PostMapping("/authority/{memberNo")
     public ResponseEntity<Void> updateMemberAuthority(@PathVariable Long memberNo,
-                                                      @PathVariable String authorityName) {
-        memberService.createMemberAuthority(memberNo, authorityName);
+                                                      @Valid @RequestBody
+                                                      MemberAuthorityUpdateRequest request) {
+        memberService.createMemberAuthority(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }

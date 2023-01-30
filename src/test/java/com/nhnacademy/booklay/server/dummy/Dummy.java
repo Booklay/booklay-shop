@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
+import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
@@ -344,5 +345,17 @@ public class Dummy {
         ReflectionTestUtils.setField(request, "productNo", 4L);
         ReflectionTestUtils.setField(request, "count", 3);
         return request;
+    }
+
+    public static BlockedMemberDetail getDummyBlockedMemberDetail() {
+        BlockedMemberDetail blockedMemberDetail = BlockedMemberDetail.builder()
+            .member(getDummyMember())
+            .reason("test reason")
+            .build();
+
+        ReflectionTestUtils.setField(blockedMemberDetail, "id", 1L);
+        ReflectionTestUtils.setField(blockedMemberDetail, "blockedAt", LocalDateTime.now());
+
+        return blockedMemberDetail;
     }
 }

@@ -1,14 +1,17 @@
 package com.nhnacademy.booklay.server.repository;
 
-import com.nhnacademy.booklay.server.dummy.Dummy;
-import com.nhnacademy.booklay.server.entity.Member;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dummy.Dummy;
+import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
+import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,9 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    BlockedMemberDetailRepository blockedMemberDetailRepository;
 
     @BeforeEach
     public void setUp() {
@@ -112,7 +118,7 @@ class MemberRepositoryTest {
         Page<MemberRetrieveResponse> result = memberRepository.retrieveAll(page);
 
         //then
-        assertThat(result.getSize()).isEqualTo(3);
+        assertThat(result.getSize()).isEqualTo(3 );
     }
 
     @Test
@@ -129,6 +135,7 @@ class MemberRepositoryTest {
         //then
         assertThat(expected).isEqualTo(true);
     }
+
 
     @Test
     @DisplayName("Member Entity JPA Auditing 기능 테스트")

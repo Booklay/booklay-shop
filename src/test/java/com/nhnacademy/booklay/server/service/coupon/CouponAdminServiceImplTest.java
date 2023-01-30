@@ -20,6 +20,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -143,7 +144,6 @@ class CouponAdminServiceImplTest {
         // then
         BDDMockito.then(couponRepository).should().save(any());
     }
-
     @Test
     @DisplayName("쿠폰 삭제 테스트")
     void testDeleteCoupon() {

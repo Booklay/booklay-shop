@@ -59,8 +59,6 @@ public class ProductServiceImplTest {
   @Mock
   private SubscribeRepository subscribeRepository;
   @Mock
-  private ImageRepository imageRepository;
-  @Mock
   private ProductTagRepository productTagRepository;
   @Mock
   private FileServiceImpl fileService;
@@ -150,6 +148,7 @@ public class ProductServiceImplTest {
 
   @Test
   void testRetrieveSubscribeData(){
+    //given
     Long targetId = 1L;
     RetrieveProductSubscribeResponse response = new RetrieveProductSubscribeResponse();
     List<Long> categoryIds = new ArrayList<>();
@@ -158,18 +157,24 @@ public class ProductServiceImplTest {
     given(productRepository.findProductSubscribeDataByProductId(targetId)).willReturn(response);
     given(productRepository.findCategoryIdsByProductId(response.getProductId())).willReturn(categoryIds);
 
+    //when
     RetrieveProductSubscribeResponse result = productService.retrieveSubscribeData(targetId);
 
+    //then
     assertThat(result.getCategoryIds()).isEqualTo(categoryIds);
   }
 
   @Test
   void testSoftDelete_success(){
+    //given
     given(productRepository.findById(productBook.getId())).willReturn(
         Optional.ofNullable(productBook));
+    assertThat(productBook.isDeleted()).isFalse();
 
+    //when
     productService.softDelete(productBook.getId());
 
+    //then
     assertThat(productBook.isDeleted()).isTrue();
   }
 

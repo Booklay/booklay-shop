@@ -96,7 +96,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable) {
-        return memberRepository.retrieveBlockedMembers(pageable);
+        return blockedMemberDetailRepository.retrieveBlockedMembers(pageable);
     }
 
     @Override

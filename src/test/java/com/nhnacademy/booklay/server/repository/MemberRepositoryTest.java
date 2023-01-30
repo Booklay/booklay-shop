@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,9 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    BlockedMemberDetailRepository blockedMemberDetailRepository;
 
     @BeforeEach
     public void setUp() {
@@ -114,42 +118,7 @@ class MemberRepositoryTest {
         Page<MemberRetrieveResponse> result = memberRepository.retrieveAll(page);
 
         //then
-        assertThat(result.getSize()).isEqualTo(3);
-    }
-
-    @Disabled
-    @Test
-    @DisplayName("MemberRepository retrieveBlockedMembers 테스트")
-    void retrieveBlockedMembers_successTest() {
-        //given
-        Member member1 = Dummy.getDummyMember();
-        Member member2 = Dummy.getDummyMember();
-        Member member3 = Dummy.getDummyMember();
-        Member member4 = Dummy.getDummyMember();
-
-
-        ReflectionTestUtils.setField(member2, "memberNo", 2L);
-        ReflectionTestUtils.setField(member3, "memberNo", 3L);
-        ReflectionTestUtils.setField(member4, "memberNo", 4L);
-
-        BlockedMemberDetail blockedMemberDetail1 = Dummy.getDummyBlockedMemberDetail();
-        BlockedMemberDetail blockedMemberDetail2 = BlockedMemberDetail.builder()
-            .member(member2)
-            .build();
-
-        entityManager.persist(member1.getGender());
-
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
-        memberRepository.save(member4);
-
-        //when
-        PageRequest page = PageRequest.of(0, 3);
-        Page<MemberRetrieveResponse> result = memberRepository.retrieveAll(page);
-
-        //then
-        assertThat(result.getSize()).isEqualTo(3);
+        assertThat(result.getSize()).isEqualTo(3 );
     }
 
     @Test

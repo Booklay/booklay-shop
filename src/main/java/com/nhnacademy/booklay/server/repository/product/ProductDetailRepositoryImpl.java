@@ -48,4 +48,5 @@ public class ProductDetailRepositoryImpl extends QuerydslRepositorySupport imple
         .select(author.authorId)
         .fetch();
   }
+
 }

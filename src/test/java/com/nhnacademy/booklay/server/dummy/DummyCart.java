@@ -1,9 +1,21 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
-import com.nhnacademy.booklay.server.entity.*;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.entity.Cart;
+import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.entity.CategoryProduct;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-
+import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.ObjectFile;
+import com.nhnacademy.booklay.server.entity.Post;
+import com.nhnacademy.booklay.server.entity.PostType;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductAskComment;
+import com.nhnacademy.booklay.server.entity.ProductAuthor;
+import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.entity.Subscribe;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,22 +80,35 @@ public class DummyCart {
 
   public static Product getDummyProduct(CreateUpdateProductBookRequest request) {
     return Product.builder()
-        .image(getDummyImage())
         .price(request.getPrice())
         .pointMethod(request.getPointMethod())
         .pointRate(request.getPointRate())
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(getDummyImage())
+        .objectFile(getDummyFile())
         .isSelling(request.getIsSelling())
         .build();
   }
 
-  public static Image getDummyImage() {
-    return Image.builder()
-        .ext("jpg")
-        .address("dummy_address")
+  public static Product getDummyProduct(CreateUpdateProductSubscribeRequest request) {
+    return Product.builder()
+        .price(request.getPrice())
+        .pointMethod(request.getPointMethod())
+        .pointRate(request.getPointRate())
+        .title(request.getTitle())
+        .shortDescription(request.getShortDescription())
+        .longDescription(request.getLongDescription())
+        .objectFile(getDummyFile())
+        .isSelling(request.getIsSelling())
+        .build();
+  }
+
+  public static ObjectFile getDummyFile() {
+    //TODO 전달하는 값 수정
+    return ObjectFile.builder()
+        .fileAddress("jpg")
+        .fileName("dummy_address")
         .build();
   }
 
@@ -143,21 +168,22 @@ public class DummyCart {
     List<Long> categories = new ArrayList<>();
     categories.add(1L);
 
-    CreateUpdateProductBookRequest createProductBookRequest = CreateUpdateProductBookRequest.builder()
-        .isbn("923-2239-42-1")
-        .page(300)
-        .isSelling(true)
-        .price(12900L)
-        .authorIds(authors)
-        .categoryIds(categories)
-        .longDescription("really looooooooooooong description")
-        .shortDescription("short")
-        .pointMethod(true)
-        .pointRate(5L)
-        .title("dummy title")
-        .publishedDate(LocalDate.of(2023, 1, 1))
-        .publisher("더미 출판사")
-        .build();
+    CreateUpdateProductBookRequest createProductBookRequest =
+        CreateUpdateProductBookRequest.builder()
+            .isbn("923-2239-42-1")
+            .page(300)
+            .isSelling(true)
+            .price(12900L)
+            .authorIds(authors)
+            .categoryIds(categories)
+            .longDescription("really looooooooooooong description")
+            .shortDescription("short")
+            .pointMethod(true)
+            .pointRate(5L)
+            .title("dummy title")
+            .publishedDate(LocalDate.of(2023, 1, 1))
+            .publisher("더미 출판사")
+            .build();
 
     createProductBookRequest.setStorage(400);
     createProductBookRequest.setImage(file);
@@ -197,4 +223,41 @@ public class DummyCart {
         .build();
   }
 
+
+  public static CreateUpdateProductSubscribeRequest getDummyProductSubscribeDto() {
+    MultipartFile file = null;
+
+    List<Long> authors = new ArrayList<>();
+    authors.add(1L);
+
+    List<Long> categories = new ArrayList<>();
+    categories.add(1L);
+
+    return CreateUpdateProductSubscribeRequest.builder()
+        .isSelling(true)
+        .price(12900L)
+        .categoryIds(categories)
+        .longDescription("really looooooooooooong description")
+        .shortDescription("short")
+        .pointMethod(true)
+        .pointRate(5L)
+        .title("dummy title")
+        .publisher("더미 출판사")
+        .subscribeWeek(1)
+        .subscribeDay(4)
+        .build();
+
+  }
+
+  public static Subscribe getDummySubscribe(CreateUpdateProductSubscribeRequest request) {
+    Subscribe result = Subscribe.builder()
+        .subscribeDay(request.getSubscribeDay())
+        .subscribeWeek(request.getSubscribeWeek())
+        .product(DummyCart.getDummyProduct(request))
+        .build();
+
+    result.setPublisher(request.getPublisher());
+
+    return result;
+  }
 }

@@ -34,7 +34,9 @@ class CouponRepositoryTest {
     void clearRepo(String entityName, JpaRepository jpaRepository) {
         jpaRepository.deleteAll();
 
-        String query = String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName, entityName);
+        String query =
+            String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName,
+                entityName);
 
         this.entityManager
             .getEntityManager()
@@ -47,7 +49,7 @@ class CouponRepositoryTest {
         clearRepo("coupon", couponRepository);
         coupon = Dummy.getDummyCoupon();
 
-        entityManager.persist(coupon.getImage());
+        entityManager.persist(coupon.getObjectFile());
         entityManager.persist(coupon.getCouponType());
 
         couponRepository.save(coupon);
@@ -73,7 +75,8 @@ class CouponRepositoryTest {
         //given
 
         //when
-        Coupon expected = couponRepository.findById(coupon.getId()).orElseThrow(() -> new IllegalArgumentException("Coupon not found."));
+        Coupon expected = couponRepository.findById(coupon.getId())
+            .orElseThrow(() -> new IllegalArgumentException("Coupon not found."));
 
         //then
         assertThat(expected.getId()).isEqualTo(coupon.getId());

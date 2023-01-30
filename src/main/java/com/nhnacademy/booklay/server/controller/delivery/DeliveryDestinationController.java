@@ -30,8 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/delivery/destination")
 @RequiredArgsConstructor
 public class DeliveryDestinationController {
-    private static final String DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE = "DeliveryDestinationNotFound";
-    private static final String DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE = "DeliveryDestinationLimitExceeded";
+    private static final String DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE =
+        "DeliveryDestinationNotFound";
+    private static final String DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE =
+        "DeliveryDestinationLimitExceeded";
 
     private final DeliveryDestinationService deliveryDestinationService;
 
@@ -86,18 +88,21 @@ public class DeliveryDestinationController {
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
+
     @ExceptionHandler(DeliveryDestinationNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDeliveryDestinationNotFoundException(
         DeliveryDestinationNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE).message(ex.getMessage()).build());
+            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 
     @ExceptionHandler(DeliveryDestinationLimitExceededException.class)
     public ResponseEntity<ErrorResponse> handleDeliveryDestinationLimitExceededException(
         DeliveryDestinationLimitExceededException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE).message(ex.getMessage()).build());
+            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 
 

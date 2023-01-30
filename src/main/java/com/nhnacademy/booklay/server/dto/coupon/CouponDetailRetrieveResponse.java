@@ -1,11 +1,10 @@
 package com.nhnacademy.booklay.server.dto.coupon;
 
 import com.nhnacademy.booklay.server.entity.Coupon;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor

@@ -35,30 +35,30 @@ class ProductAuthorRepositoryTest {
 
     CreateUpdateProductBookRequest request = DummyCart.getDummyProductBookDto();
 
-  void clearRepo(String entityName, JpaRepository jpaRepository) {
-    jpaRepository.deleteAll();
+    void clearRepo(String entityName, JpaRepository jpaRepository) {
+        jpaRepository.deleteAll();
 
-    String query =
+        String query =
             String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName,
-                    entityName);
+                entityName);
 
-    this.entityManager
+        this.entityManager
             .getEntityManager()
             .createNativeQuery(query)
             .executeUpdate();
-  }
+    }
 
-  @BeforeEach
-  void setUp () {
-    clearRepo("product", productRepository);
-    clearRepo("author", authorRepository);
-  }
+    @BeforeEach
+    void setUp() {
+        clearRepo("product", productRepository);
+        clearRepo("author", authorRepository);
+    }
 
-  @Test
-  void testProductAuthorSave(){
-    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(request);
+    @Test
+    void testProductAuthorSave() {
+        ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(request);
 
-        entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
+        entityManager.persist(productAuthor.getProductDetail().getProduct().getObjectFile());
         productRepository.save(productAuthor.getProductDetail().getProduct());
         productDetailRepository.save(productAuthor.getProductDetail());
 
@@ -73,7 +73,7 @@ class ProductAuthorRepositoryTest {
     void testProductAuthorFind() {
         ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(request);
 
-        entityManager.persist(productAuthor.getProductDetail().getProduct().getImage());
+        entityManager.persist(productAuthor.getProductDetail().getProduct().getObjectFile());
         productRepository.save(productAuthor.getProductDetail().getProduct());
         productDetailRepository.save(productAuthor.getProductDetail());
 
@@ -84,7 +84,7 @@ class ProductAuthorRepositoryTest {
         ProductAuthor expect = productAuthorRepository.findById(productAuthor.getPk())
             .orElseThrow(() -> new IllegalArgumentException("no"));
 
-    assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
-  }
+        assertThat(expect.getAuthor().getName()).isEqualTo(productAuthor.getAuthor().getName());
+    }
 
 }

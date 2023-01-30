@@ -37,7 +37,7 @@ class CartRepositoryTest {
         entityManager.persist(cart.getMember().getGender());
         memberRepository.save(cart.getMember());
 
-        entityManager.persist(cart.getProduct().getImage());
+        entityManager.persist(cart.getProduct().getObjectFile());
         productRepository.save(cart.getProduct());
 
         Cart expected = cartRepository.save(cart);
@@ -52,7 +52,7 @@ class CartRepositoryTest {
         entityManager.persist(cart.getMember().getGender());
         memberRepository.save(cart.getMember());
 
-        entityManager.persist(cart.getProduct().getImage());
+        entityManager.persist(cart.getProduct().getObjectFile());
         productRepository.save(cart.getProduct());
 
         cartRepository.save(cart);

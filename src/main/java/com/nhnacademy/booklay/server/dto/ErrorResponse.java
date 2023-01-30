@@ -1,12 +1,11 @@
 package com.nhnacademy.booklay.server.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.FieldError;
-
-import java.util.List;
 
 @Getter
 @Builder
@@ -29,9 +28,9 @@ public class ErrorResponse {
 
         public static ValidationError of(final FieldError fieldError) {
             return ValidationError.builder()
-                    .field(fieldError.getField())
-                    .message(fieldError.getDefaultMessage())
-                    .build();
+                .field(fieldError.getField())
+                .message(fieldError.getDefaultMessage())
+                .build();
         }
     }
 }

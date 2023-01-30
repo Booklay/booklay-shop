@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DeleteIdRequest {
 
-  @NotNull
-  Long id;
+    @NotNull
+    Long id;
 
-  public DeleteIdRequest(Long id) {
-    this.id = id;
-  }
+    public DeleteIdRequest(Long id) {
+        this.id = id;
+    }
 }

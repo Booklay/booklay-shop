@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequest;
@@ -12,12 +11,9 @@ import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.service.product.AuthorService;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +37,7 @@ public class AuthorServiceImpl implements AuthorService {
         .build();
 
     if (Objects.nonNull(request.getMemberNo())) {
-      Member member = memberRepository.findByMemberNo(request.getMemberNo())
+      Member member = memberRepository.findById(request.getMemberNo())
           .orElseThrow(() -> new NotFoundException(Member.class, "Member not found"));
 
       author.setMember(member);
@@ -59,7 +55,7 @@ public class AuthorServiceImpl implements AuthorService {
         .build();
 
     if (Objects.nonNull(request.getMemberNo())) {
-      Member member = memberRepository.findByMemberNo(request.getMemberNo())
+      Member member = memberRepository.findById(request.getMemberNo())
           .orElseThrow(() -> new NotFoundException(Member.class, "Member not found"));
 
       author.setMember(member);
@@ -81,27 +77,7 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   @Transactional
   public Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable) {
-    Page<Author> authors = authorRepository.findAllBy(pageable, Author.class);
-    List<Author> content = authors.getContent();
-
-    List<RetrieveAuthorResponse> contents = new ArrayList<>();
-
-    for (Author author : content) {
-      RetrieveAuthorResponse element = new RetrieveAuthorResponse(author.getAuthorId(),
-          author.getName());
-
-      if (Objects.nonNull(author.getMember())) {
-        Member member = author.getMember();
-        MemberForAuthorResponse memberDto = new MemberForAuthorResponse(member.getMemberNo(),
-            member.getMemberId());
-
-        element.setMember(memberDto);
-      }
-
-      contents.add(element);
-    }
-
-    return new PageImpl<>(contents, authors.getPageable(),
-        authors.getTotalElements());
+    return authorRepository.findAllBy(pageable);
   }
+
 }

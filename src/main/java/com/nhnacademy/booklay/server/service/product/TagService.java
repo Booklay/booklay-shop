@@ -1,9 +1,9 @@
 package com.nhnacademy.booklay.server.service.product;
 
-import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
-import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
-import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
+import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
 import org.springframework.data.domain.Page;
@@ -14,11 +14,17 @@ import org.springframework.data.domain.Pageable;
  */
 
 public interface TagService {
-  void createTag(CreateTagRequest request);
-  void updateTag(UpdateTagRequest request);
-  Page<RetrieveTagResponse> retrieveAllTag(Pageable pageable);
-  Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo);
-  void deleteTag(DeleteIdRequest id);
-  void createTagProduct(CreateDeleteTagProductRequest request);
-  void deleteTagProduct(CreateDeleteTagProductRequest request);
+    void createTag(CreateTagRequest request);
+
+    void updateTag(UpdateTagRequest request);
+
+    Page<RetrieveTagResponse> retrieveAllTag(Pageable pageable);
+
+    Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo);
+
+    void deleteTag(DeleteIdRequest id);
+
+    void createTagProduct(CreateDeleteTagProductRequest request);
+
+    void deleteTagProduct(CreateDeleteTagProductRequest request);
 }

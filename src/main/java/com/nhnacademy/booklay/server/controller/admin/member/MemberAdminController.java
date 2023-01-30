@@ -52,10 +52,9 @@ public class MemberAdminController {
         return memberService.retrieveMember(memberNo);
     }
 
-    @PostMapping("/authority/{memberNo")
+    @PostMapping("/authority/{memberNo}")
     public ResponseEntity<Void> updateMemberAuthority(@PathVariable Long memberNo,
-                                                      @Valid @RequestBody
-                                                      MemberAuthorityUpdateRequest request) {
+                                                      @Valid @RequestBody MemberAuthorityUpdateRequest request) {
         memberService.createMemberAuthority(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
             .build();

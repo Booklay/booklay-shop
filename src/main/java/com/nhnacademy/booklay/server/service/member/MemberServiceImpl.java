@@ -1,11 +1,15 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
+import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
@@ -16,10 +20,9 @@ import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
-import com.nhnacademy.booklay.server.exception.member.MemberAuthorityNotFoundException;
-import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
+import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
@@ -45,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
     private final GenderRepository genderRepository;
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
+    private final BlockedMemberDetailRepository blockedMemberDetailRepository;
 
     private final GetMemberService getMemberService;
 
@@ -62,7 +66,6 @@ public class MemberServiceImpl implements MemberService {
             () -> new GenderNotFoundException(createDto.getGender()));
 
         Member member = createDto.toEntity(gender);
-        MemberGrade grade = new MemberGrade(member, "화이트");
 
         Authority authority = authorityRepository.findByName("ROLE_MEMBER").orElseThrow(
             () -> new AuthorityNotFoundException("ROLE_MEMBER"));
@@ -72,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
                                 member, authority);
 
         memberRepository.save(member);
-        memberGradeRepository.save(grade);
+        memberGradeRepository.save(member.addGrade("white"));
         memberAuthorityRepository.save(memberAuthority);
     }
 
@@ -88,6 +91,12 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable) {
         return memberRepository.retrieveAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable) {
+        return blockedMemberDetailRepository.retrieveBlockedMembers(pageable);
     }
 
     @Override
@@ -112,18 +121,18 @@ public class MemberServiceImpl implements MemberService {
      * admin과 author 권한 동시에 존재 시 에러
      *
      * @param memberNo
-     * @param authorityName
+     * @param request
      */
     @Override
-    public void createMemberAuthority(Long memberNo, String authorityName) {
+    public void createMemberAuthority(Long memberNo, MemberAuthorityUpdateRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        Authority authority = authorityRepository.findByName(authorityName).orElseThrow(
-            () -> new AuthorityNotFoundException(authorityName));
+        Authority authority = authorityRepository.findByName(request.getAuthorityName()).orElseThrow(
+            () -> new AuthorityNotFoundException(request.getAuthorityName()));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
         if (!memberAuthorityRepository.existsById(pk)) {
-            throw new AlreadyExistAuthorityException(authorityName);
+            throw new AlreadyExistAuthorityException(request.getAuthorityName());
         }
 
         Authority adminAuthority = authorityRepository.findByName("admin").orElseThrow(
@@ -135,7 +144,7 @@ public class MemberServiceImpl implements MemberService {
         MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
         MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
 
-        if (!authorityName.equals("member") && (memberAuthorityRepository.existsById(adminPk) ||
+        if (!request.getAuthorityName().equals("member") && (memberAuthorityRepository.existsById(adminPk) ||
             memberAuthorityRepository.existsById(authorPk))) {
             throw new AdminAndAuthorAuthorityCannotExistTogetherException();
         }
@@ -186,9 +195,14 @@ public class MemberServiceImpl implements MemberService {
         return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
     }
 
-    private Member getMember(Long memberNo) {
-        return memberRepository.findByMemberNo(memberNo)
-                               .orElseThrow(() -> new MemberNotFoundException(memberNo));
+    @Override
+    public void blockMember(Long memberNo, MemberBlockRequest request) {
+        Member member = getMemberService.getMemberNo(memberNo);
+        member.setIsBlocked(true);
+
+        BlockedMemberDetail blockedMemberDetail = new BlockedMemberDetail(member, request.getReason());
+
+        blockedMemberDetailRepository.save(blockedMemberDetail);
     }
 
 }

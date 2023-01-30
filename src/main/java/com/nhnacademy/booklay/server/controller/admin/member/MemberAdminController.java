@@ -1,9 +1,13 @@
 package com.nhnacademy.booklay.server.controller.admin.member;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.service.member.MemberService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,8 +17,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,10 +52,10 @@ public class MemberAdminController {
         return memberService.retrieveMember(memberNo);
     }
 
-    @PostMapping("/authority/{memberNo}/{authorityName}")
+    @PostMapping("/authority/{memberNo}")
     public ResponseEntity<Void> updateMemberAuthority(@PathVariable Long memberNo,
-                                                      @PathVariable String authorityName) {
-        memberService.createMemberAuthority(memberNo, authorityName);
+                                                      @Valid @RequestBody MemberAuthorityUpdateRequest request) {
+        memberService.createMemberAuthority(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }
@@ -69,8 +75,21 @@ public class MemberAdminController {
             memberService.retrieveMemberGrades(memberNo, pageable);
 
         PageResponse<MemberGradeRetrieveResponse> memberPageResponse
-            = new PageResponse<>(responsePage.getNumber(), responsePage.getSize(),
-            responsePage.getTotalPages(), responsePage.getContent());
+            = new PageResponse<>(responsePage);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberPageResponse);
+    }
+
+    @GetMapping("/block")
+    public ResponseEntity<PageResponse<BlockedMemberRetrieveResponse>> retrieveBlockedMember(
+        Pageable pageable) {
+        Page<BlockedMemberRetrieveResponse> responsePage =
+            memberService.retrieveBlockedMember(pageable);
+
+        PageResponse<BlockedMemberRetrieveResponse> memberPageResponse
+            = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +100,15 @@ public class MemberAdminController {
     public ResponseEntity<Void> createMemberGrade(@PathVariable Long memberNo,
                                                   @PathVariable String gradeName) {
         memberService.createMemberGrade(memberNo, gradeName);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .build();
+    }
+
+    @PostMapping("/block/{memberNo}")
+    public ResponseEntity<Void> memberBlock(@Valid @RequestBody MemberBlockRequest request,
+                                            @PathVariable Long memberNo) {
+        memberService.blockMember(memberNo, request);
+        return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }
 }

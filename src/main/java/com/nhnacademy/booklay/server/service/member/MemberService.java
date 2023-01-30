@@ -1,10 +1,14 @@
 package com.nhnacademy.booklay.server.service.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.entity.Member;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +29,7 @@ public interface MemberService {
 
     void deleteMember(Long memberNo);
 
-    void createMemberAuthority(Long memberNo, String authority);
+    void createMemberAuthority(Long memberNo, MemberAuthorityUpdateRequest request);
 
     Optional<MemberLoginResponse> retrieveMemberById(String memberId);
 
@@ -35,4 +39,7 @@ public interface MemberService {
 
     Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo, Pageable pageable);
 
+    void blockMember(Long memberNo, MemberBlockRequest request);
+
+    Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable);
 }

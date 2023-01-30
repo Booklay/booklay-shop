@@ -125,7 +125,6 @@ class CouponAdminServiceImplTest {
         BDDMockito.then(couponRepository).should().findById(targetId);
     }
 
-    @Disabled
     @Test
     @DisplayName("쿠폰 수정 테스트")
     void testUpdateCoupon() {
@@ -145,7 +144,6 @@ class CouponAdminServiceImplTest {
         // then
         BDDMockito.then(couponRepository).should().save(any());
     }
-    @Disabled
     @Test
     @DisplayName("쿠폰 삭제 테스트")
     void testDeleteCoupon() {

@@ -335,7 +335,7 @@ public class ProductServiceImpl implements ProductService {
           ProductDetail productDetail =
               productDetailRepository.findProductDetailByProductId(
                   product.getId());
-          log.info("PD 아이디 출력" + productDetail.getId());
+
           //작가 정보 DTO
           List<RetrieveAuthorResponse> authors =
               productDetailRepository.findAuthorsByProductDetailId(
@@ -426,4 +426,37 @@ public class ProductServiceImpl implements ProductService {
   public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
     return productRepository.findAllById(productNoList);
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products) {
+    List<RetrieveProductResponse> result = new ArrayList<>();
+    for (int i = 0; i < products.size(); i++) {
+      Product product = productRepository.findById(products.get(i))
+          .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+
+      //TODO : query dsl 이용해서 뽑아오는 방식을 통해서 depth 줄일것
+      if (!product.isDeleted() && productDetailRepository.existsProductDetailByProductId(
+          product.getId())) {
+        ProductDetail productDetail =
+            productDetailRepository.findProductDetailByProductId(
+                product.getId());
+
+        //작가 정보 DTO
+        List<RetrieveAuthorResponse> authors =
+            productDetailRepository.findAuthorsByProductDetailId(
+                productDetail.getId());
+
+        //합체
+        RetrieveProductResponse element =
+            new RetrieveProductResponse(product, productDetail,
+                authors);
+        //컨텐츠에 주입
+        result.add(element);
+
+      }
+    }
+    return result;
+  }
 }
+

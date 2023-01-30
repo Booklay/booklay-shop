@@ -3,24 +3,26 @@ package com.nhnacademy.booklay.server.service.product.impl;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.CategoryProduct;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.entity.Image;
+import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
-import com.nhnacademy.booklay.server.repository.ImageRepository;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.BookSubscribeRepository;
 import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
@@ -28,6 +30,8 @@ import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import com.nhnacademy.booklay.server.service.storage.FileService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,8 +61,9 @@ public class ProductServiceImpl implements ProductService {
   private final AuthorRepository authorRepository;
   private final ProductAuthorRepository productAuthorRepository;
   private final SubscribeRepository subscribeRepository;
-  private final ImageRepository imageRepository;
   private final ProductTagRepository productTagRepository;
+  private final FileService fileService;
+  private final BookSubscribeRepository bookSubscribeRepository;
 
   //상품 생성
   @Override
@@ -79,7 +84,6 @@ public class ProductServiceImpl implements ProductService {
     if (Objects.nonNull(request.getEbookAddress())) {
       productDetail.setEbookAddress(request.getEbookAddress());
     }
-
     ProductDetail savedDetail = productDetailRepository.save(productDetail);
 
     //product_author
@@ -90,22 +94,19 @@ public class ProductServiceImpl implements ProductService {
 
   //구독 생성
   @Override
-  public Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
+  public Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request)
+      throws IOException {
     Product product = splitProductSubscribe(request);
     Product savedProduct = productRepository.save(product);
-
     //category_product
     saveProductCategory(request.getCategoryIds(), savedProduct);
-
     //subscribe
     Subscribe subscribe = splitSubscribe(savedProduct, request);
 
     if (request.getPublisher() != null) {
       subscribe.setPublisher(request.getPublisher());
     }
-
     subscribeRepository.save(subscribe);
-
     return savedProduct.getId();
   }
 
@@ -116,8 +117,8 @@ public class ProductServiceImpl implements ProductService {
     RetrieveProductBookResponse response = productRepository.findProductBookDataByProductId(id);
     response.setAuthorIds(
         productDetailRepository.findAuthorIdsByProductDetailId(response.getProductDetailId()));
-    response.setCategoryIds(productRepository.findCategoryIdsByProductId(response.getProductId()));
-
+    response.setCategoryIds(
+        productRepository.findCategoryIdsByProductId(response.getProductId()));
     return response;
   }
 
@@ -127,7 +128,6 @@ public class ProductServiceImpl implements ProductService {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
-
     Product product = splitProduct(request);
     product.setId(request.getProductId());
     product.setCreatedAt(request.getCreatedAt());
@@ -152,7 +152,6 @@ public class ProductServiceImpl implements ProductService {
     }
     ProductDetail updatedDetail = productDetailRepository.save(productDetail);
 
-    //싹 밀었다가 다시 다 등록하는걸로 생각하는데 그게 맞나?
     productAuthorRepository.deleteAllByProductDetailId(updatedDetail.getId());
     productAuthorRegister(request.getAuthorIds(), updatedDetail);
     return null;
@@ -165,36 +164,27 @@ public class ProductServiceImpl implements ProductService {
 
     targetProduct.setDeleted(true);
 
-    Product deletedProduct = productRepository.save(targetProduct);
-
-    log.info("변동 확인용 출력 : " + deletedProduct.isDeleted());
+    productRepository.save(targetProduct);
   }
 
   //수정 위해서 구독 상품 조회
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    RetrieveProductSubscribeResponse response = productRepository.findProductSubscribeDataByProductId(
-        id);
-    response.setCategoryIds(productRepository.findCategoryIdsByProductId(response.getProductId()));
+    RetrieveProductSubscribeResponse response =
+        productRepository.findProductSubscribeDataByProductId(
+            id);
+    response.setCategoryIds(
+        productRepository.findCategoryIdsByProductId(response.getProductId()));
 
     return response;
   }
 
   //구독 상품 수정
   @Override
-  public Product retrieveProductByProductNo(Long productNo) {
-    return productRepository.findById(productNo).orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
-  }
-
-  @Override
-  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
-    return productRepository.findAllById(productNoList);
-  }
-
-  @Override
   @Transactional
-  public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) {
+  public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request)
+      throws IOException {
     if (!productRepository.existsById(request.getProductId())) {
       throw new IllegalArgumentException();
     }
@@ -246,17 +236,10 @@ public class ProductServiceImpl implements ProductService {
 
   //책
   //생성 수정 dto 에서 product 분리
-  private Product splitProduct(CreateUpdateProductBookRequest request) {
+  private Product splitProduct(CreateUpdateProductBookRequest request) throws IOException {
     MultipartFile thumbnail = request.getImage();
 
-    log.info("출력 : " + thumbnail.getOriginalFilename());
-
-    Image imageMake = Image.builder()
-        .address(thumbnail.getOriginalFilename())
-        .ext("jpeg")
-        .build();
-
-    Image image = imageRepository.save(imageMake);
+    ObjectFile objectFile = fileService.uploadFile(thumbnail);
 
     return Product.builder()
         .price(request.getPrice())
@@ -265,7 +248,7 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(image)
+        .objectFile(objectFile)
         .isSelling(request.getIsSelling())
         .build();
   }
@@ -276,7 +259,8 @@ public class ProductServiceImpl implements ProductService {
       Author foundAuthor = authorRepository.findById(authorIdList.get(i))
           .orElseThrow(IllegalArgumentException::new);
 
-      ProductAuthor.Pk pk = new ProductAuthor.Pk(productDetail.getId(), foundAuthor.getAuthorId());
+      ProductAuthor.Pk pk =
+          new ProductAuthor.Pk(productDetail.getId(), foundAuthor.getAuthorId());
 
       ProductAuthor productAuthor = ProductAuthor.builder()
           .pk(pk)
@@ -289,7 +273,8 @@ public class ProductServiceImpl implements ProductService {
   }
 
   //생성 수정 dto 에서 product_detail 분리
-  private ProductDetail splitDetail(CreateUpdateProductBookRequest request, Product savedProduct) {
+  private ProductDetail splitDetail(CreateUpdateProductBookRequest request,
+      Product savedProduct) {
     //product detail
     return ProductDetail.builder()
         .product(savedProduct)
@@ -303,13 +288,12 @@ public class ProductServiceImpl implements ProductService {
   //구독
 
   //dto 에서 product 분리
-  private Product splitProductSubscribe(CreateUpdateProductSubscribeRequest request) {
-    Image requestImage = Image.builder()
-        .address(request.getImage().getOriginalFilename())
-        .ext("jpeg")
-        .build();
+  private Product splitProductSubscribe(CreateUpdateProductSubscribeRequest request)
+      throws IOException {
+    MultipartFile thumbnail = request.getImage();
 
-    Image image = imageRepository.save(requestImage);
+    ObjectFile objectFile = fileService.uploadFile(thumbnail);
+
     return Product.builder()
         .price(request.getPrice())
         .pointMethod(request.getPointMethod())
@@ -317,7 +301,7 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .image(image)
+        .objectFile(objectFile)
         .isSelling(request.getIsSelling())
         .build();
   }
@@ -348,16 +332,19 @@ public class ProductServiceImpl implements ProductService {
       if (!product.isDeleted()) {
         //책 상품이라면
         if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-          ProductDetail productDetail = productDetailRepository.findProductDetailByProductId(
-              product.getId());
-          log.info("PD 아이디 출력" + productDetail.getId());
+          ProductDetail productDetail =
+              productDetailRepository.findProductDetailByProductId(
+                  product.getId());
+
           //작가 정보 DTO
-          List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(
-              productDetail.getId());
+          List<RetrieveAuthorResponse> authors =
+              productDetailRepository.findAuthorsByProductDetailId(
+                  productDetail.getId());
 
           //합체
-          RetrieveProductResponse element = new RetrieveProductResponse(product, productDetail,
-              authors);
+          RetrieveProductResponse element =
+              new RetrieveProductResponse(product, productDetail,
+                  authors);
           //컨텐츠에 주입
           assembledContent.add(element);
         }
@@ -365,7 +352,8 @@ public class ProductServiceImpl implements ProductService {
         //구독 상품 이라면
         if (subscribeRepository.existsSubscribeByProduct(product)) {
           Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-          RetrieveProductResponse element = new RetrieveProductResponse(product, subscribe);
+          RetrieveProductResponse element =
+              new RetrieveProductResponse(product, subscribe);
           assembledContent.add(element);
         }
       }
@@ -386,11 +374,13 @@ public class ProductServiceImpl implements ProductService {
         product.getId());
 
     if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-      ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
+      ProductDetail productDetail =
+          productDetailRepository.findProductDetailByProduct(product);
 
       //작가 정보 DTO
-      List<RetrieveAuthorResponse> authors = productDetailRepository.findAuthorsByProductDetailId(
-          productDetail.getId());
+      List<RetrieveAuthorResponse> authors =
+          productDetailRepository.findAuthorsByProductDetailId(
+              productDetail.getId());
 
       return new RetrieveProductViewResponse(product, productDetail, authors, productTags);
     }
@@ -402,4 +392,71 @@ public class ProductServiceImpl implements ProductService {
     }
     return null;
   }
+
+
+  @Override
+  public Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
+      Long subscribeId) {
+    Page<RetrieveBookForSubscribeResponse> thisPage = productRepository.findAllBooksForSubscribeBy(
+        pageable);
+    List<RetrieveBookForSubscribeResponse> pageContent = thisPage.getContent();
+
+    for (RetrieveBookForSubscribeResponse response : pageContent) {
+      BookSubscribe.Pk pk = new BookSubscribe.Pk(subscribeId, response.getProductId());
+      Boolean isRegistered = bookSubscribeRepository.existsById(pk);
+
+      List<String> authorNames = productRepository.findAuthorNameByProductId(
+          response.getProductId());
+
+      response.setAuthors(authorNames);
+      response.setIsRegistered(isRegistered);
+    }
+
+    return new PageImpl<>(pageContent, thisPage.getPageable(),
+        thisPage.getTotalElements());
+  }
+
+  @Override
+  public Product retrieveProductByProductNo(Long productNo) {
+    return productRepository.findById(productNo)
+        .orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
+  }
+
+  @Override
+  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
+    return productRepository.findAllById(productNoList);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products) {
+    List<RetrieveProductResponse> result = new ArrayList<>();
+    for (int i = 0; i < products.size(); i++) {
+      Product product = productRepository.findById(products.get(i))
+          .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+
+      //TODO : query dsl 이용해서 뽑아오는 방식을 통해서 depth 줄일것
+      if (!product.isDeleted() && productDetailRepository.existsProductDetailByProductId(
+          product.getId())) {
+        ProductDetail productDetail =
+            productDetailRepository.findProductDetailByProductId(
+                product.getId());
+
+        //작가 정보 DTO
+        List<RetrieveAuthorResponse> authors =
+            productDetailRepository.findAuthorsByProductDetailId(
+                productDetail.getId());
+
+        //합체
+        RetrieveProductResponse element =
+            new RetrieveProductResponse(product, productDetail,
+                authors);
+        //컨텐츠에 주입
+        result.add(element);
+
+      }
+    }
+    return result;
+  }
 }
+

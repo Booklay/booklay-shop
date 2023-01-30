@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.repository.coupon;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
@@ -38,7 +37,7 @@ class OrderCouponRepositoryTest {
     @BeforeEach
     void setUp() {
         coupon = Coupon.builder()
-            .image(DummyCart.getDummyImage())
+            .objectFile(DummyCart.getDummyFile())
             .couponType(Dummy.getDummyCouponType())
             .name("이달의 쿠폰")
             .amount(5)
@@ -62,7 +61,7 @@ class OrderCouponRepositoryTest {
 
         // given
         entityManager.persist(coupon.getCouponType());
-        entityManager.persist(coupon.getImage());
+        entityManager.persist(coupon.getObjectFile());
         entityManager.persist(coupon);
 
         // when
@@ -79,7 +78,7 @@ class OrderCouponRepositoryTest {
 
         // given
         entityManager.persist(coupon.getCouponType());
-        entityManager.persist(coupon.getImage());
+        entityManager.persist(coupon.getObjectFile());
         entityManager.persist(coupon);
         orderCouponRepository.save(orderCoupon);
 

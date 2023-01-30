@@ -4,14 +4,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CreateUpdateProductSubscribeRequest {
 
   private Long productId;
@@ -41,10 +45,10 @@ public class CreateUpdateProductSubscribeRequest {
   private Long subscribeId;
   @NotNull
   @Length(max = 4)
-  private Long subscribeWeek;
+  private Integer subscribeWeek;
   @NotNull
   @Length(max = 7)
-  private Long subscribeDay;
+  private Integer subscribeDay;
   @NotNull
   private String publisher;
   private List<Long> childProducts;

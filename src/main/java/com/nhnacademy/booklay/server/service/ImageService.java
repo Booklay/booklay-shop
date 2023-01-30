@@ -1,8 +1,8 @@
 package com.nhnacademy.booklay.server.service;
 
-import com.nhnacademy.booklay.server.entity.Image;
+import com.nhnacademy.booklay.server.entity.ObjectFile;
 
 public interface ImageService {
 
-  Image createImage(Image image);
+    ObjectFile createImage(ObjectFile objectFile);
 }

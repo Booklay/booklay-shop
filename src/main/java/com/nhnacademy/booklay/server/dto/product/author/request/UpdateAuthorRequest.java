@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.dto.product.author.request;
 
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class UpdateAuthorRequest {
@@ -12,11 +13,11 @@ public class UpdateAuthorRequest {
   @NotNull
   String name;
 
+  @Setter
   Long memberNo;
 
-  public UpdateAuthorRequest(Long id, String name, Long memberNo) {
+  public UpdateAuthorRequest(Long id, String name) {
     this.id = id;
     this.name = name;
-    this.memberNo = memberNo;
   }
 }

@@ -5,14 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
-import com.nhnacademy.booklay.server.entity.Image;
+import com.nhnacademy.booklay.server.entity.ObjectFile;
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -50,11 +49,12 @@ public class CouponCreateRequest {
 
     private Integer quantity;
 
-    public static Coupon toEntity(CouponCreateRequest couponRequest, CouponType couponType, Image image) {
+    public static Coupon toEntity(CouponCreateRequest couponRequest, CouponType couponType,
+                                  ObjectFile objectFile) {
         return Coupon.builder()
             .couponType(couponType)
             .name(couponRequest.getName())
-            .image(image)
+            .objectFile(objectFile)
             .amount(couponRequest.getAmount())
             .minimumUseAmount(couponRequest.getMinimumUseAmount())
             .maximumDiscountAmount(couponRequest.getMaximumDiscountAmount())

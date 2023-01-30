@@ -80,7 +80,7 @@ drop table if exists gender cascade;
 
 drop table if exists product cascade;
 
-drop table if exists image cascade;
+drop table if exists objectFile cascade;
 
 create table access_log
 (
@@ -133,12 +133,12 @@ create table gender
     gender varchar(5) not null
 );
 
-create table image
+create table object_file
 (
-    image_no bigint not null
+    file_no bigint not null
         primary key auto_increment,
     address varchar(255) not null,
-    ext varchar(5) not null
+    file_name varchar(255) not null
 );
 
 create table member
@@ -300,7 +300,7 @@ create table product
     point_method boolean not null,
     is_deleted boolean not null default true,
     constraint FK_image_TO_product_1
-        foreign key (thumbnail_no) references image (image_no)
+        foreign key (thumbnail_no) references object_file (file_no)
 );
 
 create table coupon
@@ -325,7 +325,7 @@ create table coupon
     constraint FK_coupon_type_TO_coupon_1
         foreign key (code) references coupon_type (code),
     constraint FK_image_TO_coupon_1
-        foreign key (image_no) references image (image_no)
+        foreign key (image_no) references object_file (file_no)
 );
 
 create table order_coupon
@@ -534,7 +534,7 @@ create table review
     created_at datetime not null,
     modified_at datetime null,
     constraint FK_image_TO_review_1
-        foreign key (image_no) references image (image_no),
+        foreign key (image_no) references object_file (file_no),
     constraint FK_member_TO_review_1
         foreign key (member_no) references member (member_no),
     constraint FK_product_TO_review_1
@@ -620,14 +620,6 @@ create table wishlist
         foreign key (member_no) references member (member_no),
     constraint FK_product_TO_wishlist_1
         foreign key (product_no) references product (product_no)
-);
-
-create table object_file
-(
-    file_no bigint not null
-        primary key auto_increment,
-    address varchar(255) not null,
-    file_name varchar(255) not null
 );
 
 insert into category values (0,0,'없음',0,false);

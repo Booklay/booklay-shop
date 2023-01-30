@@ -17,7 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
 
-public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom {
+public class MemberRepositoryImpl extends QuerydslRepositorySupport
+    implements MemberRepositoryCustom {
 
     public MemberRepositoryImpl() {
         super(Member.class);

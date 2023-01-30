@@ -8,8 +8,8 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;
-import com.nhnacademy.booklay.server.entity.Image;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.OrderCoupon;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductCoupon;
@@ -56,10 +56,10 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         CouponType couponType = couponTypeRepository.findById(typeCode)
             .orElseThrow(() -> new NotFoundException(CouponType.class.toString(), typeCode));
 
-        Image image = imageRepository.findById(imageId)
-            .orElseThrow(() -> new NotFoundException(Image.class.toString(), imageId));
+        ObjectFile objectFile = imageRepository.findById(imageId)
+            .orElseThrow(() -> new NotFoundException(ObjectFile.class.toString(), imageId));
 
-        Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType, image);
+        Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType, objectFile);
 
         // 수량을 정하지 않으면, 수량 제한이 없음.
         if (couponRequest.getQuantity() == null) {

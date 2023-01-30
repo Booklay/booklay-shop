@@ -66,7 +66,6 @@ public class MemberServiceImpl implements MemberService {
             () -> new GenderNotFoundException(createDto.getGender()));
 
         Member member = createDto.toEntity(gender);
-        MemberGrade grade = new MemberGrade(member, "화이트");
 
         Authority authority = authorityRepository.findByName("ROLE_MEMBER").orElseThrow(
             () -> new AuthorityNotFoundException("ROLE_MEMBER"));
@@ -76,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
                                 member, authority);
 
         memberRepository.save(member);
-        memberGradeRepository.save(grade);
+        memberGradeRepository.save(member.addGrade("white"));
         memberAuthorityRepository.save(memberAuthority);
     }
 

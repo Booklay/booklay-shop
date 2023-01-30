@@ -111,4 +111,11 @@ public class Member {
         this.nickname = null;
         this.phoneNo = null;
     }
+
+    public MemberGrade addGrade(String gradeName) {
+        return MemberGrade.builder()
+            .member(this)
+            .name(gradeName)
+            .build();
+    }
 }

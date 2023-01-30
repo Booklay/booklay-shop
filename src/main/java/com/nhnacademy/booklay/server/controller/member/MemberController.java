@@ -47,8 +47,8 @@ public class MemberController {
 
         MemberRetrieveResponse memberResponse = memberService.retrieveMember(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(memberResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberResponse);
     }
 
     @PostMapping
@@ -57,7 +57,7 @@ public class MemberController {
 
         memberService.createMember(memberCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .build();
+                             .build();
     }
 
     @PutMapping("/{memberNo}")
@@ -67,7 +67,7 @@ public class MemberController {
 
         memberService.updateMember(memberNo, memberUpdateRequest);
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                             .build();
     }
 
     @DeleteMapping("/{memberNo}")
@@ -75,39 +75,41 @@ public class MemberController {
 
         memberService.deleteMember(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                             .build();
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(MemberNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ErrorResponse.builder().code(MEMBER_NOT_FOUND_ERROR_CODE).message(ex.getMessage())
-                .build());
+                             .body(ErrorResponse.builder().code(MEMBER_NOT_FOUND_ERROR_CODE)
+                                                .message(ex.getMessage())
+                                                .build());
     }
 
     @ExceptionHandler(AuthorityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleAuthorityNotFoundException(
         AuthorityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ErrorResponse.builder().code(AUTHORITY_NOT_FOUND_ERROR_CODE)
-                .message(ex.getMessage()).build());
+                             .body(ErrorResponse.builder().code(AUTHORITY_NOT_FOUND_ERROR_CODE)
+                                                .message(ex.getMessage()).build());
     }
 
     @ExceptionHandler(AdminAndAuthorAuthorityCannotExistTogetherException.class)
     public ResponseEntity<ErrorResponse> handleAdminAndAuthorAuthorityCannotExistTogetherException(
         AdminAndAuthorAuthorityCannotExistTogetherException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse.builder()
-                .code(ADMIN_AND_AUTHOR_AUTHORITY_CANNOT_EXIST_TOGETHER_ERROR_CODE)
-                .message(ex.getMessage()).build());
+                             .body(ErrorResponse.builder()
+                                                .code(
+                                                    ADMIN_AND_AUTHOR_AUTHORITY_CANNOT_EXIST_TOGETHER_ERROR_CODE)
+                                                .message(ex.getMessage()).build());
     }
 
     @ExceptionHandler(AlreadyExistAuthorityException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyExistAuthorityException(
         AlreadyExistAuthorityException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse.builder().code(ALREADY_EXIST_AUTHORITY_ERROR_CODE)
-                .message(ex.getMessage()).build());
+                             .body(ErrorResponse.builder().code(ALREADY_EXIST_AUTHORITY_ERROR_CODE)
+                                                .message(ex.getMessage()).build());
     }
 }
 

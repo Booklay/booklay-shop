@@ -13,48 +13,48 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class RetrieveProductResponse {
 
-  @NotNull
-  private Long productId;
-  @Setter
-  private MultipartFile image;
-  @NotNull
-  private String title;
-  @NotNull
-  private Long price;
-  @NotNull
-  private Long pointRate;
-  @NotNull
-  private Boolean isSelling;
-  @NotNull
-  private Boolean pointMethod;
-  @NotNull
-  private String shortDescription;
-  @NotNull
-  private String publisher;
+    @NotNull
+    private Long productId;
+    @Setter
+    private MultipartFile image;
+    @NotNull
+    private String title;
+    @NotNull
+    private Long price;
+    @NotNull
+    private Long pointRate;
+    @NotNull
+    private Boolean isSelling;
+    @NotNull
+    private Boolean pointMethod;
+    @NotNull
+    private String shortDescription;
+    @NotNull
+    private String publisher;
 
-  private List<RetrieveAuthorResponse> authors;
+    private List<RetrieveAuthorResponse> authors;
 
-  public RetrieveProductResponse(Product product, ProductDetail productDetail,
-      List<RetrieveAuthorResponse> authorsNo) {
-    this.productId = product.getId();
-    this.title = product.getTitle();
-    this.price = product.getPrice();
-    this.pointRate = product.getPointRate();
-    this.isSelling = product.isSelling();
-    this.pointMethod = product.isPointMethod();
-    this.shortDescription = product.getShortDescription();
-    this.publisher = productDetail.getPublisher();
-    this.authors = authorsNo;
-  }
+    public RetrieveProductResponse(Product product, ProductDetail productDetail,
+                                   List<RetrieveAuthorResponse> authorsNo) {
+        this.productId = product.getId();
+        this.title = product.getTitle();
+        this.price = product.getPrice();
+        this.pointRate = product.getPointRate();
+        this.isSelling = product.isSelling();
+        this.pointMethod = product.isPointMethod();
+        this.shortDescription = product.getShortDescription();
+        this.publisher = productDetail.getPublisher();
+        this.authors = authorsNo;
+    }
 
-  public RetrieveProductResponse(Product product, Subscribe subscribe) {
-    this.productId = product.getId();
-    this.title = product.getTitle();
-    this.price = product.getPrice();
-    this.pointRate = product.getPointRate();
-    this.isSelling = product.isSelling();
-    this.pointMethod = product.isPointMethod();
-    this.shortDescription = product.getShortDescription();
-    this.publisher = subscribe.getPublisher();
-  }
+    public RetrieveProductResponse(Product product, Subscribe subscribe) {
+        this.productId = product.getId();
+        this.title = product.getTitle();
+        this.price = product.getPrice();
+        this.pointRate = product.getPointRate();
+        this.isSelling = product.isSelling();
+        this.pointMethod = product.isPointMethod();
+        this.shortDescription = product.getShortDescription();
+        this.publisher = subscribe.getPublisher();
+    }
 }

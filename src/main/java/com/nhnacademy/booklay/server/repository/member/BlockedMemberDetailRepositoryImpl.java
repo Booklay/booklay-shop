@@ -12,7 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
 
-public class BlockedMemberDetailRepositoryImpl extends QuerydslRepositorySupport implements BlockedMemberDetailRepositoryCustom {
+public class BlockedMemberDetailRepositoryImpl extends QuerydslRepositorySupport
+    implements BlockedMemberDetailRepositoryCustom {
     public BlockedMemberDetailRepositoryImpl() {
         super(BlockedMemberDetail.class);
     }
@@ -27,13 +28,13 @@ public class BlockedMemberDetailRepositoryImpl extends QuerydslRepositorySupport
             .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
             .where(member.isBlocked.eq(true))
             .select(Projections.constructor(BlockedMemberRetrieveResponse.class,
-                blockedMemberDetail.id,
-                member.memberNo,
-                member.memberId,
-                member.name,
-                blockedMemberDetail.reason,
-                blockedMemberDetail.blockedAt,
-                blockedMemberDetail.releasedAt))
+                                            blockedMemberDetail.id,
+                                            member.memberNo,
+                                            member.memberId,
+                                            member.name,
+                                            blockedMemberDetail.reason,
+                                            blockedMemberDetail.blockedAt,
+                                            blockedMemberDetail.releasedAt))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();

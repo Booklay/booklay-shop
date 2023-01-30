@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.entity;
 
-import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.Column;
@@ -24,39 +23,39 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookSubscribe {
-  @EmbeddedId
-  private Pk pk;
+    @EmbeddedId
+    private Pk pk;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_no")
-  @MapsId("productId")
-  private Product productNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_no")
+    @MapsId("productId")
+    private Product productNo;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "subscribe_no")
-  @MapsId("subscribeId")
-  private Subscribe subscribeNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscribe_no")
+    @MapsId("subscribeId")
+    private Subscribe subscribeNo;
 
-  @Column(name= "release_Date")
-  private LocalDate releaseDate;
+    @Column(name = "release_Date")
+    private LocalDate releaseDate;
 
-  @Embeddable
-  @EqualsAndHashCode
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class Pk implements Serializable {
-    @Column(name = "subscribe_no")
-    private Long subscribeId;
+    @Embeddable
+    @EqualsAndHashCode
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Pk implements Serializable {
+        @Column(name = "subscribe_no")
+        private Long subscribeId;
 
-    @Column(name = "product_no")
-    private Long productId;
-  }
+        @Column(name = "product_no")
+        private Long productId;
+    }
 
-  @Builder
-  public BookSubscribe(Pk pk, Product productNo, Subscribe subscribeNo, LocalDate releaseDate) {
-    this.pk = pk;
-    this.productNo = productNo;
-    this.subscribeNo = subscribeNo;
-    this.releaseDate = releaseDate;
-  }
+    @Builder
+    public BookSubscribe(Pk pk, Product productNo, Subscribe subscribeNo, LocalDate releaseDate) {
+        this.pk = pk;
+        this.productNo = productNo;
+        this.subscribeNo = subscribeNo;
+        this.releaseDate = releaseDate;
+    }
 }

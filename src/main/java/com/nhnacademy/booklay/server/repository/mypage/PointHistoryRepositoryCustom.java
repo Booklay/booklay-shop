@@ -12,5 +12,6 @@ public interface PointHistoryRepositoryCustom {
 
     Optional<TotalPointRetrieveResponse> retrieveLatestPointHistory(Long memberNo);
 
-    Page<PointHistoryRetrieveResponse> retrievePointHistoryByMemberNo(Long memberNo, Pageable pageable);
+    Page<PointHistoryRetrieveResponse> retrievePointHistoryByMemberNo(Long memberNo,
+                                                                      Pageable pageable);
 }

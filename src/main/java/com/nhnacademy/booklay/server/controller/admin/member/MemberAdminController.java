@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,11 +39,11 @@ public class MemberAdminController {
 
         PageResponse<MemberRetrieveResponse> memberPageResponse
             = new PageResponse<>(responsePage.getNumber(), responsePage.getSize(),
-            responsePage.getTotalPages(), responsePage.getContent());
+                                 responsePage.getTotalPages(), responsePage.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(memberPageResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberPageResponse);
     }
 
     @GetMapping("/{memberNo}")
@@ -54,10 +53,11 @@ public class MemberAdminController {
 
     @PostMapping("/authority/{memberNo}")
     public ResponseEntity<Void> updateMemberAuthority(@PathVariable Long memberNo,
-                                                      @Valid @RequestBody MemberAuthorityUpdateRequest request) {
+                                                      @Valid @RequestBody
+                                                      MemberAuthorityUpdateRequest request) {
         memberService.createMemberAuthority(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .build();
+                             .build();
     }
 
     @DeleteMapping("/authority/{memberNo}/{authorityName}")
@@ -65,7 +65,7 @@ public class MemberAdminController {
                                                       @PathVariable String authorityName) {
         memberService.deleteMemberAuthority(memberNo, authorityName);
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                             .build();
     }
 
     @GetMapping("/grade/{memberNo}")
@@ -78,8 +78,8 @@ public class MemberAdminController {
             = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(memberPageResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberPageResponse);
     }
 
     @GetMapping("/block")
@@ -92,8 +92,8 @@ public class MemberAdminController {
             = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(memberPageResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberPageResponse);
     }
 
     @PostMapping("/grade/{memberNo}/{gradeName}")
@@ -101,7 +101,7 @@ public class MemberAdminController {
                                                   @PathVariable String gradeName) {
         memberService.createMemberGrade(memberNo, gradeName);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .build();
+                             .build();
     }
 
     @PostMapping("/block/{memberNo}")
@@ -109,6 +109,6 @@ public class MemberAdminController {
                                             @PathVariable Long memberNo) {
         memberService.blockMember(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .build();
+                             .build();
     }
 }

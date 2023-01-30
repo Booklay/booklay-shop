@@ -62,7 +62,7 @@ public class WebConfig {
         var clientStore = KeyStore.getInstance("PKCS12");
 
         try (InputStream inputStream = getClass().getClassLoader()
-            .getResourceAsStream("booklay.p12")) {
+                                                 .getResourceAsStream("booklay.p12")) {
             File tempFile = File.createTempFile(String.valueOf(inputStream.hashCode()), ".tmp");
             tempFile.deleteOnExit();
 
@@ -72,15 +72,15 @@ public class WebConfig {
         }
 
         var sslContext = SSLContextBuilder.create()
-            .setProtocol("TLS")
-            .loadKeyMaterial(clientStore, p12Password.toCharArray())
-            .loadTrustMaterial(new TrustSelfSignedStrategy())
-            .build();
+                                          .setProtocol("TLS")
+                                          .loadKeyMaterial(clientStore, p12Password.toCharArray())
+                                          .loadTrustMaterial(new TrustSelfSignedStrategy())
+                                          .build();
 
         var sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext);
         CloseableHttpClient httpClient = HttpClients.custom()
-            .setSSLSocketFactory(sslConnectionSocketFactory)
-            .build();
+                                                    .setSSLSocketFactory(sslConnectionSocketFactory)
+                                                    .build();
 
         var requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
 
@@ -104,10 +104,10 @@ public class WebConfig {
             restTemplate.getForObject(url + this.dbUrl, SecretResponse.class));
 
         return DatasourceInfo.builder()
-            .passwword(passwordResponse.getBody().getSecret())
-            .dbUrl(dbUrlResponse.getBody().getSecret())
-            .username(usernameResponse.getBody().getSecret())
-            .build();
+                             .passwword(passwordResponse.getBody().getSecret())
+                             .dbUrl(dbUrlResponse.getBody().getSecret())
+                             .username(usernameResponse.getBody().getSecret())
+                             .build();
 
     }
 }

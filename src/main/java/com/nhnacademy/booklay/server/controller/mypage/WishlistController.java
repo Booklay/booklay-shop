@@ -19,7 +19,7 @@ public class WishlistController {
 
     private final WishlistService wishlistService;
 
-    //위시리스트 등록 삭제
+    // 위시리스트 등록 삭제
     @PostMapping("/wishlist")
     public void createWishlist(CreateWishlistRequest request) {
         wishlistService.createWishlist(request);

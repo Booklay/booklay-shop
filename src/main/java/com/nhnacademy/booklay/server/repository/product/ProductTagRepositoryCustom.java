@@ -6,5 +6,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface ProductTagRepositoryCustom {
-  List<RetrieveTagResponse> findTagsByProductId(Long id);
+    List<RetrieveTagResponse> findTagsByProductId(Long id);
 }

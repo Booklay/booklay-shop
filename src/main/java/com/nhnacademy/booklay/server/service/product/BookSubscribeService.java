@@ -5,9 +5,9 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductRespons
 import java.util.List;
 
 public interface BookSubscribeService {
-  void bookSubscribeConnection(DisAndConnectBookWithSubscribeRequest request);
+    void bookSubscribeConnection(DisAndConnectBookWithSubscribeRequest request);
 
-  void bookSubscribeDisconnection(DisAndConnectBookWithSubscribeRequest request);
+    void bookSubscribeDisconnection(DisAndConnectBookWithSubscribeRequest request);
 
-  List<RetrieveProductResponse> retrieveBookSubscribe (Long subscribeId);
+    List<RetrieveProductResponse> retrieveBookSubscribe(Long subscribeId);
 }

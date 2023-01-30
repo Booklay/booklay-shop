@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.dto.product.author.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,12 +8,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateAuthorRequest {
 
-  String name;
+    String name;
 
-  @Setter
-  Long memberNo;
+    @Setter
+    Long memberNo;
 
-  public CreateAuthorRequest(String name) {
-    this.name = name;
-  }
+    public CreateAuthorRequest(String name) {
+        this.name = name;
+    }
 }

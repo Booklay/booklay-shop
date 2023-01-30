@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.dto.member.request;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -8,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 public interface CouponTypeService {
 
     void createCouponType(CouponTypeCURequest couponTypeRequest);
+
     Page<CouponTypeRetrieveResponse> retrieveAllCouponTypes(Pageable pageable);
+
     void updateCouponType(Long couponTypeId, CouponTypeCURequest couponTypeRequest);
+
     void deleteCouponType(Long couponTypeId);
 }

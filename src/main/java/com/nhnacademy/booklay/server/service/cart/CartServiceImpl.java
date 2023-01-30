@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
+
     @Override
     public Cart retrieveCartByMemberNoAndProductNo(Long memberNo, Long productNo) {
         return cartRepository.getReferenceById(new Cart.Pk(memberNo, productNo));

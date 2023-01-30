@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CouponTypeServiceImpl implements CouponTypeService{
+public class CouponTypeServiceImpl implements CouponTypeService {
 
     private final CouponTypeRepository couponTypeRepository;
 
@@ -31,21 +31,21 @@ public class CouponTypeServiceImpl implements CouponTypeService{
 
     @Override
     public void updateCouponType(Long couponTypeId, CouponTypeCURequest couponTypeRequest) {
-        if(!couponTypeRepository.existsById(couponTypeId)) {
+        if (!couponTypeRepository.existsById(couponTypeId)) {
             throw new NotFoundException(CouponType.class.toString(), couponTypeId);
         }
 
         CouponType couponType = CouponType.builder()
-            .id(couponTypeRequest.getId())
-            .name(couponTypeRequest.getName())
-            .build();
+                                          .id(couponTypeRequest.getId())
+                                          .name(couponTypeRequest.getName())
+                                          .build();
 
         couponTypeRepository.save(couponType);
     }
 
     @Override
     public void deleteCouponType(Long couponTypeId) {
-        if(!couponTypeRepository.existsById(couponTypeId)) {
+        if (!couponTypeRepository.existsById(couponTypeId)) {
             throw new NotFoundException(CouponType.class.toString(), couponTypeId);
         }
         couponTypeRepository.deleteById(couponTypeId);

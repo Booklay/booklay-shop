@@ -28,9 +28,9 @@ public class ErrorResponse {
 
         public static ValidationError of(final FieldError fieldError) {
             return ValidationError.builder()
-                .field(fieldError.getField())
-                .message(fieldError.getDefaultMessage())
-                .build();
+                                  .field(fieldError.getField())
+                                  .message(fieldError.getDefaultMessage())
+                                  .build();
         }
     }
 }

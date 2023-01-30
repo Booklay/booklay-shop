@@ -49,26 +49,28 @@ public class StorageController {
 
         if (originalFilename.isPresent()) {
             fileExtension = originalFilename.filter(f -> f.contains("."))
-                .map(f -> f.substring(originalFilename.get().lastIndexOf(".") + 1));
+                                            .map(f -> f.substring(
+                                                originalFilename.get().lastIndexOf(".") + 1));
         }
 
         if (contentType.isPresent() && fileExtension.isPresent()) {
             FileResolveRequest fileResolveRequest = FileResolveRequest.builder()
-                .fileExtension(fileExtension.get())
-                .fileType(contentType.get())
-                .build();
+                                                                      .fileExtension(
+                                                                          fileExtension.get())
+                                                                      .fileType(contentType.get())
+                                                                      .build();
 
             fileService.uploadFileResolve(file, fileResolveRequest);
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .build();
+                                 .contentType(MediaType.APPLICATION_JSON)
+                                 .build();
 
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .build();
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .build();
     }
 
     /**
@@ -85,7 +87,7 @@ public class StorageController {
         String path = fileService.downloadFile(fileId);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(path);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(path);
     }
 }

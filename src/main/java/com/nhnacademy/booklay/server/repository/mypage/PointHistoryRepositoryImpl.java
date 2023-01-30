@@ -30,8 +30,8 @@ public class PointHistoryRepositoryImpl extends QuerydslRepositorySupport
             .where(pointHistory.member.memberNo.eq(memberNo))
             .orderBy(pointHistory.updatedAt.asc())
             .select(Projections.constructor(TotalPointRetrieveResponse.class,
-                pointHistory.member.memberNo,
-                pointHistory.totalPoint))
+                                            pointHistory.member.memberNo,
+                                            pointHistory.totalPoint))
             .fetchFirst();
 
         return Optional.ofNullable(responsePoint);
@@ -47,12 +47,12 @@ public class PointHistoryRepositoryImpl extends QuerydslRepositorySupport
             .innerJoin(member).on(pointHistory.member.memberNo.eq(member.memberNo))
             .where(pointHistory.member.memberNo.eq(memberNo))
             .select(Projections.constructor(PointHistoryRetrieveResponse.class,
-                pointHistory.id,
-                pointHistory.member.memberNo,
-                pointHistory.point,
-                pointHistory.totalPoint,
-                pointHistory.updatedAt,
-                pointHistory.updatedDetail))
+                                            pointHistory.id,
+                                            pointHistory.member.memberNo,
+                                            pointHistory.point,
+                                            pointHistory.totalPoint,
+                                            pointHistory.updatedAt,
+                                            pointHistory.updatedDetail))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();

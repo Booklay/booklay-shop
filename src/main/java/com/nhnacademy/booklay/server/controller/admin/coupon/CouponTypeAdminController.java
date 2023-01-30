@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author 김승혜
  */
 @RestController
@@ -33,26 +32,31 @@ public class CouponTypeAdminController {
     private final CouponTypeService couponTypeService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<CouponTypeRetrieveResponse>> retrieveAllCouponTypes(@PageableDefault
-                                                                                           Pageable pageable) {
-        Page<CouponTypeRetrieveResponse> couponTypePage = couponTypeService.retrieveAllCouponTypes(pageable);
-        PageResponse<CouponTypeRetrieveResponse> couponTypePageResponse = new PageResponse<>(couponTypePage);
+    public ResponseEntity<PageResponse<CouponTypeRetrieveResponse>> retrieveAllCouponTypes(
+        @PageableDefault
+        Pageable pageable) {
+        Page<CouponTypeRetrieveResponse> couponTypePage =
+            couponTypeService.retrieveAllCouponTypes(pageable);
+        PageResponse<CouponTypeRetrieveResponse> couponTypePageResponse =
+            new PageResponse<>(couponTypePage);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(couponTypePageResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(couponTypePageResponse);
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCouponType(@Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
-       couponTypeService.createCouponType(couponTypeRequest);
+    public ResponseEntity<Void> createCouponType(
+        @Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
+        couponTypeService.createCouponType(couponTypeRequest);
 
-       return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{couponTypeId}")
     public ResponseEntity<Void> updateCouponType(@PathVariable Long couponTypeId,
-                                                 @Valid @RequestBody CouponTypeCURequest couponTypeRequest) {
+                                                 @Valid @RequestBody
+                                                 CouponTypeCURequest couponTypeRequest) {
         couponTypeService.updateCouponType(couponTypeId, couponTypeRequest);
 
         return ResponseEntity.status(HttpStatus.OK).build();

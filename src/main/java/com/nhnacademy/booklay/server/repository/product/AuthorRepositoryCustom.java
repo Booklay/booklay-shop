@@ -7,5 +7,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface AuthorRepositoryCustom {
-  Page<RetrieveAuthorResponse> findAllBy(Pageable pageable);
+    Page<RetrieveAuthorResponse> findAllBy(Pageable pageable);
 }

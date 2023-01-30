@@ -11,13 +11,13 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface ProductRepositoryCustom {
 
-  RetrieveProductBookResponse findProductBookDataByProductId(Long id);
+    RetrieveProductBookResponse findProductBookDataByProductId(Long id);
 
-  RetrieveProductSubscribeResponse findProductSubscribeDataByProductId(Long id);
+    RetrieveProductSubscribeResponse findProductSubscribeDataByProductId(Long id);
 
-  List<Long> findCategoryIdsByProductId(Long id);
+    List<Long> findCategoryIdsByProductId(Long id);
 
-  Page<RetrieveBookForSubscribeResponse> findAllBooksForSubscribeBy(Pageable pageable);
+    Page<RetrieveBookForSubscribeResponse> findAllBooksForSubscribeBy(Pageable pageable);
 
-  List<String> findAuthorNameByProductId(Long productId);
+    List<String> findAuthorNameByProductId(Long productId);
 }

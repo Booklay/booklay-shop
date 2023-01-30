@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RetrieveIdRequest {
 
-  @NotNull
-  Long id;
+    @NotNull
+    Long id;
 
-  public RetrieveIdRequest(Long id) {
-    this.id = id;
-  }
+    public RetrieveIdRequest(Long id) {
+        this.id = id;
+    }
 }

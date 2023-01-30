@@ -51,7 +51,7 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, errorCode);
     }
 
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleAllException(Exception ex) {
         log.warn("handleAllException", ex);
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
@@ -60,44 +60,45 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
-            .body(makeErrorResponse(errorCode));
+                             .body(makeErrorResponse(errorCode));
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
         return ErrorResponse.builder()
-            .code(errorCode.name())
-            .message(errorCode.getMessage())
-            .build();
+                            .code(errorCode.name())
+                            .message(errorCode.getMessage())
+                            .build();
     }
 
     private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode, String message) {
         return ResponseEntity.status(errorCode.getHttpStatus())
-            .body(makeErrorResponse(errorCode, message));
+                             .body(makeErrorResponse(errorCode, message));
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
         return ErrorResponse.builder()
-            .code(errorCode.name())
-            .message(message)
-            .build();
+                            .code(errorCode.name())
+                            .message(message)
+                            .build();
     }
 
     private ResponseEntity<Object> handleExceptionInternal(BindException e, ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
-            .body(makeErrorResponse(e, errorCode));
+                             .body(makeErrorResponse(e, errorCode));
     }
 
     private ErrorResponse makeErrorResponse(BindException e, ErrorCode errorCode) {
         List<ErrorResponse.ValidationError> validationErrorList = e.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .map(ErrorResponse.ValidationError::of)
-            .collect(Collectors.toList());
+                                                                   .getFieldErrors()
+                                                                   .stream()
+                                                                   .map(
+                                                                       ErrorResponse.ValidationError::of)
+                                                                   .collect(Collectors.toList());
 
         return ErrorResponse.builder()
-            .code(errorCode.name())
-            .message(errorCode.getMessage())
-            .errors(validationErrorList)
-            .build();
+                            .code(errorCode.name())
+                            .message(errorCode.getMessage())
+                            .errors(validationErrorList)
+                            .build();
     }
 }

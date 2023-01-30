@@ -26,23 +26,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product")
 public class ProductController {
 
-  private final ProductService productService;
-  private final BookSubscribeService bookSubscribeService;
+    private final ProductService productService;
+    private final BookSubscribeService bookSubscribeService;
 
-  @GetMapping
-  public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
-      throws JsonProcessingException {
-    Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
-    return new PageResponse<>(response);
-  }
+    @GetMapping
+    public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
+        throws JsonProcessingException {
+        Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
+        return new PageResponse<>(response);
+    }
 
-  @GetMapping("/view/{productNo}")
-  public RetrieveProductViewResponse retrieveDetailView(@PathVariable Long productNo) {
-    return productService.retrieveProductView(productNo);
-  }
+    @GetMapping("/view/{productNo}")
+    public RetrieveProductViewResponse retrieveDetailView(@PathVariable Long productNo) {
+        return productService.retrieveProductView(productNo);
+    }
 
-  @GetMapping("/view/subscribe/{subscribeId}")
-  public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId) {
-    return bookSubscribeService.retrieveBookSubscribe(subscribeId);
-  }
+    @GetMapping("/view/subscribe/{subscribeId}")
+    public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId) {
+        return bookSubscribeService.retrieveBookSubscribe(subscribeId);
+    }
 }

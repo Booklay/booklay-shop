@@ -37,7 +37,7 @@ public class PointHistoryController {
         pointHistoryService.createPointHistory(pointHistoryCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .build();
+                             .build();
     }
 
     @GetMapping("/{memberNo}")
@@ -49,8 +49,8 @@ public class PointHistoryController {
         PageResponse<PointHistoryRetrieveResponse> response = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(response);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(response);
     }
 
     @GetMapping("/total/{memberNo}")
@@ -60,8 +60,8 @@ public class PointHistoryController {
             pointHistoryService.retrieveTotalPoint(memberNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(totalPointRetrieveResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(totalPointRetrieveResponse);
     }
 
     @PostMapping("/present/{memberNo}")
@@ -71,15 +71,15 @@ public class PointHistoryController {
         pointHistoryService.presentPoint(memberNo, pointPresentRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                             .build();
     }
 
     @PostMapping("/coupon/{memberNo}/{couponId}")
     public ResponseEntity<Void> convertPointCoupon(@PathVariable Long memberNo,
                                                    @PathVariable Long couponId) {
-        //TODO : 쿠폰 확인, 쿠폰 사용 체크, 포인트 적립
+        // TODO : 쿠폰 확인, 쿠폰 사용 체크, 포인트 적립
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                             .build();
     }
 
 }

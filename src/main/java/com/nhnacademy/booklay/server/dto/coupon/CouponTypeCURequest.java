@@ -18,8 +18,8 @@ public class CouponTypeCURequest {
 
     public static CouponType toEntity(CouponTypeCURequest couponTypeRequest) {
         return CouponType.builder()
-            .id(couponTypeRequest.getId())
-            .name(couponTypeRequest.getName())
-            .build();
+                         .id(couponTypeRequest.getId())
+                         .name(couponTypeRequest.getName())
+                         .build();
     }
 }

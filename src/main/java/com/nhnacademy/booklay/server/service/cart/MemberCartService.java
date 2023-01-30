@@ -10,6 +10,8 @@ public interface MemberCartService {
     void setCartItem(CartAddRequest cartAddRequest);
 
     void deleteCartItem(String key, Long productNo);
+
     void deleteAllCartItems(String key);
+
     void deleteCartItems(String key, List<Long> productNoList);
 }

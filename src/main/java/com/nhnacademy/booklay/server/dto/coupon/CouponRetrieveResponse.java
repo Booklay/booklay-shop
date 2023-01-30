@@ -30,13 +30,13 @@ public class CouponRetrieveResponse {
 
     public static CouponRetrieveResponse fromEntity(Coupon coupon) {
         return CouponRetrieveResponse.builder()
-            .id(coupon.getId())
-            .name(coupon.getName())
-            .couponType(coupon.getCouponType())
-            .amount(coupon.getAmount())
-            .minimumUseAmount(coupon.getMinimumUseAmount())
-            .minimumUseAmount(coupon.getMaximumDiscountAmount())
-            .isLimited(coupon.getIsLimited())
-            .build();
+                                     .id(coupon.getId())
+                                     .name(coupon.getName())
+                                     .couponType(coupon.getCouponType())
+                                     .amount(coupon.getAmount())
+                                     .minimumUseAmount(coupon.getMinimumUseAmount())
+                                     .minimumUseAmount(coupon.getMaximumDiscountAmount())
+                                     .isLimited(coupon.getIsLimited())
+                                     .build();
     }
 }

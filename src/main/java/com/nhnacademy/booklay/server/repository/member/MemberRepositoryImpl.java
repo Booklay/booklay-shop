@@ -1,19 +1,20 @@
 package com.nhnacademy.booklay.server.repository.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.QAuthority;
+import com.nhnacademy.booklay.server.entity.QBlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QMemberAuthority;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-
-import java.util.Optional;
 import org.springframework.data.support.PageableExecutionUtils;
 
 public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom {
@@ -32,14 +33,42 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
         MemberLoginResponse memberLoginResponse = from(member)
                 .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
                 .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
-                .where(member.memberId.eq(userId))
-                .select(Projections.constructor(MemberLoginResponse.class,
-                        member.memberId,
-                        member.password,
-                        authority.name))
-                .fetchOne();
+            .where(member.memberId.eq(userId))
+            .select(Projections.constructor(MemberLoginResponse.class,
+                member.memberId,
+                member.password,
+                authority.name))
+            .fetchOne();
 
         return Optional.ofNullable(memberLoginResponse);
+    }
+
+    @Override
+    public Page<BlockedMemberRetrieveResponse> retrieveBlockedMembers(Pageable pageable) {
+        QMember member = QMember.member;
+        QBlockedMemberDetail blockedMemberDetail = QBlockedMemberDetail.blockedMemberDetail;
+
+        List<BlockedMemberRetrieveResponse> content = from(member)
+            .innerJoin(blockedMemberDetail)
+            .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
+            .select(Projections.constructor(BlockedMemberRetrieveResponse.class,
+                blockedMemberDetail.id,
+                member.memberNo,
+                member.memberId,
+                member.name,
+                blockedMemberDetail.reason,
+                blockedMemberDetail.blockedAt,
+                blockedMemberDetail.releasedAt))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        JPQLQuery<Long> count = from(member)
+            .innerJoin(blockedMemberDetail)
+            .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
+            .select(member.count());
+
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
     }
 
     @Override
@@ -68,4 +97,5 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
             .select(member.count());
         return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
     }
+
 }

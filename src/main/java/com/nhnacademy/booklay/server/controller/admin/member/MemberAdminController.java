@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.controller.admin.member;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
@@ -72,8 +73,21 @@ public class MemberAdminController {
             memberService.retrieveMemberGrades(memberNo, pageable);
 
         PageResponse<MemberGradeRetrieveResponse> memberPageResponse
-            = new PageResponse<>(responsePage.getNumber(), responsePage.getSize(),
-            responsePage.getTotalPages(), responsePage.getContent());
+            = new PageResponse<>(responsePage);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberPageResponse);
+    }
+
+    @GetMapping("/block")
+    public ResponseEntity<PageResponse<BlockedMemberRetrieveResponse>> retrieveBlockedMember(
+        Pageable pageable) {
+        Page<BlockedMemberRetrieveResponse> responsePage =
+            memberService.retrieveBlockedMember(pageable);
+
+        PageResponse<BlockedMemberRetrieveResponse> memberPageResponse
+            = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +98,7 @@ public class MemberAdminController {
     public ResponseEntity<Void> createMemberGrade(@PathVariable Long memberNo,
                                                   @PathVariable String gradeName) {
         memberService.createMemberGrade(memberNo, gradeName);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }
 
@@ -92,7 +106,7 @@ public class MemberAdminController {
     public ResponseEntity<Void> memberBlock(@Valid @RequestBody MemberBlockRequest request,
                                             @PathVariable Long memberNo) {
         memberService.blockMember(memberNo, request);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }
 }

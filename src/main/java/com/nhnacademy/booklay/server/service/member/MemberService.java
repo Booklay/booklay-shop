@@ -41,4 +41,8 @@ public interface MemberService {
     void blockMember(Long memberNo, MemberBlockRequest request);
 
     Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable);
+
+    void blockMemberCancel(Long blockedMemberDetailId);
+
+    Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo, Pageable pageable);
 }

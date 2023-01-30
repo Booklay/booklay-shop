@@ -27,6 +27,7 @@ import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,6 +98,32 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable) {
         return blockedMemberDetailRepository.retrieveBlockedMembers(pageable);
+    }
+
+    @Override
+    public void blockMemberCancel(Long blockedMemberDetailId) {
+        //TODO 3: 최근 차단내역 없음 에러
+        BlockedMemberDetail blockedMemberDetail =
+            blockedMemberDetailRepository.findById(blockedMemberDetailId)
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        //TODO 3: 이미 차단해제 된 회원은 다시 차단해제 할 수 없음
+        if(blockedMemberDetail.getReleasedAt() != null) {
+            throw new IllegalArgumentException();
+        }
+
+        blockedMemberDetail.getMember().setIsBlocked(false);
+
+        blockedMemberDetail.setReleasedAt(LocalDateTime.now());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo,
+                                                                           Pageable pageable) {
+        getMemberService.getMemberNo(memberNo);
+
+        return blockedMemberDetailRepository.retrieveBlockedMemberDetail(memberNo, pageable);
     }
 
     @Override

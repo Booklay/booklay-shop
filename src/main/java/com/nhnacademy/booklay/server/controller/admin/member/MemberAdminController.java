@@ -96,6 +96,21 @@ public class MemberAdminController {
                              .body(memberPageResponse);
     }
 
+    @GetMapping("/block/detail/{memberNo}")
+    public ResponseEntity<PageResponse<BlockedMemberRetrieveResponse>> retrieveBlockedMemberDetail(
+        @PathVariable Long memberNo,
+        Pageable pageable) {
+        Page<BlockedMemberRetrieveResponse> responsePage =
+            memberService.retrieveBlockedMemberDetail(memberNo, pageable);
+
+        PageResponse<BlockedMemberRetrieveResponse> memberPageResponse
+            = new PageResponse<>(responsePage);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberPageResponse);
+    }
+
     @PostMapping("/grade/{memberNo}/{gradeName}")
     public ResponseEntity<Void> createMemberGrade(@PathVariable Long memberNo,
                                                   @PathVariable String gradeName) {
@@ -110,5 +125,12 @@ public class MemberAdminController {
         memberService.blockMember(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .build();
+    }
+
+    @GetMapping("/block/cancel/{blockedMemberDetailId}")
+    public ResponseEntity<Void> memberBlockCancel(@PathVariable Long blockedMemberDetailId) {
+        memberService.blockMemberCancel(blockedMemberDetailId);
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
     }
 }

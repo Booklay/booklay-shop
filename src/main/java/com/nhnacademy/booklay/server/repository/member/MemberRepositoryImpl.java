@@ -44,34 +44,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
     }
 
     @Override
-    public Page<BlockedMemberRetrieveResponse> retrieveBlockedMembers(Pageable pageable) {
-        QMember member = QMember.member;
-        QBlockedMemberDetail blockedMemberDetail = QBlockedMemberDetail.blockedMemberDetail;
-
-        List<BlockedMemberRetrieveResponse> content = from(member)
-            .innerJoin(blockedMemberDetail)
-            .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
-            .select(Projections.constructor(BlockedMemberRetrieveResponse.class,
-                blockedMemberDetail.id,
-                member.memberNo,
-                member.memberId,
-                member.name,
-                blockedMemberDetail.reason,
-                blockedMemberDetail.blockedAt,
-                blockedMemberDetail.releasedAt))
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .fetch();
-
-        JPQLQuery<Long> count = from(member)
-            .innerJoin(blockedMemberDetail)
-            .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
-            .select(member.count());
-
-        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
-    }
-
-    @Override
     public Page<MemberRetrieveResponse> retrieveAll(Pageable pageable) {
         QMember member = QMember.member;
 

@@ -14,7 +14,4 @@ public interface MemberRepositoryCustom {
     Optional<MemberLoginResponse> retrieveMemberByUserId(String userId);
 
     Page<MemberRetrieveResponse> retrieveAll(Pageable pageable);
-
-    Page<BlockedMemberRetrieveResponse> retrieveBlockedMembers(Pageable pageable);
-
 }

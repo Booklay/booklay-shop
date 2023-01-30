@@ -25,9 +25,6 @@
             **/*.java
         </sonar.issue.ignore.multicriteria.e1.resourceKey>
 
-        <sonar.java.libraries>target</sonar.java.libraries>
-        <sonar.exclusions>target/generated-sources/**</sonar.exclusions>
-        <sonar.exclusions>**/*Config.java</sonar.exclusions>
     </properties>
 
     <dependencies>

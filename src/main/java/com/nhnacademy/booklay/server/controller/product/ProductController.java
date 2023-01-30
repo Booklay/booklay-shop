@@ -45,4 +45,9 @@ public class ProductController {
     public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId) {
         return bookSubscribeService.retrieveBookSubscribe(subscribeId);
     }
+
+    @GetMapping("/recommend/{productId}")
+    public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId){
+        return productService.retrieveRecommendProducts(productId);
+    }
 }

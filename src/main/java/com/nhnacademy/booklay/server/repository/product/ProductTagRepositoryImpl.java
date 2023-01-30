@@ -12,19 +12,19 @@ public class ProductTagRepositoryImpl extends QuerydslRepositorySupport implemen
     ProductTagRepositoryCustom {
 
 
-  public ProductTagRepositoryImpl() {
-    super(ProductTag.class);
-  }
+    public ProductTagRepositoryImpl() {
+        super(ProductTag.class);
+    }
 
-  @Override
-  public List<RetrieveTagResponse> findTagsByProductId(Long id) {
+    @Override
+    public List<RetrieveTagResponse> findTagsByProductId(Long id) {
 
-    QProductTag productTag = QProductTag.productTag;
-    QTag tag = QTag.tag;
+        QProductTag productTag = QProductTag.productTag;
+        QTag tag = QTag.tag;
 
-    return from(productTag)
-        .innerJoin(tag).on(productTag.tag.id.eq(tag.id))
-        .where(productTag.product.id.eq(id))
-        .select(Projections.constructor(RetrieveTagResponse.class, tag.id, tag.name)).fetch();
-  }
+        return from(productTag)
+            .innerJoin(tag).on(productTag.tag.id.eq(tag.id))
+            .where(productTag.product.id.eq(id))
+            .select(Projections.constructor(RetrieveTagResponse.class, tag.id, tag.name)).fetch();
+    }
 }

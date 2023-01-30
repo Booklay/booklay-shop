@@ -7,17 +7,17 @@ import lombok.Setter;
 @Getter
 public class UpdateAuthorRequest {
 
-  @NotNull
-  Long id;
+    @NotNull
+    Long id;
 
-  @NotNull
-  String name;
+    @NotNull
+    String name;
 
-  @Setter
-  Long memberNo;
+    @Setter
+    Long memberNo;
 
-  public UpdateAuthorRequest(Long id, String name) {
-    this.id = id;
-    this.name = name;
-  }
+    public UpdateAuthorRequest(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

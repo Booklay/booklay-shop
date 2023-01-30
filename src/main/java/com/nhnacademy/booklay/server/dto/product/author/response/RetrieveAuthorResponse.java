@@ -8,24 +8,24 @@ import lombok.Setter;
 @Getter
 public class RetrieveAuthorResponse {
 
-  @NotNull
-  Long authorNo;
+    @NotNull
+    Long authorNo;
 
-  @Setter
-  MemberForAuthorResponse member;
+    @Setter
+    MemberForAuthorResponse member;
 
-  @NotNull
-  String name;
+    @NotNull
+    String name;
 
 
-  public RetrieveAuthorResponse(Long authorNo, String name, MemberForAuthorResponse member) {
-    this.authorNo = authorNo;
-    this.name = name;
-    this.member = member;
-  }
+    public RetrieveAuthorResponse(Long authorNo, String name, MemberForAuthorResponse member) {
+        this.authorNo = authorNo;
+        this.name = name;
+        this.member = member;
+    }
 
-  public RetrieveAuthorResponse(Long authorNo, String name) {
-    this.authorNo = authorNo;
-    this.name = name;
-  }
+    public RetrieveAuthorResponse(Long authorNo, String name) {
+        this.authorNo = authorNo;
+        this.name = name;
+    }
 }

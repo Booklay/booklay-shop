@@ -21,11 +21,11 @@ public class DeliveryDestinationCURequest {
 
     public DeliveryDestination toEntity(Member member) {
         return DeliveryDestination.builder()
-            .member(member)
-            .name(this.name)
-            .zipCode(this.zipCode)
-            .address(this.address)
-            .isDefaultDestination(this.isDefaultDestination)
-            .build();
+                                  .member(member)
+                                  .name(this.name)
+                                  .zipCode(this.zipCode)
+                                  .address(this.address)
+                                  .isDefaultDestination(this.isDefaultDestination)
+                                  .build();
     }
 }

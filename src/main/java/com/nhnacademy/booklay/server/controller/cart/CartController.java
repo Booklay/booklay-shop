@@ -35,7 +35,7 @@ public class CartController {
     private static final String STRING_PRODUCT_NO = "productNo";
     private static final String STRING_PRODUCT_NO_LIST = "productNoList";
 
-    //todo @ModelAttribute Member 추가해줄것
+    // todo @ModelAttribute Member 추가해줄것
     @GetMapping
     public ResponseEntity<List<CartRetrieveResponse>> getCart(
         @ModelAttribute("member") Member member,
@@ -44,8 +44,8 @@ public class CartController {
         List<CartRetrieveResponse> cartList = cartServiceAndKeyDto.getCartService().getAllCartItems(
             cartServiceAndKeyDto.getKey());
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(cartList);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(cartList);
     }
 
     @PostMapping
@@ -55,7 +55,7 @@ public class CartController {
             getCartServiceAndKeyDto(member, cartAddRequest.getCartId());
         cartServiceAndKeyDto.getCartService().setCartItem(cartAddRequest);
         return ResponseEntity.ok()
-            .build();
+                             .build();
     }
 
     @DeleteMapping
@@ -64,9 +64,9 @@ public class CartController {
                                            @RequestParam(STRING_PRODUCT_NO) Long productNo) {
         CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(member, cartId);
         cartServiceAndKeyDto.getCartService().deleteCartItem(cartServiceAndKeyDto.getKey(),
-            productNo);
+                                                             productNo);
         return ResponseEntity.ok()
-            .build();
+                             .build();
     }
 
     @DeleteMapping("all")
@@ -75,7 +75,7 @@ public class CartController {
         CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(member, cartId);
         cartServiceAndKeyDto.getCartService().deleteAllCartItems(cartServiceAndKeyDto.getKey());
         return ResponseEntity.ok()
-            .build();
+                             .build();
     }
 
     @DeleteMapping("/buy")
@@ -85,9 +85,9 @@ public class CartController {
                                             List<Long> productNoList) {
         CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(member, cartId);
         cartServiceAndKeyDto.getCartService().deleteCartItems(cartServiceAndKeyDto.getKey(),
-            productNoList);
+                                                              productNoList);
         return ResponseEntity.ok()
-            .build();
+                             .build();
     }
 
     @GetMapping("login/{cartId}")
@@ -98,10 +98,10 @@ public class CartController {
         for (CartRetrieveResponse cartRetrieveResponse : allCartItems) {
             rdbCartService.setCartItem(
                 new CartAddRequest(cartId, cartRetrieveResponse.getProductNo(),
-                    cartRetrieveResponse.getProductCount()));
+                                   cartRetrieveResponse.getProductCount()));
         }
         return ResponseEntity.ok()
-            .build();
+                             .build();
     }
 
     @GetMapping("/uuid/{uuid}")

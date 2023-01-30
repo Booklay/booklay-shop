@@ -23,8 +23,8 @@ public class CategoryStepResponse {
         for (Category c : category.getCategories()) {
             categories.add(
                 CategoryStepResponse.builder()
-                    .category(c)
-                    .build()
+                                    .category(c)
+                                    .build()
             );
         }
     }

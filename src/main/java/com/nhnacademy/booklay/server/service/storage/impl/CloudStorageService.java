@@ -102,17 +102,17 @@ public class CloudStorageService implements StorageService {
 
         HttpMessageConverterExtractor<String> responseExtractor =
             new HttpMessageConverterExtractor<>(String.class,
-                requestRestTemplate.getMessageConverters());
+                                                requestRestTemplate.getMessageConverters());
 
         try (InputStream inputStream = new FileInputStream(tempFileForUpload)) {
             accessResponse = objectMapper.readValue(requestToken(), AccessResponse.class);
             String authTokenId = accessResponse.getAccess().getToken().getId();
 
             requestRestTemplate.execute(fileAddress + fileName, PUT,
-                request -> {
-                    request.getHeaders().add(HEADER_NAME, authTokenId);
-                    IOUtils.copy(inputStream, request.getBody());
-                }, responseExtractor);
+                                        request -> {
+                                            request.getHeaders().add(HEADER_NAME, authTokenId);
+                                            IOUtils.copy(inputStream, request.getBody());
+                                        }, responseExtractor);
 
             log.info("File Upload Success , fileName: {}", fileName);
         } catch (IOException e) {
@@ -121,9 +121,9 @@ public class CloudStorageService implements StorageService {
         }
 
         return FileRequest.builder()
-            .fileAddress(fileAddress)
-            .fileName(fileName)
-            .build();
+                          .fileAddress(fileAddress)
+                          .fileName(fileName)
+                          .build();
     }
 
     @Override

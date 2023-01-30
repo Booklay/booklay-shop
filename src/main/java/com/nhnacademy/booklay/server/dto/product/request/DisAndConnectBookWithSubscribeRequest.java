@@ -9,18 +9,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 public class DisAndConnectBookWithSubscribeRequest {
 
-  @NotNull
-  Long productId;
+    @NotNull
+    Long productId;
 
-  @NotNull
-  Long subscribeId;
+    @NotNull
+    Long subscribeId;
 
-  @Setter
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  LocalDate releaseDate;
+    @Setter
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    LocalDate releaseDate;
 
-  public DisAndConnectBookWithSubscribeRequest(Long productId, Long subscribeId) {
-    this.productId = productId;
-    this.subscribeId = subscribeId;
-  }
+    public DisAndConnectBookWithSubscribeRequest(Long productId, Long subscribeId) {
+        this.productId = productId;
+        this.subscribeId = subscribeId;
+    }
 }

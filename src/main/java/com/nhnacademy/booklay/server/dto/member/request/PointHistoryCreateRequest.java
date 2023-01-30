@@ -24,10 +24,10 @@ public class PointHistoryCreateRequest {
 
     public PointHistory toEntity(Member member, Integer currentTotalPoint) {
         return PointHistory.builder()
-            .member(member)
-            .point(this.point)
-            .totalPoint(currentTotalPoint + this.point)
-            .updatedDetail(this.updatedDetail)
-            .build();
+                           .member(member)
+                           .point(this.point)
+                           .totalPoint(currentTotalPoint + this.point)
+                           .updatedDetail(this.updatedDetail)
+                           .build();
     }
 }

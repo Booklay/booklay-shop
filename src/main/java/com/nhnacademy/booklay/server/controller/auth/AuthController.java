@@ -23,10 +23,11 @@ public class AuthController {
     public ResponseEntity<MemberLoginResponse> doLogin(@RequestParam String memberId) {
 
         MemberLoginResponse memberLoginResponse = memberService.retrieveMemberById(memberId)
-            .orElseThrow(IllegalArgumentException::new);
+                                                               .orElseThrow(
+                                                                   IllegalArgumentException::new);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(memberLoginResponse);
+                             .body(memberLoginResponse);
     }
 
 }

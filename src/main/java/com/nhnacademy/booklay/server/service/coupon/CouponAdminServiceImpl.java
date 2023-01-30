@@ -54,10 +54,12 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         Long imageId = couponRequest.getImageId();
 
         CouponType couponType = couponTypeRepository.findById(typeCode)
-            .orElseThrow(() -> new NotFoundException(CouponType.class.toString(), typeCode));
+                                                    .orElseThrow(() -> new NotFoundException(
+                                                        CouponType.class.toString(), typeCode));
 
         ObjectFile objectFile = imageRepository.findById(imageId)
-            .orElseThrow(() -> new NotFoundException(ObjectFile.class.toString(), imageId));
+                                               .orElseThrow(() -> new NotFoundException(
+                                                   ObjectFile.class.toString(), imageId));
 
         Coupon coupon = CouponCreateRequest.toEntity(couponRequest, couponType, objectFile);
 
@@ -69,7 +71,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         }
 
         setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(),
-            couponRequest.getApplyItemId());
+                             couponRequest.getApplyItemId());
 
         couponRepository.save(coupon);
     }
@@ -84,21 +86,26 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     @Transactional(readOnly = true)
     public CouponDetailRetrieveResponse retrieveCoupon(Long couponId) {
         return CouponDetailRetrieveResponse.fromEntity(couponRepository.findById(couponId)
-            .orElseThrow(() -> new IllegalArgumentException("No Such Coupon.")));
+                                                                       .orElseThrow(
+                                                                           () -> new IllegalArgumentException(
+                                                                               "No Such Coupon.")));
     }
 
     @Override
     public void updateCoupon(Long couponId, CouponUpdateRequest couponRequest) {
         Coupon coupon = couponRepository.findById(couponId)
-            .orElseThrow(() -> new NotFoundException(Coupon.class.toString(), couponId));
+                                        .orElseThrow(
+                                            () -> new NotFoundException(Coupon.class.toString(),
+                                                                        couponId));
 
         CouponType couponType = couponTypeRepository.findById(couponRequest.getTypeCode())
-            .orElseThrow(() -> new NotFoundException(CouponType.class.toString(),
-                couponRequest.getTypeCode()));
+                                                    .orElseThrow(() -> new NotFoundException(
+                                                        CouponType.class.toString(),
+                                                        couponRequest.getTypeCode()));
 
         coupon.update(couponRequest, couponType);
         setCategoryOrProduct(coupon, couponRequest.getIsOrderCoupon(),
-            couponRequest.getApplyItemId());
+                             couponRequest.getApplyItemId());
 
         couponRepository.save(coupon);
     }
@@ -119,9 +126,13 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         String code = UUID.randomUUID().toString().substring(0, 30);
 
         Coupon coupon = couponRepository.findById(couponId)
-            .orElseThrow(() -> new NotFoundException(Coupon.class.toString(), couponId));
+                                        .orElseThrow(
+                                            () -> new NotFoundException(Coupon.class.toString(),
+                                                                        couponId));
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new NotFoundException(Member.class.toString(), memberId));
+                                        .orElseThrow(
+                                            () -> new NotFoundException(Member.class.toString(),
+                                                                        memberId));
 
 
         if (Objects.nonNull(coupon.getCategory())) {
@@ -140,12 +151,14 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     private void setCategoryOrProduct(Coupon coupon, boolean isOrderCoupon, Long applyItemId) {
         if (isOrderCoupon) {
             Category category = categoryRepository.findById(applyItemId)
-                .orElseThrow(() -> new NotFoundException(Category.class.toString(), applyItemId));
+                                                  .orElseThrow(() -> new NotFoundException(
+                                                      Category.class.toString(), applyItemId));
 
             coupon.setCategory(category);
         } else {
             Product product = productRepository.findById(applyItemId)
-                .orElseThrow(() -> new NotFoundException(Product.class.toString(), applyItemId));
+                                               .orElseThrow(() -> new NotFoundException(
+                                                   Product.class.toString(), applyItemId));
 
             coupon.setProduct(product);
         }

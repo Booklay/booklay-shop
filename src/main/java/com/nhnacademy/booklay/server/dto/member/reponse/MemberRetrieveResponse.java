@@ -28,18 +28,18 @@ public class MemberRetrieveResponse {
 
     public static MemberRetrieveResponse fromEntity(Member member) {
         return MemberRetrieveResponse.builder()
-            .memberNo(member.getMemberNo())
-            .memberId(member.getMemberId())
-            .name(member.getName())
-            .nickname(member.getNickname())
-            .birthday(member.getBirthday())
-            .email(member.getEmail())
-            .createdAt(member.getCreatedAt())
-            .updatedAt(member.getUpdatedAt())
-            .deletedAt(member.getDeletedAt())
-            .gender(member.getGender().getName())
-            .phoneNo(member.getPhoneNo())
-            .isBlocked(member.getIsBlocked())
-            .build();
+                                     .memberNo(member.getMemberNo())
+                                     .memberId(member.getMemberId())
+                                     .name(member.getName())
+                                     .nickname(member.getNickname())
+                                     .birthday(member.getBirthday())
+                                     .email(member.getEmail())
+                                     .createdAt(member.getCreatedAt())
+                                     .updatedAt(member.getUpdatedAt())
+                                     .deletedAt(member.getDeletedAt())
+                                     .gender(member.getGender().getName())
+                                     .phoneNo(member.getPhoneNo())
+                                     .isBlocked(member.getIsBlocked())
+                                     .build();
     }
 }

@@ -38,14 +38,16 @@ public class FileServiceImpl implements FileService {
 
         if (originalFilename.isPresent()) {
             fileExtension = originalFilename.filter(f -> f.contains("."))
-                .map(f -> f.substring(originalFilename.get().lastIndexOf(".") + 1));
+                                            .map(f -> f.substring(
+                                                originalFilename.get().lastIndexOf(".") + 1));
         }
 
         if (contentType.isPresent() && fileExtension.isPresent()) {
             FileResolveRequest fileResolveRequest = FileResolveRequest.builder()
-                .fileExtension(fileExtension.get())
-                .fileType(contentType.get())
-                .build();
+                                                                      .fileExtension(
+                                                                          fileExtension.get())
+                                                                      .fileType(contentType.get())
+                                                                      .build();
 
             return uploadFileResolve(file, fileResolveRequest);
         }
@@ -59,9 +61,9 @@ public class FileServiceImpl implements FileService {
 
         return objectFileRepository.save(
             ObjectFile.builder()
-                .fileAddress(request.getFileAddress())
-                .fileName(request.getFileName())
-                .build()
+                      .fileAddress(request.getFileAddress())
+                      .fileName(request.getFileName())
+                      .build()
         );
     }
 

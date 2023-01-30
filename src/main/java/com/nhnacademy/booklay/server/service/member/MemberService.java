@@ -8,7 +8,6 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateReq
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
-import com.nhnacademy.booklay.server.entity.Member;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

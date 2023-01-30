@@ -10,20 +10,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RetrieveBookForSubscribeResponse {
 
-  @NotNull
-  Long productId;
-  @NotNull
-  String title;
-  @Setter
-  List<String> authors;
-  @NotNull
-  String publisher;
-  @Setter
-  Boolean isRegistered;
+    @NotNull
+    Long productId;
+    @NotNull
+    String title;
+    @Setter
+    List<String> authors;
+    @NotNull
+    String publisher;
+    @Setter
+    Boolean isRegistered;
 
-  public RetrieveBookForSubscribeResponse(Long productId, String title, String publisher) {
-    this.productId = productId;
-    this.title = title;
-    this.publisher = publisher;
-  }
+    public RetrieveBookForSubscribeResponse(Long productId, String title, String publisher) {
+        this.productId = productId;
+        this.title = title;
+        this.publisher = publisher;
+    }
 }

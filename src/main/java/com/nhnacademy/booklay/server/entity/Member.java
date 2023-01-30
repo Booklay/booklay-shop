@@ -79,7 +79,8 @@ public class Member {
     private Boolean isBlocked;
 
     @Builder
-    public Member(Gender gender, String memberId, String password, String nickname, String name, LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
+    public Member(Gender gender, String memberId, String password, String nickname, String name,
+                  LocalDate birthday, String phoneNo, String email, Boolean isBlocked) {
         this.gender = gender;
         this.memberId = memberId;
         this.password = password;
@@ -114,8 +115,8 @@ public class Member {
 
     public MemberGrade addGrade(String gradeName) {
         return MemberGrade.builder()
-            .member(this)
-            .name(gradeName)
-            .build();
+                          .member(this)
+                          .name(gradeName)
+                          .build();
     }
 }

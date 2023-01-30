@@ -14,11 +14,11 @@ public class GetMemberService {
 
     public Member getMemberNo(Long memberNo) {
         return memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+                               .orElseThrow(() -> new MemberNotFoundException(memberNo));
     }
 
     public Member getMemberId(String memberId) {
         return memberRepository.findByMemberId(memberId)
-            .orElseThrow(() -> new MemberNotFoundException(memberId));
+                               .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

@@ -49,15 +49,15 @@ public class MemberCreateRequest {
 
     public Member toEntity(Gender gender) {
         return Member.builder()
-            .memberId(this.memberId)
-            .password(this.password)
-            .gender(gender)
-            .nickname(this.nickname)
-            .name(this.name)
-            .birthday(this.birthday)
-            .phoneNo(this.phoneNo)
-            .email(this.email)
-            .isBlocked(false)
-            .build();
+                     .memberId(this.memberId)
+                     .password(this.password)
+                     .gender(gender)
+                     .nickname(this.nickname)
+                     .name(this.name)
+                     .birthday(this.birthday)
+                     .phoneNo(this.phoneNo)
+                     .email(this.email)
+                     .isBlocked(false)
+                     .build();
     }
 }

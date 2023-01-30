@@ -14,21 +14,26 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RDBCartServiceImpl implements RDBCartService {
     private final CartService cartService;
+
     @Override
     @Transactional(readOnly = true)
     public List<CartRetrieveResponse> getAllCartItems(String key) {
         List<Cart> cartList = cartService.retrieveAllCartsByMemberNo(Long.parseLong(key));
         return cartList.stream().map(cart -> new CartRetrieveResponse(cart.getProduct()
-            .getId(), cart.getProduct().getTitle(), cart.getProduct().getPrice(),cart.getCount())).collect(
+                                                                          .getId(),
+                                                                      cart.getProduct().getTitle(),
+                                                                      cart.getProduct().getPrice(),
+                                                                      cart.getCount())).collect(
             Collectors.toList());
     }
 
     @Override
     public void setCartItem(CartAddRequest cartAddRequest) {
         Cart cart = Cart.builder()
-            .pk(new Cart.Pk(Long.parseLong(cartAddRequest.getCartId()), cartAddRequest.getProductNo()))
-            .count(cartAddRequest.getCount())
-            .build();
+                        .pk(new Cart.Pk(Long.parseLong(cartAddRequest.getCartId()),
+                                        cartAddRequest.getProductNo()))
+                        .count(cartAddRequest.getCount())
+                        .build();
         cartService.saveCart(cart);
     }
 
@@ -44,8 +49,10 @@ public class RDBCartServiceImpl implements RDBCartService {
 
     @Override
     public void deleteCartItems(String key, List<Long> productNoList) {
-        List<Cart.Pk> pkList = productNoList.stream().map(cartDto -> new Cart.Pk(Long.parseLong(key), cartDto)).collect(
-            Collectors.toList());
+        List<Cart.Pk> pkList =
+            productNoList.stream().map(cartDto -> new Cart.Pk(Long.parseLong(key), cartDto))
+                         .collect(
+                             Collectors.toList());
         cartService.deleteAllCartByPkList(pkList);
     }
 

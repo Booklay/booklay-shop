@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CreateTagRequest {
-  private String name;
+    private String name;
 
-  public CreateTagRequest(String name) {
-    this.name = name;
-  }
+    public CreateTagRequest(String name) {
+        this.name = name;
+    }
 }

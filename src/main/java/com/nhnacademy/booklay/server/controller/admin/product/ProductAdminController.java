@@ -35,81 +35,85 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ProductAdminController {
 
-  private final ProductService productService;
-  private final BookSubscribeService bookSubscribeService;
+    private final ProductService productService;
+    private final BookSubscribeService bookSubscribeService;
 
-  //책 등록
-  @PostMapping(value = "/books",
-      consumes = {MediaType.APPLICATION_JSON_VALUE,
-          MediaType.MULTIPART_FORM_DATA_VALUE})
-  public Long postBookRegister(
-      @RequestPart CreateUpdateProductBookRequest request,
-      @RequestPart MultipartFile imgFile) throws Exception {
-    request.setImage(imgFile);
-    return productService.createBookProduct(request);
-  }
+    // 책 등록
+    @PostMapping(value = "/books",
+                 consumes = { MediaType.APPLICATION_JSON_VALUE,
+                     MediaType.MULTIPART_FORM_DATA_VALUE })
+    public Long postBookRegister(
+        @RequestPart CreateUpdateProductBookRequest request,
+        @RequestPart MultipartFile imgFile) throws Exception {
+        request.setImage(imgFile);
+        return productService.createBookProduct(request);
+    }
 
-  //책 수정용 조회
-  @GetMapping("/books/{productId}")
-  public RetrieveProductBookResponse getBookData(@PathVariable Long productId) {
-    return productService.retrieveBookData(productId);
-  }
+    // 책 수정용 조회
+    @GetMapping("/books/{productId}")
+    public RetrieveProductBookResponse getBookData(@PathVariable Long productId) {
+        return productService.retrieveBookData(productId);
+    }
 
-  //책 수정
-  @PutMapping(value = "/books",
-      consumes = {MediaType.APPLICATION_JSON_VALUE,
-          MediaType.MULTIPART_FORM_DATA_VALUE})
-  public Long postBookUpdater(@RequestPart CreateUpdateProductBookRequest request,
-      @RequestPart MultipartFile imgFile) throws Exception {
-    request.setImage(imgFile);
-    return productService.updateBookProduct(request);
-  }
+    // 책 수정
+    @PutMapping(value = "/books",
+                consumes = { MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.MULTIPART_FORM_DATA_VALUE })
+    public Long postBookUpdater(@RequestPart CreateUpdateProductBookRequest request,
+                                @RequestPart MultipartFile imgFile) throws Exception {
+        request.setImage(imgFile);
+        return productService.updateBookProduct(request);
+    }
 
-  //구독 등록
-  @PostMapping(value = "/subscribes", consumes = {MediaType.APPLICATION_JSON_VALUE,
-      MediaType.MULTIPART_FORM_DATA_VALUE})
-  public Long postSubscribeRegister(@RequestPart CreateUpdateProductSubscribeRequest request,
-      @RequestPart MultipartFile imgFile) throws Exception {
-    request.setImage(imgFile);
-    return productService.createSubscribeProduct(request);
-  }
+    // 구독 등록
+    @PostMapping(value = "/subscribes", consumes = { MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE })
+    public Long postSubscribeRegister(@RequestPart CreateUpdateProductSubscribeRequest request,
+                                      @RequestPart MultipartFile imgFile) throws Exception {
+        request.setImage(imgFile);
+        return productService.createSubscribeProduct(request);
+    }
 
-  //구독 수정용 조회
-  @GetMapping("/subscribes/{productId}")
-  public RetrieveProductSubscribeResponse getSubscribeData(@PathVariable Long productId) {
-    return productService.retrieveSubscribeData(productId);
-  }
+    // 구독 수정용 조회
+    @GetMapping("/subscribes/{productId}")
+    public RetrieveProductSubscribeResponse getSubscribeData(@PathVariable Long productId) {
+        return productService.retrieveSubscribeData(productId);
+    }
 
-  //구독 수정
-  @PutMapping(value = "/subscribes",
-      consumes = {MediaType.APPLICATION_JSON_VALUE,
-          MediaType.MULTIPART_FORM_DATA_VALUE})
-  public Long postSubscribeUpdater(@RequestPart CreateUpdateProductSubscribeRequest request,
-      @RequestPart MultipartFile imgFile) throws Exception {
-    request.setImage(imgFile);
-    return productService.updateSubscribeProduct(request);
-  }
+    // 구독 수정
+    @PutMapping(value = "/subscribes",
+                consumes = { MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.MULTIPART_FORM_DATA_VALUE })
+    public Long postSubscribeUpdater(@RequestPart CreateUpdateProductSubscribeRequest request,
+                                     @RequestPart MultipartFile imgFile) throws Exception {
+        request.setImage(imgFile);
+        return productService.updateSubscribeProduct(request);
+    }
 
-  //구독 상품의 등록용 조회
-  @GetMapping("/subscribes/connect/{subscribeId}")
-  public PageResponse<RetrieveBookForSubscribeResponse> getBooksDataForSubscribe(Pageable pageable,
-      @PathVariable Long subscribeId){
-    Page<RetrieveBookForSubscribeResponse> response = productService.retrieveBookDataForSubscribe(pageable, subscribeId);
-    return new PageResponse<>(response);
-  }
+    // 구독 상품의 등록용 조회
+    @GetMapping("/subscribes/connect/{subscribeId}")
+    public PageResponse<RetrieveBookForSubscribeResponse> getBooksDataForSubscribe(
+        Pageable pageable,
+        @PathVariable Long subscribeId) {
+        Page<RetrieveBookForSubscribeResponse> response =
+            productService.retrieveBookDataForSubscribe(pageable, subscribeId);
+        return new PageResponse<>(response);
+    }
 
-  @PostMapping("/subscribes/connect/{subscribeId}")
-  public void booksAndSubscribeConnect(@RequestBody DisAndConnectBookWithSubscribeRequest request){
-    bookSubscribeService.bookSubscribeConnection(request);
-  }
+    @PostMapping("/subscribes/connect/{subscribeId}")
+    public void booksAndSubscribeConnect(
+        @RequestBody DisAndConnectBookWithSubscribeRequest request) {
+        bookSubscribeService.bookSubscribeConnection(request);
+    }
 
-  @DeleteMapping("/subscribes/connect/{subscribeId}")
-  public void booksAndSubscribeDisconnect(@RequestBody DisAndConnectBookWithSubscribeRequest request){
-    bookSubscribeService.bookSubscribeDisconnection(request);
-  }
+    @DeleteMapping("/subscribes/connect/{subscribeId}")
+    public void booksAndSubscribeDisconnect(
+        @RequestBody DisAndConnectBookWithSubscribeRequest request) {
+        bookSubscribeService.bookSubscribeDisconnection(request);
+    }
 
-  @DeleteMapping("/{productId}")
-  public void softDeleteProduct(@PathVariable Long productId){
-    productService.softDelete(productId);
-  }
+    @DeleteMapping("/{productId}")
+    public void softDeleteProduct(@PathVariable Long productId) {
+        productService.softDelete(productId);
+    }
 }

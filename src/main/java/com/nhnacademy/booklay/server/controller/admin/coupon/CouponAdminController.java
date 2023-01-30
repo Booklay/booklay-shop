@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author 김승혜
  */
 @RestController
@@ -36,35 +35,39 @@ public class CouponAdminController {
     private final CouponAdminService couponAdminService;
 
     @PostMapping
-    public ResponseEntity<Void> createCoupon(@Valid @RequestBody CouponCreateRequest couponRequest) {
+    public ResponseEntity<Void> createCoupon(
+        @Valid @RequestBody CouponCreateRequest couponRequest) {
         couponAdminService.createCoupon(couponRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/pages")
-    public ResponseEntity<PageResponse<CouponRetrieveResponse>> retrieveAllCoupons(@PageableDefault Pageable pageable) {
+    public ResponseEntity<PageResponse<CouponRetrieveResponse>> retrieveAllCoupons(
+        @PageableDefault Pageable pageable) {
         Page<CouponRetrieveResponse> couponPage = couponAdminService.retrieveAllCoupons(pageable);
 
         PageResponse<CouponRetrieveResponse> couponPageResponse = new PageResponse<>(couponPage);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(couponPageResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(couponPageResponse);
     }
 
     @GetMapping("/{couponId}")
-    public ResponseEntity<CouponDetailRetrieveResponse> retrieveCouponDetail(@PathVariable Long couponId) {
+    public ResponseEntity<CouponDetailRetrieveResponse> retrieveCouponDetail(
+        @PathVariable Long couponId) {
         CouponDetailRetrieveResponse couponDetailRetrieveResponse =
             couponAdminService.retrieveCoupon(couponId);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(couponDetailRetrieveResponse);
+                             .body(couponDetailRetrieveResponse);
     }
 
     @PutMapping("/{couponId}")
     public ResponseEntity<Void> updateCoupon(@PathVariable Long couponId,
-                                             @Valid @RequestBody CouponUpdateRequest couponRequest) {
+                                             @Valid @RequestBody
+                                             CouponUpdateRequest couponRequest) {
         couponAdminService.updateCoupon(couponId, couponRequest);
 
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -78,7 +81,8 @@ public class CouponAdminController {
     }
 
     @PostMapping("/issue")
-    public ResponseEntity<Void> issueCouponToMember(@Valid @RequestBody CouponIssueRequest couponRequest) {
+    public ResponseEntity<Void> issueCouponToMember(
+        @Valid @RequestBody CouponIssueRequest couponRequest) {
         couponAdminService.issueCoupon(couponRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();

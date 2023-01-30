@@ -38,7 +38,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     public void createDeliveryDestination(Long memberNo,
                                           DeliveryDestinationCURequest requestDto) {
         Member member = memberRepository.findByMemberNo(memberNo)
-            .orElseThrow(() -> new MemberNotFoundException(memberNo));
+                                        .orElseThrow(() -> new MemberNotFoundException(memberNo));
 
         releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination());
 
@@ -53,7 +53,8 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     @Transactional(readOnly = true)
     public DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo) {
         DeliveryDestination deliveryDestination = deliveryDestinationRepository.findById(addressNo)
-            .orElseThrow(() -> new IllegalArgumentException());
+                                                                               .orElseThrow(
+                                                                                   () -> new IllegalArgumentException());
 
         return DeliveryDestinationRetrieveResponse.fromEntity(deliveryDestination);
     }
@@ -67,7 +68,9 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     @Transactional(readOnly = true)
     public DeliveryDestination checkExistsDeliveryDestination(Long addressNo) {
         return deliveryDestinationRepository.findById(addressNo)
-            .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));
+                                            .orElseThrow(
+                                                () -> new DeliveryDestinationNotFoundException(
+                                                    addressNo));
     }
 
     @Override

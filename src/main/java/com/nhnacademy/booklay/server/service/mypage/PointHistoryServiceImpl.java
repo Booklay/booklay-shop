@@ -33,7 +33,7 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
         TotalPointRetrieveResponse recentlyPointHistory =
             pointHistoryRepository.retrieveLatestPointHistory(requestDto.getMemberNo())
-                .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
+                                  .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
 
         Integer currentTotalPoint = recentlyPointHistory.getTotalPoint();
 
@@ -47,7 +47,8 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PointHistoryRetrieveResponse> retrievePointHistorys(Long memberNo, Pageable pageable) {
+    public Page<PointHistoryRetrieveResponse> retrievePointHistorys(Long memberNo,
+                                                                    Pageable pageable) {
         return pointHistoryRepository.retrievePointHistoryByMemberNo(memberNo, pageable);
     }
 
@@ -57,7 +58,7 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         getMemberService.getMemberNo(memberNo);
 
         return pointHistoryRepository.retrieveLatestPointHistory(memberNo)
-            .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
+                                     .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
     }
 
     @Override
@@ -66,15 +67,17 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         Member targetMember = getMemberService.getMemberId(requestDto.getTargetMemberId());
 
         createPointHistory(PointHistoryCreateRequest.builder()
-            .memberNo(memberNo)
-            .point(-(requestDto.getTargetPoint()))
-            .updatedDetail( targetMember.getMemberId() + "에게 포인트 선물하기")
-            .build());
+                                                    .memberNo(memberNo)
+                                                    .point(-(requestDto.getTargetPoint()))
+                                                    .updatedDetail(
+                                                        targetMember.getMemberId() + "에게 포인트 선물하기")
+                                                    .build());
 
         createPointHistory(PointHistoryCreateRequest.builder()
-            .memberNo(targetMember.getMemberNo())
-            .point(requestDto.getTargetPoint())
-            .updatedDetail( member.getMemberId() + "에게 포인트 선물받기")
-            .build());
+                                                    .memberNo(targetMember.getMemberNo())
+                                                    .point(requestDto.getTargetPoint())
+                                                    .updatedDetail(
+                                                        member.getMemberId() + "에게 포인트 선물받기")
+                                                    .build());
     }
 }

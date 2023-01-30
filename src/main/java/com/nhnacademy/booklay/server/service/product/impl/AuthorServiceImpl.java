@@ -26,58 +26,61 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
-  private final AuthorRepository authorRepository;
-  private final MemberRepository memberRepository;
-  private final ProductAuthorRepository productAuthorRepository;
+    private final AuthorRepository authorRepository;
+    private final MemberRepository memberRepository;
+    private final ProductAuthorRepository productAuthorRepository;
 
-  @Override
-  public void createAuthor(CreateAuthorRequest request) {
-    Author author = Author.builder()
-        .name(request.getName())
-        .build();
+    @Override
+    public void createAuthor(CreateAuthorRequest request) {
+        Author author = Author.builder()
+                              .name(request.getName())
+                              .build();
 
-    if (Objects.nonNull(request.getMemberNo())) {
-      Member member = memberRepository.findById(request.getMemberNo())
-          .orElseThrow(() -> new NotFoundException(Member.class, "Member not found"));
+        if (Objects.nonNull(request.getMemberNo())) {
+            Member member = memberRepository.findById(request.getMemberNo())
+                                            .orElseThrow(() -> new NotFoundException(Member.class,
+                                                                                     "Member not found"));
 
-      author.setMember(member);
+            author.setMember(member);
+        }
+
+        authorRepository.save(author);
     }
 
-    authorRepository.save(author);
-  }
+    @Override
+    public void updateAuthor(UpdateAuthorRequest request) {
+        authorRepository.findById(request.getId());
 
-  @Override
-  public void updateAuthor(UpdateAuthorRequest request) {
-    authorRepository.findById(request.getId());
+        Author author = Author.builder()
+                              .name(request.getName())
+                              .build();
 
-    Author author = Author.builder()
-        .name(request.getName())
-        .build();
+        if (Objects.nonNull(request.getMemberNo())) {
+            Member member = memberRepository.findById(request.getMemberNo())
+                                            .orElseThrow(() -> new NotFoundException(Member.class,
+                                                                                     "Member not found"));
 
-    if (Objects.nonNull(request.getMemberNo())) {
-      Member member = memberRepository.findById(request.getMemberNo())
-          .orElseThrow(() -> new NotFoundException(Member.class, "Member not found"));
+            author.setMember(member);
+        }
 
-      author.setMember(member);
+        authorRepository.save(author);
     }
 
-    authorRepository.save(author);
-  }
+    @Override
+    public void deleteAuthor(DeleteIdRequest request) {
+        Long id = request.getId();
 
-  @Override
-  public void deleteAuthor(DeleteIdRequest request) {
-    Long id = request.getId();
+        Author author = authorRepository.findById(id)
+                                        .orElseThrow(() -> new NotFoundException(Author.class,
+                                                                                 "author not found"));
 
-    Author author = authorRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException(Author.class, "author not found"));
+        authorRepository.delete(author);
+    }
 
-    authorRepository.delete(author);
-  }
-
-  @Override
-  @Transactional
-  public Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable) {
-    return authorRepository.findAllBy(pageable);
-  }
+    @Override
+    @Transactional
+    public Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable) {
+        return authorRepository.findAllBy(pageable);
+    }
 
 }

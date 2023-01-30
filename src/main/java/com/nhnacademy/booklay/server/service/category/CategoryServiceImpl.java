@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (categoryRepository.existsById(createRequest.getId())) {
             throw new AlreadyExistedException(Category.class,
-                "이미 존재하는 카테고리 ID 입니다.");
+                                              "이미 존재하는 카테고리 ID 입니다.");
         }
 
         Optional<Category> parentCategory = Optional.empty();
@@ -102,14 +102,15 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryFindById(topCategoryId);
 
         return CategoryStepResponse.builder()
-            .category(category)
-            .build();
+                                   .category(category)
+                                   .build();
     }
 
     private Category categoryFindById(Long categoryId) {
 
         return categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
+                                 .orElseThrow(() -> new NotFoundException(Category.class,
+                                                                          NOT_FOUND_MESSAGE));
     }
 
 }

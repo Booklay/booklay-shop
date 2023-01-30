@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CategoryProductRepository extends
     JpaRepository<CategoryProduct, CategoryProduct.Pk> {
 
-  @Modifying
-  @Transactional
-  @Query(value = "delete from CategoryProduct as cp where cp.pk.productId=?1")
-  void deleteAllByProductId(Long id);
+    @Modifying
+    @Transactional
+    @Query(value = "delete from CategoryProduct as cp where cp.pk.productId=?1")
+    void deleteAllByProductId(Long id);
 }

@@ -30,28 +30,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthorAdminController {
 
-  private final AuthorService authorService;
+    private final AuthorService authorService;
 
-  //작가
-  @GetMapping
-  public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable) {
-    Page<RetrieveAuthorResponse> response = authorService.retrieveAllAuthor(pageable);
-    return new PageResponse<>(response);
-  }
+    // 작가
+    @GetMapping
+    public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable) {
+        Page<RetrieveAuthorResponse> response = authorService.retrieveAllAuthor(pageable);
+        return new PageResponse<>(response);
+    }
 
-  @PostMapping
-  public void authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
-    authorService.createAuthor(request);
-  }
+    @PostMapping
+    public void authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
+        authorService.createAuthor(request);
+    }
 
-  @PutMapping
-  public void authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
-    authorService.updateAuthor(request);
-  }
+    @PutMapping
+    public void authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
+        authorService.updateAuthor(request);
+    }
 
-  @DeleteMapping
-  public void authorDelete(@Valid @RequestBody DeleteIdRequest request) {
-    authorService.deleteAuthor(request);
-  }
+    @DeleteMapping
+    public void authorDelete(@Valid @RequestBody DeleteIdRequest request) {
+        authorService.deleteAuthor(request);
+    }
 
 }

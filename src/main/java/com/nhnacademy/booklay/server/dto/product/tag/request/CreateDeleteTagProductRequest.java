@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateDeleteTagProductRequest {
 
-  Long tagId;
-  Long productNo;
+    Long tagId;
+    Long productNo;
 
-  public CreateDeleteTagProductRequest(Long tagId, Long productNo) {
-    this.tagId = tagId;
-    this.productNo = productNo;
-  }
+    public CreateDeleteTagProductRequest(Long tagId, Long productNo) {
+        this.tagId = tagId;
+        this.productNo = productNo;
+    }
 }

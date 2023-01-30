@@ -25,113 +25,113 @@ import org.springframework.data.support.PageableExecutionUtils;
 public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     ProductRepositoryCustom {
 
-  public ProductRepositoryImpl() {
-    super(Product.class);
-  }
+    public ProductRepositoryImpl() {
+        super(Product.class);
+    }
 
-  //수정용 책 조회
-  @Override
-  public RetrieveProductBookResponse findProductBookDataByProductId(Long id) {
-    QProduct product = QProduct.product;
-    QProductDetail productDetail = QProductDetail.productDetail;
+    // 수정용 책 조회
+    @Override
+    public RetrieveProductBookResponse findProductBookDataByProductId(Long id) {
+        QProduct product = QProduct.product;
+        QProductDetail productDetail = QProductDetail.productDetail;
 
-    return from(product)
-        .innerJoin(productDetail).on(productDetail.product.id.eq(product.id))
-        .where(product.id.eq(id))
-        .select(Projections.constructor(RetrieveProductBookResponse.class,
-            product.id,
-            product.title,
-            product.price,
-            product.pointRate,
-            product.shortDescription,
-            product.longDescription,
-            product.isSelling,
-            product.pointMethod,
-            product.createdAt,
-            productDetail.id,
-            productDetail.isbn,
-            productDetail.page,
-            productDetail.publisher,
-            productDetail.publishedDate,
-            productDetail.ebookAddress,
-            productDetail.storage
-        )).fetchOne();
-  }
+        return from(product)
+            .innerJoin(productDetail).on(productDetail.product.id.eq(product.id))
+            .where(product.id.eq(id))
+            .select(Projections.constructor(RetrieveProductBookResponse.class,
+                                            product.id,
+                                            product.title,
+                                            product.price,
+                                            product.pointRate,
+                                            product.shortDescription,
+                                            product.longDescription,
+                                            product.isSelling,
+                                            product.pointMethod,
+                                            product.createdAt,
+                                            productDetail.id,
+                                            productDetail.isbn,
+                                            productDetail.page,
+                                            productDetail.publisher,
+                                            productDetail.publishedDate,
+                                            productDetail.ebookAddress,
+                                            productDetail.storage
+            )).fetchOne();
+    }
 
-  //수정용 구독 조회
-  @Override
-  public RetrieveProductSubscribeResponse findProductSubscribeDataByProductId(Long id) {
-    QProduct product = QProduct.product;
-    QSubscribe subscribe = QSubscribe.subscribe;
+    // 수정용 구독 조회
+    @Override
+    public RetrieveProductSubscribeResponse findProductSubscribeDataByProductId(Long id) {
+        QProduct product = QProduct.product;
+        QSubscribe subscribe = QSubscribe.subscribe;
 
-    return from(product)
-        .innerJoin(subscribe).on(subscribe.product.id.eq(product.id))
-        .where(product.id.eq(id))
-        .select(Projections.constructor(RetrieveProductSubscribeResponse.class,
-            product.id,
-            product.title,
-            product.price,
-            product.pointRate,
-            product.shortDescription,
-            product.longDescription,
-            product.isSelling,
-            product.pointMethod,
-            product.createdAt,
-            subscribe.id,
-            subscribe.subscribeWeek,
-            subscribe.subscribeDay,
-            subscribe.publisher
-        )).fetchOne();
-  }
+        return from(product)
+            .innerJoin(subscribe).on(subscribe.product.id.eq(product.id))
+            .where(product.id.eq(id))
+            .select(Projections.constructor(RetrieveProductSubscribeResponse.class,
+                                            product.id,
+                                            product.title,
+                                            product.price,
+                                            product.pointRate,
+                                            product.shortDescription,
+                                            product.longDescription,
+                                            product.isSelling,
+                                            product.pointMethod,
+                                            product.createdAt,
+                                            subscribe.id,
+                                            subscribe.subscribeWeek,
+                                            subscribe.subscribeDay,
+                                            subscribe.publisher
+            )).fetchOne();
+    }
 
-  //상품 카테고리 조회
-  @Override
-  public List<Long> findCategoryIdsByProductId(Long id) {
-    QProduct product = QProduct.product;
-    QCategoryProduct categoryProduct = QCategoryProduct.categoryProduct;
-    QCategory category = QCategory.category;
+    // 상품 카테고리 조회
+    @Override
+    public List<Long> findCategoryIdsByProductId(Long id) {
+        QProduct product = QProduct.product;
+        QCategoryProduct categoryProduct = QCategoryProduct.categoryProduct;
+        QCategory category = QCategory.category;
 
-    return from(product)
-        .innerJoin(categoryProduct).on(categoryProduct.product.id.eq(product.id))
-        .innerJoin(category).on(categoryProduct.category.id.eq(category.id))
-        .where(product.id.eq(id))
-        .select(category.id)
-        .fetch();
-  }
+        return from(product)
+            .innerJoin(categoryProduct).on(categoryProduct.product.id.eq(product.id))
+            .innerJoin(category).on(categoryProduct.category.id.eq(category.id))
+            .where(product.id.eq(id))
+            .select(category.id)
+            .fetch();
+    }
 
-  @Override
-  public Page<RetrieveBookForSubscribeResponse> findAllBooksForSubscribeBy(Pageable pageable) {
-    QProduct product = QProduct.product;
-    QProductDetail productDetail = QProductDetail.productDetail;
+    @Override
+    public Page<RetrieveBookForSubscribeResponse> findAllBooksForSubscribeBy(Pageable pageable) {
+        QProduct product = QProduct.product;
+        QProductDetail productDetail = QProductDetail.productDetail;
 
-    List<RetrieveBookForSubscribeResponse> content = from(product)
-        .innerJoin(productDetail).on(productDetail.product.id.eq(product.id))
-        .select(Projections.constructor(RetrieveBookForSubscribeResponse.class,
-            product.id,
-            product.title,
-            productDetail.publisher
-        ))
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize())
-        .fetch();
+        List<RetrieveBookForSubscribeResponse> content = from(product)
+            .innerJoin(productDetail).on(productDetail.product.id.eq(product.id))
+            .select(Projections.constructor(RetrieveBookForSubscribeResponse.class,
+                                            product.id,
+                                            product.title,
+                                            productDetail.publisher
+            ))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
 
-    JPQLQuery<Long> count = from(product)
-        .select(product.count());
-    return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
-  }
+        JPQLQuery<Long> count = from(product)
+            .select(product.count());
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+    }
 
-  public List<String> findAuthorNameByProductId(Long productId) {
+    public List<String> findAuthorNameByProductId(Long productId) {
 
-    QProduct product = QProduct.product;
-    QProductAuthor productAuthor = QProductAuthor.productAuthor;
-    QProductDetail productDetail = QProductDetail.productDetail;
-    QAuthor author = QAuthor.author;
-    return from(product)
-        .innerJoin(productDetail).on(productDetail.product.id.eq(product.id))
-        .innerJoin(productAuthor).on(productAuthor.productDetail.id.eq(productDetail.id))
-        .innerJoin(author).on(productAuthor.author.authorId.eq(author.authorId))
-        .where(product.id.eq(productId))
-        .select(author.name)
-        .fetch();
-  }
+        QProduct product = QProduct.product;
+        QProductAuthor productAuthor = QProductAuthor.productAuthor;
+        QProductDetail productDetail = QProductDetail.productDetail;
+        QAuthor author = QAuthor.author;
+        return from(product)
+            .innerJoin(productDetail).on(productDetail.product.id.eq(product.id))
+            .innerJoin(productAuthor).on(productAuthor.productDetail.id.eq(productDetail.id))
+            .innerJoin(author).on(productAuthor.author.authorId.eq(author.authorId))
+            .where(product.id.eq(productId))
+            .select(author.name)
+            .fetch();
+    }
 }

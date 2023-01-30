@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class RetrieveProductViewResponse {
 
-    //상품
+    // 상품
     private Long productId;
     @Setter
     private MultipartFile image;
@@ -40,7 +40,7 @@ public class RetrieveProductViewResponse {
 
     private List<RetrieveTagResponse> productTags;
 
-    //책 상세
+    // 책 상세
     private Long productDetailId;
     private String isbn;
     private Integer page;
@@ -52,7 +52,7 @@ public class RetrieveProductViewResponse {
     private Integer storage;
     private List<RetrieveAuthorResponse> authors;
 
-    //구독 상품 상세
+    // 구독 상품 상세
     private Long subscribeId;
     @Length(max = 4)
     private Integer subscribeWeek;
@@ -60,7 +60,7 @@ public class RetrieveProductViewResponse {
     private Integer subscribeDay;
     private List<Long> childProducts;
 
-    //책 구독 상품 상세 공통
+    // 책 구독 상품 상세 공통
     @NotNull
     private String publisher;
 

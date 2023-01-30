@@ -18,7 +18,7 @@ public class HealthController {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("BAD_REQUEST");
+                             .body("BAD_REQUEST");
     }
 
     @GetMapping("/deploy/ready")

@@ -8,7 +8,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateWishlistRequest;
 
 public interface WishlistService {
 
-  void createWishlist(CreateWishlistRequest request);
+    void createWishlist(CreateWishlistRequest request);
 
-  void deleteWishlist(CreateWishlistRequest request);
+    void deleteWishlist(CreateWishlistRequest request);
 }

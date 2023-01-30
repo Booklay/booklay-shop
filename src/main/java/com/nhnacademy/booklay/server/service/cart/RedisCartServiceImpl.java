@@ -28,7 +28,8 @@ public class RedisCartServiceImpl implements RedisCartService {
     public List<CartRetrieveResponse> getAllCartItems(String key) {
         List<CartDto> cartDtoList = redisTemplate.<String, CartDto>opsForHash().values(key);
         List<Long> productNoList = cartDtoList.stream().map(CartDto::getProductNo)
-            .filter(productNo -> productNo != -1L).collect(Collectors.toList());
+                                              .filter(productNo -> productNo != -1L)
+                                              .collect(Collectors.toList());
         List<Product> productList =
             productService.retrieveProductListByProductNoList(productNoList);
         return getCartRetrieveResponseListFromProductListAndCartDto(productList, cartDtoList);
@@ -37,8 +38,8 @@ public class RedisCartServiceImpl implements RedisCartService {
     @Override
     public void setCartItem(CartAddRequest cartAddRequest) {
         redisTemplate.opsForHash()
-            .put(cartAddRequest.getCartId(), cartAddRequest.getProductNo().toString(),
-                new CartDto(cartAddRequest.getProductNo(), cartAddRequest.getCount()));
+                     .put(cartAddRequest.getCartId(), cartAddRequest.getProductNo().toString(),
+                          new CartDto(cartAddRequest.getProductNo(), cartAddRequest.getCount()));
         redisTemplate.expire(cartAddRequest.getCartId(), 2, TimeUnit.DAYS);
     }
 
@@ -50,13 +51,14 @@ public class RedisCartServiceImpl implements RedisCartService {
     @Override
     public void deleteAllCartItems(String key) {
         redisTemplate.opsForHash()
-            .delete(key, redisTemplate.<String, CartDto>opsForHash().keys(key).toArray());
+                     .delete(key, redisTemplate.<String, CartDto>opsForHash().keys(key).toArray());
     }
 
     @Override
     public void deleteCartItems(String key, List<Long> productNoList) {
         redisTemplate.opsForHash().delete(key,
-            productNoList.stream().map(aLong -> aLong.toString()).collect(Collectors.toList()));
+                                          productNoList.stream().map(aLong -> aLong.toString())
+                                                       .collect(Collectors.toList()));
         createUsedInRedis(key);
     }
 
@@ -78,11 +80,12 @@ public class RedisCartServiceImpl implements RedisCartService {
                 continue;
             }
             Product product = productList.stream().filter(product1 -> Objects.equals(
-                    product1.getId(), cartDto.getProductNo())).findFirst()
-                .orElse(Product.builder().price(0L).title("상품 없음").build());
+                                             product1.getId(), cartDto.getProductNo())).findFirst()
+                                         .orElse(
+                                             Product.builder().price(0L).title("상품 없음").build());
             cartRetrieveResponseList.add(
                 new CartRetrieveResponse(product.getId(), product.getTitle(), product.getPrice(),
-                    cartDto.getCount()));
+                                         cartDto.getCount()));
         }
         return cartRetrieveResponseList;
     }

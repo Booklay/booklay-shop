@@ -127,8 +127,9 @@ public class MemberServiceImpl implements MemberService {
     public void createMemberAuthority(Long memberNo, MemberAuthorityUpdateRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        Authority authority = authorityRepository.findByName(request.getAuthorityName()).orElseThrow(
-            () -> new AuthorityNotFoundException(request.getAuthorityName()));
+        Authority authority =
+            authorityRepository.findByName(request.getAuthorityName()).orElseThrow(
+                () -> new AuthorityNotFoundException(request.getAuthorityName()));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
         if (!memberAuthorityRepository.existsById(pk)) {
@@ -144,8 +145,9 @@ public class MemberServiceImpl implements MemberService {
         MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
         MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
 
-        if (!request.getAuthorityName().equals("member") && (memberAuthorityRepository.existsById(adminPk) ||
-            memberAuthorityRepository.existsById(authorPk))) {
+        if (!request.getAuthorityName().equals("member") &&
+            (memberAuthorityRepository.existsById(adminPk) ||
+                memberAuthorityRepository.existsById(authorPk))) {
             throw new AdminAndAuthorAuthorityCannotExistTogetherException();
         }
 
@@ -200,7 +202,8 @@ public class MemberServiceImpl implements MemberService {
         Member member = getMemberService.getMemberNo(memberNo);
         member.setIsBlocked(true);
 
-        BlockedMemberDetail blockedMemberDetail = new BlockedMemberDetail(member, request.getReason());
+        BlockedMemberDetail blockedMemberDetail =
+            new BlockedMemberDetail(member, request.getReason());
 
         blockedMemberDetailRepository.save(blockedMemberDetail);
     }

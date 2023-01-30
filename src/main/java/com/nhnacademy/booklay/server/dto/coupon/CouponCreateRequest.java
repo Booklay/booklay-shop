@@ -52,14 +52,14 @@ public class CouponCreateRequest {
     public static Coupon toEntity(CouponCreateRequest couponRequest, CouponType couponType,
                                   ObjectFile objectFile) {
         return Coupon.builder()
-            .couponType(couponType)
-            .name(couponRequest.getName())
-            .objectFile(objectFile)
-            .amount(couponRequest.getAmount())
-            .minimumUseAmount(couponRequest.getMinimumUseAmount())
-            .maximumDiscountAmount(couponRequest.getMaximumDiscountAmount())
-            .issuanceDeadlineAt(couponRequest.getIssuanceDeadlineAt())
-            .isDuplicatable(couponRequest.getIsDuplicatable())
-            .build();
+                     .couponType(couponType)
+                     .name(couponRequest.getName())
+                     .objectFile(objectFile)
+                     .amount(couponRequest.getAmount())
+                     .minimumUseAmount(couponRequest.getMinimumUseAmount())
+                     .maximumDiscountAmount(couponRequest.getMaximumDiscountAmount())
+                     .issuanceDeadlineAt(couponRequest.getIssuanceDeadlineAt())
+                     .isDuplicatable(couponRequest.getIsDuplicatable())
+                     .build();
     }
 }

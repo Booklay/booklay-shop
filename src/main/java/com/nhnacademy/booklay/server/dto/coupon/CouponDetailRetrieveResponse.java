@@ -24,14 +24,14 @@ public class CouponDetailRetrieveResponse {
 
     public static CouponDetailRetrieveResponse fromEntity(Coupon coupon) {
         return CouponDetailRetrieveResponse.builder()
-            .id(coupon.getId())
-            .name(coupon.getName())
-            .typeName(coupon.getCouponType().getName())
-            .amount(coupon.getAmount())
-            .minimumUseAmount(coupon.getMinimumUseAmount())
-            .minimumUseAmount(coupon.getMaximumDiscountAmount())
-            .isDuplicatable(coupon.getIsDuplicatable())
-            .isLimited(coupon.getIsLimited())
-            .build();
+                                           .id(coupon.getId())
+                                           .name(coupon.getName())
+                                           .typeName(coupon.getCouponType().getName())
+                                           .amount(coupon.getAmount())
+                                           .minimumUseAmount(coupon.getMinimumUseAmount())
+                                           .minimumUseAmount(coupon.getMaximumDiscountAmount())
+                                           .isDuplicatable(coupon.getIsDuplicatable())
+                                           .isLimited(coupon.getIsLimited())
+                                           .build();
     }
 }

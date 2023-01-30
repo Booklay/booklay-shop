@@ -38,11 +38,11 @@ public class CategoryCreateRequest {
         }
 
         return Category.builder()
-            .id(id)
-            .parent(category)
-            .name(name)
-            .depth(++depth)
-            .isExposure(isExposure)
-            .build();
+                       .id(id)
+                       .parent(category)
+                       .name(name)
+                       .depth(++depth)
+                       .isExposure(isExposure)
+                       .build();
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
-  <T> Page<T> findAllBy(Pageable pageable, Class<T> type);
+    <T> Page<T> findAllBy(Pageable pageable, Class<T> type);
 
-  boolean existsByName(String name);
+    boolean existsByName(String name);
 }

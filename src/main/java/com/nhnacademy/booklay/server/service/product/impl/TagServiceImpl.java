@@ -34,111 +34,114 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-  private static final String NOT_FOUNT = "product not found";
-  private final TagRepository tagRepository;
-  private final ProductTagRepository productTagRepository;
-  private final ProductRepository productRepository;
+    private static final String NOT_FOUNT = "product not found";
+    private final TagRepository tagRepository;
+    private final ProductTagRepository productTagRepository;
+    private final ProductRepository productRepository;
 
 
-  @Override
-  @Transactional
-  public void createTag(CreateTagRequest request) {
-    tagNameValidator(request.getName());
+    @Override
+    @Transactional
+    public void createTag(CreateTagRequest request) {
+        tagNameValidator(request.getName());
 
-    Tag tag = Tag.builder()
-        .name(request.getName())
-        .build();
-    tagRepository.save(tag);
-  }
-
-  @Override
-  @Transactional
-  public void updateTag(UpdateTagRequest request) {
-    tagExistValidator(request.getId());
-    tagNameValidator(request.getName());
-    Tag tag = Tag.builder()
-        .name(request.getName())
-        .build();
-    tag.setId(request.getId());
-    tagRepository.save(tag);
-  }
-
-  @Override
-  @Transactional
-  public Page<RetrieveTagResponse> retrieveAllTag(Pageable pageable) {
-    return tagRepository.findAllBy(pageable, RetrieveTagResponse.class);
-  }
-
-  @Override
-  @Transactional
-  public void deleteTag(DeleteIdRequest request) {
-    Long id = request.getId();
-    tagExistValidator(id);
-
-    if (productTagRepository.existsByPk_TagId(id)) {
-      productTagRepository.deleteByPk_TagId(id);
-    }
-    tagRepository.deleteById(id);
-  }
-
-  private void tagExistValidator(Long id) {
-    if (!tagRepository.existsById(id)) {
-      throw new NotFoundException(Tag.class, "tag not found");
-    }
-  }
-
-  private void tagNameValidator(String name) {
-    if (tagRepository.existsByName(name)) {
-      throw new IllegalArgumentException(name + " tag is already exist");
-    }
-  }
-
-  @Override
-  public Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo) {
-    if (!productRepository.existsById(productNo)) {
-      throw new NotFoundException(Product.class, NOT_FOUNT);
-    }
-    Page<RetrieveTagResponse> basicPageDto = tagRepository.findAllBy(pageable,
-        RetrieveTagResponse.class);
-
-    List<RetrieveTagResponse> basicContent = basicPageDto.getContent();
-    List<TagProductResponse> convertedContent = new ArrayList<>();
-
-    for (RetrieveTagResponse response : basicContent) {
-      ProductTag.Pk ptPk = new Pk(productNo, response.getId());
-
-      Boolean isRegistered = productTagRepository.existsById(ptPk);
-
-      TagProductResponse tagProductDto = new TagProductResponse(response.getId(),
-          response.getName(), isRegistered);
-
-      convertedContent.add(tagProductDto);
+        Tag tag = Tag.builder()
+                     .name(request.getName())
+                     .build();
+        tagRepository.save(tag);
     }
 
-    return new PageImpl<>(convertedContent, basicPageDto.getPageable(),
-        basicPageDto.getTotalElements());
-  }
+    @Override
+    @Transactional
+    public void updateTag(UpdateTagRequest request) {
+        tagExistValidator(request.getId());
+        tagNameValidator(request.getName());
+        Tag tag = Tag.builder()
+                     .name(request.getName())
+                     .build();
+        tag.setId(request.getId());
+        tagRepository.save(tag);
+    }
 
-  @Override
-  public void createTagProduct(CreateDeleteTagProductRequest request) {
-    ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
+    @Override
+    @Transactional
+    public Page<RetrieveTagResponse> retrieveAllTag(Pageable pageable) {
+        return tagRepository.findAllBy(pageable, RetrieveTagResponse.class);
+    }
 
-    Product product = productRepository.findById(request.getProductNo()).orElseThrow(()->new NotFoundException(Product.class, "product not exists"));
-    Tag tag = tagRepository.findById(request.getTagId()).orElseThrow(()->new NotFoundException(Tag.class, "tag not exists"));
+    @Override
+    @Transactional
+    public void deleteTag(DeleteIdRequest request) {
+        Long id = request.getId();
+        tagExistValidator(id);
 
-    ProductTag productTag = ProductTag.builder()
-        .pk(pk)
-        .product(product)
-        .tag(tag)
-        .build();
+        if (productTagRepository.existsByPk_TagId(id)) {
+            productTagRepository.deleteByPk_TagId(id);
+        }
+        tagRepository.deleteById(id);
+    }
 
-    productTagRepository.save(productTag);
-  }
+    private void tagExistValidator(Long id) {
+        if (!tagRepository.existsById(id)) {
+            throw new NotFoundException(Tag.class, "tag not found");
+        }
+    }
 
-  @Override
-  public void deleteTagProduct(CreateDeleteTagProductRequest request) {
-    ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
+    private void tagNameValidator(String name) {
+        if (tagRepository.existsByName(name)) {
+            throw new IllegalArgumentException(name + " tag is already exist");
+        }
+    }
 
-    productTagRepository.deleteById(pk);
-  }
+    @Override
+    public Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo) {
+        if (!productRepository.existsById(productNo)) {
+            throw new NotFoundException(Product.class, NOT_FOUNT);
+        }
+        Page<RetrieveTagResponse> basicPageDto = tagRepository.findAllBy(pageable,
+                                                                         RetrieveTagResponse.class);
+
+        List<RetrieveTagResponse> basicContent = basicPageDto.getContent();
+        List<TagProductResponse> convertedContent = new ArrayList<>();
+
+        for (RetrieveTagResponse response : basicContent) {
+            ProductTag.Pk ptPk = new Pk(productNo, response.getId());
+
+            Boolean isRegistered = productTagRepository.existsById(ptPk);
+
+            TagProductResponse tagProductDto = new TagProductResponse(response.getId(),
+                                                                      response.getName(),
+                                                                      isRegistered);
+
+            convertedContent.add(tagProductDto);
+        }
+
+        return new PageImpl<>(convertedContent, basicPageDto.getPageable(),
+                              basicPageDto.getTotalElements());
+    }
+
+    @Override
+    public void createTagProduct(CreateDeleteTagProductRequest request) {
+        ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
+
+        Product product = productRepository.findById(request.getProductNo()).orElseThrow(
+            () -> new NotFoundException(Product.class, "product not exists"));
+        Tag tag = tagRepository.findById(request.getTagId()).orElseThrow(
+            () -> new NotFoundException(Tag.class, "tag not exists"));
+
+        ProductTag productTag = ProductTag.builder()
+                                          .pk(pk)
+                                          .product(product)
+                                          .tag(tag)
+                                          .build();
+
+        productTagRepository.save(productTag);
+    }
+
+    @Override
+    public void deleteTagProduct(CreateDeleteTagProductRequest request) {
+        ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
+
+        productTagRepository.deleteById(pk);
+    }
 }

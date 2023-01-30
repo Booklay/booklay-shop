@@ -42,9 +42,9 @@ public class DeliveryDestinationController {
                                                           DeliveryDestinationCURequest requestDto,
                                                           @PathVariable Long memberNo) {
         deliveryDestinationService.createDeliveryDestination(memberNo,
-            requestDto);
+                                                             requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .build();
+                             .build();
     }
 
     @GetMapping("/list/{memberNo}")
@@ -55,8 +55,8 @@ public class DeliveryDestinationController {
             deliveryDestinationService.retrieveDeliveryDestinations(memberNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(response);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(response);
     }
 
     @GetMapping("/{addressNo}")
@@ -66,8 +66,8 @@ public class DeliveryDestinationController {
             deliveryDestinationService.retrieveDeliveryDestination(addressNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(response);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(response);
     }
 
     @PostMapping("/update/{memberNo}/{addressNo}")
@@ -77,7 +77,7 @@ public class DeliveryDestinationController {
         @PathVariable Long addressNo) {
         deliveryDestinationService.updateDeliveryDestination(memberNo, addressNo, requestDto);
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                             .build();
     }
 
     @DeleteMapping("/delete/{memberNo}/{addressNo}")
@@ -86,23 +86,25 @@ public class DeliveryDestinationController {
         deliveryDestinationService.deleteDeliveryDestination(memberNo, addressNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                             .build();
     }
 
     @ExceptionHandler(DeliveryDestinationNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDeliveryDestinationNotFoundException(
         DeliveryDestinationNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE)
-                .message(ex.getMessage()).build());
+                             .body(ErrorResponse.builder()
+                                                .code(DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE)
+                                                .message(ex.getMessage()).build());
     }
 
     @ExceptionHandler(DeliveryDestinationLimitExceededException.class)
     public ResponseEntity<ErrorResponse> handleDeliveryDestinationLimitExceededException(
         DeliveryDestinationLimitExceededException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse.builder().code(DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE)
-                .message(ex.getMessage()).build());
+                             .body(ErrorResponse.builder().code(
+                                                    DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE)
+                                                .message(ex.getMessage()).build());
     }
 
 

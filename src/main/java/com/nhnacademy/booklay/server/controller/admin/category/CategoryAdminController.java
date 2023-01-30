@@ -43,8 +43,8 @@ public class CategoryAdminController {
         CategoryStepResponse categoryStep = categoryService.retrieveCategoryStep(categoryId);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(categoryStep);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(categoryStep);
 
     }
 
@@ -69,7 +69,7 @@ public class CategoryAdminController {
         categoryResponse = categoryService.retrieveCategory(createDto.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(categoryResponse);
+                             .body(categoryResponse);
     }
 
     @GetMapping
@@ -78,7 +78,7 @@ public class CategoryAdminController {
         PageResponse<CategoryResponse> page = categoryService.retrieveCategory(pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(page);
+                             .body(page);
     }
 
     @GetMapping("/{categoryId}")
@@ -86,7 +86,7 @@ public class CategoryAdminController {
         CategoryResponse categoryResponse = categoryService.retrieveCategory(id);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(categoryResponse);
+                             .body(categoryResponse);
     }
 
     @PutMapping("/{categoryId}")
@@ -103,7 +103,7 @@ public class CategoryAdminController {
         CategoryResponse categoryResponse = categoryService.retrieveCategory(updateDto.getId());
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(categoryResponse);
+                             .body(categoryResponse);
     }
 
     @DeleteMapping("/{categoryId}")
@@ -111,7 +111,7 @@ public class CategoryAdminController {
         try {
             categoryService.deleteCategory(categoryId);
             return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"result\": \"Success\"}");
+                                 .body("{\"result\": \"Success\"}");
         } catch (NotFoundException e) {
             throw new DeleteFailedException("카테고리 삭제 실패");
 

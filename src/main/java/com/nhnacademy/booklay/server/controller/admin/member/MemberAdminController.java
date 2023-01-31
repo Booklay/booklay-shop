@@ -1,11 +1,15 @@
 package com.nhnacademy.booklay.server.controller.admin.member;
 
+import com.nhnacademy.booklay.server.dto.ErrorResponse;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
+import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +37,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberAdminController {
     private final MemberService memberService;
+    private static final String ALREADY_UNBLOCKED_MEMBER_ERROR_CODE = "AlreadyUnblockedMember";
+    private static final String ALREADY_BLOCKED_MEMBER_ERROR_CODE = "AlreadyBlockedMember";
+
 
     @GetMapping
     public ResponseEntity<PageResponse<MemberRetrieveResponse>> retrieveMembers(Pageable pageable) {
@@ -39,7 +47,7 @@ public class MemberAdminController {
 
         PageResponse<MemberRetrieveResponse> memberPageResponse
             = new PageResponse<>(responsePage.getNumber(), responsePage.getSize(),
-                                 responsePage.getTotalPages(), responsePage.getContent());
+            responsePage.getTotalPages(), responsePage.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +132,7 @@ public class MemberAdminController {
                                             @PathVariable Long memberNo) {
         memberService.blockMember(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .build();
+            .build();
     }
 
     @GetMapping("/block/cancel/{blockedMemberDetailId}")
@@ -132,5 +140,21 @@ public class MemberAdminController {
         memberService.blockMemberCancel(blockedMemberDetailId);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
+    }
+
+    @ExceptionHandler(AlreadyUnblockedMemberException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyUnblockedMemberException(
+        AlreadyExistAuthorityException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ErrorResponse.builder().code(ALREADY_UNBLOCKED_MEMBER_ERROR_CODE)
+                .message(ex.getMessage()).build());
+    }
+
+    @ExceptionHandler(AlreadyBlockedMemberException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyBlockedMemberException(
+        AlreadyExistAuthorityException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ErrorResponse.builder().code(ALREADY_BLOCKED_MEMBER_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 }

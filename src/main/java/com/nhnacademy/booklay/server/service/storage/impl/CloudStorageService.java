@@ -127,7 +127,7 @@ public class CloudStorageService implements StorageService {
     }
 
     @Override
-    public String downloadFile(ObjectFileResponse fileResponse) throws IOException {
+    public ResponseEntity<byte[]> downloadFile(ObjectFileResponse fileResponse) throws IOException {
 
         accessResponse = objectMapper.readValue(requestToken(), AccessResponse.class);
         String authTokenId = accessResponse.getAccess().getToken().getId();
@@ -141,22 +141,7 @@ public class CloudStorageService implements StorageService {
         String fileName = fileResponse.getFileName();
         String url = fileResponse.getFileAddress() + fileName;
 
-        ResponseEntity<byte[]> response
-            = this.restTemplate.exchange(url, HttpMethod.GET, requestHttpEntity, byte[].class);
-
-        String dir = String.valueOf(getDownloadDir());
-        File file = new File(dir, fileResponse.getFileName());
-
-        try (InputStream input = new ByteArrayInputStream(
-            Objects.requireNonNull(response.getBody()));
-             OutputStream output = new FileOutputStream(file)) {
-            IOUtils.copy(input, output);
-
-        } catch (IOException e) {
-            log.error("{}", e.getMessage());
-        }
-
-        return file.getPath();
+        return this.restTemplate.exchange(url, HttpMethod.GET, requestHttpEntity, byte[].class);
     }
 
     private Path getDownloadDir() {

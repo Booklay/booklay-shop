@@ -5,21 +5,16 @@
       "booklay_analyzer": {
         "type": "custom",
         "tokenizer": "nori_with_user_dict",
-        "filter": ["nori_part_of_speech","synonyms","nori_readingform","lowercase","remove_duplicates"]
+        "filter": ["nori_part_of_speech","nori_readingform","lowercase","remove_duplicates"]
       }
     },
     "tokenizer":{
       "nori_with_user_dict":{
         "type":"nori_tokenizer",
-        "decompound":"mixed",
-        "user_dictionary":"user_dic.txt"
+        "decompound":"mixed"
       }
     },
     "filter": {
-      "synonyms": {
-        "type": "synonym_graph",
-        "synonyms_path" : "synonyms.txt"
-      },
       "nori_part_of_speech": {
         "type": "nori_part_of_speech",
         "stoptags": [

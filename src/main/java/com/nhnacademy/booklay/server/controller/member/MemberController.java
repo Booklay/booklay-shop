@@ -8,6 +8,7 @@ import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCan
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,21 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(memberResponse);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<MemberRetrieveResponse> retrieveMemberByEmail(
+        @PathVariable String email) {
+
+        MemberRetrieveResponse memberResponse =
+            memberService.retrieveMemberByEmail(email)
+                         .orElseThrow(() -> new NotFoundException(MemberNotFoundException.class,
+                                                                  MEMBER_NOT_FOUND_ERROR_CODE));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberResponse);
+
     }
 
     @PostMapping

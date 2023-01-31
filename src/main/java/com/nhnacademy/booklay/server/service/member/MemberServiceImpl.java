@@ -100,6 +100,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Optional<MemberRetrieveResponse> retrieveMemberByEmail(String email) {
+        return memberRepository.retrieveMemberByEmail(email);
+    }
+
+    @Override
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
         Member member = getMemberService.getMemberNo(memberNo);
 

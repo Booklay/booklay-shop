@@ -8,6 +8,7 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductRespons
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.entity.Product;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public interface ProductService {
 
     RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
 
-    Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable);
+    Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException;
 
     RetrieveProductViewResponse retrieveProductView(Long productId);
 
@@ -43,5 +44,6 @@ public interface ProductService {
 
     void softDelete(Long productId);
 
-    List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products);
+    List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds)
+        throws IOException;
 }

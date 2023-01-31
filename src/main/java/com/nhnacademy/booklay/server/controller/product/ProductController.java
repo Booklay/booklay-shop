@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
+import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final BookSubscribeService bookSubscribeService;
+    private final ProductRelationService productRelationService;
 
     @GetMapping
     public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
@@ -48,6 +50,6 @@ public class ProductController {
 
     @GetMapping("/recommend/{productId}")
     public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId){
-        return productService.retrieveRecommendProducts(productId);
+        return productRelationService.retrieveRecommendProducts(productId);
     }
 }

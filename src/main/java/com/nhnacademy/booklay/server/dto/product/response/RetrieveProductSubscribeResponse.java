@@ -12,7 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class RetrieveProductSubscribeResponse {
 
@@ -55,4 +54,24 @@ public class RetrieveProductSubscribeResponse {
     @Setter
     private List<Long> childProducts;
 
+    public RetrieveProductSubscribeResponse(Long productId, String title, MultipartFile image,
+        Long price, Long pointRate, String shortDescription, String longDescription,
+        Boolean isSelling,
+        Boolean pointMethod, LocalDateTime createdAt, List<Long> categoryIds, Long subscribeId,
+        Integer subscribeWeek, Integer subscribeDay) {
+        this.productId = productId;
+        this.title = title;
+        this.image = image;
+        this.price = price;
+        this.pointRate = pointRate;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
+        this.isSelling = isSelling;
+        this.pointMethod = pointMethod;
+        this.createdAt = createdAt;
+        this.categoryIds = categoryIds;
+        this.subscribeId = subscribeId;
+        this.subscribeWeek = subscribeWeek;
+        this.subscribeDay = subscribeDay;
+    }
 }

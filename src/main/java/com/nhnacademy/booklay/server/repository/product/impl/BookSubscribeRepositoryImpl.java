@@ -1,7 +1,8 @@
-package com.nhnacademy.booklay.server.repository.product;
+package com.nhnacademy.booklay.server.repository.product.impl;
 
 import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.QBookSubscribe;
+import com.nhnacademy.booklay.server.repository.product.BookSubscribeRepositoryCustom;
 import java.util.List;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 

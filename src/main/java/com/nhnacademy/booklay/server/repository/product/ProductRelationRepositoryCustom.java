@@ -7,4 +7,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface ProductRelationRepositoryCustom {
 
   List<Long> findRecommendIdsByBaseProductId(Long productId);
+
+  Boolean existsByBaseAndTargetId(Long baseId, Long targetId);
+
+  void deleteByBaseAndTargetId(Long baseId, Long targetId);
 }

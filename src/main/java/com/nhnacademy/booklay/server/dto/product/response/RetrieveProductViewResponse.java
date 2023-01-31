@@ -22,7 +22,7 @@ public class RetrieveProductViewResponse {
     // 상품
     private Long productId;
     @Setter
-    private MultipartFile image;
+    private Long objectFileId;
     @NotNull
     private String title;
     @NotNull
@@ -68,7 +68,7 @@ public class RetrieveProductViewResponse {
                                        List<RetrieveAuthorResponse> authors,
                                        List<RetrieveTagResponse> productTags) {
         this.productId = product.getId();
-        this.image = null;
+        this.objectFileId = product.getObjectFile().getId();
         this.title = product.getTitle();
         this.price = product.getPrice();
         this.pointRate = product.getPointRate();
@@ -91,7 +91,7 @@ public class RetrieveProductViewResponse {
     public RetrieveProductViewResponse(Product product, Subscribe subscribe,
                                        List<RetrieveTagResponse> productTags) {
         this.productId = product.getId();
-        this.image = null;
+        this.objectFileId = product.getObjectFile().getId();
         this.title = product.getTitle();
         this.price = product.getPrice();
         this.pointRate = product.getPointRate();

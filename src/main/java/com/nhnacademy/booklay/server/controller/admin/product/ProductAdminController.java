@@ -12,6 +12,7 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscri
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -121,7 +122,7 @@ public class ProductAdminController {
     //연관 상품 등록 위해 조회
     @GetMapping("/recommend/{productNo}")
     public PageResponse<RetrieveProductResponse> retrieveRecommendConnector(
-        @PathVariable Long productNo, Pageable pageable){
+        @PathVariable Long productNo, Pageable pageable) throws IOException {
         Page<RetrieveProductResponse> response = productRelationService.retrieveRecommendConnection(productNo, pageable);
 
         return new PageResponse<>(response);

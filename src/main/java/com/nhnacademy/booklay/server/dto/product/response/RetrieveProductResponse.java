@@ -5,10 +5,10 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import java.util.List;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class RetrieveProductResponse {
@@ -16,7 +16,7 @@ public class RetrieveProductResponse {
     @NotNull
     private Long productId;
     @Setter
-    private MultipartFile image;
+    private Long objectFileId;
     @NotNull
     private String title;
     @NotNull
@@ -32,6 +32,7 @@ public class RetrieveProductResponse {
     @NotNull
     private String publisher;
 
+    @Setter
     private List<RetrieveAuthorResponse> authors;
 
     public RetrieveProductResponse(Product product, ProductDetail productDetail,
@@ -56,5 +57,23 @@ public class RetrieveProductResponse {
         this.pointMethod = product.isPointMethod();
         this.shortDescription = product.getShortDescription();
         this.publisher = subscribe.getPublisher();
+
+    }
+
+    public RetrieveProductResponse(Product product, ProductDetail productDetail, Subscribe subscribe) {
+        this.productId = product.getId();
+        this.title = product.getTitle();
+        this.price = product.getPrice();
+        this.pointRate = product.getPointRate();
+        this.isSelling = product.isSelling();
+        this.pointMethod = product.isPointMethod();
+        this.shortDescription = product.getShortDescription();
+        this.objectFileId = product.getObjectFile().getId();
+
+        if (Objects.nonNull(subscribe)) {
+            this.publisher = subscribe.getPublisher();
+        } else if (Objects.nonNull(productDetail)) {
+            this.publisher = productDetail.getPublisher();
+        }
     }
 }

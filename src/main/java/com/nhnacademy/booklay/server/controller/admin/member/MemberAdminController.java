@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.controller.admin.member;
 import com.nhnacademy.booklay.server.dto.ErrorResponse;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
@@ -112,6 +113,20 @@ public class MemberAdminController {
             memberService.retrieveBlockedMemberDetail(memberNo, pageable);
 
         PageResponse<BlockedMemberRetrieveResponse> memberPageResponse
+            = new PageResponse<>(responsePage);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberPageResponse);
+    }
+
+    @GetMapping("/dropped")
+    public ResponseEntity<PageResponse<DroppedMemberRetrieveResponse>> retrieveDroppedMember(
+        Pageable pageable) {
+        Page<DroppedMemberRetrieveResponse> responsePage =
+            memberService.retrieveDroppedMembers(pageable);
+
+        PageResponse<DroppedMemberRetrieveResponse> memberPageResponse
             = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)

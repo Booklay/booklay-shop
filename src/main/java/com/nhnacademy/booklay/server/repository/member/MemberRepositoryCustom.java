@@ -1,5 +1,7 @@
 package com.nhnacademy.booklay.server.repository.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import java.util.Optional;
@@ -13,4 +15,6 @@ public interface MemberRepositoryCustom {
     Optional<MemberLoginResponse> retrieveMemberByUserId(String userId);
 
     Page<MemberRetrieveResponse> retrieveAll(Pageable pageable);
+    Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable);
+
 }

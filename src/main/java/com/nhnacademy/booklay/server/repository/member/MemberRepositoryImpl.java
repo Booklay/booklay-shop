@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.repository.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -66,6 +67,25 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
 
         JPQLQuery<Long> count = from(member)
             .select(member.count());
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+    }
+
+    @Override
+    public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
+        QMember member = QMember.member;
+
+        List<DroppedMemberRetrieveResponse> content = from(member)
+            .where(member.deletedAt.isNotNull())
+            .select(Projections.constructor(DroppedMemberRetrieveResponse.class,
+                member.memberId,
+                member.deletedAt))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        JPQLQuery<Long> count = from(member)
+            .select(member.count());
+
         return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
     }
 

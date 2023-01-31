@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,7 +69,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String downloadFile(final Long id) throws IOException {
+    public ResponseEntity<byte[]> downloadFile(final Long id) throws IOException {
         ObjectFileResponse response = objectFileRepository.queryById(id);
 
         return storageService.downloadFile(response);

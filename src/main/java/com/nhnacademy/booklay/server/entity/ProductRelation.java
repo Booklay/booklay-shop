@@ -2,6 +2,8 @@ package com.nhnacademy.booklay.server.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,6 +21,7 @@ public class ProductRelation {
 
     @Id
     @Column(name = "product_relation_no")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -26,18 +29,12 @@ public class ProductRelation {
     private Product baseProduct;
 
     @ManyToOne
-    @JoinColumn(name = "related_product_no2", nullable = false)
+    @JoinColumn(name = "related_product_no", nullable = false)
     private Product relatedProduct;
 
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted;
-
     @Builder
-    public ProductRelation(Long id, Product baseProduct, Product relatedProduct,
-                           Boolean isDeleted) {
-        this.id = id;
+    public ProductRelation(Product baseProduct, Product relatedProduct) {
         this.baseProduct = baseProduct;
         this.relatedProduct = relatedProduct;
-        this.isDeleted = isDeleted;
     }
 }

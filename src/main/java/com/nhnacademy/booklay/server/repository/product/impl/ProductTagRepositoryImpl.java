@@ -1,9 +1,10 @@
-package com.nhnacademy.booklay.server.repository.product;
+package com.nhnacademy.booklay.server.repository.product.impl;
 
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.ProductTag;
 import com.nhnacademy.booklay.server.entity.QProductTag;
 import com.nhnacademy.booklay.server.entity.QTag;
+import com.nhnacademy.booklay.server.repository.product.ProductTagRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import java.util.List;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;

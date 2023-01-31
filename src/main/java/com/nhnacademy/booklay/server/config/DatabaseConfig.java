@@ -2,9 +2,6 @@ package com.nhnacademy.booklay.server.config;
 
 import com.nhnacademy.booklay.server.dto.secrets.DatasourceInfo;
 import com.p6spy.engine.spy.P6DataSource;
-import java.util.Properties;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,6 +14,10 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Spring Boot의 기본 Datasource인 hikari를 DBCP2로 바꾸기 위한 설정 파일입니다.
@@ -45,8 +46,7 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(
-        EntityManagerFactory entityManagerFactory) {
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 
         var jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
@@ -55,13 +55,12 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public DataSource logDataSource(DataSource dataSource) {
+    public DataSource logDataSource(DataSource dataSource){
         return new P6DataSource(dataSource);
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-        @Qualifier("logDataSource") DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("logDataSource") DataSource dataSource) {
         var emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
         emf.setPackagesToScan("com.nhnacademy.booklay.server.entity");

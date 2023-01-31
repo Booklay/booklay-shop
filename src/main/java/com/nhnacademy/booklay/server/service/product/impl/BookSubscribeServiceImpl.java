@@ -12,6 +12,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,10 +60,11 @@ public class BookSubscribeServiceImpl implements BookSubscribeService {
     }
 
     @Override
-    public List<RetrieveProductResponse> retrieveBookSubscribe(Long subscribeId) {
+    public List<RetrieveProductResponse> retrieveBookSubscribe(Long subscribeId)
+        throws IOException {
         List<Long> productIds =
             bookSubscribeRepository.findBooksProductIdBySubscribeId(subscribeId);
 
-        return productService.retrieveBooksSubscribed(productIds);
+        return productService.retrieveProductResponses(productIds);
     }
 }

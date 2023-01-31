@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.repository.member;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -75,21 +76,40 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         QMember member = QMember.member;
 
         return Optional.ofNullable(from(member)
-                                       .select(Projections.constructor(MemberRetrieveResponse.class,
-                                                                       member.memberNo,
-                                                                       member.gender.name,
-                                                                       member.memberId,
-                                                                       member.nickname,
-                                                                       member.name,
-                                                                       member.birthday,
-                                                                       member.phoneNo,
-                                                                       member.email,
-                                                                       member.createdAt,
-                                                                       member.updatedAt,
-                                                                       member.deletedAt,
-                                                                       member.isBlocked))
-                                       .where(member.email.eq(email))
-                                       .fetchOne());
+            .select(Projections.constructor(MemberRetrieveResponse.class,
+                member.memberNo,
+                member.gender.name,
+                member.memberId,
+                member.nickname,
+                member.name,
+                member.birthday,
+                member.phoneNo,
+                member.email,
+                member.createdAt,
+                member.updatedAt,
+                member.deletedAt,
+                member.isBlocked))
+            .where(member.email.eq(email))
+            .fetchOne());
+
+    }
+
+    public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
+        QMember member = QMember.member;
+
+        List<DroppedMemberRetrieveResponse> content = from(member)
+            .where(member.deletedAt.isNull())
+            .select(Projections.constructor(DroppedMemberRetrieveResponse.class,
+                member.memberId,
+                member.deletedAt))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        JPQLQuery<Long> count = from(member)
+            .select(member.count());
+
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
     }
 
 }

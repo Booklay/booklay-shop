@@ -75,7 +75,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         QMember member = QMember.member;
 
         List<DroppedMemberRetrieveResponse> content = from(member)
-            .where(member.deletedAt.isNotNull())
+            .where(member.deletedAt.isNull())
             .select(Projections.constructor(DroppedMemberRetrieveResponse.class,
                 member.memberId,
                 member.deletedAt))

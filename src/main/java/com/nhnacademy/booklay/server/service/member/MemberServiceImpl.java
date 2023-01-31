@@ -139,8 +139,8 @@ public class MemberServiceImpl implements MemberService {
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        Gender gender = genderRepository.findByName(updateDto.getName()).orElseThrow(
-            () -> new GenderNotFoundException(updateDto.getName()));
+        Gender gender = genderRepository.findByName(updateDto.getGender()).orElseThrow(
+            () -> new GenderNotFoundException(updateDto.getGender()));
 
         member.updateMember(updateDto, gender);
 

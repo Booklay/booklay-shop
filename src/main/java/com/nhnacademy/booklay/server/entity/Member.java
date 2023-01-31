@@ -104,13 +104,10 @@ public class Member {
 
     public void deleteMember() {
         this.deletedAt = LocalDateTime.now();
-        this.gender = null;
-        this.password = null;
-        this.birthday = null;
-        this.email = null;
-        this.name = null;
-        this.nickname = null;
-        this.phoneNo = null;
+        this.email = "deleted";
+        this.name = "deleted";
+        this.nickname = "deleted";
+        this.phoneNo = "deleted";
     }
 
     public MemberGrade addGrade(String gradeName) {

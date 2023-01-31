@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Document(indexName = "category")
+@Document(indexName = "booklay_category")
 @Setting(settingPath = "elastic/analyzer-setting.json")
 @Mapping(mappingPath = "elastic/category-mapping.json")
 public class CategoryDocument {

@@ -15,8 +15,11 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
 import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
+import com.nhnacademy.booklay.server.exception.member.BlockedMemberDetailNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
@@ -101,23 +104,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void blockMemberCancel(Long blockedMemberDetailId) {
-        //TODO 3: 최근 차단내역 없음 에러
-        BlockedMemberDetail blockedMemberDetail =
-            blockedMemberDetailRepository.findById(blockedMemberDetailId)
-                .orElseThrow(() -> new IllegalArgumentException());
-
-        //TODO 3: 이미 차단해제 된 회원은 다시 차단해제 할 수 없음
-        if(blockedMemberDetail.getReleasedAt() != null) {
-            throw new IllegalArgumentException();
-        }
-
-        blockedMemberDetail.getMember().setIsBlocked(false);
-
-        blockedMemberDetail.setReleasedAt(LocalDateTime.now());
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo,
                                                                            Pageable pageable) {
@@ -125,6 +111,22 @@ public class MemberServiceImpl implements MemberService {
 
         return blockedMemberDetailRepository.retrieveBlockedMemberDetail(memberNo, pageable);
     }
+
+    @Override
+    public void blockMemberCancel(Long blockedMemberDetailId) {
+        BlockedMemberDetail blockedMemberDetail =
+            blockedMemberDetailRepository.findById(blockedMemberDetailId)
+                .orElseThrow(() -> new BlockedMemberDetailNotFoundException(blockedMemberDetailId));
+
+        if (blockedMemberDetail.getReleasedAt() != null) {
+            throw new AlreadyUnblockedMemberException(blockedMemberDetail.getMember());
+        }
+
+        blockedMemberDetail.getMember().setIsBlocked(false);
+
+        blockedMemberDetail.setReleasedAt(LocalDateTime.now());
+    }
+
 
     @Override
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
@@ -228,9 +230,8 @@ public class MemberServiceImpl implements MemberService {
     public void blockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        //TODO 3: 이미 차단된 회원은 다시 차단할 수 없음
         if(member.getIsBlocked()) {
-            throw new IllegalArgumentException();
+            throw new AlreadyBlockedMemberException(member);
         }
 
         member.setIsBlocked(true);

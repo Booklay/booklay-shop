@@ -37,12 +37,16 @@ public interface ProductService {
 
     List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 
+    Page<RetrieveProductResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable);
+
     Product retrieveProductByProductNo(Long productNo);
 
     Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
                                                                         Long subscribeId);
 
     void softDelete(Long productId);
+
+    List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products);
 
     List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds)
         throws IOException;

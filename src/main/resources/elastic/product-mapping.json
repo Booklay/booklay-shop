@@ -1,0 +1,44 @@
+{
+  "properties": {
+    "id": {
+      "type": "long"
+    },
+    "title": {
+      "type": "text",
+      "copy_to": ["keywordText","keywordList"],
+      "analyzer" : "booklay_analyzer"
+    },
+    "createdAt": {
+      "type" : "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS||epoch_millis"
+    },
+
+    "price": {
+      "type": "long"
+    },
+
+    "pointRate": {
+      "type": "long"
+    },
+
+    "shortDescription": {
+      "type": "text",
+      "copy_to": ["keywordText","keywordList"],
+      "analyzer" : "booklay_analyzer"
+    },
+
+    "longDescription": {
+      "type": "text",
+      "analyzer" : "booklay_analyzer"
+    },
+
+    "keywordText": {
+      "type": "text",
+      "analyzer" : "booklay_analyzer"
+    },
+
+    "keywordList": {
+      "type": "keyword"
+    }
+  }
+}

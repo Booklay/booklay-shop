@@ -36,6 +36,8 @@ public interface ProductService {
 
     List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 
+    Page<RetrieveProductResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable);
+
     Product retrieveProductByProductNo(Long productNo);
 
     Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
@@ -44,4 +46,5 @@ public interface ProductService {
     void softDelete(Long productId);
 
     List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products);
+
 }

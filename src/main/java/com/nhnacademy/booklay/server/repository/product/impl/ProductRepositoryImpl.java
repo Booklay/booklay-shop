@@ -179,11 +179,6 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
          *         left join tag using (tag_no)
          */
 
-
-        /**
-         * 상품 상세 번호 기준으로 맵
-         */
-
         List<ProductDetail> details =
             from(productDetail)
                 .leftJoin(productAuthor).on(productDetail.id.eq(productAuthor.pk.bookId))

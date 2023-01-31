@@ -10,6 +10,7 @@ spring:
         format_sql: true
     database: mysql
 
+
 cloud:
   auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
   user-name: sjun0322@naver.com
@@ -33,6 +34,10 @@ booklay:
     host: 127.0.0.1
     password:
     database: 0
+
+  elasticsearch:
+    uri: localhost:9200
+
 
 
 

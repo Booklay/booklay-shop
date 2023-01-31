@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.repository.product;
 
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,6 @@ public interface ProductRepositoryCustom {
     Page<RetrieveBookForSubscribeResponse> findAllBooksForSubscribeBy(Pageable pageable);
 
     List<String> findAuthorNameByProductId(Long productId);
+
+    Page<RetrieveProductResponse> findProductPageByIds(List<Long> ids, Pageable pageable);
 }

@@ -169,6 +169,11 @@ public class ProductServiceImpl implements ProductService {
     productRepository.save(targetProduct);
   }
 
+  @Override
+  public List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products) {
+    return null;
+  }
+
   // 수정 위해서 구독 상품 조회
   @Override
   @Transactional(readOnly = true)
@@ -437,11 +442,23 @@ public class ProductServiceImpl implements ProductService {
     return resultList;
   }
 
+  /**
+   * 상품 아이디 리스트를 받아서 페이지네이션.
+   */
+  @Override
+  public Page<RetrieveProductResponse> retrieveProductListByProductNoList(
+      List<Long> productNoList, Pageable pageable) {
+
+    return productRepository.findProductPageByIds(productNoList, pageable);
+  }
+
+
 
   @Override
   public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
     return null;
   }
+
 
   @Override
   public Product retrieveProductByProductNo(Long productNo) {

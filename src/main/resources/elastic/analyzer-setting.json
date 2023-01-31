@@ -1,0 +1,26 @@
+{
+  "analysis": {
+
+    "analyzer": {
+      "booklay_analyzer": {
+        "type": "custom",
+        "tokenizer": "nori_with_user_dict",
+        "filter": ["nori_part_of_speech","nori_readingform","lowercase","remove_duplicates"]
+      }
+    },
+    "tokenizer":{
+      "nori_with_user_dict":{
+        "type":"nori_tokenizer",
+        "decompound":"mixed"
+      }
+    },
+    "filter": {
+      "nori_part_of_speech": {
+        "type": "nori_part_of_speech",
+        "stoptags": [
+          "NR"
+        ]
+      }
+    }
+  }
+}

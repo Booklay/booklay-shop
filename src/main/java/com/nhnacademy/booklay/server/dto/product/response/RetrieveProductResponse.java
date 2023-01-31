@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import java.util.List;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +32,8 @@ public class RetrieveProductResponse {
   @NotNull
   private String publisher;
 
-  private List<RetrieveAuthorResponse> authors;
+    @Setter
+    private List<RetrieveAuthorResponse> authors;
 
   @Setter
   private Boolean recommend;
@@ -61,4 +63,21 @@ public class RetrieveProductResponse {
     this.shortDescription = product.getShortDescription();
     this.publisher = subscribe.getPublisher();
   }
+
+    public RetrieveProductResponse(Product product, ProductDetail productDetail, Subscribe subscribe) {
+        this.productId = product.getId();
+        this.title = product.getTitle();
+        this.price = product.getPrice();
+        this.pointRate = product.getPointRate();
+        this.selling = product.isSelling();
+        this.pointMethod = product.isPointMethod();
+        this.shortDescription = product.getShortDescription();
+        this.objectFileId = product.getObjectFile().getId();
+
+        if (Objects.nonNull(subscribe)) {
+            this.publisher = subscribe.getPublisher();
+        } else if (Objects.nonNull(productDetail)) {
+            this.publisher = productDetail.getPublisher();
+        }
+    }
 }

@@ -24,7 +24,7 @@ public class RetrieveProductResponse {
     @NotNull
     private Long pointRate;
     @NotNull
-    private Boolean isSelling;
+    private Boolean selling;
     @NotNull
     private Boolean pointMethod;
     @NotNull
@@ -34,13 +34,16 @@ public class RetrieveProductResponse {
 
     private List<RetrieveAuthorResponse> authors;
 
+    @Setter
+    private Boolean recommend;
+
     public RetrieveProductResponse(Product product, ProductDetail productDetail,
                                    List<RetrieveAuthorResponse> authorsNo) {
         this.productId = product.getId();
         this.title = product.getTitle();
         this.price = product.getPrice();
         this.pointRate = product.getPointRate();
-        this.isSelling = product.isSelling();
+        this.selling = product.isSelling();
         this.pointMethod = product.isPointMethod();
         this.shortDescription = product.getShortDescription();
         this.publisher = productDetail.getPublisher();
@@ -52,7 +55,7 @@ public class RetrieveProductResponse {
         this.title = product.getTitle();
         this.price = product.getPrice();
         this.pointRate = product.getPointRate();
-        this.isSelling = product.isSelling();
+        this.selling = product.isSelling();
         this.pointMethod = product.isPointMethod();
         this.shortDescription = product.getShortDescription();
         this.publisher = subscribe.getPublisher();

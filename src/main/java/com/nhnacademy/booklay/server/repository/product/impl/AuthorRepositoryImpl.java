@@ -1,10 +1,11 @@
-package com.nhnacademy.booklay.server.repository.product;
+package com.nhnacademy.booklay.server.repository.product.impl;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.QAuthor;
 import com.nhnacademy.booklay.server.entity.QMember;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import java.util.List;

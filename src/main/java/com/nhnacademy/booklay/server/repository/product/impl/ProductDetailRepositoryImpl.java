@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.repository.product;
+package com.nhnacademy.booklay.server.repository.product.impl;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.entity.QAuthor;
 import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QProductAuthor;
 import com.nhnacademy.booklay.server.entity.QProductDetail;
+import com.nhnacademy.booklay.server.repository.product.ProductDetailRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import java.util.List;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;

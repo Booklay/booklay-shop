@@ -1,13 +1,16 @@
 package com.nhnacademy.booklay.server.controller.admin.product;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteProductRelationRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.request.DisAndConnectBookWithSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
+import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,7 @@ public class ProductAdminController {
 
     private final ProductService productService;
     private final BookSubscribeService bookSubscribeService;
+    private final ProductRelationService productRelationService;
 
     // 책 등록
     @PostMapping(value = "/books",
@@ -100,18 +104,41 @@ public class ProductAdminController {
         return new PageResponse<>(response);
     }
 
+    //상품과 구독 상품 연동
     @PostMapping("/subscribes/connect/{subscribeId}")
     public void booksAndSubscribeConnect(
         @RequestBody DisAndConnectBookWithSubscribeRequest request) {
         bookSubscribeService.bookSubscribeConnection(request);
     }
 
+    //상품과 구독 상품 연동 취소
     @DeleteMapping("/subscribes/connect/{subscribeId}")
     public void booksAndSubscribeDisconnect(
         @RequestBody DisAndConnectBookWithSubscribeRequest request) {
         bookSubscribeService.bookSubscribeDisconnection(request);
     }
 
+    //연관 상품 등록 위해 조회
+    @GetMapping("/recommend/{productNo}")
+    public PageResponse<RetrieveProductResponse> retrieveRecommendConnector(
+        @PathVariable Long productNo, Pageable pageable){
+        Page<RetrieveProductResponse> response = productRelationService.retrieveRecommendConnection(productNo, pageable);
+
+        return new PageResponse<>(response);
+    }
+
+    @PostMapping("/recommend")
+    public void createRecommend(@RequestBody CreateDeleteProductRelationRequest request){
+        productRelationService.createProductRelation(request);
+    }
+
+    @DeleteMapping("/recommend")
+    public void deleteRecommend(@RequestBody CreateDeleteProductRelationRequest request){
+        productRelationService.deleteProductRelation(request);
+    }
+
+
+    //소프트 딜리트
     @DeleteMapping("/{productId}")
     public void softDeleteProduct(@PathVariable Long productId) {
         productService.softDelete(productId);

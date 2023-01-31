@@ -82,12 +82,10 @@ public class StorageController {
      */
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<String> downloadFile(@PathVariable("fileId") final Long fileId)
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("fileId") final Long fileId)
         throws IOException {
-        String path = fileService.downloadFile(fileId);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(path);
+        return fileService.downloadFile(fileId);
     }
+
 }

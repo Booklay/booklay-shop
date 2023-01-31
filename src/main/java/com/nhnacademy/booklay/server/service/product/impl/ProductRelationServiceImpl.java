@@ -9,6 +9,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductRelationRepositor
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,8 @@ public class ProductRelationServiceImpl implements ProductRelationService {
 
   //productId를 통해서 연관 상품 목록 호출
   @Override
-  public List<RetrieveProductResponse> retrieveRecommendProducts(Long productId) {
+  public List<RetrieveProductResponse> retrieveRecommendProducts(Long productId)
+      throws IOException {
 
     if(productRelationRepository.existsAllByBaseProduct_Id(productId)) {
       List<Long> recommendProductIds = productRelationRepository.findRecommendIdsByBaseProductId(
@@ -42,7 +44,7 @@ public class ProductRelationServiceImpl implements ProductRelationService {
 
   @Override
   public Page<RetrieveProductResponse> retrieveRecommendConnection(Long productNo,
-      Pageable pageable) {
+      Pageable pageable) throws IOException {
 
     Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
 

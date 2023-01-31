@@ -227,6 +227,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void blockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
+
+        //TODO 3: 이미 차단된 회원은 다시 차단할 수 없음
+        if(member.getIsBlocked()) {
+            throw new IllegalArgumentException();
+        }
+
         member.setIsBlocked(true);
 
         BlockedMemberDetail blockedMemberDetail =

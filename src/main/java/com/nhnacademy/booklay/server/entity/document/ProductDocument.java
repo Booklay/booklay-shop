@@ -21,7 +21,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Document(indexName = "product")
+@Document(indexName = "booklay_product")
 @Setting(settingPath = "elastic/analyzer-setting.json")
 @Mapping(mappingPath = "elastic/product-mapping.json")
 public class ProductDocument {

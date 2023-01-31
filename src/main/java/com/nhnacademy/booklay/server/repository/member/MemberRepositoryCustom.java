@@ -13,4 +13,7 @@ public interface MemberRepositoryCustom {
     Optional<MemberLoginResponse> retrieveMemberByUserId(String userId);
 
     Page<MemberRetrieveResponse> retrieveAll(Pageable pageable);
+
+    Optional<MemberRetrieveResponse> retrieveMemberByEmail(String email);
+
 }

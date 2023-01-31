@@ -433,15 +433,6 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllById(productNoList);
     }
 
-    /**
-     * 상품 아이디 리스트를 받아서 페이지네이션.
-     */
-    @Override
-    public Page<RetrieveProductResponse> retrieveProductListByProductNoList(
-        List<Long> productNoList, Pageable pageable) {
-
-        return productRepository.findProductPageByIds(productNoList, pageable);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -477,5 +468,11 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+
+    @Override
+    public Page<RetrieveProductResponse> retrieveProductListByProductNoList(
+        List<Long> productNoList, Pageable pageable) {
+        return null;
+    }
 }
 

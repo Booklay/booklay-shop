@@ -26,7 +26,8 @@ public class BlockedMemberDetailRepositoryImpl extends QuerydslRepositorySupport
         List<BlockedMemberRetrieveResponse> content = from(blockedMemberDetail)
             .innerJoin(member)
             .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
-            .where(member.isBlocked.eq(true))
+            .where(member.isBlocked.eq(true).and(member.deletedAt.isNull()))
+            .orderBy(blockedMemberDetail.blockedAt.desc())
             .select(Projections.constructor(BlockedMemberRetrieveResponse.class,
                                             blockedMemberDetail.id,
                                             member.memberNo,
@@ -35,6 +36,37 @@ public class BlockedMemberDetailRepositoryImpl extends QuerydslRepositorySupport
                                             blockedMemberDetail.reason,
                                             blockedMemberDetail.blockedAt,
                                             blockedMemberDetail.releasedAt))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        JPQLQuery<Long> count = from(blockedMemberDetail)
+            .innerJoin(member)
+            .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
+            .select(blockedMemberDetail.count());
+
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+    }
+
+    @Override
+    public Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo,
+                                                                           Pageable pageable) {
+        QMember member = QMember.member;
+        QBlockedMemberDetail blockedMemberDetail = QBlockedMemberDetail.blockedMemberDetail;
+
+        List<BlockedMemberRetrieveResponse> content = from(blockedMemberDetail)
+            .innerJoin(member)
+            .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
+            .where(member.memberNo.eq(memberNo).and(member.deletedAt.isNull()))
+            .orderBy(blockedMemberDetail.blockedAt.desc())
+            .select(Projections.constructor(BlockedMemberRetrieveResponse.class,
+                blockedMemberDetail.id,
+                member.memberNo,
+                member.memberId,
+                member.name,
+                blockedMemberDetail.reason,
+                blockedMemberDetail.blockedAt,
+                blockedMemberDetail.releasedAt))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();

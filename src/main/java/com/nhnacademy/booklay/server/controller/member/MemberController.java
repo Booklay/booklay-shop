@@ -38,7 +38,7 @@ public class MemberController {
     private static final String AUTHORITY_NOT_FOUND_ERROR_CODE = "AuthorityNotFound";
     private static final String ADMIN_AND_AUTHOR_AUTHORITY_CANNOT_EXIST_TOGETHER_ERROR_CODE =
         "AdminAndAuthorAuthorityCannotExistTogether";
-    private static final String ALREADY_EXIST_AUTHORITY_ERROR_CODE = "MemberNotFound";
+    private static final String ALREADY_EXIST_AUTHORITY_ERROR_CODE = "AlreadyExistAuthority";
 
 
     private final MemberService memberService;

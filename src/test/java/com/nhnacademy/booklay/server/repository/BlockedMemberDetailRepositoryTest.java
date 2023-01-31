@@ -64,8 +64,8 @@ public class BlockedMemberDetailRepositoryTest {
     }
 
     @Test
-    @DisplayName("DeliveryDetail save test ")
-    void testDeliveryDetailSave() {
+    @DisplayName("DeliveryDetail save test")
+    void save_successTest() {
         //given
 
         //when
@@ -73,6 +73,83 @@ public class BlockedMemberDetailRepositoryTest {
 
         //then
         assertThat(expected.getReason()).isEqualTo(blockedMemberDetail.getReason());
+    }
+
+    @Test
+    @DisplayName("DeliveryDetail findById test")
+    void findById_successTest() {
+        //given
+        Member member = Dummy.getDummyMember();
+
+        ReflectionTestUtils.setField(member, "isBlocked", true);
+
+        memberRepository.save(member);
+        blockedMemberDetailRepository.save(blockedMemberDetail);
+
+        //when
+        BlockedMemberDetail expected = blockedMemberDetailRepository.findById(blockedMemberDetail.getId())
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        //then
+        assertThat(expected.getId()).isEqualTo(blockedMemberDetail.getId());
+    }
+
+    @Test
+    @DisplayName("DeliveryDetail findFirstByMember_MemberNoOrderByBlockedAtDesc success test ")
+    void findFirstByMember_MemberNoOrderByBlockedAtDesc_successTest() {
+        //given
+        Member member = Dummy.getDummyMember();
+
+        ReflectionTestUtils.setField(member, "isBlocked", true);
+
+        BlockedMemberDetail blockedMemberDetail1 = BlockedMemberDetail.builder()
+            .member(member)
+            .reason("test reason1")
+            .build();
+        BlockedMemberDetail blockedMemberDetail2 = BlockedMemberDetail.builder()
+            .member(member)
+            .reason("test reason2")
+            .build();
+
+        memberRepository.save(member);
+        blockedMemberDetailRepository.save(blockedMemberDetail1);
+        blockedMemberDetailRepository.save(blockedMemberDetail2);
+
+        //when
+        BlockedMemberDetail expected = blockedMemberDetailRepository.findFirstByMember_MemberNoOrderByBlockedAtDesc(member.getMemberNo())
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        //then
+        assertThat(expected.getReason()).isEqualTo(blockedMemberDetail2.getReason());
+    }
+
+    @Test
+    @DisplayName("DeliveryDetail findFirstByMember_MemberNoOrderByBlockedAtDesc fail test ")
+    void findFirstByMember_MemberNoOrderByBlockedAtDesc_failTest() {
+        //given
+        Member member = Dummy.getDummyMember();
+
+        ReflectionTestUtils.setField(member, "isBlocked", true);
+
+        BlockedMemberDetail blockedMemberDetail1 = BlockedMemberDetail.builder()
+            .member(member)
+            .reason("test reason1")
+            .build();
+        BlockedMemberDetail blockedMemberDetail2 = BlockedMemberDetail.builder()
+            .member(member)
+            .reason("test reason2")
+            .build();
+
+        memberRepository.save(member);
+        blockedMemberDetailRepository.save(blockedMemberDetail1);
+        blockedMemberDetailRepository.save(blockedMemberDetail2);
+
+        //when
+        BlockedMemberDetail expected = blockedMemberDetailRepository.findFirstByMember_MemberNoOrderByBlockedAtDesc(member.getMemberNo())
+            .orElseThrow(() -> new IllegalArgumentException());
+
+        //then
+        assertThat(expected.getReason()).isNotEqualTo(blockedMemberDetail1.getReason());
     }
 
     @Test
@@ -109,8 +186,6 @@ public class BlockedMemberDetailRepositoryTest {
             .member(member4)
             .reason("test reason4")
             .build();
-
-//        entityManager.persist(member1.getGender());
 
         memberRepository.save(member1);
         memberRepository.save(member2);

@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.member;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
@@ -15,8 +16,11 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
 import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
+import com.nhnacademy.booklay.server.exception.member.BlockedMemberDetailNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
@@ -27,6 +31,7 @@ import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -105,11 +110,42 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo,
+                                                                           Pageable pageable) {
+        getMemberService.getMemberNo(memberNo);
+
+        return blockedMemberDetailRepository.retrieveBlockedMemberDetail(memberNo, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
+        return memberRepository.retrieveDroppedMembers(pageable);
+    }
+
+    @Override
+    public void blockMemberCancel(Long blockedMemberDetailId) {
+        BlockedMemberDetail blockedMemberDetail =
+            blockedMemberDetailRepository.findById(blockedMemberDetailId)
+                .orElseThrow(() -> new BlockedMemberDetailNotFoundException(blockedMemberDetailId));
+
+        if (blockedMemberDetail.getReleasedAt() != null) {
+            throw new AlreadyUnblockedMemberException(blockedMemberDetail.getMember());
+        }
+
+        blockedMemberDetail.getMember().setIsBlocked(false);
+
+        blockedMemberDetail.setReleasedAt(LocalDateTime.now());
+    }
+
+
+    @Override
     public void updateMember(Long memberNo, MemberUpdateRequest updateDto) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        Gender gender = genderRepository.findByName(updateDto.getName()).orElseThrow(
-            () -> new GenderNotFoundException(updateDto.getName()));
+        Gender gender = genderRepository.findByName(updateDto.getGender()).orElseThrow(
+            () -> new GenderNotFoundException(updateDto.getGender()));
 
         member.updateMember(updateDto, gender);
 
@@ -205,6 +241,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void blockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
+
+        if(member.getIsBlocked()) {
+            throw new AlreadyBlockedMemberException(member);
+        }
+
         member.setIsBlocked(true);
 
         BlockedMemberDetail blockedMemberDetail =

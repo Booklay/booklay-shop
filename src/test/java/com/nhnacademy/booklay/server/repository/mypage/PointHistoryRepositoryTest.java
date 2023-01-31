@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveRespon
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -96,9 +97,11 @@ class PointHistoryRepositoryTest {
         pointHistoryRepository.save(pointHistory);
 
         //when
-        TotalPointRetrieveResponse expected = pointHistoryRepository.retrieveLatestPointHistory(
-                pointHistory.getMember().getMemberNo())
-            .orElseThrow(() -> new IllegalArgumentException());
+        Optional<TotalPointRetrieveResponse> totalPointRetrieveResponse =
+            pointHistoryRepository.retrieveLatestPointHistory(
+                pointHistory.getMember().getMemberNo());
+
+        TotalPointRetrieveResponse expected = totalPointRetrieveResponse.get();
 
         //then
         assertThat(expected.getTotalPoint()).isEqualTo(pointHistory.getTotalPoint());

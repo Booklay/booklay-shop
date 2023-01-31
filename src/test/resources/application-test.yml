@@ -46,3 +46,6 @@ booklay:
     host: 127.0.0.1
     password:
     database: 0
+
+  elasticsearch:
+    uri: 133.186.210.108:9200

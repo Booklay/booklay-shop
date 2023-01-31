@@ -20,7 +20,7 @@ public class RetrieveProductSubscribeResponse {
     @NotNull
     private String title;
     @Setter
-    private MultipartFile image;
+    private Long objectFileId;
     @NotNull
     private Long price;
     @NotNull
@@ -54,14 +54,14 @@ public class RetrieveProductSubscribeResponse {
     @Setter
     private List<Long> childProducts;
 
-    public RetrieveProductSubscribeResponse(Long productId, String title, MultipartFile image,
+    public RetrieveProductSubscribeResponse(Long productId, String title, Long objectFileId,
         Long price, Long pointRate, String shortDescription, String longDescription,
         Boolean isSelling,
         Boolean pointMethod, LocalDateTime createdAt, List<Long> categoryIds, Long subscribeId,
         Integer subscribeWeek, Integer subscribeDay) {
         this.productId = productId;
         this.title = title;
-        this.image = image;
+        this.objectFileId = objectFileId;
         this.price = price;
         this.pointRate = pointRate;
         this.shortDescription = shortDescription;

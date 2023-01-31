@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewRes
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class ProductController {
 
     @GetMapping
     public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
-        throws JsonProcessingException {
+        throws IOException {
         Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
         return new PageResponse<>(response);
     }
@@ -44,12 +45,14 @@ public class ProductController {
     }
 
     @GetMapping("/view/subscribe/{subscribeId}")
-    public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId) {
+    public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
+        throws IOException {
         return bookSubscribeService.retrieveBookSubscribe(subscribeId);
     }
 
     @GetMapping("/recommend/{productId}")
-    public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId){
+    public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
+        throws IOException {
         return productRelationService.retrieveRecommendProducts(productId);
     }
 }

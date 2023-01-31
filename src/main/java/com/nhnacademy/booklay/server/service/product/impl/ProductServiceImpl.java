@@ -321,7 +321,7 @@ public class ProductServiceImpl implements ProductService {
   // 상품(책 구독 모두) 게시판식 조회
   @Override
   @Transactional(readOnly = true)
-  public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) {
+  public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException {
     Page<Product> products = productRepository.findAllBy(pageable, Product.class);
 
     List<Product> productsContent = products.getContent();
@@ -396,7 +396,8 @@ public class ProductServiceImpl implements ProductService {
   //자주 쓰는 retrieveProductResponse 를 조립해주는 메소드
   @Override
   @Transactional(readOnly = true)
-  public List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds) {
+  public List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds)
+      throws IOException {
     List<RetrieveProductResponse> resultList = new ArrayList<>();
 
     for (int i = 0; i < productIds.size(); i++) {

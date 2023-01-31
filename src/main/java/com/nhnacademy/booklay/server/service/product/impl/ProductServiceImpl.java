@@ -326,41 +326,13 @@ public class ProductServiceImpl implements ProductService {
 
     List<Product> productsContent = products.getContent();
 
-    List<RetrieveProductResponse> assembledContent = new ArrayList<>();
+    List<Long> productIds = new ArrayList<>();
 
-    for (int i = 0; i < productsContent.size(); i++) {
-      Product product = productsContent.get(i);
-
-      // TODO : query dsl 이용해서 뽑아오는 방식을 통해서 depth 줄일것
-      if (!product.isDeleted()) {
-        // 책 상품이라면
-        if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-          ProductDetail productDetail =
-              productDetailRepository.findProductDetailByProductId(
-                  product.getId());
-
-          // 작가 정보 DTO
-          List<RetrieveAuthorResponse> authors =
-              productDetailRepository.findAuthorsByProductDetailId(
-                  productDetail.getId());
-
-          // 합체
-          RetrieveProductResponse element =
-              new RetrieveProductResponse(product, productDetail,
-                  authors);
-          // 컨텐츠에 주입
-          assembledContent.add(element);
-        }
-
-        // 구독 상품 이라면
-        if (subscribeRepository.existsSubscribeByProduct(product)) {
-          Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-          RetrieveProductResponse element =
-              new RetrieveProductResponse(product, subscribe);
-          assembledContent.add(element);
-        }
-      }
+    for (Product product : productsContent) {
+      productIds.add(product.getId());
     }
+
+    List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
 
     return new PageImpl<>(assembledContent, products.getPageable(),
         products.getTotalElements());
@@ -421,54 +393,59 @@ public class ProductServiceImpl implements ProductService {
         thisPage.getTotalElements());
   }
 
+  //자주 쓰는 retrieveProductResponse 를 조립해주는 메소드
   @Override
   @Transactional(readOnly = true)
-  public List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products) {
-    List<RetrieveProductResponse> result = new ArrayList<>();
-    for (int i = 0; i < products.size(); i++) {
-      Product product = productRepository.findById(products.get(i))
-          .orElseThrow(
-              () -> new NotFoundException(Product.class,
-                  "product not found"));
+  public List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds) {
+    List<RetrieveProductResponse> resultList = new ArrayList<>();
+
+    for (int i = 0; i < productIds.size(); i++) {
+      Product product = productRepository.findById(productIds.get(i))
+          .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
       // TODO : query dsl 이용해서 뽑아오는 방식을 통해서 depth 줄일것
-      if (!product.isDeleted() && productDetailRepository.existsProductDetailByProductId(
-          product.getId())) {
-        ProductDetail productDetail =
-            productDetailRepository.findProductDetailByProductId(
-                product.getId());
+      if (!product.isDeleted()) {
+        // 책 상품이라면
+        if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
+          ProductDetail productDetail =
+              productDetailRepository.findProductDetailByProductId(
+                  product.getId());
 
-        // 작가 정보 DTO
-        List<RetrieveAuthorResponse> authors =
-            productDetailRepository.findAuthorsByProductDetailId(
-                productDetail.getId());
+          // 작가 정보 DTO
+          List<RetrieveAuthorResponse> authors =
+              productDetailRepository.findAuthorsByProductDetailId(
+                  productDetail.getId());
 
-        // 합체
-        RetrieveProductResponse element =
-            new RetrieveProductResponse(product, productDetail,
-                authors);
-        // 컨텐츠에 주입
-        result.add(element);
+          // 합체
+          RetrieveProductResponse element =
+              new RetrieveProductResponse(product, productDetail,
+                  authors);
+          // 컨텐츠에 주입
+          resultList.add(element);
+        }
 
+        // 구독 상품 이라면
+        if (subscribeRepository.existsSubscribeByProduct(product)) {
+          Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+          RetrieveProductResponse element =
+              new RetrieveProductResponse(product, subscribe);
+          resultList.add(element);
+        }
       }
     }
-    return result;
+    return resultList;
   }
 
+
   @Override
-  public List<RetrieveProductResponse> retrieveRecommendProducts(Long productId) {
+  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
     return null;
   }
 
+  @Override
+  public Product retrieveProductByProductNo(Long productNo) {
+    return null;
+  }
 
-    @Override
-    public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
-        return null;
-    }
-
-    @Override
-    public Product retrieveProductByProductNo(Long productNo) {
-        return null;
-    }
 }
 

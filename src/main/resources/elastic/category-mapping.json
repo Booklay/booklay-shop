@@ -1,0 +1,31 @@
+{
+    "properties": {
+      "id": {
+        "type": "long",
+        "copy_to" : ["keywordId"]
+      },
+
+      "name": {
+          "type": "text",
+          "copy_to" : ["keywordText"],
+          "analyzer" : "booklay_analyzer"
+      },
+      "parentCategoryId": {
+        "type": "long",
+        "copy_to" : ["keywordId"]
+      },
+      "depth": {
+        "type": "long"
+      },
+      "isExposure": {
+        "type": "boolean"
+      },
+      "keywordText": {
+        "type": "text",
+        "analyzer" : "booklay_analyzer"
+      },
+      "keywordId":{
+        "type": "long"
+      }
+    }
+}

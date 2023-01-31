@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.member;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
@@ -45,4 +46,6 @@ public interface MemberService {
     void blockMemberCancel(Long blockedMemberDetailId);
 
     Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo, Pageable pageable);
+
+    Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable);
 }

@@ -26,7 +26,7 @@ public class BlockedMemberDetailRepositoryImpl extends QuerydslRepositorySupport
         List<BlockedMemberRetrieveResponse> content = from(blockedMemberDetail)
             .innerJoin(member)
             .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
-            .where(member.isBlocked.eq(true))
+            .where(member.isBlocked.eq(true).and(member.deletedAt.isNull()))
             .orderBy(blockedMemberDetail.blockedAt.desc())
             .select(Projections.constructor(BlockedMemberRetrieveResponse.class,
                                             blockedMemberDetail.id,
@@ -57,7 +57,7 @@ public class BlockedMemberDetailRepositoryImpl extends QuerydslRepositorySupport
         List<BlockedMemberRetrieveResponse> content = from(blockedMemberDetail)
             .innerJoin(member)
             .on(member.memberNo.eq(blockedMemberDetail.member.memberNo))
-            .where(member.memberNo.eq(memberNo))
+            .where(member.memberNo.eq(memberNo).and(member.deletedAt.isNull()))
             .orderBy(blockedMemberDetail.blockedAt.desc())
             .select(Projections.constructor(BlockedMemberRetrieveResponse.class,
                 blockedMemberDetail.id,

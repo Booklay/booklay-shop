@@ -26,7 +26,7 @@ public class DeliveryDestinationRepositoryImpl extends QuerydslRepositorySupport
         return from(deliveryDestination)
             .innerJoin(member).on(deliveryDestination.member.memberNo.eq(member.memberNo))
             .innerJoin(gender).on(member.gender.id.eq(gender.id))
-            .where(deliveryDestination.member.memberNo.eq(memberNo))
+            .where(deliveryDestination.member.memberNo.eq(memberNo).and(member.deletedAt.isNull()))
             .select(Projections.constructor(DeliveryDestinationRetrieveResponse.class,
                                             deliveryDestination.id,
                                             member.memberNo,

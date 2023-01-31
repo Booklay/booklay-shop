@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.controller.storage;
 
 import com.nhnacademy.booklay.server.dto.stroage.request.FileResolveRequest;
+import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.service.storage.FileService;
 import java.io.IOException;
 import java.util.Arrays;
@@ -38,39 +39,13 @@ public class StorageController {
      */
 
     @PostMapping
-    public ResponseEntity<Void> uploadFile(@RequestPart final MultipartFile file)
+    public ResponseEntity<ObjectFile> uploadFile(@RequestPart final MultipartFile file)
         throws IOException {
+        ObjectFile objectFile = fileService.uploadFile(file);
 
-        Optional<String> contentType =
-            Arrays.stream(Objects.requireNonNull(file.getContentType()).split("/")).findFirst();
-
-        Optional<String> originalFilename = Optional.ofNullable(file.getOriginalFilename());
-        Optional<String> fileExtension = Optional.empty();
-
-        if (originalFilename.isPresent()) {
-            fileExtension = originalFilename.filter(f -> f.contains("."))
-                                            .map(f -> f.substring(
-                                                originalFilename.get().lastIndexOf(".") + 1));
-        }
-
-        if (contentType.isPresent() && fileExtension.isPresent()) {
-            FileResolveRequest fileResolveRequest = FileResolveRequest.builder()
-                                                                      .fileExtension(
-                                                                          fileExtension.get())
-                                                                      .fileType(contentType.get())
-                                                                      .build();
-
-            fileService.uploadFileResolve(file, fileResolveRequest);
-
-            return ResponseEntity.status(HttpStatus.CREATED)
-                                 .contentType(MediaType.APPLICATION_JSON)
-                                 .build();
-
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(objectFile);
     }
 
     /**

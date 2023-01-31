@@ -36,7 +36,8 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .select(Projections.constructor(MemberLoginResponse.class,
                                             member.memberId,
                                             member.password,
-                                            authority.name))
+                                            authority.name,
+                                            member.email))
             .fetchOne();
 
         return Optional.ofNullable(memberLoginResponse);
@@ -67,6 +68,28 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         JPQLQuery<Long> count = from(member)
             .select(member.count());
         return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+    }
+
+    @Override
+    public Optional<MemberRetrieveResponse> retrieveMemberByEmail(String email) {
+        QMember member = QMember.member;
+
+        return Optional.ofNullable(from(member)
+                                       .select(Projections.constructor(MemberRetrieveResponse.class,
+                                                                       member.memberNo,
+                                                                       member.gender.name,
+                                                                       member.memberId,
+                                                                       member.nickname,
+                                                                       member.name,
+                                                                       member.birthday,
+                                                                       member.phoneNo,
+                                                                       member.email,
+                                                                       member.createdAt,
+                                                                       member.updatedAt,
+                                                                       member.deletedAt,
+                                                                       member.isBlocked))
+                                       .where(member.email.eq(email))
+                                       .fetchOne());
     }
 
 }

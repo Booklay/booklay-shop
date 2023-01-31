@@ -63,6 +63,6 @@ public class BookSubscribeServiceImpl implements BookSubscribeService {
         List<Long> productIds =
             bookSubscribeRepository.findBooksProductIdBySubscribeId(subscribeId);
 
-        return productService.retrieveBooksSubscribed(productIds);
+        return productService.retrieveProductResponses(productIds);
     }
 }

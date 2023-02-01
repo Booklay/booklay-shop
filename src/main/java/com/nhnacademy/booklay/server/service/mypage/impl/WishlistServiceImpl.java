@@ -46,7 +46,6 @@ public class WishlistServiceImpl implements WishlistService {
         wishlistPkValidation(request);
         Wishlist.Pk pk = new Pk(request.getMemberNo(), request.getProductId());
 
-        // 없는걸 지우려고하면 안되니까...
         if (!wishlistRepository.existsById(pk)) {
             throw new NotFoundException(Wishlist.Pk.class, "wishlist not found");
         }

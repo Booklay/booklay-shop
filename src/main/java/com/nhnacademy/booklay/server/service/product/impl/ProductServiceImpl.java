@@ -452,17 +452,14 @@ public class ProductServiceImpl implements ProductService {
     return productRepository.findProductPageByIds(productNoList, pageable);
   }
 
-
+  @Override
+  public Product retrieveProductByProductNo(Long productNo) {
+    return productRepository.findById(productNo).orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
+  }
 
   @Override
   public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
-    return null;
-  }
-
-
-  @Override
-  public Product retrieveProductByProductNo(Long productNo) {
-    return null;
+    return productRepository.findAllById(productNoList);
   }
 
 }

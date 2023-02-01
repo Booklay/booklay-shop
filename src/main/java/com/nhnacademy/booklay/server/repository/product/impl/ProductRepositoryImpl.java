@@ -1,5 +1,7 @@
 package com.nhnacademy.booklay.server.repository.product.impl;
 
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;

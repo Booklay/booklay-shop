@@ -114,12 +114,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductBookResponse retrieveBookData(Long id) {
-    RetrieveProductBookResponse response = productRepository.findProductBookDataByProductId(id);
-    response.setAuthorIds(
-        productDetailRepository.findAuthorIdsByProductDetailId(response.getProductDetailId()));
-    response.setCategoryIds(
-        productRepository.findCategoryIdsByProductId(response.getProductId()));
-    return response;
+    return productRepository.retrieveProductBookResponse(id);
   }
 
   // 책 상품 수정
@@ -178,13 +173,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    RetrieveProductSubscribeResponse response =
-        productRepository.findProductSubscribeDataByProductId(
-            id);
-    response.setCategoryIds(
-        productRepository.findCategoryIdsByProductId(response.getProductId()));
-
-    return response;
+    return productRepository.retrieveProductSubscribeResponseById(id);
   }
 
   // 구독 상품 수정
@@ -466,8 +455,9 @@ public class ProductServiceImpl implements ProductService {
   public Page<RetrieveProductResponse> retrieveProductListByProductNoList(
       List<Long> productNoList, Pageable pageable) {
 
-    return productRepository.findProductPageByIds(productNoList, pageable);
+    return productRepository.retrieveProductPageByIds(productNoList, pageable);
   }
+
 
   @Override
   public Product retrieveProductByProductNo(Long productNo) {

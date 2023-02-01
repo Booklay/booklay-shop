@@ -9,8 +9,5 @@ import lombok.NoArgsConstructor;
 public class SearchRequest {
 
     @NotBlank
-    String searchType;
-
-    @NotBlank
     String keywords;
 }

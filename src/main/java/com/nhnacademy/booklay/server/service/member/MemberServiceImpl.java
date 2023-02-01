@@ -26,6 +26,7 @@ import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedExcept
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
+import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
 import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
@@ -54,6 +55,7 @@ public class MemberServiceImpl implements MemberService {
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
     private final BlockedMemberDetailRepository blockedMemberDetailRepository;
+    private final DeliveryDestinationRepository deliveryDestinationRepository;
 
     private final GetMemberService getMemberService;
 
@@ -155,6 +157,7 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMember(Long memberNo) {
         Member member = getMemberService.getMemberNo(memberNo);
         member.deleteMember();
+        deliveryDestinationRepository.deleteAllByMember_MemberNo(memberNo);
     }
 
     /**

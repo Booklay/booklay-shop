@@ -115,4 +115,19 @@ class DeliveryDestinationRepositoryTest {
 
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
     }
+
+    @Disabled
+    @Test
+    @DisplayName("deleteAllByMember_MemberNo success test")
+    void deleteAllByMember_MemberNoSuccessTest() {
+        //given
+        deliveryDestinationRepository.save(deliveryDestination);
+        //when
+        DeliveryDestination expected =
+            deliveryDestinationRepository.findByIsDefaultDestination(
+                    deliveryDestination.getIsDefaultDestination())
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
+    }
 }

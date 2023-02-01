@@ -58,9 +58,6 @@ public class ProductDetail {
     @Column
     private Integer storage;
 
-    @OneToMany(mappedBy = "productDetail")
-    private List<ProductAuthor> productAuthors;
-
 
     @Builder
     public ProductDetail(Product product, String isbn, Integer page, String publisher,

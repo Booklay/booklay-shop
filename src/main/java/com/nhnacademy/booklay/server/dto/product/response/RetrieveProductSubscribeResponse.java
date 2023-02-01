@@ -7,13 +7,11 @@ import com.nhnacademy.booklay.server.entity.Subscribe;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
@@ -42,10 +40,10 @@ public class RetrieveProductSubscribeResponse {
 
     @NotNull
     @Setter
-    private List<CategoryResponse> categoryResponseList;
+    private List<CategoryResponse> categoryList;
 
     @Setter
-    private List<RetrieveTagResponse> tagResponseList;
+    private List<RetrieveTagResponse> tagList;
 
     @NotNull
     private Long subscribeId;

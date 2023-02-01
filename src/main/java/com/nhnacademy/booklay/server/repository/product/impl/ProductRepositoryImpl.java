@@ -149,7 +149,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
-    public Page<RetrieveProductResponse> findProductPageByIds(List<Long> ids, Pageable pageable) {
+    public Page<RetrieveProductResponse> retrieveProductPageByIds(List<Long> ids, Pageable pageable) {
 
         QProduct product = QProduct.product;
 
@@ -219,8 +219,8 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
                 .select(Projections.constructor(RetrieveProductSubscribeResponse.class, product, subscribe))
                 .fetchOne();
 
-        productResponse.setCategoryResponseList(categories);
-        productResponse.setTagResponseList(tags);
+        productResponse.setCategoryList(categories);
+        productResponse.setTagList(tags);
 
         return productResponse;
     }
@@ -231,14 +231,13 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
 
         QProductDetail productDetail = QProductDetail.productDetail;
 
-        List<RetrieveAuthorResponse>
-            authors = getAuthorResponsesByProductId(id, productDetail);
-
         List<CategoryResponse> categories =
             getCategoryResponseListByProductId(id);
 
         List<RetrieveTagResponse> tags =
             getTagResponsesByProductId(id, product);
+
+        List<RetrieveAuthorResponse> authors = getAuthorResponsesByProductId(id, productDetail);
 
         RetrieveProductBookResponse productResponse =
             from(product)
@@ -247,9 +246,9 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
                 .select(Projections.constructor(RetrieveProductBookResponse.class, product, productDetail))
                 .fetchOne();
 
-        productResponse.setCategoryResponseList(categories);
-        productResponse.setTagResponseList(tags);
-        productResponse.setAuthorResponses(authors);
+        productResponse.setCategoryList(categories);
+        productResponse.setTagList(tags);
+        productResponse.setAuthorList(authors);
 
         return productResponse;
     }
@@ -260,11 +259,11 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
         QMember member = QMember.member;
 
         return from(author)
-            .leftJoin(productAuthor).on(productAuthor.productDetail.id.eq(productDetail.id))
-            .leftJoin(member).on(member.memberNo.eq(author.member.memberNo))
+            .leftJoin(member).on(author.member.memberNo.eq(member.memberNo))
+            .leftJoin(productAuthor).on(author.authorId.eq(productAuthor.author.authorId))
+            .leftJoin(productDetail).on(productAuthor.productDetail.id.eq(productDetail.id))
             .where(productDetail.product.id.eq(id))
-            .select(Projections.constructor(RetrieveAuthorResponse.class, author.authorId, author.name,
-                member))
+            .select(Projections.constructor(RetrieveAuthorResponse.class, author, member))
             .fetch();
     }
 
@@ -272,8 +271,9 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
         QProductTag productTag = QProductTag.productTag;
         QTag tag = QTag.tag;
 
-        return from(tag)
+        return from(product)
             .leftJoin(productTag).on(product.id.eq(productTag.product.id))
+            .leftJoin(tag).on(productTag.tag.id.eq(tag.id))
             .where(productTag.product.id.eq(id))
             .select(Projections.constructor(RetrieveTagResponse.class, tag))
             .fetch();

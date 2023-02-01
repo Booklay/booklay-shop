@@ -32,8 +32,8 @@ public class RetrieveProductResponse {
   @NotNull
   private String publisher;
 
-    @Setter
-    private List<RetrieveAuthorResponse> authors;
+  @Setter
+  private List<RetrieveAuthorResponse> authors;
 
   @Setter
   private Boolean recommend;

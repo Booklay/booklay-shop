@@ -22,7 +22,7 @@ public interface ProductRepositoryCustom {
 
     List<String> findAuthorNameByProductId(Long productId);
 
-    Page<RetrieveProductResponse> findProductPageByIds(List<Long> ids, Pageable pageable);
+    Page<RetrieveProductResponse> retrieveProductPageByIds(List<Long> ids, Pageable pageable);
 
     RetrieveProductSubscribeResponse retrieveProductSubscribeResponseById(Long id);
 

@@ -88,8 +88,6 @@ public class MemberController {
 
     @DeleteMapping("/{memberNo}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long memberNo) {
-
-        //TODO: 회원 삭제 시 개인정보, 연관정보 삭제
         memberService.deleteMember(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
                              .build();

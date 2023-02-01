@@ -104,6 +104,7 @@ public class Member {
 
     public void deleteMember() {
         this.deletedAt = LocalDateTime.now();
+        this.password = "deleted";
         this.email = "deleted";
         this.name = "deleted";
         this.nickname = "deleted";

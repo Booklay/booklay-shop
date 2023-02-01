@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
+import com.nhnacademy.booklay.server.service.mypage.impl.PointHistoryServiceImpl;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

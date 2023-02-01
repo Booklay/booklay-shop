@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.controller.search;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.search.request.SearchRequest;
 import com.nhnacademy.booklay.server.service.product.ProductService;
@@ -58,13 +59,7 @@ public class SearchController {
 
         List<Long> ids = new ArrayList<>();
 
-        if (searchRequest.getSearchType().equals("category")){
-            ids = searchService.retrieveProductsIdsByCategory(searchRequest.getKeywords());
-        }else if (searchRequest.getSearchType().equals("keywords")){
-            ids = searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
-        }else if (searchRequest.getSearchType().equals("tags")){
-            ids = searchService.retrieveProductsIdsByTags(searchRequest.getKeywords());
-        }
+        ids = searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
 
         return ids;
     }

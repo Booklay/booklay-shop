@@ -235,9 +235,11 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
 
         list.forEach(response -> response.setAuthors(listMap.get(response.getProductId())));
 
+        JPQLQuery<Long> count = from(product)
+            .innerJoin(productDetail)
+            .on(product.id.eq(productDetail.product.id))
+            .select(product.count());
 
-
-
-        return new PageImpl<>(list,pageable, 1L);
+        return PageableExecutionUtils.getPage(list, pageable, count::fetchFirst);
     }
 }

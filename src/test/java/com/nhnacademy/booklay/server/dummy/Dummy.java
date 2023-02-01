@@ -295,7 +295,7 @@ public class Dummy {
     }
 
     public static DeliveryDestinationCURequest getDummyDeliveryDestinationCreateRequest() {
-        return new DeliveryDestinationCURequest("집", "12345", "서울특별시 송파구 올림픽로 240", true);
+        return new DeliveryDestinationCURequest("집", "12345", "서울특별시 송파구 올림픽로 240", "", "", true);
     }
 
     public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {

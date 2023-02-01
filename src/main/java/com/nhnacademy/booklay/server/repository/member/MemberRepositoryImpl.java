@@ -92,7 +92,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
                 member.isBlocked))
             .where(member.email.eq(email))
             .fetchOne());
-
     }
 
     public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
@@ -112,5 +111,4 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
 
         return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
     }
-
 }

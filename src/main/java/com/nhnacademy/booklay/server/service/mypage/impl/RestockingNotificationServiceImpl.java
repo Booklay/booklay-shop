@@ -46,7 +46,6 @@ public class RestockingNotificationServiceImpl implements RestockingNotification
     RestockingNotification.Pk pk = new RestockingNotification.Pk(request.getMemberNo(),
         request.getProductId());
 
-    // 없는걸 지우려고하면 안되니까...
     if (!restockingNotificationRepository.existsById(pk)) {
       throw new NotFoundException(RestockingNotification.Pk.class, "RestockingNotification not found");
     }

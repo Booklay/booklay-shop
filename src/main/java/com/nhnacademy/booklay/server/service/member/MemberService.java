@@ -39,7 +39,7 @@ public interface MemberService {
 
     Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo, Pageable pageable);
 
-    void blockMember(Long memberNo, MemberBlockRequest request);
+    void createBlockMember(Long memberNo, MemberBlockRequest request);
 
     Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable);
 

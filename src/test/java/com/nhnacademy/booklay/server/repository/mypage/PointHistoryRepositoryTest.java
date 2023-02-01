@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -72,7 +73,7 @@ class PointHistoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("PointHistoryRepository retrievePointHistoryByMemberNo 성공 테스트")
+    @DisplayName("retrievePointHistoryByMemberNo 성공 테스트")
     void retrievePointHistoryByMemberNo_successTest() {
         //given
         pointHistoryRepository.save(pointHistory);
@@ -91,7 +92,7 @@ class PointHistoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("PointHistoryRepository retrieveLatestPointHistory 성공 테스트")
+    @DisplayName("retrieveLatestPointHistory 성공 테스트")
     void retrieveLatestPointHistory_successTest() {
         //given
         pointHistoryRepository.save(pointHistory);
@@ -105,5 +106,33 @@ class PointHistoryRepositoryTest {
 
         //then
         assertThat(expected.getTotalPoint()).isEqualTo(pointHistory.getTotalPoint());
+    }
+
+    @Test
+    @DisplayName("deleteAllByMember_MemberNo success test")
+    void deleteAllByMember_MemberNoSuccessTest() {
+        //given
+        PointHistory point1 = pointHistory;
+        PointHistory point2 = pointHistory;
+        PointHistory point3 = pointHistory;
+        PointHistory point4 = pointHistory;
+
+        ReflectionTestUtils.setField(point1, "id", 1L);
+        ReflectionTestUtils.setField(point2, "id", 2L);
+        ReflectionTestUtils.setField(point3, "id", 3L);
+        ReflectionTestUtils.setField(point4, "id", 4L);
+
+        pointHistoryRepository.save(point1);
+        pointHistoryRepository.save(point2);
+        pointHistoryRepository.save(point3);
+        pointHistoryRepository.save(point4);
+
+        //when
+        pointHistoryRepository.deleteAllByMember_MemberNo(point1.getMember().getMemberNo());
+        Page<PointHistoryRetrieveResponse> response =
+            pointHistoryRepository.retrievePointHistoryByMemberNo(point1.getMember().getMemberNo(),
+                PageRequest.of(0, 1));
+
+        assertThat(response.getContent().size()).isZero();
     }
 }

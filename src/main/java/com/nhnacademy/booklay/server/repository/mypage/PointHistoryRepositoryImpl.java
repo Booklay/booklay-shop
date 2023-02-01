@@ -46,6 +46,7 @@ public class PointHistoryRepositoryImpl extends QuerydslRepositorySupport
         List<PointHistoryRetrieveResponse> content = from(pointHistory)
             .innerJoin(member).on(pointHistory.member.memberNo.eq(member.memberNo))
             .where(pointHistory.member.memberNo.eq(memberNo).and(member.deletedAt.isNull()))
+            .orderBy(pointHistory.updatedAt.desc())
             .select(Projections.constructor(PointHistoryRetrieveResponse.class,
                                             pointHistory.id,
                                             pointHistory.member.memberNo,

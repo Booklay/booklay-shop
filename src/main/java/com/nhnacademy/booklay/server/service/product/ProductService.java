@@ -19,31 +19,33 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-    Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception;
+  Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception;
 
-    Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
+  Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
 
-    Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception;
+  Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception;
 
-    Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
+  Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
 
-    RetrieveProductBookResponse retrieveBookData(Long id);
+  RetrieveProductBookResponse retrieveBookData(Long id);
 
-    RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
+  RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
 
-    Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException;
+  Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException;
 
-    RetrieveProductViewResponse retrieveProductView(Long productId);
+  RetrieveProductViewResponse retrieveProductView(Long productId);
 
-    List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
+  List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 
-    Product retrieveProductByProductNo(Long productNo);
+  Product retrieveProductByProductNo(Long productNo);
 
-    Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
-                                                                        Long subscribeId);
+  Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
+      Long subscribeId);
 
-    void softDelete(Long productId);
+  void softDelete(Long productId);
 
-    List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds)
-        throws IOException;
+  List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds)
+      throws IOException;
+
+  Page<RetrieveProductResponse> retrieveAdminProductPage(Pageable pageable) throws IOException;
 }

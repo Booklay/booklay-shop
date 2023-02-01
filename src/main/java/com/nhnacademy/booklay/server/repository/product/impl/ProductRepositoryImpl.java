@@ -135,4 +135,20 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
             .select(author.name)
             .fetch();
     }
+
+    @Override
+    public Page<Product> findNotDeletedByPageable(Pageable pageable){
+        QProduct product = QProduct.product;
+
+        List<Product> productList = from(product)
+            .where(product.isDeleted.eq(false))
+            .select(product)
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        JPQLQuery<Long> count = from(product)
+            .select(product.count());
+        return PageableExecutionUtils.getPage(productList, pageable, count::fetchFirst);
+    }
 }

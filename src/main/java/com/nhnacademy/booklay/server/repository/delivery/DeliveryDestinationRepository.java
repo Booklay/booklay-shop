@@ -9,4 +9,5 @@ public interface DeliveryDestinationRepository
     Optional<DeliveryDestination> findByIsDefaultDestination(Boolean isDefaultDestination);
 
     int countByMember_MemberNo(Long memberNo);
+    void deleteAllByMember_MemberNo(Long memberNo);
 }

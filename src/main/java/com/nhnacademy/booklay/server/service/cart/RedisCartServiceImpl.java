@@ -57,7 +57,7 @@ public class RedisCartServiceImpl implements RedisCartService {
     @Override
     public void deleteCartItems(String key, List<Long> productNoList) {
         redisTemplate.opsForHash().delete(key,
-                                          productNoList.stream().map(aLong -> aLong.toString())
+                                          productNoList.stream().map(Object::toString)
                                                        .collect(Collectors.toList()));
         createUsedInRedis(key);
     }

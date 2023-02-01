@@ -51,8 +51,7 @@ public class RestockingNotification {
     }
 
     @Builder
-    public RestockingNotification(Member member, Product product) {
-        this.member = member;
-        this.product = product;
+    public RestockingNotification(Pk pk) {
+        this.pk = pk;
     }
 }

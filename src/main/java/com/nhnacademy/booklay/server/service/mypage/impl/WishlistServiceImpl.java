@@ -1,6 +1,6 @@
-package com.nhnacademy.booklay.server.service.product.impl;
+package com.nhnacademy.booklay.server.service.mypage.impl;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateWishlistRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteWishlistAndAlarmRequest;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.Wishlist;
@@ -9,15 +9,18 @@ import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.WishlistRepository;
-import com.nhnacademy.booklay.server.service.product.WishlistService;
+import com.nhnacademy.booklay.server.service.mypage.WishlistService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author 최규태
  */
-
+@Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class WishlistServiceImpl implements WishlistService {
 
@@ -26,10 +29,10 @@ public class WishlistServiceImpl implements WishlistService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void createWishlist(CreateWishlistRequest request) {
-        wishlistValidation(request);
+    public void createWishlist(CreateDeleteWishlistAndAlarmRequest request) {
+        wishlistPkValidation(request);
 
-        Wishlist.Pk pk = new Pk(request.getMemberId(), request.getProductId());
+        Wishlist.Pk pk = new Pk(request.getMemberNo(), request.getProductId());
 
         Wishlist wishlist = Wishlist.builder()
                                     .pk(pk)
@@ -39,9 +42,9 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public void deleteWishlist(CreateWishlistRequest request) {
-        wishlistValidation(request);
-        Wishlist.Pk pk = new Pk(request.getMemberId(), request.getProductId());
+    public void deleteWishlist(CreateDeleteWishlistAndAlarmRequest request) {
+        wishlistPkValidation(request);
+        Wishlist.Pk pk = new Pk(request.getMemberNo(), request.getProductId());
 
         // 없는걸 지우려고하면 안되니까...
         if (!wishlistRepository.existsById(pk)) {
@@ -52,8 +55,8 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
 
-    public void wishlistValidation(CreateWishlistRequest request) {
-        if (!memberRepository.existsById(request.getMemberId())) {
+    public void wishlistPkValidation(CreateDeleteWishlistAndAlarmRequest request) {
+        if (!memberRepository.existsById(request.getMemberNo())) {
             throw new NotFoundException(Member.class, "member not found");
         }
         if (!productRepository.existsById(request.getProductId())) {

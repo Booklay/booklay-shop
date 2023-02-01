@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.entity.*;
+import com.nhnacademy.booklay.server.entity.RestockingNotification.Pk;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -48,10 +49,12 @@ public class DummyNum3 {
     }
 
     public static RestockingNotification getDummyRestockingNotification() {
+        Pk pk = new Pk(getDummyMemberForDummy().getMemberNo(),  DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto()).getId());
 
         RestockingNotification restockingNotification = RestockingNotification.builder()
-            .product(DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto()))
+            .pk(pk)
             .member(getDummyMemberForDummy())
+            .product(DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto()))
             .build();
 
         ReflectionTestUtils.setField(restockingNotification, "pk",

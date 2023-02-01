@@ -26,13 +26,15 @@ public class RestockingNotificationServiceImpl implements RestockingNotification
 
   @Override
   public void createWishlist(CreateDeleteWishlistAndAlarmRequest request) {
-    alarmPkValidation(request);
-
+    Product product = productRepository.findById(request.getProductId()).orElseThrow(()->new NotFoundException(Product.class, "product not found"));
+    Member member = memberRepository.findById(request.getMemberNo()).orElseThrow(()->new NotFoundException(Member.class, "member not found"));
     RestockingNotification.Pk pk = new RestockingNotification.Pk(request.getMemberNo(),
         request.getProductId());
 
     RestockingNotification notification = RestockingNotification.builder()
         .pk(pk)
+        .product(product)
+        .member(member)
         .build();
 
     restockingNotificationRepository.save(notification);

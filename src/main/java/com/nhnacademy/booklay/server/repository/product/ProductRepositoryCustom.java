@@ -29,7 +29,5 @@ public interface ProductRepositoryCustom {
 
     RetrieveProductBookResponse retrieveProductBookResponse(Long id);
 
-    Page<RetrieveProductResponse> findProductPageByIds(List<Long> ids, Pageable pageable);
-
     Page<Product> findNotDeletedByPageable(Pageable pageable);
 }

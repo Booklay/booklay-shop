@@ -49,6 +49,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         QMember member = QMember.member;
 
         List<MemberRetrieveResponse> content = from(member)
+            .orderBy(member.createdAt.asc())
             .select(Projections.constructor(MemberRetrieveResponse.class,
                                             member.memberNo,
                                             member.gender.name,

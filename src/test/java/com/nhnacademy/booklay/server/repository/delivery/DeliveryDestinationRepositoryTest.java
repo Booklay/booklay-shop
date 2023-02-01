@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -72,7 +73,6 @@ class DeliveryDestinationRepositoryTest {
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
     }
 
-    @Disabled
     @Test
     @DisplayName("findById success test")
     void deliveryDestinationFindBySuccessTest() {
@@ -116,18 +116,29 @@ class DeliveryDestinationRepositoryTest {
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
     }
 
-    @Disabled
     @Test
     @DisplayName("deleteAllByMember_MemberNo success test")
     void deleteAllByMember_MemberNoSuccessTest() {
         //given
-        deliveryDestinationRepository.save(deliveryDestination);
-        //when
-        DeliveryDestination expected =
-            deliveryDestinationRepository.findByIsDefaultDestination(
-                    deliveryDestination.getIsDefaultDestination())
-                .orElseThrow(() -> new IllegalArgumentException());
+        DeliveryDestination address1 = deliveryDestination;
+        DeliveryDestination address2 = deliveryDestination;
+        DeliveryDestination address3 = deliveryDestination;
+        DeliveryDestination address4 = deliveryDestination;
 
-        assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
+        ReflectionTestUtils.setField(address1, "id", 1L);
+        ReflectionTestUtils.setField(address2, "id", 2L);
+        ReflectionTestUtils.setField(address3, "id", 3L);
+        ReflectionTestUtils.setField(address4, "id", 4L);
+
+        deliveryDestinationRepository.save(address1);
+        deliveryDestinationRepository.save(address2);
+        deliveryDestinationRepository.save(address3);
+        deliveryDestinationRepository.save(address4);
+
+        //when
+        deliveryDestinationRepository.deleteAllByMember_MemberNo(address1.getMember().getMemberNo());
+        int count = deliveryDestinationRepository.countByMember_MemberNo(address1.getMember().getMemberNo());
+
+        assertThat(count).isZero();
     }
 }

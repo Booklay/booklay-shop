@@ -85,7 +85,85 @@ public class MemberServiceImpl implements MemberService {
         memberGradeRepository.save(member.addGrade("white"));
         memberAuthorityRepository.save(memberAuthority);
     }
+    @Override
+    public void createMemberGrade(Long memberNo, String gradeName) {
+        Member member = getMemberService.getMemberNo(memberNo);
 
+        MemberGrade memberGrade = new MemberGrade(member, gradeName);
+
+        memberGradeRepository.save(memberGrade);
+    }
+
+    /**
+     * 이미 존재하는 권한 설정 시 에러
+     * admin과 author 권한 동시에 존재 시 에러
+     *
+     * @param memberNo
+     * @param request
+     */
+    @Override
+    public void createMemberAuthority(Long memberNo, MemberAuthorityUpdateRequest request) {
+        Member member = getMemberService.getMemberNo(memberNo);
+
+        Authority authority =
+            authorityRepository.findByName(request.getAuthorityName()).orElseThrow(
+                () -> new AuthorityNotFoundException(request.getAuthorityName()));
+
+        MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
+        if (!memberAuthorityRepository.existsById(pk)) {
+            throw new AlreadyExistAuthorityException(request.getAuthorityName());
+        }
+
+        Authority adminAuthority = authorityRepository.findByName("admin").orElseThrow(
+            () -> new NotFoundException(Authority.class, "authority admin not found"));
+
+        Authority authorAuthority = authorityRepository.findByName("author").orElseThrow(
+            () -> new NotFoundException(Authority.class, "author not found"));
+
+        MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
+        MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
+
+        if (!request.getAuthorityName().equals("member") &&
+            (memberAuthorityRepository.existsById(adminPk) ||
+                memberAuthorityRepository.existsById(authorPk))) {
+            throw new AdminAndAuthorAuthorityCannotExistTogetherException();
+        }
+
+        MemberAuthority memberAuthority = new MemberAuthority(pk, member, authority);
+
+        memberAuthorityRepository.save(memberAuthority);
+    }
+
+    @Override
+    public void createBlockMember(Long memberNo, MemberBlockRequest request) {
+        Member member = getMemberService.getMemberNo(memberNo);
+
+        if(member.getIsBlocked()) {
+            throw new AlreadyBlockedMemberException(member);
+        }
+
+        member.setIsBlocked(true);
+
+        BlockedMemberDetail blockedMemberDetail =
+            new BlockedMemberDetail(member, request.getReason());
+
+        blockedMemberDetailRepository.save(blockedMemberDetail);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo,
+                                                                  Pageable pageable) {
+        getMemberService.getMemberNo(memberNo);
+
+        return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<MemberLoginResponse> retrieveMemberById(String memberId) {
+        return memberRepository.retrieveMemberByUserId(memberId);
+    }
     @Override
     @Transactional(readOnly = true)
     public MemberRetrieveResponse retrieveMember(Long memberNo) {
@@ -160,50 +238,6 @@ public class MemberServiceImpl implements MemberService {
         deliveryDestinationRepository.deleteAllByMember_MemberNo(memberNo);
     }
 
-    /**
-     * 이미 존재하는 권한 설정 시 에러
-     * admin과 author 권한 동시에 존재 시 에러
-     *
-     * @param memberNo
-     * @param request
-     */
-    @Override
-    public void createMemberAuthority(Long memberNo, MemberAuthorityUpdateRequest request) {
-        Member member = getMemberService.getMemberNo(memberNo);
-
-        Authority authority =
-            authorityRepository.findByName(request.getAuthorityName()).orElseThrow(
-                () -> new AuthorityNotFoundException(request.getAuthorityName()));
-
-        MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
-        if (!memberAuthorityRepository.existsById(pk)) {
-            throw new AlreadyExistAuthorityException(request.getAuthorityName());
-        }
-
-        Authority adminAuthority = authorityRepository.findByName("admin").orElseThrow(
-            () -> new NotFoundException(Authority.class, "authority admin not found"));
-
-        Authority authorAuthority = authorityRepository.findByName("author").orElseThrow(
-            () -> new NotFoundException(Authority.class, "author not found"));
-
-        MemberAuthority.Pk adminPk = new MemberAuthority.Pk(memberNo, adminAuthority.getId());
-        MemberAuthority.Pk authorPk = new MemberAuthority.Pk(memberNo, authorAuthority.getId());
-
-        if (!request.getAuthorityName().equals("member") &&
-            (memberAuthorityRepository.existsById(adminPk) ||
-                memberAuthorityRepository.existsById(authorPk))) {
-            throw new AdminAndAuthorAuthorityCannotExistTogetherException();
-        }
-
-        MemberAuthority memberAuthority = new MemberAuthority(pk, member, authority);
-
-        memberAuthorityRepository.save(memberAuthority);
-    }
-
-    @Override
-    public Optional<MemberLoginResponse> retrieveMemberById(String memberId) {
-        return memberRepository.retrieveMemberByUserId(memberId);
-    }
 
     @Override
     public void deleteMemberAuthority(Long memberNo, String authorityName) {
@@ -221,40 +255,6 @@ public class MemberServiceImpl implements MemberService {
             () -> new NotFoundException(MemberAuthority.class, "member authority not found"));
 
         memberAuthorityRepository.delete(memberAuthority);
-    }
-
-    @Override
-    public void createMemberGrade(Long memberNo, String gradeName) {
-        Member member = getMemberService.getMemberNo(memberNo);
-
-        MemberGrade memberGrade = new MemberGrade(member, gradeName);
-
-        memberGradeRepository.save(memberGrade);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo,
-                                                                  Pageable pageable) {
-        getMemberService.getMemberNo(memberNo);
-
-        return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
-    }
-
-    @Override
-    public void blockMember(Long memberNo, MemberBlockRequest request) {
-        Member member = getMemberService.getMemberNo(memberNo);
-
-        if(member.getIsBlocked()) {
-            throw new AlreadyBlockedMemberException(member);
-        }
-
-        member.setIsBlocked(true);
-
-        BlockedMemberDetail blockedMemberDetail =
-            new BlockedMemberDetail(member, request.getReason());
-
-        blockedMemberDetailRepository.save(blockedMemberDetail);
     }
 
 }

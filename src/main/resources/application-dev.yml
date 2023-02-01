@@ -36,7 +36,7 @@ booklay:
     database: 0
 
   elasticsearch:
-    uri: localhost:9200
+    uri: 133.186.210.108:9200
 
 
 

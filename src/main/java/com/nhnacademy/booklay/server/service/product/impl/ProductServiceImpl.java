@@ -327,20 +327,39 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException {
-    Page<Product> products = productRepository.findAllBy(pageable, Product.class);
+    Page<Product> products = productRepository.findNotDeletedByPageable(pageable);
 
-    List<Product> productsContent = products.getContent();
-
-    List<Long> productIds = new ArrayList<>();
-
-    for (Product product : productsContent) {
-      productIds.add(product.getId());
-    }
+    List<Long> productIds =refineProductsToLongList(products.getContent());
 
     List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
 
     return new PageImpl<>(assembledContent, products.getPageable(),
         products.getTotalElements());
+  }
+
+  // 상품(책 구독 모두) 게시판식 조회
+  @Override
+  @Transactional(readOnly = true)
+  public Page<RetrieveProductResponse> retrieveAdminProductPage(Pageable pageable)
+      throws IOException {
+    Page<Product> products = productRepository.findAllBy(pageable, Product.class);
+
+    List<Long> productIds =refineProductsToLongList(products.getContent());
+
+    List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
+
+    return new PageImpl<>(assembledContent, products.getPageable(),
+        products.getTotalElements());
+  }
+
+  private List<Long> refineProductsToLongList(List<Product> products){
+    List<Long> productIds = new ArrayList<>();
+
+    for (Product product : products) {
+      productIds.add(product.getId());
+    }
+
+    return productIds;
   }
 
   // 상품 상세 보기 조회
@@ -409,36 +428,34 @@ public class ProductServiceImpl implements ProductService {
       Product product = productRepository.findById(productIds.get(i))
           .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
-      // TODO : query dsl 이용해서 뽑아오는 방식을 통해서 depth 줄일것
-      if (!product.isDeleted()) {
-        // 책 상품이라면
-        if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-          ProductDetail productDetail =
-              productDetailRepository.findProductDetailByProductId(
-                  product.getId());
+      // 책 상품이라면
+      if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
+        ProductDetail productDetail =
+            productDetailRepository.findProductDetailByProductId(
+                product.getId());
 
-          // 작가 정보 DTO
-          List<RetrieveAuthorResponse> authors =
-              productDetailRepository.findAuthorsByProductDetailId(
-                  productDetail.getId());
+        // 작가 정보 DTO
+        List<RetrieveAuthorResponse> authors =
+            productDetailRepository.findAuthorsByProductDetailId(
+                productDetail.getId());
 
-          // 합체
-          RetrieveProductResponse element =
-              new RetrieveProductResponse(product, productDetail,
-                  authors);
-          // 컨텐츠에 주입
-          resultList.add(element);
-        }
+        // 합체
+        RetrieveProductResponse element =
+            new RetrieveProductResponse(product, productDetail,
+                authors);
+        // 컨텐츠에 주입
+        resultList.add(element);
+      }
 
-        // 구독 상품 이라면
-        if (subscribeRepository.existsSubscribeByProduct(product)) {
-          Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-          RetrieveProductResponse element =
-              new RetrieveProductResponse(product, subscribe);
-          resultList.add(element);
-        }
+      // 구독 상품 이라면
+      if (subscribeRepository.existsSubscribeByProduct(product)) {
+        Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+        RetrieveProductResponse element =
+            new RetrieveProductResponse(product, subscribe);
+        resultList.add(element);
       }
     }
+
     return resultList;
   }
 

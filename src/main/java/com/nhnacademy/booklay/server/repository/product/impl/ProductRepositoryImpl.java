@@ -1,7 +1,5 @@
 package com.nhnacademy.booklay.server.repository.product.impl;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
-import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
@@ -145,6 +143,22 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
             .where(product.id.eq(productId))
             .select(author.name)
             .fetch();
+    }
+
+    @Override
+    public Page<Product> findNotDeletedByPageable(Pageable pageable){
+        QProduct product = QProduct.product;
+
+        List<Product> productList = from(product)
+            .where(product.isDeleted.eq(false))
+            .select(product)
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        JPQLQuery<Long> count = from(product)
+            .select(product.count());
+        return PageableExecutionUtils.getPage(productList, pageable, count::fetchFirst);
     }
 
     @Override

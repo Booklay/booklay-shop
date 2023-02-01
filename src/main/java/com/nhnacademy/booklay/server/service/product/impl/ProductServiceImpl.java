@@ -438,16 +438,13 @@ public class ProductServiceImpl implements ProductService {
   public Page<RetrieveProductResponse> retrieveProductListByProductNoList(
       List<Long> productNoList, Pageable pageable) {
 
-    return productRepository.findProductPageByIds(productNoList, pageable);
+    return productRepository.retrieveProductPageByIds(productNoList, pageable);
   }
-
-
 
   @Override
   public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
     return null;
   }
-
 
   @Override
   public Product retrieveProductByProductNo(Long productNo) {

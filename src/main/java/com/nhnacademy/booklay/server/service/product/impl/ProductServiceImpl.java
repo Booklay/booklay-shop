@@ -173,7 +173,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    return productRepository.findProductSubscribeDataByProductId(id);
+    return productRepository.retrieveProductSubscribeResponseById(id);
   }
 
   // 구독 상품 수정

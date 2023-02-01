@@ -42,11 +42,11 @@ public class RetrieveProductBookResponse {
   private Integer storage;
 
   @Setter
-  private List<CategoryResponse> categoryResponseList;
+  private List<CategoryResponse> categoryList;
   @Setter
-  private List<RetrieveTagResponse> tagResponseList;
+  private List<RetrieveTagResponse> tagList;
   @Setter
-  private List<RetrieveAuthorResponse> authorResponses;
+  private List<RetrieveAuthorResponse> authorList;
 
   public RetrieveProductBookResponse(Product product, ProductDetail productDetail) {
     this.productId = product.getId();

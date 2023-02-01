@@ -49,6 +49,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         QMember member = QMember.member;
 
         List<MemberRetrieveResponse> content = from(member)
+            .orderBy(member.createdAt.asc())
             .select(Projections.constructor(MemberRetrieveResponse.class,
                                             member.memberNo,
                                             member.gender.name,
@@ -91,7 +92,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
                 member.isBlocked))
             .where(member.email.eq(email))
             .fetchOne());
-
     }
 
     public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
@@ -111,5 +111,4 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
 
         return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
     }
-
 }

@@ -145,7 +145,7 @@ public class MemberAdminController {
     @PostMapping("/block/{memberNo}")
     public ResponseEntity<Void> memberBlock(@Valid @RequestBody MemberBlockRequest request,
                                             @PathVariable Long memberNo) {
-        memberService.blockMember(memberNo, request);
+        memberService.createBlockMember(memberNo, request);
         return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }

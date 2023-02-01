@@ -30,10 +30,10 @@ booklay:
   pool_size: 20
 
   redis:
+    host: 133.186.151.141
     port: 6379
-    host: 127.0.0.1
-    password:
-    database: 0
+    database: 4
+    password: "*N2vya7H@muDTwdNMR!"
 
   elasticsearch:
     uri: 133.186.210.108:9200

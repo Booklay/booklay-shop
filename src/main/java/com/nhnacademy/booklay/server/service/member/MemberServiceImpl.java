@@ -32,6 +32,7 @@ import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberAuthorityRepository memberAuthorityRepository;
     private final BlockedMemberDetailRepository blockedMemberDetailRepository;
     private final DeliveryDestinationRepository deliveryDestinationRepository;
+    private final PointHistoryRepository pointHistoryRepository;
 
     private final GetMemberService getMemberService;
 
@@ -236,6 +238,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = getMemberService.getMemberNo(memberNo);
         member.deleteMember();
         deliveryDestinationRepository.deleteAllByMember_MemberNo(memberNo);
+        pointHistoryRepository.deleteAllByMember_MemberNo(memberNo);
     }
 
 

@@ -10,5 +10,5 @@ public interface PointHistoryRepository
     extends JpaRepository<PointHistory, Long>, PointHistoryRepositoryCustom {
     Page<PointHistoryRetrieveResponse> findAllBy(Pageable pageable);
 
-
+    void deleteAllByMember_MemberNo(Long memberNo);
 }

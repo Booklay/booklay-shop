@@ -153,7 +153,6 @@ class MemberServiceImplTest {
     @DisplayName("멤버 등급 조회시 Page 반환 성공 테스트")
     void retrieveMemberGradesSuccessTest() {
         //given
-//        given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
         given(getMemberService.getMemberNo(any())).willReturn(member);
         given(memberGradeRepository.findByMember_MemberNo(any(), any())).willReturn(Page.empty());
 

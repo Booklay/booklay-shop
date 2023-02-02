@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.member;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
@@ -9,6 +10,7 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateReq
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,9 +46,13 @@ public interface MemberService {
     Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable);
 
     Optional<MemberRetrieveResponse> retrieveMemberByEmail(String memberId);
+
     void blockMemberCancel(Long blockedMemberDetailId);
 
-    Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo, Pageable pageable);
+    Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo,
+                                                                    Pageable pageable);
 
     Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable);
+
+    List<MemberAuthorityRetrieveResponse> retrieveMemberAuthority(Long memberNo);
 }

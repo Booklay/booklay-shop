@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.member;
 
 import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.reponse.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
@@ -34,6 +35,7 @@ import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -204,6 +206,11 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
         return memberRepository.retrieveDroppedMembers(pageable);
+    }
+
+    @Override
+    public List<MemberAuthorityRetrieveResponse> retrieveMemberAuthority(Long memberNo) {
+        return memberAuthorityRepository.retrieveAuthoritiesByMemberNo(memberNo);
     }
 
     @Override

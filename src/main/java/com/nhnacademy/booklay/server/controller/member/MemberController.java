@@ -1,18 +1,24 @@
 package com.nhnacademy.booklay.server.controller.member;
 
 import com.nhnacademy.booklay.server.dto.ErrorResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,13 +64,39 @@ public class MemberController {
 
         MemberRetrieveResponse memberResponse =
             memberService.retrieveMemberByEmail(email)
-                         .orElseThrow(() -> new NotFoundException(MemberNotFoundException.class,
-                                                                  MEMBER_NOT_FOUND_ERROR_CODE));
+                .orElseThrow(() -> new NotFoundException(MemberNotFoundException.class,
+                    MEMBER_NOT_FOUND_ERROR_CODE));
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberResponse);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberResponse);
 
+    }
+
+    @GetMapping("/grade/{memberNo}")
+    public ResponseEntity<PageResponse<MemberGradeRetrieveResponse>> retrieveMemberGrade(
+        @PathVariable Long memberNo,
+        Pageable pageable) {
+        Page<MemberGradeRetrieveResponse> responsePage =
+            memberService.retrieveMemberGrades(memberNo, pageable);
+
+        PageResponse<MemberGradeRetrieveResponse> memberPageResponse
+            = new PageResponse<>(responsePage);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberPageResponse);
+    }
+
+    @GetMapping("/authority/{memberNo}")
+    public ResponseEntity<List<MemberAuthorityRetrieveResponse>> retrieveMemberAuthority(
+        @PathVariable Long memberNo) {
+
+        List<MemberAuthorityRetrieveResponse> memberResponse =
+            memberService.retrieveMemberAuthority(memberNo);
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberResponse);
     }
 
     @PostMapping
@@ -73,7 +105,7 @@ public class MemberController {
 
         memberService.createMember(memberCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .build();
+            .build();
     }
 
     @PutMapping("/{memberNo}")

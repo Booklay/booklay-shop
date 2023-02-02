@@ -1,6 +1,5 @@
-package com.nhnacademy.booklay.server.dto.member.reponse;
+package com.nhnacademy.booklay.server.dto.member.response;
 
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberGradeRetrieveResponse {
+public class MemberAuthorityRetrieveResponse {
     private Long id;
-    private Long memberNo;
     private String name;
-    private LocalDate date;
 }

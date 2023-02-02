@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.repository.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QMemberGrade;

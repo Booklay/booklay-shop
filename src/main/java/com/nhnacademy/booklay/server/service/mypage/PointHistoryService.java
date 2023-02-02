@@ -1,9 +1,9 @@
 package com.nhnacademy.booklay.server.service.mypage;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
+import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

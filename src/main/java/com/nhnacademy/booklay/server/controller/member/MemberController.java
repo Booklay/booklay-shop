@@ -2,11 +2,11 @@ package com.nhnacademy.booklay.server.controller.member;
 
 import com.nhnacademy.booklay.server.dto.ErrorResponse;
 import com.nhnacademy.booklay.server.dto.PageResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberAuthorityRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;

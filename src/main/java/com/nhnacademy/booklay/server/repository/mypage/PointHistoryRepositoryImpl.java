@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.repository.mypage;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QPointHistory;

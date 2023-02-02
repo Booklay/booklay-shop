@@ -1,8 +1,8 @@
 package com.nhnacademy.booklay.server.repository.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.QAuthority;
 import com.nhnacademy.booklay.server.entity.QMember;
@@ -122,5 +122,35 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .select(member.count());
 
         return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+    }
+
+    @Override
+    public Long retrieveValidMemberCount() {
+        QMember member = QMember.member;
+
+        return from(member)
+            .where(member.isBlocked.isFalse().and(member.deletedAt.isNull()))
+            .select(member.count())
+            .fetchFirst();
+    }
+
+    @Override
+    public Long retrieveBlockedMemberCount() {
+        QMember member = QMember.member;
+
+        return from(member)
+            .where(member.isBlocked.isTrue())
+            .select(member.count())
+            .fetchFirst();
+    }
+
+    @Override
+    public Long retrieveDroppedMemberCount() {
+        QMember member = QMember.member;
+
+        return from(member)
+            .where(member.deletedAt.isNotNull())
+            .select(member.count())
+            .fetchFirst();
     }
 }

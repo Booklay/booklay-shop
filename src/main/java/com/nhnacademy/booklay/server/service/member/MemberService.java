@@ -1,15 +1,16 @@
 package com.nhnacademy.booklay.server.service.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberAuthorityRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -55,4 +56,6 @@ public interface MemberService {
     Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable);
 
     List<MemberAuthorityRetrieveResponse> retrieveMemberAuthority(Long memberNo);
+
+    MemberChartRetrieveResponse retrieveMemberChart();
 }

@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.QAuthority;
 import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QMemberAuthority;
+import com.nhnacademy.booklay.server.entity.QMemberGrade;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import java.util.List;
@@ -47,8 +48,19 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
     @Override
     public Page<MemberRetrieveResponse> retrieveAll(Pageable pageable) {
         QMember member = QMember.member;
+        QMemberGrade memberGrade = QMemberGrade.memberGrade;
+        QMemberAuthority memberAuthority = QMemberAuthority.memberAuthority;
+        QAuthority authority = QAuthority.authority;
 
         List<MemberRetrieveResponse> content = from(member)
+            .innerJoin(memberGrade)
+            .on(member.memberNo.eq(memberGrade.member.memberNo))
+            .innerJoin(memberAuthority)
+            .on(member.memberNo.eq(memberAuthority.member.memberNo))
+            .innerJoin(authority)
+            .on(authority.id.eq(memberAuthority.authority.id))
+            .where(member.isBlocked.isFalse().and(member.deletedAt.isNull())
+                .and(authority.name.notLike("ROLE_ADMIN")))
             .orderBy(member.createdAt.asc())
             .select(Projections.constructor(MemberRetrieveResponse.class,
                                             member.memberNo,

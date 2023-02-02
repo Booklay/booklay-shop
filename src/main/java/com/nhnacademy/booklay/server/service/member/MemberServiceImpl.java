@@ -1,14 +1,16 @@
 package com.nhnacademy.booklay.server.service.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.DroppedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberLoginResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Gender;
@@ -34,6 +36,7 @@ import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -204,6 +207,22 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
         return memberRepository.retrieveDroppedMembers(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MemberAuthorityRetrieveResponse> retrieveMemberAuthority(Long memberNo) {
+        return memberAuthorityRepository.retrieveAuthoritiesByMemberNo(memberNo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MemberChartRetrieveResponse retrieveMemberChart() {
+        return MemberChartRetrieveResponse.builder()
+            .validMemberCount(memberRepository.retrieveValidMemberCount())
+            .blockedMemberCount(memberRepository.retrieveBlockedMemberCount())
+            .droppedMemberCount(memberRepository.retrieveDroppedMemberCount())
+            .build();
     }
 
     @Override

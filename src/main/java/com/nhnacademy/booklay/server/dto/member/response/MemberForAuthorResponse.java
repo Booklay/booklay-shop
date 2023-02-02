@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.member.reponse;
+package com.nhnacademy.booklay.server.dto.member.response;
 
 import lombok.Getter;
 import lombok.Setter;

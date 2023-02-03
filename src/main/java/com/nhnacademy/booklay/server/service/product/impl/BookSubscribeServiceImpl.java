@@ -60,6 +60,7 @@ public class BookSubscribeServiceImpl implements BookSubscribeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RetrieveProductResponse> retrieveBookSubscribe(Long subscribeId) throws IOException {
         List<Long> productIds =
             bookSubscribeRepository.findBooksProductIdBySubscribeId(subscribeId);

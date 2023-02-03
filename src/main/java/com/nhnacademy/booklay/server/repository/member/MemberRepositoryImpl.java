@@ -156,6 +156,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .fetchFirst();
     }
 
+    //TODO : return null 바꿔야 함
     @Override
     public Long retrieveWhiteGradeMemberCount() {
         QMember member = QMember.member;

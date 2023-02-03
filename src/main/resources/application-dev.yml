@@ -37,7 +37,6 @@ booklay:
 
   elasticsearch:
     uri: 133.186.210.108:9200
-
-
-
-
+logging:
+  level:
+    root: debug

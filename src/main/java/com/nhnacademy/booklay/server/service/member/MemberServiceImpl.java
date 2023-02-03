@@ -8,6 +8,7 @@ import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveRe
 import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
@@ -64,12 +65,11 @@ public class MemberServiceImpl implements MemberService {
 
     private final GetMemberService getMemberService;
 
-    public void checkExistsMemberId(String memberId) {
+    private void checkExistsMemberId(String memberId) {
         if (memberRepository.existsByMemberId(memberId)) {
             throw new MemberAlreadyExistedException(memberId);
         }
     }
-
     @Override
     public void createMember(MemberCreateRequest createDto) {
         checkExistsMemberId(createDto.getMemberId());
@@ -169,6 +169,7 @@ public class MemberServiceImpl implements MemberService {
     public Optional<MemberLoginResponse> retrieveMemberById(String memberId) {
         return memberRepository.retrieveMemberByUserId(memberId);
     }
+
     @Override
     @Transactional(readOnly = true)
     public MemberRetrieveResponse retrieveMember(Long memberNo) {
@@ -223,6 +224,12 @@ public class MemberServiceImpl implements MemberService {
             .blockedMemberCount(memberRepository.retrieveBlockedMemberCount())
             .droppedMemberCount(memberRepository.retrieveDroppedMemberCount())
             .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
+        return MemberGradeChartRetrieveResponse.builder().build();
     }
 
     @Override

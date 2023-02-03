@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteWishlistAnd
 
 public interface RestockingNotificationService {
 
-  void createWishlist(CreateDeleteWishlistAndAlarmRequest request);
+  void createAlarm(CreateDeleteWishlistAndAlarmRequest request);
 
-  void deleteWishlist(CreateDeleteWishlistAndAlarmRequest request);
+  void deleteAlarm(CreateDeleteWishlistAndAlarmRequest request);
 }

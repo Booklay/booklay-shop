@@ -114,6 +114,8 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductBookResponse retrieveBookData(Long id) {
+
+    //TODO: 못찾는거 예외처리
     return productRepository.retrieveProductBookResponse(id);
   }
 
@@ -121,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
-      throw new IllegalArgumentException();
+      throw new NotFoundException(Product.class, "product not found");
     }
     Product product = splitProduct(request);
     product.setId(request.getProductId());
@@ -154,10 +156,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public void softDelete(Long productId) {
-    Product targetProduct = productRepository.findById(productId)
-        .orElseThrow(
-            () -> new NotFoundException(Product.class,
-                "product not found"));
+    Product targetProduct = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
     targetProduct.setDeleted(true);
 
@@ -173,6 +172,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
+    //TODO: 못찾는거 예외처리
     return productRepository.retrieveProductSubscribeResponseById(id);
   }
 

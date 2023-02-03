@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.controller.mypage;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteWishlistAndAlarmRequest;
+import com.nhnacademy.booklay.server.service.mypage.RestockingNotificationService;
 import com.nhnacademy.booklay.server.service.mypage.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyPageProductController {
 
     private final WishlistService wishlistService;
+    private final RestockingNotificationService restockingNotificationService;
 
     // 위시리스트 등록 삭제
     @PostMapping("/wishlist")
@@ -33,11 +35,11 @@ public class MyPageProductController {
     //재입고 알림 등록 삭제
     @PostMapping("/alarm")
     public void createAlarm(CreateDeleteWishlistAndAlarmRequest request) {
-        wishlistService.createWishlist(request);
+        restockingNotificationService.createAlarm(request);
     }
 
     @DeleteMapping("/alarm")
     public void deleteAlarm(CreateDeleteWishlistAndAlarmRequest request) {
-        wishlistService.deleteWishlist(request);
+        restockingNotificationService.deleteAlarm(request);
     }
 }

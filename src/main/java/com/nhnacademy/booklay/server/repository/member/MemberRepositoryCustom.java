@@ -25,4 +25,9 @@ public interface MemberRepositoryCustom {
 
     Long retrieveDroppedMemberCount();
 
+    Long retrieveWhiteGradeMemberCount();
+    Long retrieveSilverGradeMemberCount();
+    Long retrieveGoldGradeMemberCount();
+    Long retrievePlatinumGradeMemberCount();
+
 }

@@ -65,9 +65,14 @@ public class MemberServiceImpl implements MemberService {
 
     private final GetMemberService getMemberService;
 
+    private void checkExistsMemberId(String memberId) {
+        if (memberRepository.existsByMemberId(memberId)) {
+            throw new MemberAlreadyExistedException(memberId);
+        }
+    }
     @Override
     public void createMember(MemberCreateRequest createDto) {
-        getMemberService.getMemberId(createDto.getMemberId());
+        checkExistsMemberId(createDto.getMemberId());
 
         Gender gender = genderRepository.findByName(createDto.getGender()).orElseThrow(
             () -> new GenderNotFoundException(createDto.getGender()));

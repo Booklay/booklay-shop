@@ -45,10 +45,6 @@ public class Member {
     private String password;
 
     @Column
-    @Setter
-    private String identity;
-
-    @Column
     private String nickname;
 
     @Column

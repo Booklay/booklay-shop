@@ -8,6 +8,7 @@ import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveRe
 import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
@@ -20,8 +21,6 @@ import org.springframework.data.domain.Pageable;
  * @author 양승아
  */
 public interface MemberService {
-    void checkExistsMemberId(String memberId);
-
     MemberRetrieveResponse retrieveMember(Long memberNo);
 
     Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable);
@@ -58,4 +57,6 @@ public interface MemberService {
     List<MemberAuthorityRetrieveResponse> retrieveMemberAuthority(Long memberNo);
 
     MemberChartRetrieveResponse retrieveMemberChart();
+
+    MemberGradeChartRetrieveResponse retrieveMemberGradeChart();
 }

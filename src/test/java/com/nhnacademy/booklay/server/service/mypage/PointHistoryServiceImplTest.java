@@ -3,13 +3,14 @@ package com.nhnacademy.booklay.server.service.mypage;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
+import com.nhnacademy.booklay.server.service.mypage.impl.PointHistoryServiceImpl;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

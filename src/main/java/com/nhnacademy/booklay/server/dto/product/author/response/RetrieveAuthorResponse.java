@@ -1,6 +1,9 @@
 package com.nhnacademy.booklay.server.dto.product.author.response;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberForAuthorResponse;
+import com.nhnacademy.booklay.server.entity.Author;
+import com.nhnacademy.booklay.server.entity.Member;
+import java.util.Objects;
+import com.nhnacademy.booklay.server.dto.member.response.MemberForAuthorResponse;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +25,16 @@ public class RetrieveAuthorResponse {
         this.authorNo = authorNo;
         this.name = name;
         this.member = member;
+    }
+
+    public RetrieveAuthorResponse(Author author, Member member) {
+        this.authorNo = author.getAuthorId();
+        this.name = author.getName();
+
+        if (Objects.nonNull(member)) {
+            this.member = new MemberForAuthorResponse(member.getMemberNo(), member.getMemberId());
+        }
+
     }
 
     public RetrieveAuthorResponse(Long authorNo, String name) {

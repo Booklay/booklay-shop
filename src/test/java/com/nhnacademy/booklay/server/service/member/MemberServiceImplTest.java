@@ -7,9 +7,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberGradeRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.Gender;
@@ -153,7 +153,6 @@ class MemberServiceImplTest {
     @DisplayName("멤버 등급 조회시 Page 반환 성공 테스트")
     void retrieveMemberGradesSuccessTest() {
         //given
-//        given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
         given(getMemberService.getMemberNo(any())).willReturn(member);
         given(memberGradeRepository.findByMember_MemberNo(any(), any())).willReturn(Page.empty());
 

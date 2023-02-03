@@ -1,13 +1,14 @@
-package com.nhnacademy.booklay.server.service.mypage;
+package com.nhnacademy.booklay.server.service.mypage.impl;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
+import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
+import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

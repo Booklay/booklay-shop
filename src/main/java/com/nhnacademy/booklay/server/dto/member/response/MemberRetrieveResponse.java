@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.member.reponse;
+package com.nhnacademy.booklay.server.dto.member.response;
 
 import com.nhnacademy.booklay.server.entity.Member;
 import java.time.LocalDate;

@@ -16,6 +16,8 @@ public class DeliveryDestinationCURequest {
     private final String zipCode;
     @NotBlank
     private final String address;
+    private final String addressDetail;
+    private final String addDetail;
     @NotNull
     private final Boolean isDefaultDestination;
 
@@ -24,7 +26,7 @@ public class DeliveryDestinationCURequest {
                                   .member(member)
                                   .name(this.name)
                                   .zipCode(this.zipCode)
-                                  .address(this.address)
+                                  .address(this.address+ " " + this.addressDetail + " " + this.addDetail)
                                   .isDefaultDestination(this.isDefaultDestination)
                                   .build();
     }

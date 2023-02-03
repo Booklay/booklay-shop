@@ -85,7 +85,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .select(Projections.constructor(MemberLoginResponse.class,
                                             member.memberId,
                                             member.password,
-                                            member.identity,
                                             authority.name,
                                             member.email))
             .fetchOne();

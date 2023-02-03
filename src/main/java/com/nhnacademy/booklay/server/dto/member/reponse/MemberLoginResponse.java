@@ -11,8 +11,6 @@ public class MemberLoginResponse {
 
     private final String password;
 
-    private final String identity;
-
     private final String authority;
 
     private final String email;

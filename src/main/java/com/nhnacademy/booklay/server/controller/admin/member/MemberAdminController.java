@@ -7,8 +7,10 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
@@ -138,6 +140,11 @@ public class MemberAdminController {
     @GetMapping("/chart")
     public MemberChartRetrieveResponse retrieveMemberChart() {
         return memberService.retrieveMemberChart();
+    }
+
+    @GetMapping("/grade/chart")
+    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
+        return memberService.retrieveMemberGradeChart();
     }
 
     @PostMapping("/grade/{memberNo}/{gradeName}")

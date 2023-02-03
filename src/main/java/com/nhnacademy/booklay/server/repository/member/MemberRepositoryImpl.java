@@ -16,7 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
-
+/**
+ * @author 양승아
+ */
 public class MemberRepositoryImpl extends QuerydslRepositorySupport
     implements MemberRepositoryCustom {
 
@@ -152,5 +154,27 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .where(member.deletedAt.isNotNull())
             .select(member.count())
             .fetchFirst();
+    }
+
+    @Override
+    public Long retrieveWhiteGradeMemberCount() {
+        QMember member = QMember.member;
+
+        return null;
+    }
+
+    @Override
+    public Long retrieveSilverGradeMemberCount() {
+        return null;
+    }
+
+    @Override
+    public Long retrieveGoldGradeMemberCount() {
+        return null;
+    }
+
+    @Override
+    public Long retrievePlatinumGradeMemberCount() {
+        return null;
     }
 }

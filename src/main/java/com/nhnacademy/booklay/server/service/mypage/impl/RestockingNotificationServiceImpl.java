@@ -14,6 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author 최규태
+ */
+
 @Slf4j
 @Service
 @Transactional
@@ -25,7 +29,7 @@ public class RestockingNotificationServiceImpl implements RestockingNotification
   private final ProductRepository productRepository;
 
   @Override
-  public void createWishlist(CreateDeleteWishlistAndAlarmRequest request) {
+  public void createAlarm(CreateDeleteWishlistAndAlarmRequest request) {
     Product product = productRepository.findById(request.getProductId()).orElseThrow(()->new NotFoundException(Product.class, "product not found"));
     Member member = memberRepository.findById(request.getMemberNo()).orElseThrow(()->new NotFoundException(Member.class, "member not found"));
     RestockingNotification.Pk pk = new RestockingNotification.Pk(request.getMemberNo(),
@@ -41,7 +45,7 @@ public class RestockingNotificationServiceImpl implements RestockingNotification
   }
 
   @Override
-  public void deleteWishlist(CreateDeleteWishlistAndAlarmRequest request) {
+  public void deleteAlarm(CreateDeleteWishlistAndAlarmRequest request) {
     alarmPkValidation(request);
     RestockingNotification.Pk pk = new RestockingNotification.Pk(request.getMemberNo(),
         request.getProductId());

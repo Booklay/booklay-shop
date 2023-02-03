@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author 최규태
+ */
+
 @Slf4j
 @Service
 @Transactional
@@ -32,14 +36,10 @@ public class BookSubscribeServiceImpl implements BookSubscribeService {
 
     @Override
     public void bookSubscribeConnection(DisAndConnectBookWithSubscribeRequest request) {
-        log.info("진입 확인" + request.getSubscribeId());
         Subscribe subscribe = subscribeRepository.findById(request.getSubscribeId())
-                                                 .orElseThrow(
-                                                     () -> new NotFoundException(Subscribe.class,
-                                                                                 "subscribe not found"));
+            .orElseThrow(() -> new NotFoundException(Subscribe.class, "subscribe not found"));
         Product product = productRepository.findById(request.getProductId())
-                                           .orElseThrow(() -> new NotFoundException(Product.class,
-                                                                                    "product not found"));
+            .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
         BookSubscribe.Pk pk = new Pk(request.getSubscribeId(), request.getProductId());
         BookSubscribe bookSubscribe = BookSubscribe.builder()
@@ -60,8 +60,8 @@ public class BookSubscribeServiceImpl implements BookSubscribeService {
     }
 
     @Override
-    public List<RetrieveProductResponse> retrieveBookSubscribe(Long subscribeId)
-        throws IOException {
+    @Transactional(readOnly = true)
+    public List<RetrieveProductResponse> retrieveBookSubscribe(Long subscribeId) throws IOException {
         List<Long> productIds =
             bookSubscribeRepository.findBooksProductIdBySubscribeId(subscribeId);
 

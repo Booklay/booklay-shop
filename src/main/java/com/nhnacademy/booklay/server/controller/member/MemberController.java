@@ -52,21 +52,6 @@ public class MemberController {
                              .body(memberResponse);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<MemberRetrieveResponse> retrieveMemberByEmail(
-        @PathVariable String email) {
-
-        MemberRetrieveResponse memberResponse =
-            memberService.retrieveMemberByEmail(email)
-                         .orElseThrow(() -> new NotFoundException(MemberNotFoundException.class,
-                                                                  MEMBER_NOT_FOUND_ERROR_CODE));
-
-        return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberResponse);
-
-    }
-
     @PostMapping
     public ResponseEntity<Void> createMember(
         @Valid @RequestBody MemberCreateRequest memberCreateRequest) {

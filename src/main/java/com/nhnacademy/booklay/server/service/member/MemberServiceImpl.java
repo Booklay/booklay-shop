@@ -187,7 +187,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<MemberRetrieveResponse> retrieveMemberByEmail(String email) {
+    @Transactional(readOnly = true)
+    public Optional<MemberLoginResponse> retrieveMemberByEmail(String email) {
         return memberRepository.retrieveMemberByEmail(email);
     }
 

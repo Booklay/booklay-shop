@@ -229,6 +229,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
+        //TODO : 객체 만들어서 리턴하기
         return MemberGradeChartRetrieveResponse.builder().build();
     }
 

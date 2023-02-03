@@ -3,7 +3,7 @@ package com.nhnacademy.booklay.server.controller.admin.coupon;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponDetailRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.coupon.CouponIssueRequest;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.service.coupon.CouponAdminService;

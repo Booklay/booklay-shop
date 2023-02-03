@@ -124,10 +124,8 @@ public class TagServiceImpl implements TagService {
     public void createTagProduct(CreateDeleteTagProductRequest request) {
         ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
 
-        Product product = productRepository.findById(request.getProductNo()).orElseThrow(
-            () -> new NotFoundException(Product.class, "product not exists"));
-        Tag tag = tagRepository.findById(request.getTagId()).orElseThrow(
-            () -> new NotFoundException(Tag.class, "tag not exists"));
+        Product product = productRepository.findById(request.getProductNo()).orElseThrow(() -> new NotFoundException(Product.class, "product not exists"));
+        Tag tag = tagRepository.findById(request.getTagId()).orElseThrow(() -> new NotFoundException(Tag.class, "tag not exists"));
 
         ProductTag productTag = ProductTag.builder()
                                           .pk(pk)

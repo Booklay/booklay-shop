@@ -30,6 +30,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
+/**
+ * @author 최규태
+ */
+
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class AuthorServiceTest {

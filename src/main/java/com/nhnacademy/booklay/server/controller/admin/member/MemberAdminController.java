@@ -10,7 +10,6 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResp
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
-import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
@@ -186,3 +185,4 @@ public class MemberAdminController {
                 .message(ex.getMessage()).build());
     }
 }
+

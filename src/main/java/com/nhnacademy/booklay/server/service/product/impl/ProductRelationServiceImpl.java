@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * @author 최규태
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +44,7 @@ public class ProductRelationServiceImpl implements ProductRelationService {
       return productService.retrieveProductResponses(recommendProductIds);
     }
 
-    return null;
+    return new ArrayList<>();
   }
 
   @Override
@@ -51,8 +56,7 @@ public class ProductRelationServiceImpl implements ProductRelationService {
     List<RetrieveProductResponse> content = response.getContent();
 
     for (RetrieveProductResponse product : content) {
-      product.setRecommend(
-          productRelationRepository.existsByBaseAndTargetId(productNo, product.getProductId()));
+      product.setRecommend(productRelationRepository.existsByBaseAndTargetId(productNo, product.getProductId()));
     }
 
     return new PageImpl<>(content, response.getPageable(),

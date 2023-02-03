@@ -37,6 +37,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+/**
+ * @author 최규태
+ */
+
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceImplTest {

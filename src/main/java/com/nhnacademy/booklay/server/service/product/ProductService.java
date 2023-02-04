@@ -47,7 +47,6 @@ public interface ProductService {
 
   void softDelete(Long productId);
 
-  List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products);
 
   List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds)
       throws IOException;

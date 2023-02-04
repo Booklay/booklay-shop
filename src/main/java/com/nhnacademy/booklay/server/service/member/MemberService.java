@@ -45,8 +45,8 @@ public interface MemberService {
 
     Page<BlockedMemberRetrieveResponse> retrieveBlockedMember(Pageable pageable);
 
-    Optional<MemberRetrieveResponse> retrieveMemberByEmail(String memberId);
-
+    Optional<MemberLoginResponse> retrieveMemberByEmail(String memberId);
+    
     void blockMemberCancel(Long blockedMemberDetailId);
 
     Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo,

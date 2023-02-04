@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @AllArgsConstructor
@@ -34,7 +33,7 @@ public class RetrieveProductViewResponse {
     @NotNull
     private String longDescription;
     @NotNull
-    private Boolean isSelling;
+    private Boolean selling;
     @NotNull
     private Boolean pointMethod;
 
@@ -74,7 +73,7 @@ public class RetrieveProductViewResponse {
         this.pointRate = product.getPointRate();
         this.shortDescription = product.getShortDescription();
         this.longDescription = product.getLongDescription();
-        this.isSelling = product.isSelling();
+        this.selling = product.isSelling();
         this.pointMethod = product.isPointMethod();
         this.productTags = productTags;
 
@@ -97,7 +96,7 @@ public class RetrieveProductViewResponse {
         this.pointRate = product.getPointRate();
         this.shortDescription = product.getShortDescription();
         this.longDescription = product.getLongDescription();
-        this.isSelling = product.isSelling();
+        this.selling = product.isSelling();
         this.pointMethod = product.isPointMethod();
         this.productTags = productTags;
 

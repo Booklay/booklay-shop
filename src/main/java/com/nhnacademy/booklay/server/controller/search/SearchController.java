@@ -5,7 +5,6 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductRespons
 import com.nhnacademy.booklay.server.dto.search.request.SearchRequest;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.search.SearchService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +32,13 @@ public class SearchController {
     }
 
     @GetMapping("/save/all")
-    public ResponseEntity<Void> saveAll(){
+    public ResponseEntity<Void> saveAll() {
         searchService.saveAllDocuments();
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
 
-    @PostMapping("/products")
+    @PostMapping("/products/keywords")
     public ResponseEntity<PageResponse<RetrieveProductResponse>> search(@Valid @RequestBody SearchRequest searchRequest,
                                                                         Pageable pageable) {
 
@@ -54,13 +53,9 @@ public class SearchController {
             .body(pageResponse);
     }
 
-    private List<Long> resolveRequest(SearchRequest searchRequest){
+    private List<Long> resolveRequest(SearchRequest searchRequest) {
 
-        List<Long> ids = new ArrayList<>();
-
-        ids = searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
-
-        return ids;
+        return searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
     }
 
 }

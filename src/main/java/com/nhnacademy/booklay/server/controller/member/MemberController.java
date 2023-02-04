@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
@@ -59,17 +60,18 @@ public class MemberController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<MemberRetrieveResponse> retrieveMemberByEmail(
+    public ResponseEntity<MemberLoginResponse> retrieveMemberByEmail(
         @PathVariable String email) {
 
-        MemberRetrieveResponse memberResponse =
+        MemberLoginResponse memberResponse =
             memberService.retrieveMemberByEmail(email)
-                .orElseThrow(() -> new NotFoundException(MemberNotFoundException.class,
-                    MEMBER_NOT_FOUND_ERROR_CODE));
+                         .orElseThrow(() -> new NotFoundException(
+                             MemberNotFoundException.class,
+                             MEMBER_NOT_FOUND_ERROR_CODE));
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(memberResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberResponse);
 
     }
 
@@ -84,8 +86,8 @@ public class MemberController {
             = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(memberPageResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberPageResponse);
     }
 
     @GetMapping("/authority/{memberNo}")
@@ -95,8 +97,8 @@ public class MemberController {
         List<MemberAuthorityRetrieveResponse> memberResponse =
             memberService.retrieveMemberAuthority(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(memberResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberResponse);
     }
 
     @PostMapping
@@ -105,7 +107,7 @@ public class MemberController {
 
         memberService.createMember(memberCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .build();
+                             .build();
     }
 
     @PutMapping("/{memberNo}")

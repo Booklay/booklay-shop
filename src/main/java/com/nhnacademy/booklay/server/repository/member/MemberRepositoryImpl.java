@@ -87,25 +87,23 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
     }
 
     @Override
-    public Optional<MemberRetrieveResponse> retrieveMemberByEmail(String email) {
+    public Optional<MemberLoginResponse> retrieveMemberByEmail(String email) {
         QMember member = QMember.member;
+        QAuthority authority = QAuthority.authority;
+        QMemberAuthority memberAuthority = QMemberAuthority.memberAuthority;
 
-        return Optional.ofNullable(from(member)
-            .select(Projections.constructor(MemberRetrieveResponse.class,
-                member.memberNo,
-                member.gender.name,
-                member.memberId,
-                member.nickname,
-                member.name,
-                member.birthday,
-                member.phoneNo,
-                member.email,
-                member.createdAt,
-                member.updatedAt,
-                member.deletedAt,
-                member.isBlocked))
+        MemberLoginResponse memberLoginResponse = from(member)
+            .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
+            .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
             .where(member.email.eq(email))
-            .fetchOne());
+            .select(Projections.constructor(MemberLoginResponse.class,
+                                            member.memberId,
+                                            member.password,
+                                            authority.name,
+                                            member.email))
+            .fetchOne();
+
+        return Optional.ofNullable(memberLoginResponse);
     }
 
     public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {

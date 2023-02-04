@@ -15,7 +15,7 @@ public interface MemberRepositoryCustom {
 
     Page<MemberRetrieveResponse> retrieveAll(Pageable pageable);
 
-    Optional<MemberRetrieveResponse> retrieveMemberByEmail(String email);
+    Optional<MemberLoginResponse> retrieveMemberByEmail(String email);
 
     Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable);
 

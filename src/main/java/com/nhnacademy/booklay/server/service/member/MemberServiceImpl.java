@@ -79,8 +79,8 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = createDto.toEntity(gender);
 
-        Authority authority = authorityRepository.findByName("ROLE_MEMBER").orElseThrow(
-            () -> new AuthorityNotFoundException("ROLE_MEMBER"));
+        Authority authority = authorityRepository.findByName("ROLE_USER").orElseThrow(
+            () -> new AuthorityNotFoundException("ROLE_USER"));
 
         MemberAuthority memberAuthority =
             new MemberAuthority(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()),
@@ -191,7 +191,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<MemberRetrieveResponse> retrieveMemberByEmail(String email) {
+    @Transactional(readOnly = true)
+    public Optional<MemberLoginResponse> retrieveMemberByEmail(String email) {
         return memberRepository.retrieveMemberByEmail(email);
     }
 

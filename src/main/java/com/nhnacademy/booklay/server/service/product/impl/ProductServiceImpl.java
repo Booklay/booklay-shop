@@ -156,16 +156,12 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public void softDelete(Long productId) {
-    Product targetProduct = productRepository.findById(productId).orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+    Product targetProduct = productRepository.findById(productId)
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
     targetProduct.setDeleted(true);
 
     productRepository.save(targetProduct);
-  }
-
-  @Override
-  public List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products) {
-    return null;
   }
 
   // 수정 위해서 구독 상품 조회
@@ -318,8 +314,7 @@ public class ProductServiceImpl implements ProductService {
   public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException {
     Page<Product> products = productRepository.findNotDeletedByPageable(pageable);
 
-    List<Long> productIds =refineProductsToLongList(products.getContent());
-
+    List<Long> productIds = refineProductsToLongList(products.getContent());
     List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
 
     return new PageImpl<>(assembledContent, products.getPageable(),
@@ -333,7 +328,7 @@ public class ProductServiceImpl implements ProductService {
       throws IOException {
     Page<Product> products = productRepository.findAllBy(pageable, Product.class);
 
-    List<Long> productIds =refineProductsToLongList(products.getContent());
+    List<Long> productIds = refineProductsToLongList(products.getContent());
 
     List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
 
@@ -341,7 +336,7 @@ public class ProductServiceImpl implements ProductService {
         products.getTotalElements());
   }
 
-  private List<Long> refineProductsToLongList(List<Product> products){
+  private List<Long> refineProductsToLongList(List<Product> products) {
     List<Long> productIds = new ArrayList<>();
 
     for (Product product : products) {
@@ -356,11 +351,9 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public RetrieveProductViewResponse retrieveProductView(Long productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new NotFoundException(Product.class,
-            "product not found"));
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
-    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(
-        product.getId());
+    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(product.getId());
 
     if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
       ProductDetail productDetail =
@@ -379,9 +372,8 @@ public class ProductServiceImpl implements ProductService {
 
       return new RetrieveProductViewResponse(product, subscribe, productTags);
     }
-    return null;
+    throw new NotFoundException(Product.class, "correct product not found");
   }
-
 
   @Override
   public Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,

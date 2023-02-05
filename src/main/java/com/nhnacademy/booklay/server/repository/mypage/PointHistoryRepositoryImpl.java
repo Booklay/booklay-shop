@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.repository.mypage;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QPointHistory;
@@ -28,7 +28,7 @@ public class PointHistoryRepositoryImpl extends QuerydslRepositorySupport
         TotalPointRetrieveResponse responsePoint = from(pointHistory)
             .innerJoin(member).on(pointHistory.member.memberNo.eq(member.memberNo))
             .where(pointHistory.member.memberNo.eq(memberNo).and(member.deletedAt.isNull()))
-            .orderBy(pointHistory.updatedAt.asc())
+            .orderBy(pointHistory.updatedAt.desc())
             .select(Projections.constructor(TotalPointRetrieveResponse.class,
                                             pointHistory.member.memberNo,
                                             pointHistory.totalPoint))
@@ -46,6 +46,7 @@ public class PointHistoryRepositoryImpl extends QuerydslRepositorySupport
         List<PointHistoryRetrieveResponse> content = from(pointHistory)
             .innerJoin(member).on(pointHistory.member.memberNo.eq(member.memberNo))
             .where(pointHistory.member.memberNo.eq(memberNo).and(member.deletedAt.isNull()))
+            .orderBy(pointHistory.updatedAt.desc())
             .select(Projections.constructor(PointHistoryRetrieveResponse.class,
                                             pointHistory.id,
                                             pointHistory.member.memberNo,

@@ -250,7 +250,7 @@ public class ProductServiceImpl implements ProductService {
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .objectFile(objectFile)
-        .isSelling(request.getIsSelling())
+        .isSelling(request.getSelling())
         .build();
   }
 
@@ -303,7 +303,7 @@ public class ProductServiceImpl implements ProductService {
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .objectFile(objectFile)
-        .isSelling(request.getIsSelling())
+        .isSelling(request.getSelling())
         .build();
   }
 
@@ -311,8 +311,6 @@ public class ProductServiceImpl implements ProductService {
   private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
     return Subscribe.builder()
         .product(product)
-        .subscribeWeek(Math.toIntExact(request.getSubscribeWeek()))
-        .subscribeDay(Math.toIntExact(request.getSubscribeDay()))
         .build();
   }
 

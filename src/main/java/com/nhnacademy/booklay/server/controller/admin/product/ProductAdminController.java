@@ -44,6 +44,15 @@ public class ProductAdminController {
     private final BookSubscribeService bookSubscribeService;
     private final ProductRelationService productRelationService;
 
+    //관리자의 전채 목록 조회
+    @GetMapping
+    public PageResponse<RetrieveProductResponse> postAdminProduct(Pageable pageable)
+        throws IOException {
+        Page<RetrieveProductResponse> response = productService.retrieveAdminProductPage(pageable);
+
+        return new PageResponse<>(response);
+    }
+
     // 책 등록
     @PostMapping(value = "/books",
                  consumes = { MediaType.APPLICATION_JSON_VALUE,

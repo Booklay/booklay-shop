@@ -14,4 +14,5 @@ public class MemberLoginResponse {
     private final String authority;
 
     private final String email;
+
 }

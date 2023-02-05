@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.repository.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.QBlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.QMember;

@@ -2,8 +2,7 @@ package com.nhnacademy.booklay.server.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Member;

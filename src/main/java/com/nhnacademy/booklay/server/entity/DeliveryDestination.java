@@ -60,6 +60,7 @@ public class DeliveryDestination {
     public void update(DeliveryDestinationCURequest requestDto) {
         this.name = requestDto.getName();
         this.zipCode = requestDto.getZipCode();
+        this.address = requestDto.getAddress() + " " + requestDto.getAddressDetail() + " " + requestDto.getAddDetail();
         this.isDefaultDestination = requestDto.getIsDefaultDestination();
     }
 }

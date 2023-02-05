@@ -114,19 +114,16 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductBookResponse retrieveBookData(Long id) {
-    RetrieveProductBookResponse response = productRepository.findProductBookDataByProductId(id);
-    response.setAuthorIds(
-        productDetailRepository.findAuthorIdsByProductDetailId(response.getProductDetailId()));
-    response.setCategoryIds(
-        productRepository.findCategoryIdsByProductId(response.getProductId()));
-    return response;
+
+    //TODO: 못찾는거 예외처리
+    return productRepository.retrieveProductBookResponse(id);
   }
 
   // 책 상품 수정
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
-      throw new IllegalArgumentException();
+      throw new NotFoundException(Product.class, "product not found");
     }
     Product product = splitProduct(request);
     product.setId(request.getProductId());
@@ -160,31 +157,19 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public void softDelete(Long productId) {
     Product targetProduct = productRepository.findById(productId)
-        .orElseThrow(
-            () -> new NotFoundException(Product.class,
-                "product not found"));
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
     targetProduct.setDeleted(true);
 
     productRepository.save(targetProduct);
   }
 
-  @Override
-  public List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products) {
-    return null;
-  }
-
   // 수정 위해서 구독 상품 조회
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    RetrieveProductSubscribeResponse response =
-        productRepository.findProductSubscribeDataByProductId(
-            id);
-    response.setCategoryIds(
-        productRepository.findCategoryIdsByProductId(response.getProductId()));
-
-    return response;
+    //TODO: 못찾는거 예외처리
+    return productRepository.retrieveProductSubscribeResponseById(id);
   }
 
   // 구독 상품 수정
@@ -327,15 +312,23 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException {
+    Page<Product> products = productRepository.findNotDeletedByPageable(pageable);
+
+    List<Long> productIds = refineProductsToLongList(products.getContent());
+    List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
+
+    return new PageImpl<>(assembledContent, products.getPageable(),
+        products.getTotalElements());
+  }
+
+  // 상품(책 구독 모두) 게시판식 조회
+  @Override
+  @Transactional(readOnly = true)
+  public Page<RetrieveProductResponse> retrieveAdminProductPage(Pageable pageable)
+      throws IOException {
     Page<Product> products = productRepository.findAllBy(pageable, Product.class);
 
-    List<Product> productsContent = products.getContent();
-
-    List<Long> productIds = new ArrayList<>();
-
-    for (Product product : productsContent) {
-      productIds.add(product.getId());
-    }
+    List<Long> productIds = refineProductsToLongList(products.getContent());
 
     List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
 
@@ -343,16 +336,24 @@ public class ProductServiceImpl implements ProductService {
         products.getTotalElements());
   }
 
+  private List<Long> refineProductsToLongList(List<Product> products) {
+    List<Long> productIds = new ArrayList<>();
+
+    for (Product product : products) {
+      productIds.add(product.getId());
+    }
+
+    return productIds;
+  }
+
   // 상품 상세 보기 조회
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductViewResponse retrieveProductView(Long productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new NotFoundException(Product.class,
-            "product not found"));
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
-    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(
-        product.getId());
+    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(product.getId());
 
     if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
       ProductDetail productDetail =
@@ -371,9 +372,8 @@ public class ProductServiceImpl implements ProductService {
 
       return new RetrieveProductViewResponse(product, subscribe, productTags);
     }
-    return null;
+    throw new NotFoundException(Product.class, "correct product not found");
   }
-
 
   @Override
   public Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
@@ -409,36 +409,34 @@ public class ProductServiceImpl implements ProductService {
       Product product = productRepository.findById(productIds.get(i))
           .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
-      // TODO : query dsl 이용해서 뽑아오는 방식을 통해서 depth 줄일것
-      if (!product.isDeleted()) {
-        // 책 상품이라면
-        if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-          ProductDetail productDetail =
-              productDetailRepository.findProductDetailByProductId(
-                  product.getId());
+      // 책 상품이라면
+      if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
+        ProductDetail productDetail =
+            productDetailRepository.findProductDetailByProductId(
+                product.getId());
 
-          // 작가 정보 DTO
-          List<RetrieveAuthorResponse> authors =
-              productDetailRepository.findAuthorsByProductDetailId(
-                  productDetail.getId());
+        // 작가 정보 DTO
+        List<RetrieveAuthorResponse> authors =
+            productDetailRepository.findAuthorsByProductDetailId(
+                productDetail.getId());
 
-          // 합체
-          RetrieveProductResponse element =
-              new RetrieveProductResponse(product, productDetail,
-                  authors);
-          // 컨텐츠에 주입
-          resultList.add(element);
-        }
+        // 합체
+        RetrieveProductResponse element =
+            new RetrieveProductResponse(product, productDetail,
+                authors);
+        // 컨텐츠에 주입
+        resultList.add(element);
+      }
 
-        // 구독 상품 이라면
-        if (subscribeRepository.existsSubscribeByProduct(product)) {
-          Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-          RetrieveProductResponse element =
-              new RetrieveProductResponse(product, subscribe);
-          resultList.add(element);
-        }
+      // 구독 상품 이라면
+      if (subscribeRepository.existsSubscribeByProduct(product)) {
+        Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+        RetrieveProductResponse element =
+            new RetrieveProductResponse(product, subscribe);
+        resultList.add(element);
       }
     }
+
     return resultList;
   }
 
@@ -449,20 +447,18 @@ public class ProductServiceImpl implements ProductService {
   public Page<RetrieveProductResponse> retrieveProductListByProductNoList(
       List<Long> productNoList, Pageable pageable) {
 
-    return productRepository.findProductPageByIds(productNoList, pageable);
-  }
-
-
-
-  @Override
-  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
-    return null;
+    return productRepository.retrieveProductPageByIds(productNoList, pageable);
   }
 
 
   @Override
   public Product retrieveProductByProductNo(Long productNo) {
-    return null;
+    return productRepository.findById(productNo).orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
+  }
+
+  @Override
+  public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
+    return productRepository.findAllById(productNoList);
   }
 
 }

@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscri
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
+import com.nhnacademy.booklay.server.entity.Product;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +23,11 @@ public interface ProductRepositoryCustom {
 
     List<String> findAuthorNameByProductId(Long productId);
 
-    Page<RetrieveProductResponse> findProductPageByIds(List<Long> ids, Pageable pageable);
+    Page<RetrieveProductResponse> retrieveProductPageByIds(List<Long> ids, Pageable pageable);
+
+    RetrieveProductSubscribeResponse retrieveProductSubscribeResponseById(Long id);
+
+    RetrieveProductBookResponse retrieveProductBookResponse(Long id);
+
+    Page<Product> findNotDeletedByPageable(Pageable pageable);
 }

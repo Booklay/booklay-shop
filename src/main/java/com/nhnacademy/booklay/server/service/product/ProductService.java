@@ -2,12 +2,14 @@ package com.nhnacademy.booklay.server.service.product;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -27,7 +29,8 @@ public interface ProductService {
 
   Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
 
-  RetrieveProductBookResponse retrieveBookData(Long id);
+//  RetrieveProductBookResponse retrieveBookData(Long id);
+  ProductAllInOneResponse retrieveBookData(Long id);
 
   RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
 
@@ -37,8 +40,7 @@ public interface ProductService {
 
   List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 
-  Page<RetrieveProductResponse> retrieveProductListByProductNoList(List<Long> productNoList,
-      Pageable pageable);
+  Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable);
 
   Product retrieveProductByProductNo(Long productNo);
 
@@ -52,4 +54,8 @@ public interface ProductService {
       throws IOException;
 
   Page<RetrieveProductResponse> retrieveAdminProductPage(Pageable pageable) throws IOException;
+
+  ProductAllInOneResponse retrieveProductResponse(Long productId);
+
+  Page<ProductAllInOneResponse> getProductsPage(Pageable pageable);
 }

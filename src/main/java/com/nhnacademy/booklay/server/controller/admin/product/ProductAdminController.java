@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteProductRela
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.request.DisAndConnectBookWithSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
@@ -54,9 +55,15 @@ public class ProductAdminController {
         return productService.createBookProduct(request);
     }
 
+//    // 책 수정용 조회
+//    @GetMapping("/books/{productId}")
+//    public RetrieveProductBookResponse getBookData(@PathVariable Long productId) {
+//        return productService.retrieveBookData(productId);
+//    }
+
     // 책 수정용 조회
     @GetMapping("/books/{productId}")
-    public RetrieveProductBookResponse getBookData(@PathVariable Long productId) {
+    public ProductAllInOneResponse getBookData(@PathVariable Long productId) {
         return productService.retrieveBookData(productId);
     }
 
@@ -78,11 +85,16 @@ public class ProductAdminController {
         request.setImage(imgFile);
         return productService.createSubscribeProduct(request);
     }
-
+//
+//    // 구독 수정용 조회
+//    @GetMapping("/subscribes/{productId}")
+//    public RetrieveProductSubscribeResponse getSubscribeData(@PathVariable Long productId) {
+//        return productService.retrieveSubscribeData(productId);
+//    }
     // 구독 수정용 조회
     @GetMapping("/subscribes/{productId}")
-    public RetrieveProductSubscribeResponse getSubscribeData(@PathVariable Long productId) {
-        return productService.retrieveSubscribeData(productId);
+    public ProductAllInOneResponse getSubscribeData(@PathVariable Long productId) {
+        return productService.retrieveBookData(productId);
     }
 
     // 구독 수정

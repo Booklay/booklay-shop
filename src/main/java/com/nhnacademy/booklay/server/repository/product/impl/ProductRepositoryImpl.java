@@ -1,12 +1,15 @@
 package com.nhnacademy.booklay.server.repository.product.impl;
 
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.product.author.AuthorsInProduct;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
+import com.nhnacademy.booklay.server.dto.product.category.CategoriesInProduct;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.TagsInProduct;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.QAuthor;
@@ -149,7 +152,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
-    public Page<Product> findNotDeletedByPageable(Pageable pageable){
+    public Page<Product> findNotDeletedByPageable(Pageable pageable) {
         QProduct product = QProduct.product;
 
         List<Product> productList = from(product)
@@ -165,51 +168,30 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
-    public Page<RetrieveProductResponse> retrieveProductPageByIds(List<Long> ids, Pageable pageable) {
+    public ProductAllInOneResponse retrieveProductResponse(Long id) {
+        Page<ProductAllInOneResponse> page = retrieveProductPage(List.of(id), Pageable.ofSize(1));
+
+        PageResponse<ProductAllInOneResponse> pageResponse = new PageResponse<>(page);
+
+        return pageResponse.getData().get(0);
+    }
+
+    @Override
+    public Page<ProductAllInOneResponse> retrieveProductPage(List<Long> ids, Pageable pageable) {
 
         QProduct product = QProduct.product;
 
-        QSubscribe subscribe = QSubscribe.subscribe;
-        QProductDetail productDetail = QProductDetail.productDetail;
+        Map<Long, List<RetrieveAuthorResponse>> authorsInProductList = getAuthorsInProductList(ids);
+        Map<Long, List<RetrieveTagResponse>> tagsInProductList = getTagsInProductList(ids);
+        Map<Long, List<CategoryResponse>> categoriesInProductList = getCategoriesInProductList(ids);
 
-        QProductAuthor productAuthor = QProductAuthor.productAuthor;
-        QAuthor author = QAuthor.author;
+        List<ProductAllInOneResponse> list = getRetrieveProductResponseList(ids, pageable, product);
 
-        List<AuthorsInProduct> authorList =
-            from(productDetail)
-                .leftJoin(productAuthor).on(productAuthor.productDetail.id.eq(productDetail.id))
-                    .leftJoin(author).on(author.authorId.eq(productAuthor.author.authorId))
-                .where(productDetail.product.id.in(ids))
-                .select(Projections.constructor(
-                    AuthorsInProduct.class, productDetail.product.id, author))
-                .fetch();
-
-        Map<Long, List<RetrieveAuthorResponse>> authorsInProduct = new HashMap<>();
-        authorList.forEach(x -> authorsInProduct.put(x.getProductId(), new ArrayList<>()));
-        authorList.forEach(x -> authorsInProduct.get(x.getProductId()).add(x.getAuthor()));
-
-        List<RetrieveProductResponse> list =
-            from(product)
-                .leftJoin(subscribe).on(product.id.eq(subscribe.product.id))
-                .leftJoin(productDetail).on(product.id.eq(productDetail.product.id))
-                .where(product.id.in(ids))
-                .select(
-                    Projections.constructor(
-                        RetrieveProductResponse.class,
-                        product,
-                        productDetail,
-                        subscribe
-                    )
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        list.forEach(x -> x.setAuthors(authorsInProduct.get(x.getProductId())));
+        list.forEach(x -> x.setAuthors(authorsInProductList.get(x.getInfo().getId())));
+        list.forEach(x -> x.setTags(tagsInProductList.get(x.getInfo().getId())));
+        list.forEach(x -> x.setCategories(categoriesInProductList.get(x.getInfo().getId())));
 
         JPQLQuery<Long> count = from(product)
-            .innerJoin(productDetail)
-            .on(product.id.eq(productDetail.product.id))
             .select(product.count());
 
         return PageableExecutionUtils.getPage(list, pageable, count::fetchFirst);
@@ -305,6 +287,191 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
                 .where(categoryProduct.product.id.eq(id))
                 .select(Projections.constructor(CategoryResponse.class, category))
                 .fetch();
+    }
+
+    private List<ProductAllInOneResponse> getRetrieveProductResponseList(List<Long> ids, Pageable pageable, QProduct product) {
+
+        QSubscribe subscribe = QSubscribe.subscribe;
+        QProductDetail productDetail = QProductDetail.productDetail;
+
+        return from(product)
+            .leftJoin(subscribe).on(product.id.eq(subscribe.product.id))
+            .leftJoin(productDetail).on(product.id.eq(productDetail.product.id))
+            .where(product.id.in(ids))
+            .select(
+                Projections.constructor(
+                    ProductAllInOneResponse.class,
+                    product,
+                    productDetail,
+                    subscribe
+                )
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
+
+    /**
+     *
+     * @param ids
+     * @return
+     */
+
+    private Map<Long, List<RetrieveTagResponse>> getTagsInProductList(List<Long> ids) {
+
+        QProductTag productTag = QProductTag.productTag;
+        QTag tag = QTag.tag;
+
+        List<TagsInProduct> tagList = from(productTag)
+            .leftJoin(tag).on(productTag.tag.id.eq(tag.id))
+            .where(productTag.product.id.in(ids))
+            .select(Projections.constructor(TagsInProduct.class, productTag.product.id, tag))
+            .fetch();
+
+        Map<Long, List<RetrieveTagResponse>> tagsInProduct = new HashMap<>();
+        tagList.forEach(x -> tagsInProduct.put(x.getProductId(), new ArrayList<>()));
+        tagList.forEach(x -> tagsInProduct.get(x.getProductId()).add(x.getTag()));
+
+        return tagsInProduct;
+
+    }
+
+    private Map<Long, List<RetrieveAuthorResponse>> getAuthorsInProductList(List<Long> ids) {
+
+        QProductDetail productDetail = QProductDetail.productDetail;
+        QProductAuthor productAuthor = QProductAuthor.productAuthor;
+        QAuthor author = QAuthor.author;
+
+        List<AuthorsInProduct> authorList = from(productDetail)
+            .leftJoin(productAuthor).on(productAuthor.productDetail.id.eq(productDetail.id))
+            .leftJoin(author).on(author.authorId.eq(productAuthor.author.authorId))
+            .where(productDetail.product.id.in(ids))
+            .select(Projections.constructor(
+                AuthorsInProduct.class, productDetail.product.id, author))
+            .fetch();
+
+        Map<Long, List<RetrieveAuthorResponse>> authorsInProduct = new HashMap<>();
+        authorList.forEach(x -> authorsInProduct.put(x.getProductId(), new ArrayList<>()));
+        authorList.forEach(x -> authorsInProduct.get(x.getProductId()).add(x.getAuthor()));
+
+        return authorsInProduct;
+    }
+
+    private Map<Long, List<CategoryResponse>> getCategoriesInProductList(List<Long> ids) {
+
+        QCategory category = QCategory.category;
+        QCategoryProduct categoryProduct = QCategoryProduct.categoryProduct;
+
+        List<CategoriesInProduct> categories = from(category)
+            .leftJoin(categoryProduct).on(categoryProduct.category.id.eq(category.id))
+            .where(categoryProduct.product.id.in(ids))
+            .select(Projections.constructor(CategoriesInProduct.class, categoryProduct.product.id, category))
+            .fetch();
+
+        Map<Long, List<CategoryResponse>> categoriesInProduct = new HashMap<>();
+        categories.forEach(x -> categoriesInProduct.put(x.getProductId(), new ArrayList<>()));
+        categories.forEach(x -> categoriesInProduct.get(x.getProductId()).add(x.getCategory()));
+
+        return categoriesInProduct;
+
+    }
+
+    @Override
+    public Page<ProductAllInOneResponse> retrieveProductPage(Pageable pageable) {
+
+        QProduct product = QProduct.product;
+
+        Map<Long, List<RetrieveAuthorResponse>> authorsInProductList = getAuthorsInProductList();
+        Map<Long, List<RetrieveTagResponse>> tagsInProductList = getTagsInProductList();
+        Map<Long, List<CategoryResponse>> categoriesInProductList = getCategoriesInProductList();
+
+        List<ProductAllInOneResponse> list = getRetrieveProductResponseList(pageable, product);
+
+        list.forEach(x -> x.setAuthors(authorsInProductList.get(x.getInfo().getId())));
+        list.forEach(x -> x.setTags(tagsInProductList.get(x.getInfo().getId())));
+        list.forEach(x -> x.setCategories(categoriesInProductList.get(x.getInfo().getId())));
+
+        JPQLQuery<Long> count = from(product)
+            .select(product.count());
+
+        return PageableExecutionUtils.getPage(list, pageable, count::fetchFirst);
+    }
+
+    private List<ProductAllInOneResponse> getRetrieveProductResponseList(Pageable pageable, QProduct product) {
+
+        QSubscribe subscribe = QSubscribe.subscribe;
+        QProductDetail productDetail = QProductDetail.productDetail;
+
+        return from(product)
+            .leftJoin(subscribe).on(product.id.eq(subscribe.product.id))
+            .leftJoin(productDetail).on(product.id.eq(productDetail.product.id))
+            .select(
+                Projections.constructor(
+                    ProductAllInOneResponse.class,
+                    product,
+                    productDetail,
+                    subscribe
+                )
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
+
+    private Map<Long, List<RetrieveTagResponse>> getTagsInProductList() {
+
+        QProductTag productTag = QProductTag.productTag;
+        QTag tag = QTag.tag;
+
+        List<TagsInProduct> tagList = from(productTag)
+            .leftJoin(tag).on(productTag.tag.id.eq(tag.id))
+            .select(Projections.constructor(TagsInProduct.class, productTag.product.id, tag))
+            .fetch();
+
+        Map<Long, List<RetrieveTagResponse>> tagsInProduct = new HashMap<>();
+        tagList.forEach(x -> tagsInProduct.put(x.getProductId(), new ArrayList<>()));
+        tagList.forEach(x -> tagsInProduct.get(x.getProductId()).add(x.getTag()));
+
+        return tagsInProduct;
+
+    }
+
+    private Map<Long, List<RetrieveAuthorResponse>> getAuthorsInProductList() {
+
+        QProductDetail productDetail = QProductDetail.productDetail;
+        QProductAuthor productAuthor = QProductAuthor.productAuthor;
+        QAuthor author = QAuthor.author;
+
+        List<AuthorsInProduct> authorList = from(productDetail)
+            .leftJoin(productAuthor).on(productAuthor.productDetail.id.eq(productDetail.id))
+            .leftJoin(author).on(author.authorId.eq(productAuthor.author.authorId))
+            .select(Projections.constructor(
+                AuthorsInProduct.class, productDetail.product.id, author))
+            .fetch();
+
+        Map<Long, List<RetrieveAuthorResponse>> authorsInProduct = new HashMap<>();
+        authorList.forEach(x -> authorsInProduct.put(x.getProductId(), new ArrayList<>()));
+        authorList.forEach(x -> authorsInProduct.get(x.getProductId()).add(x.getAuthor()));
+
+        return authorsInProduct;
+    }
+
+    private Map<Long, List<CategoryResponse>> getCategoriesInProductList() {
+
+        QCategory category = QCategory.category;
+        QCategoryProduct categoryProduct = QCategoryProduct.categoryProduct;
+
+        List<CategoriesInProduct> categories = from(category)
+            .leftJoin(categoryProduct).on(categoryProduct.category.id.eq(category.id))
+            .select(Projections.constructor(CategoriesInProduct.class, categoryProduct.product.id, category))
+            .fetch();
+
+        Map<Long, List<CategoryResponse>> categoriesInProduct = new HashMap<>();
+        categories.forEach(x -> categoriesInProduct.put(x.getProductId(), new ArrayList<>()));
+        categories.forEach(x -> categoriesInProduct.get(x.getProductId()).add(x.getCategory()));
+
+        return categoriesInProduct;
+
     }
 }
 

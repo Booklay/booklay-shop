@@ -2,11 +2,13 @@ package com.nhnacademy.booklay.server.dto.product.author;
 
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.Author;
+import java.util.Map;
 import java.util.Objects;
 import lombok.Getter;
 
 @Getter
 public class AuthorsInProduct {
+
     Long productId;
 
     RetrieveAuthorResponse author;
@@ -15,4 +17,5 @@ public class AuthorsInProduct {
         this.productId = productId;
         this.author = new RetrieveAuthorResponse(author, Objects.nonNull(author.getMember()) ? author.getMember() : null);
     }
+
 }

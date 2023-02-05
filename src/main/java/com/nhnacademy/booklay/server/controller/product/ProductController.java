@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.controller.product;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
@@ -28,31 +27,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService productService;
-    private final BookSubscribeService bookSubscribeService;
-    private final ProductRelationService productRelationService;
+  private final ProductService productService;
+  private final BookSubscribeService bookSubscribeService;
+  private final ProductRelationService productRelationService;
 
-    @GetMapping
-    public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
-        throws IOException {
-        Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
-        return new PageResponse<>(response);
-    }
+  @GetMapping
+  public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
+      throws IOException {
+    Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
+    return new PageResponse<>(response);
+  }
 
-    @GetMapping("/view/{productNo}")
-    public RetrieveProductViewResponse retrieveDetailView(@PathVariable Long productNo) {
-        return productService.retrieveProductView(productNo);
-    }
+  @GetMapping("/view/{productNo}")
+  public RetrieveProductViewResponse retrieveDetailView(@PathVariable Long productNo) {
+    return productService.retrieveProductView(productNo);
+  }
 
-    @GetMapping("/view/subscribe/{subscribeId}")
-    public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
-        throws IOException {
-        return bookSubscribeService.retrieveBookSubscribe(subscribeId);
-    }
+  @GetMapping("/view/subscribe/{subscribeId}")
+  public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
+      throws IOException {
+    return bookSubscribeService.retrieveBookSubscribe(subscribeId);
+  }
 
-    @GetMapping("/recommend/{productId}")
-    public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
-        throws IOException {
-        return productRelationService.retrieveRecommendProducts(productId);
-    }
+  @GetMapping("/recommend/{productId}")
+  public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
+      throws IOException {
+    return productRelationService.retrieveRecommendProducts(productId);
+  }
+
 }

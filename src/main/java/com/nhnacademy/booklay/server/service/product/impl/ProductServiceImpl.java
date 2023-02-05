@@ -242,7 +242,7 @@ public class ProductServiceImpl implements ProductService {
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .objectFile(objectFile)
-        .isSelling(request.getIsSelling())
+        .isSelling(request.getSelling())
         .build();
   }
 

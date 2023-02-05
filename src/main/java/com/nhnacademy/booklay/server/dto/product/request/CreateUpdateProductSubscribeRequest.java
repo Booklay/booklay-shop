@@ -43,13 +43,14 @@ public class CreateUpdateProductSubscribeRequest {
     private List<Long> categoryIds;
 
     private Long subscribeId;
-    @NotNull
+
+    //TODO : 삭제 예정
     @Length(max = 4)
     private Integer subscribeWeek;
-    @NotNull
     @Length(max = 7)
     private Integer subscribeDay;
+    private List<Long> childProducts;
+
     @NotNull
     private String publisher;
-    private List<Long> childProducts;
 }

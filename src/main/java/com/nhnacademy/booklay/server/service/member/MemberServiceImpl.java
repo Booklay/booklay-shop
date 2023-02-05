@@ -197,6 +197,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Optional<MemberRetrieveResponse> retrieveMemberInfoByEmail(String email) {
+        return memberRepository.retrieveMemberInfoByEmail(email);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<BlockedMemberRetrieveResponse> retrieveBlockedMemberDetail(Long memberNo,
                                                                            Pageable pageable) {

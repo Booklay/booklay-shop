@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService productService;
-    private final BookSubscribeService bookSubscribeService;
-    private final ProductRelationService productRelationService;
+  private final ProductService productService;
+  private final BookSubscribeService bookSubscribeService;
+  private final ProductRelationService productRelationService;
 
     /**
      * 조건 없이 전체 상품 리스트 페이지를 리턴
@@ -49,17 +49,6 @@ public class ProductController {
         return productService.retrieveProductResponse(productNo);
     }
 
-//    @GetMapping("/view/subscribe/{subscribeId}")
-//    public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
-//        throws IOException {
-//        return bookSubscribeService.retrieveBookSubscribe(subscribeId);
-//    }
-//
-//    @GetMapping("/recommend/{productId}")
-//    public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
-//        throws IOException {
-//        return productRelationService.retrieveRecommendProducts(productId);
-//    }
     @GetMapping("/view/subscribe/{subscribeId}")
     public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
         throws IOException {

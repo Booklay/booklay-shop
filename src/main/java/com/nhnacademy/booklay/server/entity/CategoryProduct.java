@@ -37,6 +37,7 @@ public class CategoryProduct {
     private Product product;
 
 
+    @Getter
     @Embeddable
     @EqualsAndHashCode
     @NoArgsConstructor

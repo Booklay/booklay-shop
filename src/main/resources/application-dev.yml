@@ -10,6 +10,9 @@ spring:
         format_sql: true
     database: mysql
 
+  kafka:
+    consumer:
+      group-id: shop
 
 cloud:
   auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
@@ -37,3 +40,9 @@ booklay:
 
   elasticsearch:
     uri: 133.186.210.108:9200
+
+message:
+  topic:
+    coupon:
+      request: coupon-zone-request
+      response: coupon-zone-response

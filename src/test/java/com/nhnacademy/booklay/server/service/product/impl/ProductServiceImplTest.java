@@ -156,7 +156,7 @@ class ProductServiceImplTest {
     //when
     productService.retrieveBookData(targetId);
 
-    BDDMockito.then(productRepository).should().retrieveProductBookResponse(targetId);
+    BDDMockito.then(productRepository).should().retrieveProductResponse(targetId);
 
   }
 
@@ -223,15 +223,6 @@ class ProductServiceImplTest {
     productService.updateBookProduct(productRequest);
 
     BDDMockito.then(productRepository).should().save(any());
-  }
-
-  @Test
-  void retrieveSubscribeData_success() {
-    //when
-    productService.retrieveSubscribeData(productSubscribe.getId());
-
-    BDDMockito.then(productRepository).should()
-        .retrieveProductSubscribeResponseById(productSubscribe.getId());
   }
 
   @Test

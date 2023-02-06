@@ -32,7 +32,7 @@ public class CreateUpdateProductSubscribeRequest {
     @NotNull
     private String longDescription;
     @NotNull
-    private Boolean isSelling;
+    private Boolean selling;
     @NotNull
     private Boolean pointMethod;
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:MM:ss")
@@ -43,13 +43,14 @@ public class CreateUpdateProductSubscribeRequest {
     private List<Long> categoryIds;
 
     private Long subscribeId;
-    @NotNull
+
+    //TODO : 삭제 예정
     @Length(max = 4)
     private Integer subscribeWeek;
-    @NotNull
     @Length(max = 7)
     private Integer subscribeDay;
+    private List<Long> childProducts;
+
     @NotNull
     private String publisher;
-    private List<Long> childProducts;
 }

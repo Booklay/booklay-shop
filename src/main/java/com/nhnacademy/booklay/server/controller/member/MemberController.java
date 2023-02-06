@@ -75,6 +75,20 @@ public class MemberController {
 
     }
 
+    @GetMapping("/memberinfo/{email}")
+    public ResponseEntity<MemberRetrieveResponse> retrieveMemberInfoByEmail(@PathVariable String email) {
+
+        MemberRetrieveResponse memberRetrieveResponse = memberService.retrieveMemberInfoByEmail(email)
+                                                                     .orElseThrow(
+                                                                         () -> new NotFoundException(
+                                                                             MemberNotFoundException.class,
+                                                                             MEMBER_NOT_FOUND_ERROR_CODE));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(memberRetrieveResponse);
+    }
+
     @GetMapping("/grade/{memberNo}")
     public ResponseEntity<PageResponse<MemberGradeRetrieveResponse>> retrieveMemberGrade(
         @PathVariable Long memberNo,

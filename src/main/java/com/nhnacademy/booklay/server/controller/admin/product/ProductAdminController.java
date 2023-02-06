@@ -5,8 +5,8 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteProductRela
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.request.DisAndConnectBookWithSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
@@ -56,7 +56,7 @@ public class ProductAdminController {
 
     // 책 수정용 조회
     @GetMapping("/books/{productId}")
-    public RetrieveProductBookResponse getBookData(@PathVariable Long productId) {
+    public ProductAllInOneResponse getBookData(@PathVariable Long productId) {
         return productService.retrieveBookData(productId);
     }
 

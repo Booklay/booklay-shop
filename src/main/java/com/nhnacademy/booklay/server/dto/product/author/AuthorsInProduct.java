@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class AuthorsInProduct {
+
     Long productId;
 
     RetrieveAuthorResponse author;
@@ -15,4 +16,5 @@ public class AuthorsInProduct {
         this.productId = productId;
         this.author = new RetrieveAuthorResponse(author, Objects.nonNull(author.getMember()) ? author.getMember() : null);
     }
+
 }

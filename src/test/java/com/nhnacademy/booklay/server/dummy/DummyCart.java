@@ -100,7 +100,7 @@ public class DummyCart {
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .objectFile(getDummyFile())
-        .isSelling(request.getIsSelling())
+        .isSelling(request.getSelling())
         .build();
   }
 
@@ -234,7 +234,7 @@ public class DummyCart {
     categories.add(1L);
 
     return CreateUpdateProductSubscribeRequest.builder()
-        .isSelling(true)
+        .selling(true)
         .price(12900L)
         .categoryIds(categories)
         .longDescription("really looooooooooooong description")

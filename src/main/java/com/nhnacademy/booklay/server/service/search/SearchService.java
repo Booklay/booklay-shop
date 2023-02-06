@@ -7,11 +7,13 @@ public interface SearchService {
 
     List<Long> retrieveProductsIdsByKeywords(String keywords);
 
-    List<Long> retrieveProductsIdsByCategory(String keywords);
-
-    List<Long> retrieveProductsIdsByTags(String keywords);
-
     List<Long> retrieveCategoryHitsByIdMatch(String categoryId);
 
     List<Long> retrieveProductHitsByKeywordsMatch(String keywords);
+
+    List<Long> retrieveProductsIdsByTags(String keywords);
+
+    List<Long> retrieveProductsIdsByAuthors(String keywords);
+
+    List<Long> retrieveProductsIdsByCategory(String keywords);
 }

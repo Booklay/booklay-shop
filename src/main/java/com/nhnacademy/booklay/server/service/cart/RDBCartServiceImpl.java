@@ -23,7 +23,8 @@ public class RDBCartServiceImpl implements RDBCartService {
         List<Cart> cartList = cartService.retrieveAllCartsByMemberNo(Long.parseLong(key));
         return cartList.stream().map(cart -> new CartRetrieveResponse(cart.getProduct().getId(),
                 cart.getProduct().getTitle(), cart.getProduct().getPrice(), cart.getCount(),
-                categoryProductService.retrieveCategoryIdListByProductId(cart.getProduct().getId())))
+                categoryProductService.retrieveCategoryIdListByProductId(cart.getProduct().getId())
+                , cart.getProduct().getThumbnailNo()))
             .collect(Collectors.toList());
     }
 

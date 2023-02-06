@@ -89,7 +89,8 @@ public class RedisCartServiceImpl implements RedisCartService {
             cartRetrieveResponseList.add(
                 new CartRetrieveResponse(product.getId(), product.getTitle(), product.getPrice(),
                                          cartDto.getCount(),
-                    categoryProductService.retrieveCategoryIdListByProductId(product.getId())));
+                    categoryProductService.retrieveCategoryIdListByProductId(product.getId())
+                ,product.getThumbnailNo()));
         }
         return cartRetrieveResponseList;
     }

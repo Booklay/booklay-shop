@@ -14,4 +14,5 @@ public class CartRetrieveResponse {
     private Long productPrice;
     private Integer productCount;
     private List<Long> categoryNoList;
+    private Long imageNo;
 }

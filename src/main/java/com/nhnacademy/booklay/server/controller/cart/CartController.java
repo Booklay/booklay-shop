@@ -4,6 +4,7 @@ package com.nhnacademy.booklay.server.controller.cart;
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.cart.CartServiceAndKeyDto;
+import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.service.cart.MemberCartService;
 import com.nhnacademy.booklay.server.service.cart.RDBCartService;
 import com.nhnacademy.booklay.server.service.cart.RedisCartService;
@@ -28,8 +29,8 @@ public class CartController {
     private static final String STRING_PRODUCT_NO_LIST = "productNoList";
 
     @ModelAttribute("memberNo")
-    public Long getMemberNo(@RequestParam(value = "memberNo", required = false) Long memberNo){
-        return memberNo;
+    public Long getMemberNo(MemberInfo memberInfo){
+        return memberInfo.getMemberNo();
     }
     @GetMapping
     public ResponseEntity<List<CartRetrieveResponse>> getCart(

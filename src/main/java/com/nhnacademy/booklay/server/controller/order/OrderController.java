@@ -29,7 +29,7 @@ public class OrderController {
             categoryProductService.retrieveCategoryIdListMultiValueMapByProductIdList(productNoList);
         List<CartRetrieveResponse> cartList = productService.retrieveProductListByProductNoList(productNoList).stream()
             .map(product -> new CartRetrieveResponse(product.getId(), product.getTitle(), product.getPrice(), 0,
-                multiValueMap.get(product.getId()))).collect(Collectors.toList());
+                multiValueMap.get(product.getId()), product.getThumbnailNo())).collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(cartList);

@@ -32,6 +32,7 @@ public class RedisCartServiceImpl implements RedisCartService {
                                               .collect(Collectors.toList());
         List<Product> productList =
             productService.retrieveProductListByProductNoList(productNoList);
+
         return getCartRetrieveResponseListFromProductListAndCartDto(productList, cartDtoList);
     }
 

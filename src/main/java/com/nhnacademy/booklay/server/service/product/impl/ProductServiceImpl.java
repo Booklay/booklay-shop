@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBook
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
@@ -110,14 +111,6 @@ public class ProductServiceImpl implements ProductService {
     return savedProduct.getId();
   }
 
-//  // 수정 위해서 책 상품 조회
-//  @Override
-//  @Transactional(readOnly = true)
-//  public RetrieveProductBookResponse retrieveBookData(Long id) {
-//
-//    //TODO: 못찾는거 예외처리
-//    return productRepository.retrieveProductBookResponse(id);
-//  }
   // 수정 위해서 책 상품 조회
   @Override
   @Transactional(readOnly = true)
@@ -249,7 +242,7 @@ public class ProductServiceImpl implements ProductService {
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .objectFile(objectFile)
-        .isSelling(request.getIsSelling())
+        .isSelling(request.getSelling())
         .build();
   }
 
@@ -302,7 +295,7 @@ public class ProductServiceImpl implements ProductService {
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
         .objectFile(objectFile)
-        .isSelling(request.getIsSelling())
+        .isSelling(request.getSelling())
         .build();
   }
 
@@ -310,8 +303,6 @@ public class ProductServiceImpl implements ProductService {
   private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
     return Subscribe.builder()
         .product(product)
-        .subscribeWeek(Math.toIntExact(request.getSubscribeWeek()))
-        .subscribeDay(Math.toIntExact(request.getSubscribeDay()))
         .build();
   }
 
@@ -447,17 +438,34 @@ public class ProductServiceImpl implements ProductService {
     return resultList;
   }
 
-
-
-  @Override
-  public Product retrieveProductByProductNo(Long productNo) {
-    return productRepository.findById(productNo).orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
-  }
-
   @Override
   public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
     return productRepository.findAllById(productNoList);
   }
+
+  /**
+   * 상품 아이디 리스트를 받아서 페이지네이션.
+   */
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
+    return productRepository.retrieveProductPage(pageable);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
+    return productRepository.retrieveProductPage(productNoList, pageable);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public ProductAllInOneResponse retrieveProductResponse(Long productId){
+    return productRepository.retrieveProductResponse(productId);
+  }
+
+
 
   /**
    * 상품 아이디 리스트를 받아서 페이지네이션.

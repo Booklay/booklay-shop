@@ -2,11 +2,9 @@ package com.nhnacademy.booklay.server.controller.search;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.search.request.SearchRequest;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.search.SearchService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +39,12 @@ public class SearchController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<PageResponse<ProductAllInOneResponse>> searchByKeywords(@Valid @RequestBody SearchRequest searchRequest, Pageable pageable) {
+    public ResponseEntity<PageResponse<ProductAllInOneResponse>> search(@Valid @RequestBody SearchRequest searchRequest,
+                                                                        Pageable pageable) {
+
         List<Long> productIds = resolveRequest(searchRequest);
 
-        Page<ProductAllInOneResponse> page =
-            productService.retrieveProductListByProductNoList(productIds, pageable);
+        Page<ProductAllInOneResponse> page = productService.retrieveProductListByProductNoList(productIds, pageable);
 
         PageResponse<ProductAllInOneResponse> pageResponse = new PageResponse<>(page);
 
@@ -55,17 +54,7 @@ public class SearchController {
 
     private List<Long> resolveRequest(SearchRequest searchRequest) {
 
-        if( searchRequest.getClassification().equals("keywords")) {
-            return searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
-        } else if (searchRequest.getClassification().equals("tags")) {
-            return searchService.retrieveProductsIdsByTags(searchRequest.getKeywords());
-        } else if (searchRequest.getClassification().equals("category")) {
-            return searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
-        } else if (searchRequest.getClassification().equals("authors")) {
-            return searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
-        }
-
-        return new ArrayList<>();
+        return searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
     }
 
 }

@@ -156,7 +156,7 @@ class ProductServiceImplTest {
     //when
     productService.retrieveBookData(targetId);
 
-    BDDMockito.then(productRepository).should().retrieveProductBookResponse(targetId);
+    BDDMockito.then(productRepository).should().retrieveProductResponse(targetId);
 
   }
 

@@ -17,29 +17,43 @@ import org.springframework.data.support.PageableExecutionUtils;
 public class AuthorRepositoryImpl extends QuerydslRepositorySupport
     implements AuthorRepositoryCustom {
 
-    public AuthorRepositoryImpl() {
-        super(Author.class);
-    }
+  public AuthorRepositoryImpl() {
+    super(Author.class);
+  }
 
-    @Override
-    public Page<RetrieveAuthorResponse> findAllBy(Pageable pageable) {
-        QAuthor author = QAuthor.author;
-        QMember member = QMember.member;
+  @Override
+  public Page<RetrieveAuthorResponse> findAllBy(Pageable pageable) {
+    QAuthor author = QAuthor.author;
+    QMember member = QMember.member;
 
-        List<RetrieveAuthorResponse> content = from(author)
-            .leftJoin(member).on(author.member.memberNo.eq(member.memberNo))
-            .select(Projections.constructor(RetrieveAuthorResponse.class,
-                                            author.authorId,
-                                            author.name,
-                                            Projections.constructor(MemberForAuthorResponse.class,
-                                                                    member.memberNo,
-                                                                    member.memberId)))
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .fetch();
+    List<RetrieveAuthorResponse> content = from(author)
+        .leftJoin(member).on(author.member.memberNo.eq(member.memberNo))
+        .select(Projections.constructor(RetrieveAuthorResponse.class,
+            author.authorId,
+            author.name,
+            Projections.constructor(MemberForAuthorResponse.class,
+                member.memberNo,
+                member.memberId)))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
 
-        JPQLQuery<Long> count = from(author)
-            .select(author.count());
-        return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
-    }
+    JPQLQuery<Long> count = from(author)
+        .select(author.count());
+    return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+  }
+
+  @Override
+  public RetrieveAuthorResponse findAuthorById(Long authorNo) {
+    QAuthor author = QAuthor.author;
+    QMember member = QMember.member;
+
+    return from(author)
+        .leftJoin(member).on(author.member.eq(member))
+        .where(author.authorId.eq(authorNo))
+        .select(Projections.constructor(RetrieveAuthorResponse.class,
+            author,
+            member))
+        .fetchOne();
+  }
 }

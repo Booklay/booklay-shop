@@ -43,6 +43,14 @@ public class ProductDocument {
 
     private String longDescription;
 
+    private String categoryKeywords;
+    private String tagKeywords;
+    private String authorKeywords;
+
+    private String categoryIds;
+    private String tagIds;
+    private String authorIds;
+
     private boolean isDeleted;
 
     public static ProductDocument fromEntity(Product product) {

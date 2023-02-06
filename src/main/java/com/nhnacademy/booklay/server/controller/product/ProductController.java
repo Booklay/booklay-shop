@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.controller.product;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
@@ -28,20 +29,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService productService;
-    private final BookSubscribeService bookSubscribeService;
-    private final ProductRelationService productRelationService;
+  private final ProductService productService;
+  private final BookSubscribeService bookSubscribeService;
+  private final ProductRelationService productRelationService;
 
+    /**
+     * 조건 없이 전체 상품 리스트 페이지를 리턴
+     * @param pageable
+     * @return
+     */
     @GetMapping
-    public PageResponse<RetrieveProductResponse> retrieveProductPage(Pageable pageable)
-        throws IOException {
-        Page<RetrieveProductResponse> response = productService.retrieveProductPage(pageable);
+    public PageResponse<ProductAllInOneResponse> getProductPage(Pageable pageable) {
+        Page<ProductAllInOneResponse> response = productService.getProductsPage(pageable);
         return new PageResponse<>(response);
     }
 
     @GetMapping("/view/{productNo}")
-    public RetrieveProductViewResponse retrieveDetailView(@PathVariable Long productNo) {
-        return productService.retrieveProductView(productNo);
+    public ProductAllInOneResponse retrieveDetailView(@PathVariable Long productNo) {
+        return productService.retrieveProductResponse(productNo);
     }
 
     @GetMapping("/view/subscribe/{subscribeId}")
@@ -55,4 +60,5 @@ public class ProductController {
         throws IOException {
         return productRelationService.retrieveRecommendProducts(productId);
     }
+
 }

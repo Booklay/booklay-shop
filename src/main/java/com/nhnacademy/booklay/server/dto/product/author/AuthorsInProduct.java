@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.dto.product.author;
 
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.Author;
+import java.util.Map;
 import java.util.Objects;
 import lombok.Getter;
 

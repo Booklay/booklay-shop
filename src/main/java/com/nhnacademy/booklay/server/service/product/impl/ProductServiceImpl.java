@@ -172,14 +172,6 @@ public class ProductServiceImpl implements ProductService {
     productRepository.save(targetProduct);
   }
 
-  // 수정 위해서 구독 상품 조회
-  @Override
-  @Transactional(readOnly = true)
-  public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    //TODO: 못찾는거 예외처리
-    return productRepository.retrieveProductSubscribeResponseById(id);
-  }
-
   // 구독 상품 수정
   @Override
   @Transactional
@@ -444,13 +436,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     return resultList;
-  }
-
-
-
-  @Override
-  public Product retrieveProductByProductNo(Long productNo) {
-    return productRepository.findById(productNo).orElseThrow(() -> new NotFoundException(Product.class, productNo.toString()));
   }
 
   @Override

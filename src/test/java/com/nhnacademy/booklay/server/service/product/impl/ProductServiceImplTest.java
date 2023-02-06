@@ -226,15 +226,6 @@ class ProductServiceImplTest {
   }
 
   @Test
-  void retrieveSubscribeData_success() {
-    //when
-    productService.retrieveSubscribeData(productSubscribe.getId());
-
-    BDDMockito.then(productRepository).should()
-        .retrieveProductSubscribeResponseById(productSubscribe.getId());
-  }
-
-  @Test
   void updateSubscribeProduct_success() throws IOException {
 
     given(productRepository.existsById(subscribeRequest.getProductId())).willReturn(true);

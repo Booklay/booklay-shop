@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.coupon;
+package com.nhnacademy.booklay.server.dto.coupon.request;
 
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

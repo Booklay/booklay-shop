@@ -32,11 +32,15 @@ public class SearchServiceImpl implements SearchService {
     private final ElasticsearchOperations operations;
 
     private static final String KEYWORDS_TEXT = "keywordText";
+    private static final String KEYWORDS_TAG = "tagsText";
+    private static final String KEYWORDS_AUTHOR = "authorsText";
+    private static final String KEYWORDS_CATEGORY = "categoryText";
     private static final String KEYWORDS_ID = "keywordId";
 
     public SearchServiceImpl(CategoryDocumentRepository categoryDocumentRepository,
                              ProductDocumentRepository productDocumentRepository,
-                             CategoryRepository categoryRepository, ProductRepository productRepository,
+                             CategoryRepository categoryRepository,
+                             ProductRepository productRepository,
                              ElasticsearchOperations operations) {
         this.categoryDocumentRepository = categoryDocumentRepository;
         this.productDocumentRepository = productDocumentRepository;
@@ -46,44 +50,32 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void saveAllDocuments(){
+    public void saveAllDocuments() {
 //        카테고리 인덱스 저장
 
         List<Category> categories = categoryRepository.findAll();
         List<CategoryDocument> categoryDocuments = new ArrayList<>();
 
-        if(!categoryDocuments.isEmpty()){
+        if (!categories.isEmpty()) {
             categories.forEach(category -> categoryDocuments.add(CategoryDocument.fromCategory(category)));
             categoryDocumentRepository.saveAll(categoryDocuments);
         }
 
-//        상품 인덱스 지정
+//        상품 인덱스 저장
 
         List<Product> products = productRepository.findAll();
         List<ProductDocument> productDocuments = new ArrayList<>();
 
-
-        if (!products.isEmpty()){
+        if (!products.isEmpty()) {
             products.forEach(product -> productDocuments.add(ProductDocument.fromEntity(product)));
             productDocumentRepository.saveAll(productDocuments);
         }
 
     }
 
-    @Override
-    public List<Long> retrieveProductsIdsByCategory(String categoryId) {
-
-        return retrieveCategoryHitsByIdMatch(categoryId);
-    }
-
-    @Override
-    public List<Long> retrieveProductsIdsByTags(String keywords) {
-        return null;
-    }
 
     @Override
     public List<Long> retrieveProductsIdsByKeywords(String keywords) {
-
         return retrieveProductHitsByKeywordsMatch(keywords);
     }
 
@@ -105,7 +97,12 @@ public class SearchServiceImpl implements SearchService {
         SearchHits<CategoryDocument>
             categoryDocumentSearchHits = operations.search(nativeQuery, CategoryDocument.class);
 
-        return getHitIds(categoryDocumentSearchHits);
+        List<Long> categoryIds = getHitIds(categoryDocumentSearchHits);
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
+
+        return getHitIds(productDocumentSearchHits);
     }
 
     /**
@@ -135,7 +132,7 @@ public class SearchServiceImpl implements SearchService {
      * @return 아이디 리스트.
      * @param <T> 도큐먼트 타입.
      */
-    private static <T> List<Long> getHitIds(SearchHits<T> searchHits) {
+    private <T> List<Long> getHitIds(SearchHits<T> searchHits) {
         List<Long> hitIds = new ArrayList<>();
 
         searchHits.getSearchHits().forEach(
@@ -143,5 +140,46 @@ public class SearchServiceImpl implements SearchService {
                 Long.valueOf(Objects.requireNonNull(productDocumentSearchHit.getId())))
         );
         return hitIds;
+    }
+
+    @Override
+    public List<Long> retrieveProductsIdsByTags(String keywords) {
+        Query nativeQuery = new NativeSearchQueryBuilder()
+            .withQuery(
+                QueryBuilders.matchQuery(KEYWORDS_TAG, keywords).minimumShouldMatch("80%")
+            )
+            .build();
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
+
+        return getHitIds(productDocumentSearchHits);
+    }
+
+    @Override
+    public List<Long> retrieveProductsIdsByAuthors(String keywords) {
+        Query nativeQuery = new NativeSearchQueryBuilder()
+            .withQuery(
+                QueryBuilders.matchQuery(KEYWORDS_AUTHOR, keywords).minimumShouldMatch("80%")
+            )
+            .build();
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
+
+        return getHitIds(productDocumentSearchHits);
+    }
+    @Override
+    public List<Long> retrieveProductsIdsByCategory(String keywords) {
+        Query nativeQuery = new NativeSearchQueryBuilder()
+            .withQuery(
+                QueryBuilders.matchQuery(KEYWORDS_CATEGORY, keywords).minimumShouldMatch("80%")
+            )
+            .build();
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
+
+        return getHitIds(productDocumentSearchHits);
     }
 }

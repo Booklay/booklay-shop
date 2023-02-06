@@ -58,10 +58,10 @@ jobs:
           script_stop: true
           script: "./unhealth.sh"
 
-      - name: Sleep for 60 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '60s'
+#      - name: Sleep for 60 seconds
+#        uses: jakejarvis/wait-action@master
+#        with:
+#          time: '60s'
       
       - name : upload file
         uses: appleboy/scp-action@master
@@ -83,11 +83,11 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: "./startup.sh"
-
-      - name: Sleep for 30 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '30s'
+#
+#      - name: Sleep for 30 seconds
+#        uses: jakejarvis/wait-action@master
+#        with:
+#          time: '30s'
 
       #################
       # Shop Server 2 #
@@ -103,10 +103,10 @@ jobs:
           script_stop: true
           script: "./unhealth.sh"
 
-      - name: Sleep for 60 seconds 2
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '60s'
+#      - name: Sleep for 60 seconds 2
+#        uses: jakejarvis/wait-action@master
+#        with:
+#          time: '60s'
 
       - name: upload file 2
         uses: appleboy/scp-action@master
@@ -128,8 +128,8 @@ jobs:
           port: ${{ secrets.SSH_PORT_2 }}
           script_stop: true
           script: "./startup.sh"
-
-      - name: Sleep for 30 seconds 2
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '30s'
+#
+#      - name: Sleep for 30 seconds 2
+#        uses: jakejarvis/wait-action@master
+#        with:
+#          time: '30s'

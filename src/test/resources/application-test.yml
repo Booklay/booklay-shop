@@ -22,6 +22,10 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
 
+  kafka:
+    consumer:
+      group-id: shop
+
 cloud:
   auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
   user-name: sjun0322@naver.com
@@ -49,3 +53,9 @@ booklay:
 
   elasticsearch:
     uri: 133.186.210.108:9200
+
+message:
+  topic:
+    coupon:
+      request: coupon-zone-request
+      response: coupon-zone-response

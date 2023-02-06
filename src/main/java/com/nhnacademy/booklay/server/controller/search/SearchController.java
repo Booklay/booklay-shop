@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.controller.search;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.search.request.SearchRequest;
 import com.nhnacademy.booklay.server.service.product.ProductService;
@@ -38,16 +40,15 @@ public class SearchController {
             .build();
     }
 
-    @PostMapping("/products/keywords")
-    public ResponseEntity<PageResponse<RetrieveProductResponse>> search(@Valid @RequestBody SearchRequest searchRequest,
+    @PostMapping("/products")
+    public ResponseEntity<PageResponse<ProductAllInOneResponse>> search(@Valid @RequestBody SearchRequest searchRequest,
                                                                         Pageable pageable) {
 
         List<Long> productIds = resolveRequest(searchRequest);
 
-        Page<RetrieveProductResponse> page =
-            productService.retrieveProductListByProductNoList(productIds, pageable);
+        Page<ProductAllInOneResponse> page = productService.retrieveProductListByProductNoList(productIds, pageable);
 
-        PageResponse<RetrieveProductResponse> pageResponse = new PageResponse<>(page);
+        PageResponse<ProductAllInOneResponse> pageResponse = new PageResponse<>(page);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(pageResponse);

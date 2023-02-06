@@ -36,12 +36,13 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         MemberLoginResponse memberLoginResponse = from(member)
             .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
             .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
-            .where(member.memberId.eq(userId))
+            .where(member.memberId.eq(userId).and(member.deletedAt.isNull()))
             .select(Projections.constructor(MemberLoginResponse.class,
                                             member.memberId,
                                             member.password,
                                             authority.name,
-                                            member.email))
+                                            member.email,
+                                            member.isBlocked))
             .fetchOne();
 
         return Optional.ofNullable(memberLoginResponse);
@@ -105,6 +106,36 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
 
         return Optional.ofNullable(memberLoginResponse);
     }
+
+    @Override
+    public Optional<MemberRetrieveResponse> retrieveMemberInfoByEmail(String email) {
+
+        QMember member = QMember.member;
+        QAuthority authority = QAuthority.authority;
+        QMemberAuthority memberAuthority = QMemberAuthority.memberAuthority;
+
+        MemberRetrieveResponse memberRetrieveResponse = from(member)
+            .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
+            .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
+            .where(member.email.eq(email))
+            .select(Projections.constructor(MemberRetrieveResponse.class,
+                                            member.memberNo,
+                                            member.gender.name,
+                                            member.memberId,
+                                            member.nickname,
+                                            member.name,
+                                            member.birthday,
+                                            member.phoneNo,
+                                            member.email,
+                                            member.createdAt,
+                                            member.updatedAt,
+                                            member.deletedAt,
+                                            member.isBlocked))
+            .fetchOne();
+
+        return Optional.ofNullable(memberRetrieveResponse);
+    }
+
 
     public Page<DroppedMemberRetrieveResponse> retrieveDroppedMembers(Pageable pageable) {
         QMember member = QMember.member;

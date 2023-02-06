@@ -81,4 +81,9 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.findAllBy(pageable);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public RetrieveAuthorResponse retrieveAuthorForEdit(Long authorNo) {
+        return authorRepository.findAuthorById(authorNo);
+    }
 }

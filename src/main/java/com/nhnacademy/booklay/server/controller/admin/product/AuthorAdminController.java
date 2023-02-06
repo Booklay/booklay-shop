@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,11 @@ public class AuthorAdminController {
     public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable) {
         Page<RetrieveAuthorResponse> response = authorService.retrieveAllAuthor(pageable);
         return new PageResponse<>(response);
+    }
+
+    @GetMapping("/{authorNo}")
+    public RetrieveAuthorResponse authorEdit(@PathVariable Long authorNo){
+        return authorService.retrieveAuthorForEdit(authorNo);
     }
 
     @PostMapping

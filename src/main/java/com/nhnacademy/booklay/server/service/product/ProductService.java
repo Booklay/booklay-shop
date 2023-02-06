@@ -29,10 +29,7 @@ public interface ProductService {
 
   Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
 
-//  RetrieveProductBookResponse retrieveBookData(Long id);
   ProductAllInOneResponse retrieveBookData(Long id);
-
-  RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
 
   Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException;
 
@@ -41,8 +38,6 @@ public interface ProductService {
   List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 
   Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable);
-
-  Product retrieveProductByProductNo(Long productNo);
 
   Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
       Long subscribeId);

@@ -1,8 +1,6 @@
 package com.nhnacademy.booklay.server.repository.member;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
-import java.util.Optional;
+import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

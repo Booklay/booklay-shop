@@ -2,8 +2,8 @@ package com.nhnacademy.booklay.server.repository.mypage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.booklay.server.dto.member.reponse.PointHistoryRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.TotalPointRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;

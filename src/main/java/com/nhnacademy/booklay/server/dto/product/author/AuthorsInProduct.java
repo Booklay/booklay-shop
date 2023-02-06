@@ -1,16 +1,20 @@
 package com.nhnacademy.booklay.server.dto.product.author;
 
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
+import com.nhnacademy.booklay.server.entity.Author;
+import java.util.Objects;
 import lombok.Getter;
 
 @Getter
 public class AuthorsInProduct {
+
     Long productId;
 
     RetrieveAuthorResponse author;
 
-    public AuthorsInProduct(Long productId, RetrieveAuthorResponse author) {
+    public AuthorsInProduct(Long productId, Author author) {
         this.productId = productId;
-        this.author = author;
+        this.author = new RetrieveAuthorResponse(author, Objects.nonNull(author.getMember()) ? author.getMember() : null);
     }
+
 }

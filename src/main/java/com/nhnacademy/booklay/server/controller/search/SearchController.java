@@ -1,12 +1,10 @@
 package com.nhnacademy.booklay.server.controller.search;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
-import com.nhnacademy.booklay.server.dto.member.reponse.BlockedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.search.request.SearchRequest;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.search.SearchService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -34,34 +32,29 @@ public class SearchController {
     }
 
     @GetMapping("/save/all")
-    public ResponseEntity<Void> saveAll(){
+    public ResponseEntity<Void> saveAll() {
         searchService.saveAllDocuments();
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
 
     @PostMapping("/products")
-    public ResponseEntity<PageResponse<RetrieveProductResponse>> search(@Valid @RequestBody SearchRequest searchRequest,
+    public ResponseEntity<PageResponse<ProductAllInOneResponse>> search(@Valid @RequestBody SearchRequest searchRequest,
                                                                         Pageable pageable) {
 
         List<Long> productIds = resolveRequest(searchRequest);
 
-        Page<RetrieveProductResponse> page =
-            productService.retrieveProductListByProductNoList(productIds, pageable);
+        Page<ProductAllInOneResponse> page = productService.retrieveProductListByProductNoList(productIds, pageable);
 
-        PageResponse<RetrieveProductResponse> pageResponse = new PageResponse<>(page);
+        PageResponse<ProductAllInOneResponse> pageResponse = new PageResponse<>(page);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(pageResponse);
     }
 
-    private List<Long> resolveRequest(SearchRequest searchRequest){
+    private List<Long> resolveRequest(SearchRequest searchRequest) {
 
-        List<Long> ids = new ArrayList<>();
-
-        ids = searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
-
-        return ids;
+        return searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
     }
 
 }

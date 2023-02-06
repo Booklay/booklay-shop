@@ -3,8 +3,8 @@ package com.nhnacademy.booklay.server.service.product.impl;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
@@ -110,18 +110,27 @@ public class ProductServiceImpl implements ProductService {
     return savedProduct.getId();
   }
 
+//  // 수정 위해서 책 상품 조회
+//  @Override
+//  @Transactional(readOnly = true)
+//  public RetrieveProductBookResponse retrieveBookData(Long id) {
+//
+//    //TODO: 못찾는거 예외처리
+//    return productRepository.retrieveProductBookResponse(id);
+//  }
   // 수정 위해서 책 상품 조회
   @Override
   @Transactional(readOnly = true)
-  public RetrieveProductBookResponse retrieveBookData(Long id) {
-    return productRepository.retrieveProductBookResponse(id);
+  public ProductAllInOneResponse retrieveBookData(Long id) {
+    //TODO: 못찾는거 예외처리
+    return productRepository.retrieveProductResponse(id);
   }
 
   // 책 상품 수정
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
-      throw new IllegalArgumentException();
+      throw new NotFoundException(Product.class, "product not found");
     }
     Product product = splitProduct(request);
     product.setId(request.getProductId());
@@ -155,24 +164,18 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public void softDelete(Long productId) {
     Product targetProduct = productRepository.findById(productId)
-        .orElseThrow(
-            () -> new NotFoundException(Product.class,
-                "product not found"));
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
     targetProduct.setDeleted(true);
 
     productRepository.save(targetProduct);
   }
 
-  @Override
-  public List<RetrieveProductResponse> retrieveBooksSubscribed(List<Long> products) {
-    return null;
-  }
-
   // 수정 위해서 구독 상품 조회
   @Override
   @Transactional(readOnly = true)
   public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
+    //TODO: 못찾는거 예외처리
     return productRepository.retrieveProductSubscribeResponseById(id);
   }
 
@@ -318,8 +321,7 @@ public class ProductServiceImpl implements ProductService {
   public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException {
     Page<Product> products = productRepository.findNotDeletedByPageable(pageable);
 
-    List<Long> productIds =refineProductsToLongList(products.getContent());
-
+    List<Long> productIds = refineProductsToLongList(products.getContent());
     List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
 
     return new PageImpl<>(assembledContent, products.getPageable(),
@@ -333,7 +335,7 @@ public class ProductServiceImpl implements ProductService {
       throws IOException {
     Page<Product> products = productRepository.findAllBy(pageable, Product.class);
 
-    List<Long> productIds =refineProductsToLongList(products.getContent());
+    List<Long> productIds = refineProductsToLongList(products.getContent());
 
     List<RetrieveProductResponse> assembledContent = retrieveProductResponses(productIds);
 
@@ -341,7 +343,7 @@ public class ProductServiceImpl implements ProductService {
         products.getTotalElements());
   }
 
-  private List<Long> refineProductsToLongList(List<Product> products){
+  private List<Long> refineProductsToLongList(List<Product> products) {
     List<Long> productIds = new ArrayList<>();
 
     for (Product product : products) {
@@ -356,11 +358,9 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public RetrieveProductViewResponse retrieveProductView(Long productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new NotFoundException(Product.class,
-            "product not found"));
+        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
 
-    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(
-        product.getId());
+    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(product.getId());
 
     if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
       ProductDetail productDetail =
@@ -379,9 +379,8 @@ public class ProductServiceImpl implements ProductService {
 
       return new RetrieveProductViewResponse(product, subscribe, productTags);
     }
-    return null;
+    throw new NotFoundException(Product.class, "correct product not found");
   }
-
 
   @Override
   public Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
@@ -448,15 +447,6 @@ public class ProductServiceImpl implements ProductService {
     return resultList;
   }
 
-  /**
-   * 상품 아이디 리스트를 받아서 페이지네이션.
-   */
-  @Override
-  public Page<RetrieveProductResponse> retrieveProductListByProductNoList(
-      List<Long> productNoList, Pageable pageable) {
-
-    return productRepository.retrieveProductPageByIds(productNoList, pageable);
-  }
 
 
   @Override
@@ -468,6 +458,30 @@ public class ProductServiceImpl implements ProductService {
   public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
     return productRepository.findAllById(productNoList);
   }
+
+  /**
+   * 상품 아이디 리스트를 받아서 페이지네이션.
+   */
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
+    return productRepository.retrieveProductPage(pageable);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
+    return productRepository.retrieveProductPage(productNoList, pageable);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public ProductAllInOneResponse retrieveProductResponse(Long productId){
+    return productRepository.retrieveProductResponse(productId);
+  }
+
+
 
 }
 

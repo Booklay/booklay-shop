@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
@@ -70,15 +71,12 @@ public class AuthorServiceImpl implements AuthorService {
     public void deleteAuthor(DeleteIdRequest request) {
         Long id = request.getId();
 
-        Author author = authorRepository.findById(id)
-                                        .orElseThrow(() -> new NotFoundException(Author.class,
-                                                                                 "author not found"));
-
-        authorRepository.delete(author);
+        productAuthorRepository.deleteByPk_AuthorId(id);
+        authorRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable) {
         return authorRepository.findAllBy(pageable);
     }

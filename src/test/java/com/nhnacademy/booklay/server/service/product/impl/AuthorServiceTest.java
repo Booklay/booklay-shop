@@ -16,6 +16,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,8 @@ class AuthorServiceTest {
 
   @Mock
   private MemberRepository memberRepository;
+  @Mock
+  private ProductAuthorRepository productAuthorRepository;
 
   Author author;
   CreateAuthorRequest requestWithoutMember;
@@ -158,23 +161,15 @@ class AuthorServiceTest {
 
   @Test
   void testAuthorDelete_success() {
+    //given
     ReflectionTestUtils.setField(author, "authorId", 1L);
-
     DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorId());
 
-    given(authorRepository.findById(author.getAuthorId())).willReturn(Optional.of(author));
-
+    //when
     authorService.deleteAuthor(deleteIdRequest);
 
-    then(authorRepository).should().delete(author);
-  }
-
-  @Test
-  void testAuthorDelete_failure() {
-    ReflectionTestUtils.setField(author, "authorId", 1L);
-    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(author.getAuthorId());
-
-    assertThatThrownBy(() -> authorService.deleteAuthor(deleteIdRequest)).isInstanceOf(
-        NotFoundException.class);
+    //then
+    BDDMockito.then(productAuthorRepository).should().deleteByPk_AuthorId(deleteIdRequest.getId());
+    BDDMockito.then(authorRepository).should().deleteById(deleteIdRequest.getId());
   }
 }

@@ -36,6 +36,9 @@ public class Product {
     @JoinColumn(name = "thumbnail_no")
     private ObjectFile objectFile;
 
+    @Column(name = "thumbnail_no", insertable = false, updatable = false)
+    private Long thumbnailNo;
+
     @Column
     private String title;
 

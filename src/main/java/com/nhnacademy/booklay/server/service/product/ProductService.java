@@ -39,7 +39,6 @@ public interface ProductService {
 
   Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable);
 
-  Product retrieveProductByProductNo(Long productNo);
 
   Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
       Long subscribeId);

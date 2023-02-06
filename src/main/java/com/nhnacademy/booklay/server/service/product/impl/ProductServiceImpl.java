@@ -464,32 +464,5 @@ public class ProductServiceImpl implements ProductService {
   public ProductAllInOneResponse retrieveProductResponse(Long productId){
     return productRepository.retrieveProductResponse(productId);
   }
-
-
-
-  /**
-   * 상품 아이디 리스트를 받아서 페이지네이션.
-   */
-
-  @Override
-  @Transactional(readOnly = true)
-  public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
-    return productRepository.retrieveProductPage(pageable);
-  }
-
-  @Transactional(readOnly = true)
-  @Override
-  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
-    return productRepository.retrieveProductPage(productNoList, pageable);
-  }
-
-  @Transactional(readOnly = true)
-  @Override
-  public ProductAllInOneResponse retrieveProductResponse(Long productId){
-    return productRepository.retrieveProductResponse(productId);
-  }
-
-
-
 }
 

@@ -15,4 +15,6 @@ public class MemberLoginResponse {
 
     private final String email;
 
+    private final Boolean isBlocked;
+
 }

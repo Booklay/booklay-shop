@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.ErrorResponse;
 import com.nhnacademy.booklay.server.exception.ApiException;
 import com.nhnacademy.booklay.server.exception.CommonErrorCode;
 import com.nhnacademy.booklay.server.exception.ErrorCode;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -52,16 +53,17 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, errorCode);
     }
 
+
+    private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                             .body(makeErrorResponse(errorCode));
+    }
+
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleAllException(Exception ex) {
         log.warn("handleAllException", ex);
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
         return handleExceptionInternal(errorCode);
-    }
-
-    private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
-        return ResponseEntity.status(errorCode.getHttpStatus())
-                             .body(makeErrorResponse(errorCode));
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {

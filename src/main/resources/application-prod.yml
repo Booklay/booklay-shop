@@ -38,3 +38,8 @@ booklay:
   elasticsearch:
     uri: 133.186.210.108:9200
 
+message:
+  topic:
+    coupon:
+      request: coupon-zone-request
+      response: coupon-zone-response

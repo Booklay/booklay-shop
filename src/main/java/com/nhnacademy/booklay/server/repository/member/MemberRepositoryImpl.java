@@ -36,12 +36,13 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         MemberLoginResponse memberLoginResponse = from(member)
             .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
             .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
-            .where(member.memberId.eq(userId))
+            .where(member.memberId.eq(userId).and(member.deletedAt.isNull()))
             .select(Projections.constructor(MemberLoginResponse.class,
                                             member.memberId,
                                             member.password,
                                             authority.name,
-                                            member.email))
+                                            member.email,
+                                            member.isBlocked))
             .fetchOne();
 
         return Optional.ofNullable(memberLoginResponse);

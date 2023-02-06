@@ -81,4 +81,6 @@ public class Product {
         this.isSelling = isSelling;
         this.pointMethod = pointMethod;
     }
+
+
 }

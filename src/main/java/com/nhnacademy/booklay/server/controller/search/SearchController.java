@@ -2,6 +2,8 @@ package com.nhnacademy.booklay.server.controller.search;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.search.request.SearchRequest;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.search.SearchService;

@@ -19,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@Transactional
 class AuthorRepositoryTest {
   @Autowired
   AuthorRepository authorRepository;

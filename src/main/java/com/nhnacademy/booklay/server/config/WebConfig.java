@@ -15,12 +15,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Objects;
+
+import com.nhnacademy.booklay.server.filter.ContentCachingRequestWrapperFilter;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -109,5 +112,13 @@ public class WebConfig {
                              .username(usernameResponse.getBody().getSecret())
                              .build();
 
+    }
+
+    /**
+     * inputStream 을 여러번 읽을 수 있는 requestWrapper 로 변환하는 필터
+     */
+    @Bean
+    public FilterRegistrationBean<ContentCachingRequestWrapperFilter> reReadableRequestFilter(){
+        return new FilterRegistrationBean<>(new ContentCachingRequestWrapperFilter());
     }
 }

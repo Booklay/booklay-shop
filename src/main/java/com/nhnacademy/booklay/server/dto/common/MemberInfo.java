@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -31,7 +34,14 @@ public class MemberInfo {
         this.nickname = readMap(memberInfoFieldName[arrayCount++], paramMap);
         this.name = readMap(memberInfoFieldName[arrayCount++], paramMap);
         String birthdayString = readMap(memberInfoFieldName[arrayCount++], paramMap);
-        this.birthday = birthdayString==null?null:LocalDate.parse(birthdayString);
+        if (birthdayString != null) {
+            String[] bStringArray = birthdayString.replace("[", "").replace("]", "")
+                    .split(", ");
+            List<String> strings = Arrays.stream(bStringArray).map(s -> s.length() < 2 ? "0" + s : s).collect(Collectors.toList());
+            this.birthday = LocalDate.parse(strings.get(0)+"-"+strings.get(1)+"-"+strings.get(2));
+        }else {
+            this.birthday = null;
+        }
         this.phoneNo = readMap(memberInfoFieldName[arrayCount++], paramMap);
         this.email = readMap(memberInfoFieldName[arrayCount], paramMap);
     }

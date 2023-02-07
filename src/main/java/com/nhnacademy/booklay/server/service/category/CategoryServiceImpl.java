@@ -43,11 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         Optional<Category> parentCategory = Optional.empty();
 
-        if (Objects.nonNull(createRequest.getParentCategoryId())) {
-            if (createRequest.getParentCategoryId() != 0) {
-                parentCategory =
-                    categoryRepository.findById(createRequest.getParentCategoryId());
-            }
+        if (Objects.nonNull(createRequest.getParentCategoryId()) && createRequest.getParentCategoryId() != 0) {
+            parentCategory = categoryRepository.findById(createRequest.getParentCategoryId());
         }
 
         categoryRepository.save(createRequest.toEntity(parentCategory));
@@ -73,17 +70,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void updateCategory(CategoryUpdateRequest updateRequest, Long categoryId) {
-        Category category = categoryFindById(categoryId);
+        /**
+         *  1. 리퀘스트의 아이디와 수정 요청이 들어온 아이디를 비교
+         *  2. 먼저 리퀘스트를 토대로 엔티티를 수정하고 save
+         *  3. 하위 카테고리들의 상위 카테고리 정보 및 코드 변경하여 저장
+         *  4. 이후 기존 요청 들어온 카테고리 정보를 삭제
+         */
 
-        Optional<Category> parentCategory = Optional.empty();
+        Optional<Category> parentCategory =
+            Objects.nonNull(updateRequest.getParentCategoryId())
+                ? categoryRepository.findById(updateRequest.getParentCategoryId()) : Optional.empty();
 
-        if (updateRequest.getParentCategoryId() != 0) {
-            parentCategory =
-                categoryRepository.findById(updateRequest.getParentCategoryId());
-        }
-
-        categoryRepository.delete(category);
         categoryRepository.save(updateRequest.toEntity(parentCategory));
+
+        if (!categoryId.equals(updateRequest.getId())) {
+            categoryRepository.deleteById(categoryId);
+        }
     }
 
     @Override

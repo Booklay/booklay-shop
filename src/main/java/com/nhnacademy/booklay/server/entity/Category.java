@@ -26,7 +26,7 @@ public class Category {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_category_no", nullable = true)
+    @JoinColumn(name = "parent_category_no")
     private Category parent;
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)

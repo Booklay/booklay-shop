@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table
+@Table(name="restocking_notification")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

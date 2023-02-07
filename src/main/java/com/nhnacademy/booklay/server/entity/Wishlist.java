@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Table
+@Table(name="wishlist")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,6 +38,7 @@ public class Wishlist {
         this.pk = pk;
     }
 
+    @Getter
     @Embeddable
     @EqualsAndHashCode
     @AllArgsConstructor

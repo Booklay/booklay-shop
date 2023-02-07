@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.mypage.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -12,10 +11,9 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.Wishlist;
 import com.nhnacademy.booklay.server.entity.Wishlist.Pk;
-import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
-import com.nhnacademy.booklay.server.repository.product.WishlistRepository;
+import com.nhnacademy.booklay.server.repository.mypage.WishlistRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

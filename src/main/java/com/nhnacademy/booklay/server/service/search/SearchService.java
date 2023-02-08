@@ -1,19 +1,17 @@
 package com.nhnacademy.booklay.server.service.search;
 
-import java.util.List;
+import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface SearchService {
+
     void saveAllDocuments();
 
-    List<Long> retrieveProductsIdsByKeywords(String keywords);
+    SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable);
 
-    List<Long> retrieveCategoryHitsByIdMatch(String categoryId);
+    SearchPageResponse<SearchProductResponse> searchProductsByKeywords(SearchKeywordsRequest request, Pageable pageable);
 
-    List<Long> retrieveProductHitsByKeywordsMatch(String keywords);
-
-    List<Long> retrieveProductsIdsByTags(String keywords);
-
-    List<Long> retrieveProductsIdsByAuthors(String keywords);
-
-    List<Long> retrieveProductsIdsByCategory(String keywords);
+    SearchPageResponse<SearchProductResponse> searchProductsByCategory(Long categoryId, Pageable pageable);
 }

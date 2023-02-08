@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.controller.board;
 
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
-import com.nhnacademy.booklay.server.repository.post.PostRepository;
 import com.nhnacademy.booklay.server.service.board.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +18,8 @@ public class BoardController {
   private final PostService postService;
 
   @PostMapping
-  public void createPost(@RequestBody BoardPostCreateRequest request){
-    postService.createPost(request);
+  public Long createPost(@RequestBody BoardPostCreateRequest request) {
+    return postService.createPost(request);
   }
 
 }

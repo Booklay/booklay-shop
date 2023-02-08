@@ -43,7 +43,6 @@ public class ProductDocument {
     private Long id;
     private Long thumbnail;
 
-
     //검색 키워드
     private String title;
     private String shortDescription;
@@ -57,12 +56,12 @@ public class ProductDocument {
     private List<TagInfo> tags;
     private List<CategoryInfo> categories;
     private Boolean isDeleted;
+    private Boolean isSelling;
 
     /**
      * 엘라스틱 상품 Docs 필드를 Query DSL 을 이용해 획득한 정보에서 얻어 생성.
      */
     public static ProductDocument fromEntity(ProductAllInOneResponse product) {
-
 
         List<AuthorInfo> authorInfos = new ArrayList<>();
         List<TagInfo> tagInfos = new ArrayList<>();
@@ -99,6 +98,7 @@ public class ProductDocument {
             .categories(categoryInfos)
 
             .isDeleted(product.getInfo().isDeleted())
+            .isSelling(product.getInfo().isSelling())
 
             .build();
 

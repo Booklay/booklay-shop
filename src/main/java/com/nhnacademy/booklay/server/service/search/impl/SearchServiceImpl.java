@@ -1,7 +1,10 @@
 package com.nhnacademy.booklay.server.service.search.impl;
 
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.document.CategoryDocument;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
@@ -10,12 +13,20 @@ import com.nhnacademy.booklay.server.repository.documents.ProductDocumentReposit
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.service.search.SearchService;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -32,10 +43,9 @@ public class SearchServiceImpl implements SearchService {
     private final ElasticsearchOperations operations;
 
     private static final String KEYWORDS_TEXT = "keywordText";
-    private static final String KEYWORDS_TAG = "tagsText";
-    private static final String KEYWORDS_AUTHOR = "authorsText";
-    private static final String KEYWORDS_CATEGORY = "categoryText";
     private static final String KEYWORDS_ID = "keywordId";
+    private static final String[] PRODUCT_NESTED_PATH = { "categories", "tags", "authors"};
+
 
     public SearchServiceImpl(CategoryDocumentRepository categoryDocumentRepository,
                              ProductDocumentRepository productDocumentRepository,
@@ -50,6 +60,86 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
+
+        Query query = new NativeSearchQueryBuilder()
+            .withQuery(
+                QueryBuilders.matchAllQuery()
+            ).withPageable(pageable).build();
+
+        loggingQueryInfo(query);
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(query, ProductDocument.class);
+
+        return getSearchPageResponse(pageable, productDocumentSearchHits, "전체 상품");
+
+    }
+
+    private static void loggingQueryInfo(Query query) {
+        log.info(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
+    }
+
+    @Override
+    public SearchPageResponse<SearchProductResponse> searchProductsByKeywords(
+        SearchKeywordsRequest searchKeywordsRequest, Pageable pageable) {
+
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
+        // 요청 정보에서 전체 키워드와 작가/태그/카테고리 키워드 구분
+        if (Arrays.stream(PRODUCT_NESTED_PATH).noneMatch(x -> x.equals(searchKeywordsRequest.getClassification()))) {
+            queryBuilder.withQuery(searchProductsByOneField(KEYWORDS_TEXT, searchKeywordsRequest.getKeywords()));
+        } else {
+            queryBuilder.withQuery(searchProductByNestedField(searchKeywordsRequest));
+        }
+
+        NativeSearchQuery query = queryBuilder.withPageable(pageable).build();
+
+        loggingQueryInfo(query);
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(query, ProductDocument.class);
+
+        return getSearchPageResponse(pageable, productDocumentSearchHits, searchKeywordsRequest.getKeywords());
+    }
+
+    @Override
+    public SearchPageResponse<SearchProductResponse> searchProductsByCategory(Long categoryId,
+                                                                Pageable pageable) {
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
+        NativeSearchQuery query =
+            queryBuilder
+                .withQuery(nestedQueryForId("categories", categoryId))
+                .withPageable(pageable).build();
+
+        loggingQueryInfo(query);
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(query, ProductDocument.class);
+
+        Optional<Category> category = categoryRepository.findById(categoryId);
+
+        String searchTitle = category.isPresent() ? category.get().getName() : "알 수 없는 카테고리 정보";
+
+        return getSearchPageResponse(pageable, productDocumentSearchHits, searchTitle);
+    }
+
+    private SearchPageResponse<SearchProductResponse> getSearchPageResponse(Pageable pageable,
+                                                                            SearchHits<ProductDocument> productDocumentSearchHits,
+                                                                            String searchTitle) {
+
+        List<SearchProductResponse> list = convertHitsToResponse(getHits(productDocumentSearchHits));
+
+        return new SearchPageResponse<>(
+            searchTitle,
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            list.size() / pageable.getPageSize(),
+            list);
+    }
+
+    @Override
     public void saveAllDocuments() {
 //        카테고리 인덱스 저장
 
@@ -57,72 +147,37 @@ public class SearchServiceImpl implements SearchService {
         List<CategoryDocument> categoryDocuments = new ArrayList<>();
 
         if (!categories.isEmpty()) {
-            categories.forEach(category -> categoryDocuments.add(CategoryDocument.fromCategory(category)));
+            categories.forEach(category ->
+                categoryDocuments.add(CategoryDocument.fromCategory(category)));
             categoryDocumentRepository.saveAll(categoryDocuments);
         }
 
 //        상품 인덱스 저장
 
-        List<Product> products = productRepository.findAll();
+        List<ProductAllInOneResponse> products = productRepository.findAllProducts();
         List<ProductDocument> productDocuments = new ArrayList<>();
 
         if (!products.isEmpty()) {
-            products.forEach(product -> productDocuments.add(ProductDocument.fromEntity(product)));
+            AtomicInteger count = new AtomicInteger(1);
+            products.forEach(product -> {
+                productDocuments.add(ProductDocument.fromEntity(product));
+                log.info(" Docs Add Counts : {}", count.getAndIncrement());
+            });
+
             productDocumentRepository.saveAll(productDocuments);
         }
 
+
     }
 
 
-    @Override
-    public List<Long> retrieveProductsIdsByKeywords(String keywords) {
-        return retrieveProductHitsByKeywordsMatch(keywords);
-    }
+    private List<SearchProductResponse> convertHitsToResponse(List<ProductDocument> list) {
 
+        List<SearchProductResponse> responses = new ArrayList<>();
 
-    /**
-     * 카테고리 아이디를 받아서 엘라스틱 서치에 도큐먼트에 저장된 KeywordID 필드를 조회하여 상위 카테고리를 검색하는 경우
-     * 하위 카테고리의 리스트도 모두 리스트로 나오게 됨.
-     * @param categoryId 검색할 카테고리.
-     * @return 검색된 카테고리들의 아이디 리스트.
-     */
-    @Override
-    public List<Long> retrieveCategoryHitsByIdMatch(String categoryId) {
-        Query nativeQuery = new NativeSearchQueryBuilder()
-            .withQuery(
-                QueryBuilders.matchQuery(KEYWORDS_ID, categoryId)
-            )
-            .build();
+        list.forEach(x -> responses.add(new SearchProductResponse(x)));
 
-        SearchHits<CategoryDocument>
-            categoryDocumentSearchHits = operations.search(nativeQuery, CategoryDocument.class);
-
-        List<Long> categoryIds = getHitIds(categoryDocumentSearchHits);
-
-        SearchHits<ProductDocument>
-            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
-
-        return getHitIds(productDocumentSearchHits);
-    }
-
-    /**
-     * 여러 키워드가 들어간 스트링으로 검색하여 아이디 리스트를 반환.
-     * @param keywords 검색할 키워드들이 들어간 스트링.
-     * @return 검색된 상품들의 아이디 리스트.
-     */
-
-    @Override
-    public List<Long> retrieveProductHitsByKeywordsMatch(String keywords) {
-        Query nativeQuery = new NativeSearchQueryBuilder()
-            .withQuery(
-                QueryBuilders.matchQuery(KEYWORDS_TEXT, keywords).minimumShouldMatch("80%")
-            )
-            .build();
-
-        SearchHits<ProductDocument>
-            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
-
-        return getHitIds(productDocumentSearchHits);
+        return responses;
     }
 
     /**
@@ -137,49 +192,47 @@ public class SearchServiceImpl implements SearchService {
 
         searchHits.getSearchHits().forEach(
             productDocumentSearchHit -> hitIds.add(
-                Long.valueOf(Objects.requireNonNull(productDocumentSearchHit.getId())))
-        );
+                Long.valueOf(Objects.requireNonNull(productDocumentSearchHit.getId()))));
+
         return hitIds;
     }
 
-    @Override
-    public List<Long> retrieveProductsIdsByTags(String keywords) {
-        Query nativeQuery = new NativeSearchQueryBuilder()
-            .withQuery(
-                QueryBuilders.matchQuery(KEYWORDS_TAG, keywords).minimumShouldMatch("80%")
-            )
-            .build();
+    private <T> List<T> getHits(SearchHits<T> searchHits) {
+        List<T> hits = new ArrayList<>();
 
-        SearchHits<ProductDocument>
-            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
+        searchHits.getSearchHits().forEach(
+            productDocumentSearchHit -> hits.add(productDocumentSearchHit.getContent()));
 
-        return getHitIds(productDocumentSearchHits);
+        return hits;
     }
 
-    @Override
-    public List<Long> retrieveProductsIdsByAuthors(String keywords) {
-        Query nativeQuery = new NativeSearchQueryBuilder()
-            .withQuery(
-                QueryBuilders.matchQuery(KEYWORDS_AUTHOR, keywords).minimumShouldMatch("80%")
-            )
-            .build();
+    /**
+     * 여러 키워드가 들어간 스트링으로 검색하여 아이디 리스트를 반환.
+     *
+     * @param keywords 검색할 키워드들이 들어간 스트링.
+     * @return 검색된 상품들의 아이디 리스트.
+     */
 
-        SearchHits<ProductDocument>
-            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
-
-        return getHitIds(productDocumentSearchHits);
+    private MatchQueryBuilder searchProductsByOneField(String field, String keywords) {
+        return QueryBuilders.matchQuery(field, keywords);
     }
-    @Override
-    public List<Long> retrieveProductsIdsByCategory(String keywords) {
-        Query nativeQuery = new NativeSearchQueryBuilder()
-            .withQuery(
-                QueryBuilders.matchQuery(KEYWORDS_CATEGORY, keywords).minimumShouldMatch("80%")
-            )
-            .build();
 
-        SearchHits<ProductDocument>
-            productDocumentSearchHits = operations.search(nativeQuery, ProductDocument.class);
+    private NestedQueryBuilder nestedQuery(String nestedPath, String field, String text) {
+        return QueryBuilders.nestedQuery(
+            nestedPath,
+            QueryBuilders.matchQuery(field, text),
+            ScoreMode.None);
+    }
 
-        return getHitIds(productDocumentSearchHits);
+    private NestedQueryBuilder searchProductByNestedField(
+        SearchKeywordsRequest searchKeywordsRequest) {
+        return nestedQuery(
+            searchKeywordsRequest.getClassification(),
+            searchKeywordsRequest.getClassification() + ".name",
+            searchKeywordsRequest.getKeywords());
+    }
+
+    private NestedQueryBuilder nestedQueryForId(String path, Long id) {
+        return nestedQuery(path, path + ".id", String.valueOf(id));
     }
 }

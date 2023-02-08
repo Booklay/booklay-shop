@@ -1,16 +1,12 @@
 package com.nhnacademy.booklay.server.controller.search;
 
-import com.nhnacademy.booklay.server.dto.PageResponse;
-import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
-import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
-import com.nhnacademy.booklay.server.dto.search.request.SearchRequest;
-import com.nhnacademy.booklay.server.service.product.ProductService;
+import com.nhnacademy.booklay.server.dto.search.request.SearchCategoryRequest;
+import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.service.search.SearchService;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,37 +22,46 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchController {
 
     private final SearchService searchService;
-    private final ProductService productService;
 
-    public SearchController(SearchService searchService, ProductService productService) {
+    public SearchController(SearchService searchService) {
         this.searchService = searchService;
-        this.productService = productService;
     }
 
-    @GetMapping("/save/all")
-    public ResponseEntity<Void> saveAll() {
-        searchService.saveAllDocuments();
-        return ResponseEntity.status(HttpStatus.OK)
-            .build();
-    }
+    @GetMapping("/products")
+    public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchAll(Pageable pageable) {
 
-    @PostMapping("/products")
-    public ResponseEntity<PageResponse<ProductAllInOneResponse>> search(@Valid @RequestBody SearchRequest searchRequest,
-                                                                        Pageable pageable) {
-
-        List<Long> productIds = resolveRequest(searchRequest);
-
-        Page<ProductAllInOneResponse> page = productService.retrieveProductListByProductNoList(productIds, pageable);
-
-        PageResponse<ProductAllInOneResponse> pageResponse = new PageResponse<>(page);
+        SearchPageResponse<SearchProductResponse> pageResponse = searchService.getAllProducts(pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(pageResponse);
     }
 
-    private List<Long> resolveRequest(SearchRequest searchRequest) {
+    @PostMapping("/products")
+    public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchProductsByKeywords(@Valid @RequestBody
+                                                                                        SearchKeywordsRequest request, Pageable pageable) {
 
-        return searchService.retrieveProductsIdsByKeywords(searchRequest.getKeywords());
+        SearchPageResponse<SearchProductResponse> pageResponse = searchService.searchProductsByKeywords(request, pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(pageResponse);
+    }
+    @PostMapping("/products/category")
+    public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchProductsByCategory(@Valid @RequestBody SearchCategoryRequest request, Pageable pageable) {
+
+        SearchPageResponse<SearchProductResponse> pageResponse = searchService.searchProductsByCategory(
+            request.getCategoryId(), pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(pageResponse);
+    }
+
+    @GetMapping("/save/all")
+    public ResponseEntity<Void> saveAll() {
+
+        searchService.saveAllDocuments();
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
     }
 
 }

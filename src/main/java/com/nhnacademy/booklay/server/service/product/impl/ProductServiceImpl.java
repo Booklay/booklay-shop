@@ -450,9 +450,8 @@ public class ProductServiceImpl implements ProductService {
     List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(
         product.getId());
 
-    if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-      ProductDetail productDetail =
-          productDetailRepository.findProductDetailByProduct(product);
+    ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
+    if (productDetail != null) {
 
       // 작가 정보 DTO
       List<RetrieveAuthorResponse> authors =
@@ -462,8 +461,8 @@ public class ProductServiceImpl implements ProductService {
       return new RetrieveProductViewResponse(product, productDetail, authors, productTags);
     }
 
-    if (subscribeRepository.existsSubscribeByProduct(product)) {
-      Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+    Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
+    if (subscribe != null) {
 
       return new RetrieveProductViewResponse(product, subscribe, productTags);
     }
@@ -580,7 +579,6 @@ public class ProductServiceImpl implements ProductService {
   public ProductAllInOneResponse retrieveProductResponse(Long productId) {
     return productRepository.retrieveProductResponse(productId);
   }
-
 
   /**
    * 재고 처리용

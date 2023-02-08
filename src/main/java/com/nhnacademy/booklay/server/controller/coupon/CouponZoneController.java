@@ -27,31 +27,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class CouponZoneController {
 
     private final GetMemberService memberService;
-    private final CouponZoneIssueService issueService;
+    private final CouponZoneIssueService couponIssueService;
 
     /**
-     *
-     * @param request
+     * 사용자의 발급 요청을 받습니다.
+     * 사용자 확인을 합니다.
+     * @param request 발급하려는 쿠폰의 id와 발급 대상 사용자 id
      */
     @PostMapping
-    public ResponseEntity<CouponIssueResponse> issueCoupon(@RequestBody CouponIssueRequest request) {
-        log.info(request.getCouponId() + " :: 받았습니다.");
-
+    public ResponseEntity<CouponIssueResponse> issueCouponAtCouponZone(@RequestBody CouponIssueRequest request) {
         memberService.getMemberNo(request.getMemberId());
 
-        String requestId = issueService.requestIssueCoupon(request);
+        String requestId = couponIssueService.issueCoupon(request);
         CouponIssueResponse response = new CouponIssueResponse(requestId);
 
-        log.info(requestId);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity
+            .status(HttpStatus.OK)
             .body(response);
     }
 
+    /**
+     *
+     * @param requestId
+     */
     @GetMapping("/{requestId}")
     public ResponseEntity<CouponMemberResponse> responseIssueCoupon(@PathVariable String requestId) {
-        CouponMemberResponse response = issueService.getResponse(requestId);
-        log.info("메세지 가져가유~");
+        CouponMemberResponse response = couponIssueService.getResponse(requestId);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(response);
     }

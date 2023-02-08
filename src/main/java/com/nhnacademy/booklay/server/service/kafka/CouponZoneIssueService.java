@@ -8,14 +8,11 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 @Service
 @RequiredArgsConstructor
@@ -25,27 +22,31 @@ public class CouponZoneIssueService {
     @Value(value = "${message.topic.coupon.request}")
     private String requestTopic;
 
-    private final StringRedisTemplate redisTemplate;
     private final KafkaTemplate<String, CouponIssueRequestMessage> kafkaTemplate;
+    private final StringRedisTemplate redisTemplate;
 
-    public String requestIssueCoupon(CouponIssueRequest request) {
-        log.info(request.getCouponId() + " :: 쿠폰으로 보낼겁니다.");
+    /**
+     * 사용자의 발급 요청을 coupon 서버에 전달합니다.
+     * 사용자의 요청에 requestId를 부여합니다.
+     * 사용자는 requestId로 발급에 대한 응답을 요청합니다.
+     * @param request 발급하려는 쿠폰의 id와 발급 대상 사용자 id
+     */
+    public String issueCoupon(CouponIssueRequest request) {
+        String requestId = UUID.randomUUID().toString().substring(0, 30);
+        CouponIssueRequestMessage message = new CouponIssueRequestMessage(request.getCouponId(),request.getMemberId(), requestId);
 
-        String uuid = UUID.randomUUID().toString().substring(0, 30);
-        CouponIssueRequestMessage message = new CouponIssueRequestMessage(request.getCouponId(),request.getMemberId(), uuid);
         kafkaTemplate.send(requestTopic, message);
 
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.set(uuid, "null");
+        operations.set(requestId, "null");
 
-        return uuid;
+        return requestId;
     }
 
     public CouponMemberResponse getResponse(String requestId) {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
 
         String message = operations.get(requestId);
-        log.info("도착한 메시지!!!! :: " + message);
 
         CouponMemberResponse response = new CouponMemberResponse(message);
         return response;

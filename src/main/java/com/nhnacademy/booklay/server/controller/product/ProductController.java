@@ -1,10 +1,8 @@
 package com.nhnacademy.booklay.server.controller.product;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
@@ -33,32 +31,33 @@ public class ProductController {
   private final BookSubscribeService bookSubscribeService;
   private final ProductRelationService productRelationService;
 
-    /**
-     * 조건 없이 전체 상품 리스트 페이지를 리턴
-     * @param pageable
-     * @return
-     */
-    @GetMapping
-    public PageResponse<ProductAllInOneResponse> getProductPage(Pageable pageable) {
-        Page<ProductAllInOneResponse> response = productService.getProductsPage(pageable);
-        return new PageResponse<>(response);
-    }
+  /**
+   * 조건 없이 전체 상품 리스트 페이지를 리턴
+   *
+   * @param pageable
+   * @return
+   */
+  @GetMapping
+  public PageResponse<ProductAllInOneResponse> getProductPage(Pageable pageable) {
+    Page<ProductAllInOneResponse> response = productService.getProductsPage(pageable);
+    return new PageResponse<>(response);
+  }
 
-    @GetMapping("/view/{productNo}")
-    public ProductAllInOneResponse retrieveDetailView(@PathVariable Long productNo) {
-        return productService.retrieveProductResponse(productNo);
-    }
+  @GetMapping("/view/{productNo}")
+  public ProductAllInOneResponse retrieveDetailView(@PathVariable Long productNo) {
+    return productService.retrieveProductResponse(productNo);
+  }
 
-    @GetMapping("/view/subscribe/{subscribeId}")
-    public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
-        throws IOException {
-        return bookSubscribeService.retrieveBookSubscribe(subscribeId);
-    }
+  @GetMapping("/view/subscribe/{subscribeId}")
+  public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
+      throws IOException {
+    return bookSubscribeService.retrieveBookSubscribe(subscribeId);
+  }
 
-    @GetMapping("/recommend/{productId}")
-    public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
-        throws IOException {
-        return productRelationService.retrieveRecommendProducts(productId);
-    }
+  @GetMapping("/recommend/{productId}")
+  public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
+      throws IOException {
+    return productRelationService.retrieveRecommendProducts(productId);
+  }
 
 }

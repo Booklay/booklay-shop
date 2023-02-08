@@ -20,4 +20,6 @@ public interface AuthorService {
     void deleteAuthor(DeleteIdRequest request);
 
     Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable);
+
+    RetrieveAuthorResponse retrieveAuthorForEdit(Long authorNo);
 }

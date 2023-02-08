@@ -38,6 +38,9 @@ public class RetrieveProductResponse {
   @Setter
   private Boolean recommend;
 
+  @Setter
+  private Boolean alarm;
+
   public RetrieveProductResponse(Product product, ProductDetail productDetail,
       List<RetrieveAuthorResponse> authorsNo) {
     this.productId = product.getId();

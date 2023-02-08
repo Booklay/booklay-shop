@@ -45,7 +45,7 @@ public class ProductController {
 
   @GetMapping("/view/{productNo}")
   public ProductAllInOneResponse retrieveDetailView(@PathVariable Long productNo) {
-    return productService.retrieveProductResponse(productNo);
+    return productService.findProductById(productNo);
   }
 
   @GetMapping("/view/subscribe/{subscribeId}")

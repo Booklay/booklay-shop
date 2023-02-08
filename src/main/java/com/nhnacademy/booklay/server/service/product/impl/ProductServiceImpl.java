@@ -5,9 +5,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBook
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductBookResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
@@ -116,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
     //TODO: 못찾는거 예외처리
-    return productRepository.retrieveProductResponse(id);
+    return productRepository.findProductById(id);
   }
 
   // 책 상품 수정
@@ -162,14 +160,6 @@ public class ProductServiceImpl implements ProductService {
     targetProduct.setDeleted(true);
 
     productRepository.save(targetProduct);
-  }
-
-  // 수정 위해서 구독 상품 조회
-  @Override
-  @Transactional(readOnly = true)
-  public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    //TODO: 못찾는거 예외처리
-    return productRepository.retrieveProductSubscribeResponseById(id);
   }
 
   // 구독 상품 수정
@@ -450,19 +440,19 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
-    return productRepository.retrieveProductPage(pageable);
+    return productRepository.findProductPage(pageable);
   }
 
   @Transactional(readOnly = true)
   @Override
   public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
-    return productRepository.retrieveProductPage(productNoList, pageable);
+    return productRepository.findProductPage(productNoList, pageable);
   }
 
   @Transactional(readOnly = true)
   @Override
-  public ProductAllInOneResponse retrieveProductResponse(Long productId){
-    return productRepository.retrieveProductResponse(productId);
+  public ProductAllInOneResponse findProductById(Long productId){
+    return productRepository.findProductById(productId);
   }
 }
 

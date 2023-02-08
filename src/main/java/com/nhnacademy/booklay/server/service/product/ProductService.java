@@ -29,11 +29,8 @@ public interface ProductService {
 
   ProductAllInOneResponse retrieveBookData(Long id);
 
-  RetrieveProductSubscribeResponse retrieveSubscribeData(Long productId);
-
   Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException;
 
-  RetrieveProductViewResponse retrieveProductView(Long productId);
 
   List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 

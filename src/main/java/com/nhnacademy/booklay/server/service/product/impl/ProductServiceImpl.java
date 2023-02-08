@@ -7,8 +7,6 @@ import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneRespons
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
-import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -61,9 +59,9 @@ public class ProductServiceImpl implements ProductService {
   private final AuthorRepository authorRepository;
   private final ProductAuthorRepository productAuthorRepository;
   private final SubscribeRepository subscribeRepository;
-  private final ProductTagRepository productTagRepository;
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
+  private static final Long NOT_FOUND_PRODUCT_ID = 33L;
 
   /**
    * 서적 상품 생성
@@ -189,19 +187,6 @@ public class ProductServiceImpl implements ProductService {
     targetProduct.setDeleted(true);
 
     productRepository.save(targetProduct);
-  }
-
-  /**
-   * 구독 상품 수정용 조회
-   *
-   * @param id
-   * @return
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public RetrieveProductSubscribeResponse retrieveSubscribeData(Long id) {
-    //TODO: 못찾는거 예외처리
-    return productRepository.retrieveProductSubscribeResponseById(id);
   }
 
   /**
@@ -433,40 +418,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     return productIds;
-  }
-
-  /**
-   * 상품 상세보기
-   *
-   * @param productId
-   * @return
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public RetrieveProductViewResponse retrieveProductView(Long productId) {
-    Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
-
-    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(
-        product.getId());
-
-    ProductDetail productDetail = productDetailRepository.findProductDetailByProduct(product);
-    if (productDetail != null) {
-
-      // 작가 정보 DTO
-      List<RetrieveAuthorResponse> authors =
-          productDetailRepository.findAuthorsByProductDetailId(
-              productDetail.getId());
-
-      return new RetrieveProductViewResponse(product, productDetail, authors, productTags);
-    }
-
-    Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-    if (subscribe != null) {
-
-      return new RetrieveProductViewResponse(product, subscribe, productTags);
-    }
-    throw new NotFoundException(Product.class, "correct product not found");
   }
 
   /**

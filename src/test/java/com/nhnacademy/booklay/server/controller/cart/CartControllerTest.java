@@ -73,7 +73,7 @@ class CartControllerTest {
                 .build();
         cartDto = new CartDto(memberCartAddRequest.getProductNo(), memberCartAddRequest.getCount());
         cartRetrieveResponse = new CartRetrieveResponse(memberCartAddRequest.getProductNo(),
-                product.getTitle(), product.getPrice(), memberCartAddRequest.getCount());
+                product.getTitle(), product.getPrice(), memberCartAddRequest.getCount(), List.of(1L), 1L);
     }
 
     @Test

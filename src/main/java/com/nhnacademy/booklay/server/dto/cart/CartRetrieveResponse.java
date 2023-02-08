@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.dto.cart;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,4 +13,6 @@ public class CartRetrieveResponse {
     private String productName;
     private Long productPrice;
     private Integer productCount;
+    private List<Long> categoryNoList;
+    private Long imageNo;
 }

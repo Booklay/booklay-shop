@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CouponIssueResponseMessage {
-    private Long couponId;
-    private Long memberId;
+    private String uuid;
     private String message;
 }

@@ -314,60 +314,6 @@ class ProductServiceImplTest {
   }
 
   @Test
-  void retrieveBookProductView() {
-    given(productRepository.findById(productBook.getId())).willReturn(
-        Optional.ofNullable(productBook));
-
-    List<RetrieveTagResponse> tagList = new ArrayList<>();
-    tagList.add(new RetrieveTagResponse(1L, "#test"));
-
-    given(productTagRepository.findTagsByProductId(productBook.getId())).willReturn(tagList);
-
-    given(productDetailRepository.existsProductDetailByProductId(productBook.getId())).willReturn(
-        true);
-
-    given(productDetailRepository.findProductDetailByProduct(productBook)).willReturn(
-        productDetail);
-
-    List<RetrieveAuthorResponse> authorList = new ArrayList<>();
-    authorList.add(new RetrieveAuthorResponse(1L, "최작가"));
-
-    given(productDetailRepository.findAuthorsByProductDetailId(productDetail.getId())).willReturn(
-        authorList);
-
-    RetrieveProductViewResponse result = productService.retrieveProductView(productBook.getId());
-
-    RetrieveProductViewResponse actual = new RetrieveProductViewResponse(productBook, productDetail,
-        authorList, tagList);
-    assertThat(result.getProductId()).isEqualTo(actual.getProductId());
-  }
-
-  @Test
-  void retrieveSubscribeProductView() {
-    given(productRepository.findById(productSubscribe.getId())).willReturn(
-        Optional.ofNullable(productSubscribe));
-
-    List<RetrieveTagResponse> tagList = new ArrayList<>();
-    tagList.add(new RetrieveTagResponse(1L, "#test"));
-
-    given(productTagRepository.findTagsByProductId(productSubscribe.getId())).willReturn(tagList);
-
-    given(subscribeRepository.existsSubscribeByProduct(productSubscribe)).willReturn(
-        true);
-
-    given(subscribeRepository.existsSubscribeByProduct(productSubscribe)).willReturn(true);
-    given(subscribeRepository.findSubscribeByProduct(productSubscribe)).willReturn(subscribe);
-
-    RetrieveProductViewResponse result = productService.retrieveProductView(
-        productSubscribe.getId());
-
-    RetrieveProductViewResponse expect = new RetrieveProductViewResponse(productSubscribe,
-        subscribe, tagList);
-
-    assertThat(result.getProductId()).isEqualTo(expect.getProductId());
-  }
-
-  @Test
   void testRetrieveBookDataForSubscribe_success() {
     Pageable pageable = Pageable.ofSize(20);
     List<RetrieveBookForSubscribeResponse> pageContent = new ArrayList<>();

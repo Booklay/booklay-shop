@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.cart;
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Cart;
+import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RDBCartServiceImpl implements RDBCartService {
     private final CartService cartService;
+    private final CategoryProductService categoryProductService;
 
     @Override
     @Transactional(readOnly = true)
     public List<CartRetrieveResponse> getAllCartItems(String key) {
         List<Cart> cartList = cartService.retrieveAllCartsByMemberNo(Long.parseLong(key));
-        return cartList.stream().map(cart -> new CartRetrieveResponse(cart.getProduct()
-                                                                          .getId(),
-                                                                      cart.getProduct().getTitle(),
-                                                                      cart.getProduct().getPrice(),
-                                                                      cart.getCount())).collect(
-            Collectors.toList());
+        return cartList.stream().map(cart -> new CartRetrieveResponse(cart.getProduct().getId(),
+                cart.getProduct().getTitle(), cart.getProduct().getPrice(), cart.getCount(),
+                categoryProductService.retrieveCategoryIdListByProductId(cart.getProduct().getId())
+                , cart.getProduct().getThumbnailNo()))
+            .collect(Collectors.toList());
     }
 
     @Override

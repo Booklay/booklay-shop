@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.*;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
+import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,8 @@ class RDBCartServiceImplTest {
 
     @Mock
     CartService cartService;
+    @Mock
+    CategoryProductService categoryProductService;
 
     CartAddRequest cartAddRequest;
     CartRetrieveResponse cartRetrieveResponse;
@@ -41,6 +44,7 @@ class RDBCartServiceImplTest {
     void setUp() {
         cartAddRequest = Dummy.getDummyMemberCartAddRequest();
         Product product = Product.builder().price(100L).title("dummy").build();
+        ReflectionTestUtils.setField(product,"thumbnailNo",1L);
         ReflectionTestUtils.setField(product, "id", cartAddRequest.getProductNo());
         cart = Cart.builder()
                 .pk(new Cart.Pk(Long.parseLong(cartAddRequest.getCartId()), cartAddRequest.getProductNo()))
@@ -50,7 +54,7 @@ class RDBCartServiceImplTest {
                 .build();
         cartDto = new CartDto(cartAddRequest.getProductNo(), cartAddRequest.getCount());
         cartRetrieveResponse = new CartRetrieveResponse(cartAddRequest.getProductNo(),
-                product.getTitle(), product.getPrice(), cartAddRequest.getCount());
+                product.getTitle(), product.getPrice(), cartAddRequest.getCount(), List.of(1L), 1L);
 
     }
 
@@ -59,6 +63,7 @@ class RDBCartServiceImplTest {
     void getAllCartItems() {
         //given
         given(cartService.retrieveAllCartsByMemberNo(Long.parseLong(cartAddRequest.getCartId()))).willReturn(List.of(cart));
+        given(categoryProductService.retrieveCategoryIdListByProductId(cart.getProduct().getId())).willReturn(List.of(1L));
 
         //when
         List<CartRetrieveResponse> result = rdbCartService.getAllCartItems(cartAddRequest.getCartId());

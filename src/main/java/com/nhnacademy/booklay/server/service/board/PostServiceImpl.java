@@ -24,7 +24,7 @@ public class PostServiceImpl implements PostService {
   private final MemberRepository memberRepository;
 
   @Override
-  public void createPost(BoardPostCreateRequest request) {
+  public Long createPost(BoardPostCreateRequest request) {
     PostType postType = postTypeRepository.findById(request.getPostTypeNo())
         .orElseThrow(() -> new NotFoundException(PostType.class, "post type not found"));
     Member writer = memberRepository.findById(request.getMemberNo())
@@ -53,6 +53,6 @@ public class PostServiceImpl implements PostService {
       post.setAnswered(request.getAnswered());
     }
 
-    postRepository.save(post);
+    return postRepository.save(post).getPostId();
   }
 }

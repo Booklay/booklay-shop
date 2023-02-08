@@ -84,9 +84,9 @@ public class WishlistServiceImpl implements WishlistService {
   }
 
   @Override
-  public Page<RetrieveProductResponse> retrievePage(Long memberId, Pageable pageable)
+  public Page<RetrieveProductResponse> retrievePage(Long memberNo, Pageable pageable)
       throws IOException {
-    Page<Wishlist> wishlistPage =wishlistRepository.retrieveRegister(memberId, pageable);
+    Page<Wishlist> wishlistPage =wishlistRepository.retrieveRegister(memberNo, pageable);
 
     List<Long> productIds = new ArrayList<>();
     for(int i=0; i< wishlistPage.getContent().size(); i++){
@@ -94,6 +94,13 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     List<RetrieveProductResponse> content = productService.retrieveProductResponses(productIds);
+    for(RetrieveProductResponse product : content){
+      product.setAlarm(restockingNotificationRepository.existsByPk_MemberId(memberNo));
+    }
+
+    for(RetrieveProductResponse product : content) {
+      log.info(product.getAlarm() + "출력");
+    }
 
     return new PageImpl<>(content, pageable, wishlistPage.getTotalElements());
   }

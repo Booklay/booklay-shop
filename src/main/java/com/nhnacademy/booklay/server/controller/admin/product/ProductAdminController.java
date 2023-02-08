@@ -43,7 +43,12 @@ public class ProductAdminController {
     private final BookSubscribeService bookSubscribeService;
     private final ProductRelationService productRelationService;
 
-    //관리자의 전채 목록 조회
+    /**
+     * 관리자의 전체 상품 목록 조회
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
     @GetMapping
     public PageResponse<RetrieveProductResponse> postAdminProduct(Pageable pageable)
         throws IOException {
@@ -52,7 +57,13 @@ public class ProductAdminController {
         return new PageResponse<>(response);
     }
 
-    // 책 등록
+    /**
+     * 서적 상품 등록
+     * @param request
+     * @param imgFile
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/books",
                  consumes = { MediaType.APPLICATION_JSON_VALUE,
                      MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -63,19 +74,24 @@ public class ProductAdminController {
         return productService.createBookProduct(request);
     }
 
-//    // 책 수정용 조회
-//    @GetMapping("/books/{productId}")
-//    public RetrieveProductBookResponse getBookData(@PathVariable Long productId) {
-//        return productService.retrieveBookData(productId);
-//    }
-
+    /**
+     * 책 수정 조회
+     * @param productId
+     * @return
+     */
     // 책 수정용 조회
     @GetMapping("/books/{productId}")
     public ProductAllInOneResponse getBookData(@PathVariable Long productId) {
         return productService.retrieveBookData(productId);
     }
 
-    // 책 수정
+    /**
+     * 책 수정 요청
+     * @param request
+     * @param imgFile
+     * @return
+     * @throws Exception
+     */
     @PutMapping(value = "/books",
                 consumes = { MediaType.APPLICATION_JSON_VALUE,
                     MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -85,7 +101,13 @@ public class ProductAdminController {
         return productService.updateBookProduct(request);
     }
 
-    // 구독 등록
+    /**
+     * 구독 상품 등록
+     * @param request
+     * @param imgFile
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/subscribes", consumes = { MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE })
     public Long postSubscribeRegister(@RequestPart CreateUpdateProductSubscribeRequest request,
@@ -93,19 +115,24 @@ public class ProductAdminController {
         request.setImage(imgFile);
         return productService.createSubscribeProduct(request);
     }
-//
-//    // 구독 수정용 조회
-//    @GetMapping("/subscribes/{productId}")
-//    public RetrieveProductSubscribeResponse getSubscribeData(@PathVariable Long productId) {
-//        return productService.retrieveSubscribeData(productId);
-//    }
-    // 구독 수정용 조회
+
+    /**
+     * 구독 상품 수정 조회
+     * @param productId
+     * @return
+     */
     @GetMapping("/subscribes/{productId}")
     public ProductAllInOneResponse getSubscribeData(@PathVariable Long productId) {
         return productService.retrieveBookData(productId);
     }
 
-    // 구독 수정
+    /**
+     * 구독 상품 수정 요청
+     * @param request
+     * @param imgFile
+     * @return
+     * @throws Exception
+     */
     @PutMapping(value = "/subscribes",
                 consumes = { MediaType.APPLICATION_JSON_VALUE,
                     MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -115,7 +142,12 @@ public class ProductAdminController {
         return productService.updateSubscribeProduct(request);
     }
 
-    // 구독 상품의 등록용 조회
+    /**
+     * 구독 상품 하위 상품 등록 조회
+     * @param pageable
+     * @param subscribeId
+     * @return
+     */
     @GetMapping("/subscribes/connect/{subscribeId}")
     public PageResponse<RetrieveBookForSubscribeResponse> getBooksDataForSubscribe(
         Pageable pageable,
@@ -125,21 +157,33 @@ public class ProductAdminController {
         return new PageResponse<>(response);
     }
 
-    //상품과 구독 상품 연동
+    /**
+     * 상품과 구독 상품 등록 요청
+     * @param request
+     */
     @PostMapping("/subscribes/connect/{subscribeId}")
     public void booksAndSubscribeConnect(
         @RequestBody DisAndConnectBookWithSubscribeRequest request) {
         bookSubscribeService.bookSubscribeConnection(request);
     }
 
-    //상품과 구독 상품 연동 취소
+    /**
+     * 상품과 구독 상품 등록 취소
+     * @param request
+     */
     @DeleteMapping("/subscribes/connect/{subscribeId}")
     public void booksAndSubscribeDisconnect(
         @RequestBody DisAndConnectBookWithSubscribeRequest request) {
         bookSubscribeService.bookSubscribeDisconnection(request);
     }
 
-    //연관 상품 등록 위해 조회
+    /**
+     * 연관 상품 등록창 조회
+     * @param productNo
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
     @GetMapping("/recommend/{productNo}")
     public PageResponse<RetrieveProductResponse> retrieveRecommendConnector(
         @PathVariable Long productNo, Pageable pageable) throws IOException {
@@ -148,18 +192,29 @@ public class ProductAdminController {
         return new PageResponse<>(response);
     }
 
+    /**
+     * 연관 상품 등록
+     * @param request
+     */
     @PostMapping("/recommend")
     public void createRecommend(@RequestBody CreateDeleteProductRelationRequest request){
         productRelationService.createProductRelation(request);
     }
 
+    /**
+     * 연관 상품 등록 취소
+     * @param request
+     */
     @DeleteMapping("/recommend")
     public void deleteRecommend(@RequestBody CreateDeleteProductRelationRequest request){
         productRelationService.deleteProductRelation(request);
     }
 
 
-    //소프트 딜리트
+    /**
+     * 소프트 딜리트
+     * @param productId
+     */
     @DeleteMapping("/{productId}")
     public void softDeleteProduct(@PathVariable Long productId) {
         productService.softDelete(productId);

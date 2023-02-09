@@ -42,7 +42,7 @@ public class DummyCart {
 
   public static PostType getDummyPostType() {
     PostType postType = PostType.builder()
-        .postTypeId(1L)
+        .postTypeId(1)
         .type("1:1문의")
         .build();
     return postType;
@@ -55,8 +55,8 @@ public class DummyCart {
     Post post = Post.builder()
         .memberId(dummyMember)
         .postTypeId(dummyPostType)
-        .groupOrder(0L)
-        .depth(0L)
+        .groupOrder(0)
+        .depth(0)
         .title("dummy title")
         .content("dummy content for test")
         .isViewPublic(true)

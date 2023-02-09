@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,10 +53,10 @@ public class Post {
     private Post groupNo;
 
     @Column(name = "group_order")
-    private Long groupOrder;
+    private Integer groupOrder;
 
     @Column
-    private Long depth;
+    private Integer depth;
 
     @Column
     private String title;
@@ -82,7 +83,7 @@ public class Post {
 
 
     @Builder
-    public Post(PostType postTypeId, Member memberId, Long groupOrder, Long depth, String title,
+    public Post(PostType postTypeId, Member memberId, Integer groupOrder, Integer depth, String title,
                 String content,
                 boolean isViewPublic) {
         this.postTypeId = postTypeId;

@@ -34,15 +34,13 @@ public class CouponZoneController {
      * @param request
      */
     @PostMapping
-    public ResponseEntity<CouponIssueResponse> issueCoupon(@RequestBody CouponIssueRequest request) {
-        log.info(request.getCouponId() + " :: 받았습니다.");
+    public ResponseEntity<CouponIssueResponse> issueCouponAtCouponZone(@RequestBody CouponIssueRequest request) {
+        log.debug(request.getCouponId() + " :: 받았습니다.");
 
         memberService.getMemberNo(request.getMemberId());
 
         String requestId = issueService.requestIssueCoupon(request);
         CouponIssueResponse response = new CouponIssueResponse(requestId);
-
-        log.info(requestId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(response);
@@ -51,7 +49,7 @@ public class CouponZoneController {
     @GetMapping("/{requestId}")
     public ResponseEntity<CouponMemberResponse> responseIssueCoupon(@PathVariable String requestId) {
         CouponMemberResponse response = issueService.getResponse(requestId);
-        log.info("메세지 가져가유~");
+
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(response);
     }

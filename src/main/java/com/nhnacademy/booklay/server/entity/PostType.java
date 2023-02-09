@@ -20,13 +20,13 @@ public class PostType {
 
     @Id
     @Column(name = "post_type_no")
-    private Long postTypeId;
+    private Integer postTypeId;
 
     @Column
     private String type;
 
     @Builder
-    public PostType(Long postTypeId, String type) {
+    public PostType(Integer postTypeId, String type) {
         this.postTypeId = postTypeId;
         this.type = type;
     }

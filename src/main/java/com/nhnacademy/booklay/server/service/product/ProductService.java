@@ -30,7 +30,6 @@ public interface ProductService {
 
   Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException;
 
-  RetrieveProductViewResponse retrieveProductView(Long productId);
 
   List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
 

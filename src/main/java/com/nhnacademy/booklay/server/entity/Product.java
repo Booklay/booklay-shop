@@ -62,6 +62,7 @@ public class Product {
     private String longDescription;
 
     @Column(name = "is_selling")
+    @Setter
     private boolean isSelling;
 
     @Column(name = "point_method")

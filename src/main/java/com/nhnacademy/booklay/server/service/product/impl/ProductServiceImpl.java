@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubs
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
@@ -60,11 +61,17 @@ public class ProductServiceImpl implements ProductService {
   private final AuthorRepository authorRepository;
   private final ProductAuthorRepository productAuthorRepository;
   private final SubscribeRepository subscribeRepository;
-  private final ProductTagRepository productTagRepository;
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
+  private static final Long NOT_FOUND_PRODUCT_ID = 33L;
 
-  // 상품 생성
+  /**
+   * 서적 상품 생성
+   *
+   * @param request
+   * @return
+   * @throws Exception
+   */
   @Override
   public Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception {
 
@@ -91,7 +98,13 @@ public class ProductServiceImpl implements ProductService {
     return savedProduct.getId();
   }
 
-  // 구독 생성
+  /**
+   * 구독 상품 생성
+   *
+   * @param request
+   * @return
+   * @throws IOException
+   */
   @Override
   public Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request)
       throws IOException {
@@ -109,7 +122,12 @@ public class ProductServiceImpl implements ProductService {
     return savedProduct.getId();
   }
 
-  // 수정 위해서 책 상품 조회
+  /**
+   * 수정 위해서 책 상품 조회
+   *
+   * @param id
+   * @return
+   */
   @Override
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
@@ -117,7 +135,13 @@ public class ProductServiceImpl implements ProductService {
     return productRepository.findProductById(id);
   }
 
-  // 책 상품 수정
+  /**
+   * 책 상품 수정 처리
+   *
+   * @param request
+   * @return
+   * @throws Exception
+   */
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
@@ -152,6 +176,11 @@ public class ProductServiceImpl implements ProductService {
     return null;
   }
 
+  /**
+   * 상품 soft delete
+   *
+   * @param productId
+   */
   @Override
   public void softDelete(Long productId) {
     Product targetProduct = productRepository.findById(productId)
@@ -162,7 +191,13 @@ public class ProductServiceImpl implements ProductService {
     productRepository.save(targetProduct);
   }
 
-  // 구독 상품 수정
+  /**
+   * 구독 상품 수정 처리
+   *
+   * @param request
+   * @return
+   * @throws IOException
+   */
   @Override
   @Transactional
   public Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request)
@@ -198,7 +233,12 @@ public class ProductServiceImpl implements ProductService {
 
   // 공통
 
-  // 카테고리 등록
+  /**
+   * 상풍에 카테고리 등록
+   *
+   * @param categories
+   * @param product
+   */
   void saveProductCategory(List<Long> categories, Product product) {
     for (int i = 0; i < categories.size(); i++) {
       CategoryProduct.Pk pk = new Pk(product.getId(), categories.get(i));
@@ -218,7 +258,14 @@ public class ProductServiceImpl implements ProductService {
   }
 
   // 책
-  // 생성 수정 dto 에서 product 분리
+
+  /**
+   * 서적 생성 수정 dto에서 product 분리
+   *
+   * @param request
+   * @return
+   * @throws IOException
+   */
   private Product splitProduct(CreateUpdateProductBookRequest request) throws IOException {
     MultipartFile thumbnail = request.getImage();
 
@@ -236,7 +283,12 @@ public class ProductServiceImpl implements ProductService {
         .build();
   }
 
-  // product_author 등록
+  /**
+   * 서적과 작가 조인 테이블에 등록
+   *
+   * @param authorIdList
+   * @param productDetail
+   */
   private void productAuthorRegister(List<Long> authorIdList, ProductDetail productDetail) {
     for (int i = 0; i < authorIdList.size(); i++) {
       Author foundAuthor = authorRepository.findById(authorIdList.get(i))
@@ -255,7 +307,13 @@ public class ProductServiceImpl implements ProductService {
     }
   }
 
-  // 생성 수정 dto 에서 product_detail 분리
+  /**
+   * 서적 생성 수정 dto에서 product detail 분리
+   *
+   * @param request
+   * @param savedProduct
+   * @return
+   */
   private ProductDetail splitDetail(CreateUpdateProductBookRequest request,
       Product savedProduct) {
     // product detail
@@ -270,7 +328,13 @@ public class ProductServiceImpl implements ProductService {
 
   // 구독
 
-  // dto 에서 product 분리
+  /**
+   * 구독 상품 생성 수정 dto에서 product 분리
+   *
+   * @param request
+   * @return
+   * @throws IOException
+   */
   private Product splitProductSubscribe(CreateUpdateProductSubscribeRequest request)
       throws IOException {
     MultipartFile thumbnail = request.getImage();
@@ -289,14 +353,26 @@ public class ProductServiceImpl implements ProductService {
         .build();
   }
 
-  // TODO: toIntExact 수정해야한다
+  /**
+   * 구독 상품 생성 수정 dto에서 subscribe 분리
+   *
+   * @param product
+   * @param request
+   * @return
+   */
   private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
     return Subscribe.builder()
         .product(product)
         .build();
   }
 
-  // 상품(책 구독 모두) 게시판식 조회
+  /**
+   * 상품(서적 + 구독) 게시판식 조회
+   *
+   * @param pageable
+   * @return
+   * @throws IOException
+   */
   @Override
   @Transactional(readOnly = true)
   public Page<RetrieveProductResponse> retrieveProductPage(Pageable pageable) throws IOException {
@@ -309,7 +385,13 @@ public class ProductServiceImpl implements ProductService {
         products.getTotalElements());
   }
 
-  // 상품(책 구독 모두) 게시판식 조회
+  /**
+   * 관리자의 상품(책 + 구독) 게시판식 조회 (soft delete 무시)
+   *
+   * @param pageable
+   * @return
+   * @throws IOException
+   */
   @Override
   @Transactional(readOnly = true)
   public Page<RetrieveProductResponse> retrieveAdminProductPage(Pageable pageable)
@@ -324,6 +406,12 @@ public class ProductServiceImpl implements ProductService {
         products.getTotalElements());
   }
 
+  /**
+   * 상품 목록에서 id 목록 뽑아내는 처리
+   *
+   * @param products
+   * @return
+   */
   private List<Long> refineProductsToLongList(List<Product> products) {
     List<Long> productIds = new ArrayList<>();
 
@@ -334,35 +422,13 @@ public class ProductServiceImpl implements ProductService {
     return productIds;
   }
 
-  // 상품 상세 보기 조회
-  @Override
-  @Transactional(readOnly = true)
-  public RetrieveProductViewResponse retrieveProductView(Long productId) {
-    Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
-
-    List<RetrieveTagResponse> productTags = productTagRepository.findTagsByProductId(product.getId());
-
-    if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
-      ProductDetail productDetail =
-          productDetailRepository.findProductDetailByProduct(product);
-
-      // 작가 정보 DTO
-      List<RetrieveAuthorResponse> authors =
-          productDetailRepository.findAuthorsByProductDetailId(
-              productDetail.getId());
-
-      return new RetrieveProductViewResponse(product, productDetail, authors, productTags);
-    }
-
-    if (subscribeRepository.existsSubscribeByProduct(product)) {
-      Subscribe subscribe = subscribeRepository.findSubscribeByProduct(product);
-
-      return new RetrieveProductViewResponse(product, subscribe, productTags);
-    }
-    throw new NotFoundException(Product.class, "correct product not found");
-  }
-
+  /**
+   * 구독 하위 상품을 위한 목록 조회
+   *
+   * @param pageable
+   * @param subscribeId
+   * @return
+   */
   @Override
   public Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,
       Long subscribeId) {
@@ -386,7 +452,13 @@ public class ProductServiceImpl implements ProductService {
         thisPage.getTotalElements());
   }
 
-  //자주 쓰는 retrieveProductResponse 를 조립해주는 메소드
+  /**
+   * RetrieveProductResponse dto 조립 메소드
+   *
+   * @param productIds
+   * @return
+   * @throws IOException
+   */
   @Override
   @Transactional(readOnly = true)
   public List<RetrieveProductResponse> retrieveProductResponses(List<Long> productIds)
@@ -428,6 +500,12 @@ public class ProductServiceImpl implements ProductService {
     return resultList;
   }
 
+  /**
+   * 상품 Id 목록으로 상품 조회
+   *
+   * @param productNoList
+   * @return
+   */
   @Override
   public List<Product> retrieveProductListByProductNoList(List<Long> productNoList) {
     return productRepository.findAllById(productNoList);
@@ -436,7 +514,6 @@ public class ProductServiceImpl implements ProductService {
   /**
    * 상품 아이디 리스트를 받아서 페이지네이션.
    */
-
   @Override
   @Transactional(readOnly = true)
   public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
@@ -445,14 +522,33 @@ public class ProductServiceImpl implements ProductService {
 
   @Transactional(readOnly = true)
   @Override
-  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
-    return productRepository.findProductPage(productNoList, pageable);
+  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList,
+      Pageable pageable) {
+    return productRepository.retrieveProductPage(productNoList, pageable);
   }
 
   @Transactional(readOnly = true)
   @Override
-  public ProductAllInOneResponse findProductById(Long productId){
-    return productRepository.findProductById(productId);
+  public ProductAllInOneResponse retrieveProductResponse(Long productId) {
+    return productRepository.retrieveProductResponse(productId);
+  }
+
+  /**
+   * 재고 처리용
+   *
+   * @param productDetail
+   */
+  public void storageSoldOutChecker(ProductDetail productDetail) {
+
+    productDetail.setStorage(productDetail.getStorage() - 1);
+
+    if (productDetail.getStorage() <= 0) {
+      Product product = productDetail.getProduct();
+      product.setSelling(false);
+      productRepository.save(product);
+    }
+    productDetailRepository.save(productDetail);
+
   }
 }
 

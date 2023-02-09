@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ public class CartController {
     private static final String STRING_CART_ID = "cartId";
     private static final String STRING_PRODUCT_NO = "productNo";
     private static final String STRING_PRODUCT_NO_LIST = "productNoList";
-
+    //todo 품절체크
     @ModelAttribute("memberNo")
     public Long getMemberNo(MemberInfo memberInfo){
         return memberInfo.getMemberNo();
@@ -46,7 +47,7 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> setCart(@ModelAttribute("memberNo") Long memberNo,
-                                        @RequestBody CartAddRequest cartAddRequest) {
+                                        @Valid @RequestBody CartAddRequest cartAddRequest) {
         CartServiceAndKeyDto cartServiceAndKeyDto =
             getCartServiceAndKeyDto(memberNo, cartAddRequest.getCartId());
         cartServiceAndKeyDto.getCartService().setCartItem(cartAddRequest);

@@ -45,7 +45,6 @@ public class CouponZoneIssueService {
 
         String message = operations.get(requestId);
 
-
         CouponMemberResponse response = new CouponMemberResponse(message);
         return response;
     }

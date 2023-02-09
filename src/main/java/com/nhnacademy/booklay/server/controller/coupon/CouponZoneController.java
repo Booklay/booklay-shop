@@ -35,8 +35,6 @@ public class CouponZoneController {
      */
     @PostMapping
     public ResponseEntity<CouponIssueResponse> issueCouponAtCouponZone(@RequestBody CouponIssueRequest request) {
-        log.debug(request.getCouponId() + " :: 받았습니다.");
-
         memberService.getMemberNo(request.getMemberId());
 
         String requestId = issueService.requestIssueCoupon(request);

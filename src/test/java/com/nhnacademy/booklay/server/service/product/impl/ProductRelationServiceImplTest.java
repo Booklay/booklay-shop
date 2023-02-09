@@ -57,7 +57,7 @@ class ProductRelationServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    request = new CreateDeleteProductRelationRequest(1L, 1L);
+    request = new CreateDeleteProductRelationRequest(2L, 1L);
 
     bookRequest = DummyCart.getDummyProductBookDto();
     baseProduct = DummyCart.getDummyProduct(bookRequest);
@@ -133,6 +133,6 @@ class ProductRelationServiceImplTest {
     productRelationService.deleteProductRelation(request);
 
     BDDMockito.then(productRelationRepository).should()
-        .deleteByBaseAndTargetId(request.getBaseId(), request.getTargetId());
+        .deleteByBaseAndTargetId(baseProduct.getId(), targetProduct.getId());
   }
 }

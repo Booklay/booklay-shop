@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.board;
 
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
+import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Post;
 import com.nhnacademy.booklay.server.entity.PostType;
@@ -11,6 +12,8 @@ import com.nhnacademy.booklay.server.repository.post.PostRepository;
 import com.nhnacademy.booklay.server.repository.post.PostTypeRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -54,5 +57,10 @@ public class PostServiceImpl implements PostService {
     }
 
     return postRepository.save(post).getPostId();
+  }
+
+  @Override
+  public Page<PostResponse> retrieveProductQNA(Long productId, Pageable pageable) {
+    return postRepository.findAllByProductIdPage(productId, pageable);
   }
 }

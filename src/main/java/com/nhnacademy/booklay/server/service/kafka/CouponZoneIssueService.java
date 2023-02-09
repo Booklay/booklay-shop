@@ -29,23 +29,22 @@ public class CouponZoneIssueService {
     private final KafkaTemplate<String, CouponIssueRequestMessage> kafkaTemplate;
 
     public String requestIssueCoupon(CouponIssueRequest request) {
-        log.info(request.getCouponId() + " :: 쿠폰으로 보낼겁니다.");
 
-        String uuid = UUID.randomUUID().toString().substring(0, 30);
-        CouponIssueRequestMessage message = new CouponIssueRequestMessage(request.getCouponId(),request.getMemberId(), uuid);
+        String requestId = UUID.randomUUID().toString().substring(0, 30);
+        CouponIssueRequestMessage message = new CouponIssueRequestMessage(request.getCouponId(),request.getMemberId(), requestId);
         kafkaTemplate.send(requestTopic, message);
 
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.set(uuid, "null");
+        operations.set(requestId, "null");
 
-        return uuid;
+        return requestId;
     }
 
     public CouponMemberResponse getResponse(String requestId) {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
 
         String message = operations.get(requestId);
-        log.info("도착한 메시지!!!! :: " + message);
+
 
         CouponMemberResponse response = new CouponMemberResponse(message);
         return response;
@@ -53,9 +52,8 @@ public class CouponZoneIssueService {
 
     @KafkaListener(topics = "${message.topic.coupon.response}", groupId = "${spring.kafka.consumer.group-id}", containerFactory = "kafkaListenerContainerFactory")
     public void responseIssueCouponToMember(CouponIssueResponseMessage message) {
-        log.info(message.getMessage() + " :: 쿠폰으로부터 받은 응답 메시지.");
+        log.debug("Message Processed :: " + message.getMessage());
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         operations.set(message.getUuid(), message.getMessage());
-        // TODO mq확인(memberNo, couponNo, message) - 다른 토픽. 소켓으로 응답 보냄.
     }
 }

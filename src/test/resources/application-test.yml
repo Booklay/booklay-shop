@@ -24,7 +24,7 @@ spring:
 
   kafka:
     consumer:
-      group-id: shop
+      group-id: shop-test
 
 cloud:
   auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0

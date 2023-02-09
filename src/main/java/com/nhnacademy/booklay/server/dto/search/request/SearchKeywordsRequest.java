@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SearchRequest {
+public class SearchKeywordsRequest {
 
     @NotBlank
     private String classification;

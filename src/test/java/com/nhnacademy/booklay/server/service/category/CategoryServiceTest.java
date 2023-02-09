@@ -1,5 +1,13 @@
 package com.nhnacademy.booklay.server.service.category;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
@@ -8,6 +16,7 @@ import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,13 +29,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -155,11 +157,11 @@ class CategoryServiceTest {
     @DisplayName("카테고리 수정 성공")
     void testUpdateCategory() {
         //mocking
-        when(categoryRepository.findById(parentCategory.getId())).thenReturn(
+        given(categoryRepository.findById(parentCategory.getId())).willReturn(
             Optional.ofNullable(parentCategory));
 
-        when(categoryRepository.findById(category.getId()))
-            .thenReturn(Optional.ofNullable(category));
+        given(categoryRepository.findById(category.getId())).willReturn(
+            Optional.ofNullable(category));
 
         //when
 
@@ -172,6 +174,7 @@ class CategoryServiceTest {
     @DisplayName("카테고리 수정 실패, 존재하지 않는 ID에 대해 수정 시도")
     void testUpdateCategory_ifNotExistedCategoryId_thenThrowsCategoryNotFoundException() {
         //given
+        given(categoryRepository.findById(category.getId())).willThrow(new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
 
         //when
 
@@ -190,8 +193,8 @@ class CategoryServiceTest {
         when(categoryRepository.findById(updateRequest.getParentCategoryId()))
             .thenThrow(new NotFoundException(Category.class, NOT_FOUND_MESSAGE));
 
-        when(categoryRepository.findById(category.getId()))
-            .thenReturn(Optional.ofNullable(category));
+        given(categoryRepository.findById(category.getId())).willReturn(
+            Optional.ofNullable(category));
 
         //when
 

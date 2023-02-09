@@ -74,4 +74,10 @@ public class FileServiceImpl implements FileService {
 
         return storageService.downloadFile(response);
     }
+
+    @Override
+    public String downloadUrl(Long id){
+        ObjectFileResponse response = objectFileRepository.queryById(id);
+        return response.getFileAddress() + response.getFileName();
+    }
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostResponse {
 
+  Long postId;
   Integer postTypeNo;
   Long memberNo;
   Long productNo;
@@ -23,7 +24,10 @@ public class PostResponse {
   LocalDateTime createdAt;
   LocalDateTime updatedAt;
 
+  String writer;
+
   public PostResponse(Post post) {
+    this.postId = post.getPostId();
     this.postTypeNo = post.getPostTypeId().getPostTypeId();
     this.memberNo = post.getMemberId().getMemberNo();
     this.productNo = Objects.nonNull(post.getProductId()) ? post.getProductId().getId() : null;
@@ -36,5 +40,6 @@ public class PostResponse {
     this.answered = Objects.nonNull(post.isAnswered()) ? post.isAnswered() : null;
     this.createdAt = post.getCreatedAt();
     this.updatedAt = post.getUpdatedAt();
+    this.writer = post.getMemberId().getNickname();
   }
 }

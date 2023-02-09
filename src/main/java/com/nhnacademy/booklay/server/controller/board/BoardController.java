@@ -36,7 +36,6 @@ public class BoardController {
   @GetMapping("/product/{productId}")
   public ResponseEntity<PageResponse<PostResponse>> retrieveProductQNA(@PathVariable Long productId,
       Pageable pageable) {
-    log.info("진입 확인");
     Page<PostResponse> content = postService.retrieveProductQNA(productId, pageable);
 
     PageResponse<PostResponse> response = new PageResponse<>(content);

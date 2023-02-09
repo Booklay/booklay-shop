@@ -16,4 +16,6 @@ public interface FileService {
         throws IOException;
 
     ResponseEntity<byte[]> downloadFile(final Long id) throws IOException;
+
+    String downloadUrl(Long id);
 }

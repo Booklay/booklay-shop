@@ -9,6 +9,4 @@ public interface CategoryDocumentRepository
 
     List<CategoryDocument> findAllByIdIsIn(List<Long> ids);
 
-    List<CategoryDocument> findAllByDepthGreaterThanEqualAndDepthLessThan();
-
 }

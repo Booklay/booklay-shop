@@ -18,7 +18,6 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @Mapping(mappingPath = "elastic/category-mapping.json")
 public class CategoryDocument {
 
-
     @Id
     private Long id;
 
@@ -26,17 +25,13 @@ public class CategoryDocument {
 
     private String name;
 
-    private Long depth;
-
     private Boolean isExposure;
 
     @Builder
-    public CategoryDocument(Long id, Long parentCategoryId, String name, Long depth,
-                            Boolean isExposure) {
+    public CategoryDocument(Long id, Long parentCategoryId, String name, Boolean isExposure) {
         this.id = id;
         this.parentCategoryId = parentCategoryId;
         this.name = name;
-        this.depth = depth;
         this.isExposure = isExposure;
     }
 
@@ -49,7 +44,6 @@ public class CategoryDocument {
             .id(category.getId())
             .parentCategoryId(parent.map(Category::getId).orElse(null))
             .name(category.getName())
-            .depth(category.getDepth())
             .isExposure(category.getIsExposure())
             .build();
     }

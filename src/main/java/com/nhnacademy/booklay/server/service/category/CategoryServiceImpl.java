@@ -77,6 +77,8 @@ public class CategoryServiceImpl implements CategoryService {
          *  4. 이후 기존 요청 들어온 카테고리 정보를 삭제
          */
 
+        Category category = categoryFindById(categoryId);
+
         Optional<Category> parentCategory =
             Objects.nonNull(updateRequest.getParentCategoryId())
                 ? categoryRepository.findById(updateRequest.getParentCategoryId()) : Optional.empty();
@@ -84,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(updateRequest.toEntity(parentCategory));
 
         if (!categoryId.equals(updateRequest.getId())) {
-            categoryRepository.deleteById(categoryId);
+            categoryRepository.delete(category);
         }
     }
 

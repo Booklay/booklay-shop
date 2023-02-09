@@ -29,6 +29,9 @@ public class Category {
     @JoinColumn(name = "parent_category_no")
     private Category parent;
 
+    @Column(name = "parent_category_no", insertable = false, updatable = false)
+    Long parentCategoryNo;
+
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Category> categories = new ArrayList<>();
 

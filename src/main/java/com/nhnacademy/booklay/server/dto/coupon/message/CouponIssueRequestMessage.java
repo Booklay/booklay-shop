@@ -12,4 +12,5 @@ import lombok.Setter;
 public class CouponIssueRequestMessage {
     private Long couponId;
     private Long memberId;
+    private String uuid;
 }

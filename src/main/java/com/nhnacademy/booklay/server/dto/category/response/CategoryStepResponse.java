@@ -1,31 +1,27 @@
 package com.nhnacademy.booklay.server.dto.category.response;
 
 import com.nhnacademy.booklay.server.entity.Category;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
-import lombok.Getter;
 
 @Getter
+@NoArgsConstructor
 public class CategoryStepResponse {
 
     Long id;
+    Long parentId;
 
     String name;
 
     List<CategoryStepResponse> categories = new ArrayList<>();
 
-    @Builder
+//    @Builder
     public CategoryStepResponse(Category category) {
         this.id = category.getId();
         this.name = category.getName();
-
-        for (Category c : category.getCategories()) {
-            categories.add(
-                CategoryStepResponse.builder()
-                                    .category(c)
-                                    .build()
-            );
-        }
+        this.parentId = category.getParentCategoryNo();
     }
 }

@@ -7,6 +7,8 @@ import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneRespons
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
+import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -130,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
     //TODO: 못찾는거 예외처리
-    return productRepository.retrieveProductResponse(id);
+    return productRepository.findProductById(id);
   }
 
   /**
@@ -515,7 +517,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
-    return productRepository.retrieveProductPage(pageable);
+    return productRepository.findProductPage(pageable);
   }
 
   @Transactional(readOnly = true)

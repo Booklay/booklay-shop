@@ -15,6 +15,6 @@ public interface CategoryProductRepository extends
     @Query(value = "delete from CategoryProduct as cp where cp.pk.productId=?1")
     void deleteAllByProductId(Long id);
 
-    List<CategoryProduct> findAllByProduct_Id(Long productId);
-    List<CategoryProduct> findAllByProduct_IdIn(List<Long> productId);
+    List<CategoryProduct> findAllByPk_ProductId(Long productId);
+    List<CategoryProduct> findAllByPk_ProductIdIn(List<Long> productId);
 }

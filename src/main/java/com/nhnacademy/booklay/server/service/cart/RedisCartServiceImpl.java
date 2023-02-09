@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class RedisCartServiceImpl implements RedisCartService {
 
     private final RedisTemplate<String, CartDto> redisTemplate;
     private final ProductService productService;
+    private final CategoryProductService categoryProductService;
 
     @Override
     @Transactional(readOnly = true)
@@ -32,7 +34,6 @@ public class RedisCartServiceImpl implements RedisCartService {
                                               .collect(Collectors.toList());
         List<Product> productList =
             productService.retrieveProductListByProductNoList(productNoList);
-
         return getCartRetrieveResponseListFromProductListAndCartDto(productList, cartDtoList);
     }
 
@@ -86,8 +87,12 @@ public class RedisCartServiceImpl implements RedisCartService {
                                              Product.builder().price(0L).title("상품 없음").build());
             cartRetrieveResponseList.add(
                 new CartRetrieveResponse(product.getId(), product.getTitle(), product.getPrice(),
-                                         cartDto.getCount()));
+                                         cartDto.getCount(),
+                    categoryProductService.retrieveCategoryIdListByProductId(product.getId())
+                ,product.getThumbnailNo()));
         }
+
+        cartRetrieveResponseList.sort((o1, o2) -> o1.getProductNo()>o2.getProductNo()?1:-1);
         return cartRetrieveResponseList;
     }
 

@@ -17,7 +17,7 @@ public class CategoryProductServiceImpl implements CategoryProductService{
     @Override
     public List<Long> retrieveCategoryIdListByProductId(Long productId){
         List<Long> returnList = new ArrayList<>();
-        for (CategoryProduct categoryProduct: categoryProductRepository.findAllByProduct_Id(productId)){
+        for (CategoryProduct categoryProduct: categoryProductRepository.findAllByPk_ProductId(productId)){
             returnList.add(categoryProduct.getPk().getCategoryId());
         }
         return returnList;
@@ -32,7 +32,7 @@ public class CategoryProductServiceImpl implements CategoryProductService{
     public MultiValueMap<Long, Long>retrieveCategoryIdListMultiValueMapByProductIdList(
         List<Long> productIdList){
         MultiValueMap<Long, Long> returnMap = new LinkedMultiValueMap<>();
-        for (CategoryProduct categoryProduct: categoryProductRepository.findAllByProduct_IdIn(productIdList)){
+        for (CategoryProduct categoryProduct: categoryProductRepository.findAllByPk_ProductIdIn(productIdList)){
             returnMap.add(categoryProduct.getPk().getProductId(), categoryProduct.getPk()
                 .getCategoryId());
         }

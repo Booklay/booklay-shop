@@ -3,42 +3,82 @@
     "id": {
       "type": "long"
     },
+
+    "thumbnail": {
+      "type": "long"
+    },
+
     "title": {
       "type": "text",
-      "copy_to": ["keywordText","keywordList"],
+      "copy_to": ["keywordText"],
       "analyzer" : "booklay_analyzer"
     },
-    "createdAt": {
-      "type" : "date",
-      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS||epoch_millis"
+
+    "shortDescription": {
+      "type": "text",
+      "copy_to": ["keywordText"],
+      "analyzer" : "booklay_analyzer"
+    },
+
+    "publisher": {
+      "type": "text",
+      "copy_to": ["keywordText"],
+      "analyzer" : "booklay_analyzer"
     },
 
     "price": {
       "type": "long"
     },
 
-    "pointRate": {
-      "type": "long"
+    "createdAt": {
+      "type" : "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS||epoch_millis"
     },
 
-    "shortDescription": {
-      "type": "text",
-      "copy_to": ["keywordText","keywordList"],
-      "analyzer" : "booklay_analyzer"
+    "authors": {
+      "type" : "nested",
+      "properties": {
+        "id": {
+          "type": "long"
+          },
+        "name": {
+          "type": "text",
+          "analyzer" : "booklay_analyzer",
+          "copy_to": ["keywordText"]
+        }
+      }
+    },
+    "tags": {
+      "type" : "nested",
+      "properties": {
+        "id": {
+          "type": "long"
+          },
+        "name": {
+          "type": "text",
+          "analyzer" : "booklay_analyzer",
+          "copy_to": ["keywordText"]
+        }
+      }
+    },
+    "categories": {
+      "type" : "nested",
+      "properties": {
+        "id": {
+          "type": "long"
+          },
+        "name": {
+          "type": "text",
+          "analyzer" : "booklay_analyzer",
+          "copy_to": ["keywordText"]
+        }
+      }
     },
 
-    "longDescription": {
-      "type": "text",
-      "analyzer" : "booklay_analyzer"
-    },
 
     "keywordText": {
       "type": "text",
       "analyzer" : "booklay_analyzer"
-    },
-
-    "keywordList": {
-      "type": "keyword"
     }
   }
 }

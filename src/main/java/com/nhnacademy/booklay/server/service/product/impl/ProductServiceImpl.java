@@ -6,9 +6,6 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubs
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductSubscribeResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
-import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -27,7 +24,6 @@ import com.nhnacademy.booklay.server.repository.product.CategoryProductRepositor
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.storage.FileService;
@@ -406,6 +402,9 @@ public class ProductServiceImpl implements ProductService {
         products.getTotalElements());
   }
 
+
+
+
   /**
    * 상품 목록에서 id 목록 뽑아내는 처리
    *
@@ -520,17 +519,15 @@ public class ProductServiceImpl implements ProductService {
     return productRepository.findProductPage(pageable);
   }
 
-  @Transactional(readOnly = true)
-  @Override
-  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList,
-      Pageable pageable) {
-    return productRepository.retrieveProductPage(productNoList, pageable);
-  }
+//  @Transactional(readOnly = true)
+//  @Override
+//  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
+//    return productRepository.findProductPage(productNoList, pageable);
+//  }
 
-  @Transactional(readOnly = true)
   @Override
-  public ProductAllInOneResponse retrieveProductResponse(Long productId) {
-    return productRepository.retrieveProductResponse(productId);
+  public ProductAllInOneResponse findProductById(Long productId) {
+    return productRepository.findProductById(productId);
   }
 
   /**

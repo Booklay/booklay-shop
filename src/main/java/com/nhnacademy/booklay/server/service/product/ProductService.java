@@ -5,7 +5,6 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubs
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
-import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductViewResponse;
 import com.nhnacademy.booklay.server.entity.Product;
 import java.io.IOException;
 import java.util.List;
@@ -32,8 +31,6 @@ public interface ProductService {
 
 
   List<Product> retrieveProductListByProductNoList(List<Long> productNoList);
-
-  Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable);
 
 
   Page<RetrieveBookForSubscribeResponse> retrieveBookDataForSubscribe(Pageable pageable,

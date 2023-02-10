@@ -41,7 +41,7 @@ public class KafkaConfig {
 
         Map<String, Object> config = new HashMap<>();
 
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "133.186.241.189:9092, 133.186.219.132:9092, 133.186.214.24:9092");
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "133.186.144.189:9092, 133.186.219.132:9092, 133.186.214.24:9092");
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -64,7 +64,7 @@ public class KafkaConfig {
 
     private Map<String, Object> senderProps() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "133.186.241.189:9092, 133.186.219.132:9092, 133.186.214.24:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "133.186.144.189:9092, 133.186.219.132:9092, 133.186.214.24:9092");
         props.put(ProducerConfig.LINGER_MS_CONFIG, 10);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);

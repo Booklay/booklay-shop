@@ -48,7 +48,7 @@ public class TagServiceImpl implements TagService {
         Tag tag = Tag.builder()
                      .name(request.getName())
                      .build();
-        tagRepository.save(tag);
+       tagRepository.save(tag);
     }
 
     @Override

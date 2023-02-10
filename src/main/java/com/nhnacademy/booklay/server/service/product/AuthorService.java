@@ -13,9 +13,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface AuthorService {
 
-    Long createAuthor(CreateAuthorRequest author);
+    void createAuthor(CreateAuthorRequest author);
 
-    Long updateAuthor(UpdateAuthorRequest request);
+    void updateAuthor(UpdateAuthorRequest request);
 
     void deleteAuthor(DeleteIdRequest request);
 

@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.product.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.will;
 
 import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
@@ -73,6 +74,8 @@ class AuthorServiceTest {
           Optional.ofNullable(member));
       author.setMember(member);
     }
+
+    ReflectionTestUtils.setField(author,"authorId", 1L);
 
     authorService.createAuthor(requestWithoutMember);
 
@@ -175,11 +178,12 @@ class AuthorServiceTest {
     Long authorId = 1L;
     //given
     ReflectionTestUtils.setField(author, "authorId", authorId);
+    given(authorRepository.findById(authorId)).willReturn(Optional.ofNullable(author));
 
     //when
     authorService.retrieveAuthorForUpdate(authorId);
 
     //then
-    BDDMockito.then(authorRepository).should().findAuthorById(authorId);
+    BDDMockito.then(authorRepository).should().findById(authorId);
   }
 }

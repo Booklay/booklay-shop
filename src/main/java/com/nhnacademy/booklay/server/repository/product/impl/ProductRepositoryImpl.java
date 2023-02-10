@@ -101,22 +101,22 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
      * 전체 상품에 대한 정보.
      */
     @Override
-    public List<ProductAllInOneResponse> findAllProducts() {
-        return findProductList(List.of(), Pageable.unpaged());
+    public List<ProductAllInOneResponse> retrieveAllProducts() {
+        return retrieveProductsByCondition(List.of(), Pageable.unpaged());
     }
 
     /**
      * 페이지네이션을 적용한 전체 상품 정보.
      */
     @Override
-    public Page<ProductAllInOneResponse> findProductPage(Pageable pageable) {
+    public Page<ProductAllInOneResponse> retrieveProductsInPage(Pageable pageable) {
 
         QProduct product = QProduct.product;
 
         JPQLQuery<Long> count = from(product)
             .select(product.count());
 
-        List<ProductAllInOneResponse> productList = findProductList(List.of(), pageable);
+        List<ProductAllInOneResponse> productList = retrieveProductsByCondition(List.of(), pageable);
 
         return PageableExecutionUtils.getPage(productList, pageable, count::fetchFirst);
     }
@@ -125,22 +125,22 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
      * 상품 번호 리스트를 조건으로 검색
      */
     @Override
-    public List<ProductAllInOneResponse> findProductList(List<Long> ids) {
-        return findProductList(ids, Pageable.unpaged());
+    public List<ProductAllInOneResponse> retrieveProductsByIds(List<Long> ids) {
+        return retrieveProductsByCondition(ids, Pageable.unpaged());
     }
 
     /**
      * 상품 번호 리스트를 조건으로 검색하고 페이지네이션 적용 정보.
      */
     @Override
-    public Page<ProductAllInOneResponse> findProductPage(List<Long> ids, Pageable pageable) {
+    public Page<ProductAllInOneResponse> retrieveProductsByIdsInPage(List<Long> ids, Pageable pageable) {
 
         QProduct product = QProduct.product;
 
         JPQLQuery<Long> count = from(product)
             .select(product.count());
 
-        List<ProductAllInOneResponse> productList = findProductList(ids, pageable);
+        List<ProductAllInOneResponse> productList = retrieveProductsByCondition(ids, pageable);
 
         return PageableExecutionUtils.getPage(productList, pageable, count::fetchFirst);
     }
@@ -149,11 +149,11 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
      * 상품 번호를 조건으로 하나의 상품만 검색
      */
     @Override
-    public ProductAllInOneResponse findProductById(Long id) {
+    public ProductAllInOneResponse retrieveProductById(Long id) {
 
         log.info("요청된 번호 : {}", id);
 
-        return findProductList(List.of(id), Pageable.unpaged())
+        return retrieveProductsByCondition(List.of(id), Pageable.unpaged())
             .stream()
             .findFirst()
             .orElseThrow(() -> new NotFoundException(Product.class, "존재하지 않는 상품 번호입니다."));
@@ -163,7 +163,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
      * 상품에 대한 조인 쿼리들을 매개변수에 따라 쿼리를 추가하고 fetch() 후에 리턴하는 메소드.
      */
     @Override
-    public List<ProductAllInOneResponse> findProductList(List<Long> ids, Pageable pageable) {
+    public List<ProductAllInOneResponse> retrieveProductsByCondition(List<Long> ids, Pageable pageable) {
 
         QProduct product = QProduct.product;
         QProductTag productTag = QProductTag.productTag;

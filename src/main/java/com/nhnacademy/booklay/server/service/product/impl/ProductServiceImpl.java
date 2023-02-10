@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
     //TODO: 못찾는거 예외처리
-    return productRepository.findProductById(id);
+    return productRepository.retrieveProductById(id);
   }
 
   /**
@@ -516,7 +516,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
-    return productRepository.findProductPage(pageable);
+    return productRepository.retrieveProductsInPage(pageable);
   }
 
 //  @Transactional(readOnly = true)
@@ -527,7 +527,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductAllInOneResponse findProductById(Long productId) {
-    return productRepository.findProductById(productId);
+    return productRepository.retrieveProductById(productId);
   }
 
   /**

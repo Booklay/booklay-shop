@@ -42,8 +42,7 @@ public class AuthorAdminController {
         Page<RetrieveAuthorResponse> response = authorService.retrieveAllAuthor(pageable);
         PageResponse<RetrieveAuthorResponse> result = new PageResponse<>(response);
 
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/{authorNo}")
@@ -54,17 +53,15 @@ public class AuthorAdminController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
-        Long result = authorService.createAuthor(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(result);
+    public ResponseEntity authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
+        authorService.createAuthor(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
-    public ResponseEntity<Long> authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
-       Long result = authorService.updateAuthor(request);
-       return ResponseEntity.status(HttpStatus.ACCEPTED)
-           .body(result);
+    public ResponseEntity authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
+       authorService.updateAuthor(request);
+       return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @DeleteMapping

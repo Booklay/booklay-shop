@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.controller.order;
 
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.OrderCheckRequest;
+import com.nhnacademy.booklay.server.dto.order.OrderCheckResponse;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,5 +32,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(cartList);
+    }
+
+    //todo 주문 검증
+    @PostMapping("check")
+    public ResponseEntity<OrderCheckResponse> orderValidCheck(@RequestBody OrderCheckRequest orderCheckRequest){
+        OrderCheckResponse orderCheckResponse = new OrderCheckResponse(true, orderCheckRequest.getPaymentAmount());
+        return ResponseEntity.ok(orderCheckResponse);
     }
 }

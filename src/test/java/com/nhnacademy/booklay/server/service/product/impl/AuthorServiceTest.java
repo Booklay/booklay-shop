@@ -172,4 +172,17 @@ class AuthorServiceTest {
     BDDMockito.then(productAuthorRepository).should().deleteByPk_AuthorId(deleteIdRequest.getId());
     BDDMockito.then(authorRepository).should().deleteById(deleteIdRequest.getId());
   }
+
+  @Test
+  void testAuthorRetrieveForUpdate_success(){
+    Long authorId = 1L;
+    //given
+    ReflectionTestUtils.setField(author, "authorId", authorId);
+
+    //when
+    authorService.retrieveAuthorForUpdate(authorId);
+
+    //then
+    BDDMockito.then(authorRepository).should().findAuthorById(authorId);
+  }
 }

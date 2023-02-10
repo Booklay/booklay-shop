@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,29 +38,39 @@ public class AuthorAdminController {
 
     // 작가
     @GetMapping
-    public PageResponse<RetrieveAuthorResponse> authorPage(Pageable pageable) {
+    public ResponseEntity<PageResponse<RetrieveAuthorResponse>> authorPage(Pageable pageable) {
         Page<RetrieveAuthorResponse> response = authorService.retrieveAllAuthor(pageable);
-        return new PageResponse<>(response);
+        PageResponse<RetrieveAuthorResponse> result = new PageResponse<>(response);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(result);
     }
 
     @GetMapping("/{authorNo}")
-    public RetrieveAuthorResponse authorEdit(@PathVariable Long authorNo){
-        return authorService.retrieveAuthorForEdit(authorNo);
+    public ResponseEntity<RetrieveAuthorResponse> authorEdit(@PathVariable Long authorNo){
+        RetrieveAuthorResponse result = authorService.retrieveAuthorForUpdate(authorNo);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(result);
     }
 
     @PostMapping
-    public void authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
-        authorService.createAuthor(request);
+    public ResponseEntity<Long> authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
+        Long result = authorService.createAuthor(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(result);
     }
 
     @PutMapping
-    public void authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
-        authorService.updateAuthor(request);
+    public ResponseEntity<Long> authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
+       Long result = authorService.updateAuthor(request);
+       return ResponseEntity.status(HttpStatus.ACCEPTED)
+           .body(result);
     }
 
     @DeleteMapping
-    public void authorDelete(@Valid @RequestBody DeleteIdRequest request) {
+    public ResponseEntity authorDelete(@Valid @RequestBody DeleteIdRequest request) {
         authorService.deleteAuthor(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

@@ -32,7 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final ProductAuthorRepository productAuthorRepository;
 
     @Override
-    public void createAuthor(CreateAuthorRequest request) {
+    public Long createAuthor(CreateAuthorRequest request) {
         Author author = Author.builder()
                               .name(request.getName())
                               .build();
@@ -45,11 +45,11 @@ public class AuthorServiceImpl implements AuthorService {
             author.setMember(member);
         }
 
-        authorRepository.save(author);
+        return authorRepository.save(author).getAuthorId();
     }
 
     @Override
-    public void updateAuthor(UpdateAuthorRequest request) {
+    public Long updateAuthor(UpdateAuthorRequest request) {
         authorRepository.findById(request.getId());
 
         Author author = Author.builder()
@@ -64,7 +64,7 @@ public class AuthorServiceImpl implements AuthorService {
             author.setMember(member);
         }
 
-        authorRepository.save(author);
+        return authorRepository.save(author).getAuthorId();
     }
 
     @Override
@@ -83,7 +83,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    public RetrieveAuthorResponse retrieveAuthorForEdit(Long authorNo) {
+    public RetrieveAuthorResponse retrieveAuthorForUpdate(Long authorNo) {
         return authorRepository.findAuthorById(authorNo);
     }
 }

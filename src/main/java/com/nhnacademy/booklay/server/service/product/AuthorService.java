@@ -13,13 +13,13 @@ import org.springframework.data.domain.Pageable;
 
 public interface AuthorService {
 
-    void createAuthor(CreateAuthorRequest author);
+    Long createAuthor(CreateAuthorRequest author);
 
-    void updateAuthor(UpdateAuthorRequest request);
+    Long updateAuthor(UpdateAuthorRequest request);
 
     void deleteAuthor(DeleteIdRequest request);
 
     Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable);
 
-    RetrieveAuthorResponse retrieveAuthorForEdit(Long authorNo);
+    RetrieveAuthorResponse retrieveAuthorForUpdate(Long authorNo);
 }

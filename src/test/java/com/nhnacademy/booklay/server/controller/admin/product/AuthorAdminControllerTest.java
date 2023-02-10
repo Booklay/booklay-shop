@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.controller.admin.product;
 
-import static org.hamcrest.Matchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.UpdateAuthorRequest;
@@ -26,9 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -85,7 +81,6 @@ class AuthorAdminControllerTest {
   @Test
   void authorRegister() throws Exception {
     CreateAuthorRequest createAuthorRequest = new CreateAuthorRequest("create");
-    given(authorService.createAuthor(createAuthorRequest)).willReturn(authorNo);
 
     mockMvc.perform(post("/admin/author")
             .content(objectMapper.writeValueAsString(createAuthorRequest))
@@ -95,8 +90,6 @@ class AuthorAdminControllerTest {
 
   @Test
   void authorUpdate() throws Exception {
-    given(authorService.updateAuthor(updateAuthorRequest)).willReturn(authorNo);
-
     //then
     mockMvc.perform(put("/admin/author")
             .content(objectMapper.writeValueAsString(updateAuthorRequest))

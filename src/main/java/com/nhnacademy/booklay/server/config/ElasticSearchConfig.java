@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.config;
 
+import com.nhnacademy.booklay.server.exception.ElasticsearchConfigurationException;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -32,7 +33,7 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new ElasticsearchConfigurationException(e.getMessage());
         }
     }
 }

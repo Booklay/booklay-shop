@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.repository.product;
 
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.entity.Product;
@@ -28,5 +29,5 @@ public interface ProductRepositoryCustom {
     ProductAllInOneResponse findProductById(Long id);
 
     List<ProductAllInOneResponse> findAllProducts();
-
+    List<RetrieveAuthorResponse> getAuthorsByProductId(Long productId);
 }

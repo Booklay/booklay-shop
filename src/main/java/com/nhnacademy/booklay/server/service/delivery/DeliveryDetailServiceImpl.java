@@ -1,9 +1,7 @@
 package com.nhnacademy.booklay.server.service.delivery;
 
-import com.nhnacademy.booklay.server.dto.order.OrderRecipe;
 import com.nhnacademy.booklay.server.dto.order.OrderSheet;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
-import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.repository.delivery.DeliveryDetailRepository;
 import com.nhnacademy.booklay.server.service.order.OrderService;
 import com.nhnacademy.booklay.server.service.order.OrderStatusService;
@@ -16,16 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DeliveryDetailServiceImpl implements DeliveryDetailService{
     private final DeliveryDetailRepository deliveryDetailRepository;
-    private final OrderStatusService orderStatusService;
-    private final DeliveryStatusCodeService deliveryStatusCodeService;
     private final OrderService orderService;
 
     @Override
-    public OrderRecipe retrieveOrderRecipe(Long memberNo, Long orderNo){
-        OrderRecipe orderRecipe = deliveryDetailRepository.findByOrder_MemberNoAndOrder_Id(memberNo, orderNo).orElse(OrderRecipe.builder().build());
-        orderRecipe.setOrderStatus(orderStatusService.retrieveOrderStatusCodeName(orderRecipe.getOrderStatusNo()));
-        orderRecipe.setDeliveryStatus(deliveryStatusCodeService.retrieveOrderStatusCodeName(orderRecipe.getDeliveryStatusNo()));
-        return orderRecipe;
+    public List<DeliveryDetail> retrieveDeliveryDetailByMemberNoAndOrderNo(Long memberNo, Long orderNo){
+        return deliveryDetailRepository.findAllByOrder_MemberNoAndOrder_Id(memberNo, orderNo);
     }
 
     @Override

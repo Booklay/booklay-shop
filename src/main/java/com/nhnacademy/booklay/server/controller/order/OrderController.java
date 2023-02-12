@@ -1,17 +1,16 @@
 package com.nhnacademy.booklay.server.controller.order;
 
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.order.OrderCheckRequest;
+import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.dto.order.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.OrderSheetSaveResponse;
 import com.nhnacademy.booklay.server.dto.order.StorageRequest;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
-import com.nhnacademy.booklay.server.service.delivery.DeliveryDetailService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
-import com.nhnacademy.booklay.server.service.order.OrderService;
 import com.nhnacademy.booklay.server.service.order.RedisOrderService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import java.util.UUID;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,9 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,8 +47,8 @@ public class OrderController {
 
     //todo 체크 구현 필요
     @PostMapping("check")
-    public ResponseEntity<OrderSheetSaveResponse> saveOrderSheet(@RequestBody OrderSheet orderSheet){
-        OrderSheet updatedOrderSheet = complexOrderService.checkOrder(orderSheet);
+    public ResponseEntity<OrderSheetSaveResponse> saveOrderSheet(@RequestBody OrderSheet orderSheet, MemberInfo memberInfo){
+        OrderSheet updatedOrderSheet = complexOrderService.checkOrder(orderSheet, memberInfo);
         if (updatedOrderSheet == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -69,7 +65,7 @@ public class OrderController {
 
     @PostMapping("storage/down")
     public ResponseEntity<Boolean> productStorageDown(@RequestBody StorageRequest storageRequest){
-
+//todo 실제 감소시키기
 //        Boolean success = productService.
         return ResponseEntity.ok(Boolean.TRUE);
     }

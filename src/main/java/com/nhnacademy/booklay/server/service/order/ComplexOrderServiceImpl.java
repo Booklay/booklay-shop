@@ -1,13 +1,16 @@
 package com.nhnacademy.booklay.server.service.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.ApiEntity;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.dto.common.MemberInfo;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponUsingDto;
 import com.nhnacademy.booklay.server.dto.coupon.response.CouponRetrieveResponseFromProduct;
 import com.nhnacademy.booklay.server.dto.order.OrderProductDto;
 import com.nhnacademy.booklay.server.dto.order.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.SubscribeDto;
 import com.nhnacademy.booklay.server.entity.Order;
-import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.service.RestService;
@@ -36,8 +39,9 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
     private final OrderProductService orderProductService;
     private final RestService restService;
     private final String gatewayIp;
+    private final ObjectMapper objectMapper;
     @Override
-    public OrderSheet checkOrder(OrderSheet orderSheet) {
+    public OrderSheet checkOrder(OrderSheet orderSheet, MemberInfo memberInfo) {
         Map<Long, CartDto> cartDtoMap = new HashMap<>();
         List<Long> productNoList = orderSheet.getCartDtoList().stream().map(cartDto -> {
             cartDtoMap.put(cartDto.getProductNo(), cartDto);
@@ -45,7 +49,8 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         }).collect(Collectors.toList());
 
 
-        //coupon 데이터 받아오기
+        //coupon 데이터 받아오기 및 쿠폰 데이터를 쿠폰사용전송데이터로 변환
+        CouponUseRequest couponUseRequest = new CouponUseRequest();
         MultiValueMap<Long, CouponRetrieveResponseFromProduct> couponMap = new LinkedMultiValueMap<>();
         if (orderSheet.getCouponCodeList()!=null){
             MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
@@ -55,8 +60,22 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
                 new ParameterizedTypeReference<>() {});
             apiEntity.getBody().forEach(couponRetrieveResponseFromProduct -> {
                 couponMap.add(couponRetrieveResponseFromProduct.getProductNo(), couponRetrieveResponseFromProduct);
+                //상품쿠폰변환
+                if (couponRetrieveResponseFromProduct.getProductNo()!=null){
+                    couponUseRequest.getProductCouponList().add(new CouponUsingDto(
+                        couponRetrieveResponseFromProduct.getCouponCode(),
+                        couponRetrieveResponseFromProduct.getId(),
+                        couponRetrieveResponseFromProduct.getProductNo()));
+                //주문쿠폰변환
+                }else {
+                    couponUseRequest.getCategoryCouponList().add(new CouponUsingDto(
+                        couponRetrieveResponseFromProduct.getCouponCode(),
+                        couponRetrieveResponseFromProduct.getId(),
+                        couponRetrieveResponseFromProduct.getCategoryNo()));
+                }
             });
         }
+
 
 
 
@@ -83,6 +102,11 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             //저장
             orderSheet.setSubscribeProductList(subscribeCartDtoList);
             orderSheet.setOrderProductDtoList(orderProductDtoList);
+
+            //쿠폰 사용전송
+            String couponUsingUrl = gatewayIp + "coupon/v1/coupons/using";
+            restService.post(couponUsingUrl, objectMapper.convertValue(couponUseRequest, Map.class), void.class);
+
             return orderSheet;
         }
         return null;
@@ -93,10 +117,9 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         Order order = orderService.saveOrder(orderSheet);
         //주문 상품 저장
         if (!orderSheet.getOrderProductDtoList().isEmpty()){
-            orderSheet.getOrderProductDtoList().forEach(orderProductDto -> {
-                OrderProduct orderProduct = orderProductService.saveOrderProduct(orderProductDto, order.getId());
-
-            });
+            orderSheet.getOrderProductDtoList().forEach(orderProductDto ->
+                orderProductService.saveOrderProduct(orderProductDto, order.getId())
+            );
         }
         //일반 상품용 배송정보
         if (!orderSheet.getCartDtoList().isEmpty()){

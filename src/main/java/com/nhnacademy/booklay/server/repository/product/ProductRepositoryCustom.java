@@ -29,4 +29,7 @@ public interface ProductRepositoryCustom {
 
     List<ProductAllInOneResponse> retrieveAllProducts();
 
+    List<Product> findAllRecentProduct(Integer recentDay);
+
+
 }

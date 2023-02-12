@@ -23,7 +23,6 @@ public class PostServiceImpl implements PostService {
   private final PostRepository postRepository;
   private final ProductRepository productRepository;
   private final PostTypeRepository postTypeRepository;
-
   private final MemberRepository memberRepository;
 
   @Override
@@ -55,8 +54,9 @@ public class PostServiceImpl implements PostService {
     if (request.getAnswered() != null) {
       post.setAnswered(request.getAnswered());
     }
+    Post savedPost = postRepository.save(post);
 
-    return postRepository.save(post).getPostId();
+    return savedPost.getPostId();
   }
 
   @Override

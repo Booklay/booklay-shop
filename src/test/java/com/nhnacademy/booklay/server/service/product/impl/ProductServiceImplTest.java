@@ -329,14 +329,15 @@ class ProductServiceImplTest {
       List<String> authorNames = new ArrayList<>();
       authorNames.add("test Author");
 
-      given(productRepository.findAuthorNameByProductId(response.getProductId())).willReturn(authorNames);
+      given(productRepository.findAuthorNameByProductId(response.getProductId())).willReturn(
+          authorNames);
 
       response.setAuthors(authorNames);
       response.setIsRegistered(true);
     }
 
-
-    Page<RetrieveBookForSubscribeResponse> result = productService.retrieveBookDataForSubscribe(pageable, subscribe.getId());
+    Page<RetrieveBookForSubscribeResponse> result = productService.retrieveBookDataForSubscribe(
+        pageable, subscribe.getId());
 
     assertThat(result.getTotalElements()).isEqualTo(1L);
   }
@@ -355,4 +356,42 @@ class ProductServiceImplTest {
     assertThat(productBook.isDeleted()).isTrue();
   }
 
+  @Test
+  void testRetrieveBookProduct_success() throws IOException {
+
+    //given
+    Long productId = 1L;
+    List<Long> productIds = new ArrayList<>();
+    productIds.add(productId);
+    List<RetrieveProductResponse> productResponses = new ArrayList<>();
+
+    for (int i = 0; i < productIds.size(); i++) {
+      given(productRepository.findById(productIds.get(i))).willReturn(
+          Optional.ofNullable(productBook));
+
+      given(productDetailRepository.existsProductDetailByProductId(productBook.getId())).willReturn(
+          true);
+
+      given(productDetailRepository.findProductDetailByProductId(productBook.getId())).willReturn(
+          productDetail);
+
+      List<RetrieveAuthorResponse> authors = new ArrayList<>();
+      RetrieveAuthorResponse author = new RetrieveAuthorResponse(1L, "test");
+      authors.add(author);
+      // 작가 정보 DTO
+      given(productDetailRepository.findAuthorsByProductDetailId(productDetail.getId())).willReturn(
+          authors);
+
+      // 합체
+      RetrieveProductResponse element = new RetrieveProductResponse(productBook, productDetail,
+          authors);
+      // 컨텐츠에 주입
+      productResponses.add(element);
+    }
+
+    //when
+    List<RetrieveProductResponse> result = productService.retrieveProductResponses(productIds);
+
+    assertThat(result.get(0).getPrice()).isEqualTo(productResponses.get(0).getPrice());
+  }
 }

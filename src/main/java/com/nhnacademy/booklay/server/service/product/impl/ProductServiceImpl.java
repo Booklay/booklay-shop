@@ -109,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
     // category_product
     saveProductCategory(request.getCategoryIds(), savedProduct);
     // subscribe
-    Subscribe subscribe = splitSubscribe(savedProduct, request);
+    Subscribe subscribe = splitSubscribe(savedProduct);
 
     if (request.getPublisher() != null) {
       subscribe.setPublisher(request.getPublisher());
@@ -212,7 +212,7 @@ public class ProductServiceImpl implements ProductService {
     saveProductCategory(request.getCategoryIds(), savedProduct);
 
     // subscribe
-    Subscribe subscribe = splitSubscribe(savedProduct, request);
+    Subscribe subscribe = splitSubscribe(savedProduct);
     subscribe.setId(request.getSubscribeId());
 
     if (Objects.nonNull(request.getPublisher())) {
@@ -353,10 +353,10 @@ public class ProductServiceImpl implements ProductService {
    * 구독 상품 생성 수정 dto에서 subscribe 분리
    *
    * @param product
-   * @param request
+   *
    * @return
    */
-  private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
+  private Subscribe splitSubscribe(Product product) {
     return Subscribe.builder()
         .product(product)
         .build();

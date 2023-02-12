@@ -93,8 +93,7 @@ class SearchServiceImplTest {
     void searchProductsByKeywords_ByKeywordTextField() {
 
         ReflectionTestUtils.setField(request,"classification","categories");
-        ReflectionTestUtils.setField(request,"keywords","국내" +
-            "");
+        ReflectionTestUtils.setField(request,"keywords","국내");
 
         SearchPageResponse<SearchProductResponse>
             pageResponse = searchService.searchProductsByKeywords(request,Pageable.ofSize(20));

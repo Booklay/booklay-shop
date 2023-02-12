@@ -7,20 +7,26 @@ import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponUsingDto;
 import com.nhnacademy.booklay.server.dto.coupon.response.CouponRetrieveResponseFromProduct;
+import com.nhnacademy.booklay.server.dto.order.DeliveryDetailDto;
 import com.nhnacademy.booklay.server.dto.order.OrderProductDto;
+import com.nhnacademy.booklay.server.dto.order.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.SubscribeDto;
+import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.entity.Order;
+import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.service.RestService;
 import com.nhnacademy.booklay.server.service.delivery.DeliveryDetailService;
+import com.nhnacademy.booklay.server.service.delivery.DeliveryStatusCodeService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.SubscribeService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,7 +38,9 @@ import org.springframework.util.MultiValueMap;
 @RequiredArgsConstructor
 public class ComplexOrderServiceImpl implements ComplexOrderService{
     private final OrderService orderService;
+    private final OrderStatusService orderStatusService;
     private final DeliveryDetailService deliveryDetailService;
+    private final DeliveryStatusCodeService deliveryStatusCodeService;
     private final ProductService productService;
     private final SubscribeService subscribeService;
     private final OrderSubscribeService orderSubscribeService;
@@ -133,5 +141,27 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         }
 
         return order;
+    }
+
+    @Override
+    public OrderReceipt retrieveOrderReceipt(Long orderNo, Long memberNo) {
+        Order order = orderService.retrieveOrder(orderNo);
+        if (!Objects.equals(order.getMemberNo(), memberNo)){
+            return new OrderReceipt();
+        }
+        List<OrderProduct> orderProductList = orderProductService.retrieveOrderProductListByOrderNo(orderNo);
+        List<DeliveryDetail> deliveryDetailList = deliveryDetailService.retrieveDeliveryDetailByMemberNoAndOrderNo(memberNo, orderNo);
+        OrderReceipt orderReceipt = new OrderReceipt(order);
+        orderReceipt.setOrderStatus(orderStatusService.retrieveOrderStatusCodeName(orderReceipt.getOrderStatusNo()));
+        orderReceipt.setOrderProductDtoList(
+            orderProductList.stream().map(OrderProductDto::new).collect(Collectors.toList()));
+        orderReceipt.setDeliveryDetailDtoList(
+            deliveryDetailList.stream().map(deliveryDetail -> {
+                DeliveryDetailDto deliveryDetailDto = new DeliveryDetailDto(deliveryDetail);
+                deliveryDetailDto.setDeliveryStatus(deliveryStatusCodeService.retrieveOrderStatusCodeName(deliveryDetailDto.getDeliveryStatusNo()));
+                return deliveryDetailDto;
+            }).collect(Collectors.toList())
+        );
+        return orderReceipt;
     }
 }

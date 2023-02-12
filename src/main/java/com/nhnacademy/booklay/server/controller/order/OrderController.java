@@ -2,9 +2,11 @@ package com.nhnacademy.booklay.server.controller.order;
 
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
+import com.nhnacademy.booklay.server.dto.order.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.OrderSheetSaveResponse;
 import com.nhnacademy.booklay.server.dto.order.StorageRequest;
+import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
 import com.nhnacademy.booklay.server.service.order.RedisOrderService;
@@ -73,11 +75,17 @@ public class OrderController {
     /**
      * 주문기록에서 정보를 가져와 영수증으로 저장
      */
-    @PostMapping("recipe/{orderId}")
-    public ResponseEntity<String> saveOrderRecipe(@PathVariable String orderId){
+    @PostMapping("receipt/{orderId}")
+    public ResponseEntity<Long> saveOrderReceipt(@PathVariable String orderId){
         OrderSheet orderSheet = redisOrderService.retrieveOrderSheet(orderId);
-        complexOrderService.saveReceipt(orderSheet);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Order order = complexOrderService.saveReceipt(orderSheet);
+        return ResponseEntity.status(HttpStatus.CREATED).body(order.getId());
+    }
+
+    @GetMapping("receipt/{orderNo}")
+    public ResponseEntity<OrderReceipt> retrieveOrderReceipt(@PathVariable Long orderNo, MemberInfo memberInfo){
+
+        return ResponseEntity.ok(complexOrderService.retrieveOrderReceipt(orderNo, memberInfo.getMemberNo()));
     }
 
 }

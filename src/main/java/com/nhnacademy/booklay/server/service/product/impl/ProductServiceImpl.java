@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -550,18 +549,5 @@ public class ProductServiceImpl implements ProductService {
 
   }
 
-  @Override
-  public List<ProductAllInOneResponse> retrieveRecentProducts() throws IOException {
-
-    List<Product> recentProduct = productRepository.findAllRecentProduct(RECENT_DAY);
-
-    List<Long> productIds = recentProduct.stream()
-        .map(product->product.getId())
-        .collect(Collectors.toList());
-
-    return productRepository.findProductList(productIds);
-
-
-  }
 }
 

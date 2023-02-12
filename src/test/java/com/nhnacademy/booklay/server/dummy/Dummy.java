@@ -191,7 +191,9 @@ public class Dummy {
     public static Order getDummyOrder() {
         Order order = Order.builder()
             .member(Dummy.getDummyMember())
+            .memberNo(Dummy.getDummyMember().getMemberNo())
             .orderStatusCode(getDummyOrderStatusCode())
+            .orderStatusCodeNo(getDummyOrderStatusCode().getId())
             .productPriceSum(30000L)
             .deliveryPrice(1000L)
             .discountPrice(0L)

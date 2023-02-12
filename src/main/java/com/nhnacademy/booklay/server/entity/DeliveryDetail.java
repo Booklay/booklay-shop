@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -33,12 +34,16 @@ public class DeliveryDetail {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_no", nullable = false)
+    @JoinColumn(name = "order_no", nullable = false, insertable = false, updatable = false)
     private Order order;
+    @Column(name = "order_no")
+    private Long orderNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code", nullable = false)
+    @JoinColumn(name = "code", nullable = false, insertable = false, updatable = false)
     private DeliveryStatusCode statusCode;
+    @Column(name = "code")
+    private Integer deliveryStatusCodeNo;
 
     @Column(name = "zip_code", length = 5, nullable = false)
     private String zipCode;
@@ -77,17 +82,20 @@ public class DeliveryDetail {
     private LocalDateTime completedAt;
 
     @Builder
-    public DeliveryDetail(Order order, DeliveryStatusCode statusCode, String zipCode,
-                          String address,
-                          String sender, String senderPhoneNumber, String receiver,
-                          String receiverPhoneNumber) {
+
+    public DeliveryDetail(Order order, Long orderNo, DeliveryStatusCode statusCode, Integer deliveryStatusCodeNo,
+                          String zipCode, String address, String sender, String senderPhoneNumber,
+                          String receiver, String receiverPhoneNumber, String memo) {
         this.order = order;
+        this.orderNo = orderNo;
         this.statusCode = statusCode;
+        this.deliveryStatusCodeNo = deliveryStatusCodeNo;
         this.zipCode = zipCode;
         this.address = address;
         this.sender = sender;
         this.senderPhoneNumber = senderPhoneNumber;
         this.receiver = receiver;
         this.receiverPhoneNumber = receiverPhoneNumber;
+        this.memo = memo;
     }
 }

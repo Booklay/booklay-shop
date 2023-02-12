@@ -23,6 +23,7 @@ import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -122,6 +123,23 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public List<SearchProductResponse> getLatestProducts() {
+
+        Query query = new NativeSearchQueryBuilder()
+            .withSorts(
+                SortBuilders.fieldSort("createdAt")
+            ).withMaxResults(8)
+            .build();
+
+        loggingQueryInfo(query);
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(query, ProductDocument.class);
+
+        return convertHitsToResponse(getHits(productDocumentSearchHits));
+    }
+
+    @Override
     public void saveAllDocuments() {
 //        카테고리 인덱스 저장
 
@@ -148,7 +166,6 @@ public class SearchServiceImpl implements SearchService {
 
             productDocumentRepository.saveAll(productDocuments);
         }
-
 
     }
 
@@ -229,6 +246,6 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private static void loggingQueryInfo(Query query) {
-        log.info(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
+        log.debug(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
     }
 }

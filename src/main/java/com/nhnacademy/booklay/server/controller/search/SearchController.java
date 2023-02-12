@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.controller.search;
 
-import com.nhnacademy.booklay.server.dto.search.request.SearchCategoryRequest;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
@@ -46,7 +46,7 @@ public class SearchController {
             .body(latestProducts);
     }
 
-    @PostMapping("/products")
+    @PostMapping("/products/keywords")
     public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchProductsByKeywords(@Valid @RequestBody
                                                                                         SearchKeywordsRequest request, Pageable pageable) {
 
@@ -55,11 +55,12 @@ public class SearchController {
         return ResponseEntity.status(HttpStatus.OK)
             .body(pageResponse);
     }
-    @PostMapping("/products/category")
-    public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchProductsByCategory(@Valid @RequestBody SearchCategoryRequest request, Pageable pageable) {
+    @PostMapping("/products")
+    public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchProductsByCategory(@Valid @RequestBody
+                                                                                              SearchIdRequest request, Pageable pageable) {
 
         SearchPageResponse<SearchProductResponse> pageResponse = searchService.searchProductsByCategory(
-            request.getCategoryId(), pageable);
+            request, pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(pageResponse);

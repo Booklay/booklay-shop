@@ -48,5 +48,4 @@ public interface ProductService {
 
   Page<ProductAllInOneResponse> getProductsPage(Pageable pageable);
 
-  List<ProductAllInOneResponse> retrieveRecentProducts() throws IOException;
 }

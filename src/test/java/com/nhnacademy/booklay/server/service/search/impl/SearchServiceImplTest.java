@@ -113,7 +113,7 @@ class SearchServiceImplTest {
     @Test
     void saveAllDocuments() {
 
-        given(productRepository.findAllProducts()).willReturn(productList);
+        given(productRepository.retrieveAllProducts()).willReturn(productList);
 
         searchService.saveAllDocuments();
 

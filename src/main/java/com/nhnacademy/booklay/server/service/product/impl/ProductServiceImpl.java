@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -130,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
     //TODO: 못찾는거 예외처리
-    return productRepository.findProductById(id);
+    return productRepository.retrieveProductById(id);
   }
 
   /**
@@ -518,7 +517,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
-    return productRepository.findProductPage(pageable);
+    return productRepository.retrieveProductsInPage(pageable);
   }
 
 //  @Transactional(readOnly = true)
@@ -529,7 +528,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductAllInOneResponse findProductById(Long productId) {
-    return productRepository.findProductById(productId);
+    return productRepository.retrieveProductById(productId);
   }
 
   /**
@@ -550,18 +549,5 @@ public class ProductServiceImpl implements ProductService {
 
   }
 
-  @Override
-  public List<ProductAllInOneResponse> retrieveRecentProducts() throws IOException {
-
-    List<Product> recentProduct = productRepository.findAllRecentProduct(RECENT_DAY);
-
-    List<Long> productIds = recentProduct.stream()
-        .map(product->product.getId())
-        .collect(Collectors.toList());
-
-    return productRepository.findProductList(productIds);
-
-
-  }
 }
 

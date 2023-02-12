@@ -9,4 +9,6 @@ public interface OrderSubscribeService {
     OrderSubscribe saveOrderSubscribe(SubscribeDto subscribeDto, Long orderNo);
 
     OrderSubscribe renewOrderSubscribe(Long subScribeNo, Integer renewDay);
+
+    void deleteOrderSubscribeByOrderNo(Long orderNo);
 }

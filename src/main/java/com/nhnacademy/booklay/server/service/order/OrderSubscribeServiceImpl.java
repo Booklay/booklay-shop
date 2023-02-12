@@ -32,17 +32,31 @@ public class OrderSubscribeServiceImpl implements OrderSubscribeService{
             .build());
     }
 
+    /**
+     * 구독기간 연장시 사용
+     * @param orderSubScribeNo 키
+     * @param renewMonth 추가된 개월 수
+     * @return
+     */
     @Override
-    public OrderSubscribe renewOrderSubscribe(Long subScribeNo, Integer renewDay){
-        OrderSubscribe orderSubscribe = retrieveOrderSubscribe(subScribeNo);
+    public OrderSubscribe renewOrderSubscribe(Long orderSubScribeNo, Integer renewMonth){
+        OrderSubscribe orderSubscribe = retrieveOrderSubscribe(orderSubScribeNo);
         return subscribeRepository.save(OrderSubscribe.builder()
             .id(orderSubscribe.getId())
             .subscribeNo(orderSubscribe.getSubscribeNo())
             .orderNo(orderSubscribe.getOrderNo())
-            .amounts(orderSubscribe.getAmounts()+renewDay)
+            .amounts(orderSubscribe.getAmounts()+renewMonth)
             .price(orderSubscribe.getPrice())
             .startAt(LocalDate.now())
-            .finishAt(LocalDate.now().plusDays(orderSubscribe.getAmounts()+renewDay))
+            .finishAt(LocalDate.now().plusMonths(orderSubscribe.getAmounts()+renewMonth))
             .build());
+    }
+
+    /**
+     * 환불시 삭제
+     */
+    @Override
+    public void deleteOrderSubscribeByOrderNo(Long orderNo){
+        subscribeRepository.deleteAllByOrderNo(orderNo);
     }
 }

@@ -1,22 +1,26 @@
 package com.nhnacademy.booklay.server.service.search.impl;
 
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
+import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.entity.document.CategoryDocument;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.documents.CategoryDocumentRepository;
 import com.nhnacademy.booklay.server.repository.documents.ProductDocumentRepository;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.repository.product.TagRepository;
 import com.nhnacademy.booklay.server.service.search.SearchService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.join.ScoreMode;
@@ -40,6 +44,8 @@ public class SearchServiceImpl implements SearchService {
     private final ProductDocumentRepository productDocumentRepository;
 
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
+    private final AuthorRepository authorRepository;
     private final ProductRepository productRepository;
     private final ElasticsearchOperations operations;
 
@@ -51,11 +57,14 @@ public class SearchServiceImpl implements SearchService {
     public SearchServiceImpl(CategoryDocumentRepository categoryDocumentRepository,
                              ProductDocumentRepository productDocumentRepository,
                              CategoryRepository categoryRepository,
+                             TagRepository tagRepository, AuthorRepository authorRepository,
                              ProductRepository productRepository,
                              ElasticsearchOperations operations) {
         this.categoryDocumentRepository = categoryDocumentRepository;
         this.productDocumentRepository = productDocumentRepository;
         this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
+        this.authorRepository = authorRepository;
         this.productRepository = productRepository;
         this.operations = operations;
     }
@@ -101,13 +110,13 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchPageResponse<SearchProductResponse> searchProductsByCategory(Long categoryId,
-                                                                Pageable pageable) {
+    public SearchPageResponse<SearchProductResponse> searchProductsByCategory(SearchIdRequest request,
+        Pageable pageable) {
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
 
         NativeSearchQuery query =
             queryBuilder
-                .withQuery(nestedQueryForId("categories", categoryId))
+                .withQuery(nestedQueryForId(request.getClassification(), request.getId()))
                 .withPageable(pageable).build();
 
         loggingQueryInfo(query);
@@ -115,11 +124,33 @@ public class SearchServiceImpl implements SearchService {
         SearchHits<ProductDocument>
             productDocumentSearchHits = operations.search(query, ProductDocument.class);
 
-        Optional<Category> category = categoryRepository.findById(categoryId);
-
-        String searchTitle = category.isPresent() ? category.get().getName() : "알 수 없는 카테고리 정보";
+        String searchTitle = getSearchTitle(request);
 
         return getSearchPageResponse(pageable, productDocumentSearchHits, searchTitle);
+    }
+
+    private String getSearchTitle(SearchIdRequest request) {
+
+        try {
+            if (request.getClassification().equals("tags")) {
+                Tag tag = tagRepository.findById(request.getId()).orElseThrow();
+
+                return tag.getName();
+            } else if (request.getClassification().equals("categories")) {
+                Category category = categoryRepository.findById(request.getId()).orElseThrow();
+
+                return category.getName();
+            } else if (request.getClassification().equals("authors")) {
+                Author author = authorRepository.findById(request.getId()).orElseThrow();
+
+                return author.getName();
+            }
+
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
+
+        return "알 수 없는 검색 정보";
     }
 
     @Override

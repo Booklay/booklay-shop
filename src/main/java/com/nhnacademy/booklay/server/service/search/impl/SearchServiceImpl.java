@@ -76,10 +76,6 @@ public class SearchServiceImpl implements SearchService {
 
     }
 
-    private static void loggingQueryInfo(Query query) {
-        log.info(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
-    }
-
     @Override
     public SearchPageResponse<SearchProductResponse> searchProductsByKeywords(
         SearchKeywordsRequest searchKeywordsRequest, Pageable pageable) {
@@ -125,20 +121,6 @@ public class SearchServiceImpl implements SearchService {
         return getSearchPageResponse(pageable, productDocumentSearchHits, searchTitle);
     }
 
-    private SearchPageResponse<SearchProductResponse> getSearchPageResponse(Pageable pageable,
-                                                                            SearchHits<ProductDocument> productDocumentSearchHits,
-                                                                            String searchTitle) {
-
-        List<SearchProductResponse> list = convertHitsToResponse(getHits(productDocumentSearchHits));
-
-        return new SearchPageResponse<>(
-            searchTitle,
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            list.size() / pageable.getPageSize(),
-            list);
-    }
-
     @Override
     public void saveAllDocuments() {
 //        카테고리 인덱스 저장
@@ -168,6 +150,20 @@ public class SearchServiceImpl implements SearchService {
         }
 
 
+    }
+
+    private SearchPageResponse<SearchProductResponse> getSearchPageResponse(Pageable pageable,
+                                                                            SearchHits<ProductDocument> productDocumentSearchHits,
+                                                                            String searchTitle) {
+
+        List<SearchProductResponse> list = convertHitsToResponse(getHits(productDocumentSearchHits));
+
+        return new SearchPageResponse<>(
+            searchTitle,
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            list.size() / pageable.getPageSize(),
+            list);
     }
 
 
@@ -200,18 +196,14 @@ public class SearchServiceImpl implements SearchService {
     private <T> List<T> getHits(SearchHits<T> searchHits) {
         List<T> hits = new ArrayList<>();
 
-        searchHits.getSearchHits().forEach(
-            productDocumentSearchHit -> hits.add(productDocumentSearchHit.getContent()));
+        if (Objects.nonNull(searchHits)) {
+            searchHits.getSearchHits().forEach(
+                productDocumentSearchHit -> hits.add(productDocumentSearchHit.getContent()));
+        }
+
 
         return hits;
     }
-
-    /**
-     * 여러 키워드가 들어간 스트링으로 검색하여 아이디 리스트를 반환.
-     *
-     * @param keywords 검색할 키워드들이 들어간 스트링.
-     * @return 검색된 상품들의 아이디 리스트.
-     */
 
     private MatchQueryBuilder searchProductsByOneField(String field, String keywords) {
         return QueryBuilders.matchQuery(field, keywords);
@@ -234,5 +226,9 @@ public class SearchServiceImpl implements SearchService {
 
     private NestedQueryBuilder nestedQueryForId(String path, Long id) {
         return nestedQuery(path, path + ".id", String.valueOf(id));
+    }
+
+    private static void loggingQueryInfo(Query query) {
+        log.info(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
     }
 }

@@ -33,12 +33,16 @@ public class Order {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_no")
+    @JoinColumn(name = "member_no", insertable = false, updatable = false)
     private Member member;
+    @Column(name = "member_no")
+    private Long memberNo;
 
     @OneToOne
-    @JoinColumn(name = "code")
+    @JoinColumn(name = "code", insertable = false, updatable = false)
     private OrderStatusCode orderStatusCode;
+    @Column(name = "code")
+    private Long orderStatusCodeNo;
 
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -70,11 +74,15 @@ public class Order {
     private Boolean isBlinded;
 
     @Builder
-    public Order(Member member, OrderStatusCode orderStatusCode, Long productPriceSum,
+    public Order(Member member, Long memberNo, OrderStatusCode orderStatusCode,
+                 Long orderStatusCodeNo, LocalDateTime orderedAt, Long productPriceSum,
                  Long deliveryPrice, Long discountPrice, Long pointUsePrice, Long paymentPrice,
                  Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded) {
         this.member = member;
+        this.memberNo = memberNo;
         this.orderStatusCode = orderStatusCode;
+        this.orderStatusCodeNo = orderStatusCodeNo;
+        this.orderedAt = orderedAt;
         this.productPriceSum = productPriceSum;
         this.deliveryPrice = deliveryPrice;
         this.discountPrice = discountPrice;

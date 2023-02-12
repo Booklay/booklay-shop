@@ -3,7 +3,7 @@ package com.nhnacademy.booklay.server.repository.delivery;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
-import com.nhnacademy.booklay.server.repository.OrderRepository;
+import com.nhnacademy.booklay.server.repository.order.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

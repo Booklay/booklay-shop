@@ -138,6 +138,24 @@ class TagServiceImplTest {
   }
 
   @Test
+  void testTagDeleteWithProductTag_success(){
+    //given
+    Long tagId = 1L;
+    ReflectionTestUtils.setField(tag, "id", tagId);
+    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(tag.getId());
+
+    given(tagRepository.existsById(tag.getId())).willReturn(true);
+    given(productTagRepository.existsByPk_TagId(tagId)).willReturn(true);
+
+    //when
+    tagService.deleteTag(deleteIdRequest);
+
+
+    //then
+    BDDMockito.then(tagRepository).should().deleteById(tagId);
+  }
+
+  @Test
   void testTagDelete_failure() {
     ReflectionTestUtils.setField(tag, "id", 1L);
     given(tagRepository.existsById(tag.getId())).willReturn(false);

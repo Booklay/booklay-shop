@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -290,6 +291,25 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
             x.setAuthors(authorMap.getOrDefault(x.getInfo().getId(), new ArrayList<>()));
             x.setCategories(categoryMap.getOrDefault(x.getInfo().getId(), new ArrayList<>()));
         });
+    }
+
+    /**
+     * 상품 번호로 작가 목록 호출
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public List<RetrieveAuthorResponse> getAuthorsByProductId(Long productId){
+        JPQLQuery<AuthorsInProduct> query = getAuthorsInProductList();
+        QProductDetail productDetail = QProductDetail.productDetail;
+
+        List<AuthorsInProduct> authorsInProductList = query.where(productDetail.product.id.eq(productId)).fetch();
+        List<RetrieveAuthorResponse> authorList = authorsInProductList.stream()
+            .map(authors->authors.getAuthor())
+            .collect(Collectors.toList());;
+
+        return authorList;
     }
 }
 

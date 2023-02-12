@@ -12,7 +12,7 @@ import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.Post;
 import com.nhnacademy.booklay.server.entity.PostType;
 import com.nhnacademy.booklay.server.entity.Product;
-import com.nhnacademy.booklay.server.entity.ProductAskComment;
+import com.nhnacademy.booklay.server.entity.Comment;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
@@ -65,14 +65,16 @@ public class DummyCart {
     return post;
   }
 
-  public static ProductAskComment getDummyComment() {
+  public static Comment getDummyComment() {
     Post dummyPost = getDummyPost();
     Member dummyMember = Dummy.getDummyMember();
-    ProductAskComment comment = ProductAskComment.builder().postId(dummyPost)
-        .content("dummy test comment")
-        .depth(0L)
+    Comment comment = Comment.builder().postId(dummyPost)
+        .postId(dummyPost)
         .memberId(dummyMember)
+        .groupNo(null)
+        .content("dummy test comment")
         .groupOrder(0L)
+        .depth(0L)
         .build();
 
     return comment;

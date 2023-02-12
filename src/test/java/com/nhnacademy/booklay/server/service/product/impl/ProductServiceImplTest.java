@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
@@ -154,7 +153,7 @@ class ProductServiceImplTest {
     //when
     productService.retrieveBookData(targetId);
 
-    BDDMockito.then(productRepository).should().findProductById(targetId);
+    BDDMockito.then(productRepository).should().retrieveProductById(targetId);
 
   }
 

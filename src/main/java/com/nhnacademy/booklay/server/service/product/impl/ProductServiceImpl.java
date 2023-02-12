@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -60,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
   private static final Long NOT_FOUND_PRODUCT_ID = 33L;
+  private static final Integer RECENT_DAY = 7;
 
   /**
    * 서적 상품 생성
@@ -545,6 +547,20 @@ public class ProductServiceImpl implements ProductService {
       productRepository.save(product);
     }
     productDetailRepository.save(productDetail);
+
+  }
+
+  @Override
+  public List<ProductAllInOneResponse> retrieveRecentProducts() throws IOException {
+
+    List<Product> recentProduct = productRepository.findAllRecentProduct(RECENT_DAY);
+
+    List<Long> productIds = recentProduct.stream()
+        .map(product->product.getId())
+        .collect(Collectors.toList());
+
+    return productRepository.findProductList(productIds);
+
 
   }
 }

@@ -136,7 +136,7 @@ public class SearchServiceImpl implements SearchService {
 
 //        상품 인덱스 저장
 
-        List<ProductAllInOneResponse> products = productRepository.findAllProducts();
+        List<ProductAllInOneResponse> products = productRepository.retrieveAllProducts();
         List<ProductDocument> productDocuments = new ArrayList<>();
 
         if (!products.isEmpty()) {

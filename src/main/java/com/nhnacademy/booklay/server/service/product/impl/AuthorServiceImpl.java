@@ -27,63 +27,64 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorRepository authorRepository;
-    private final MemberRepository memberRepository;
-    private final ProductAuthorRepository productAuthorRepository;
+  private final AuthorRepository authorRepository;
+  private final MemberRepository memberRepository;
+  private final ProductAuthorRepository productAuthorRepository;
 
-    @Override
-    public void createAuthor(CreateAuthorRequest request) {
-        Author author = Author.builder()
-                              .name(request.getName())
-                              .build();
+  @Override
+  public void createAuthor(CreateAuthorRequest request) {
+    Author author = Author.builder()
+        .name(request.getName())
+        .build();
 
-        if (Objects.nonNull(request.getMemberNo())) {
-            Member member = memberRepository.findById(request.getMemberNo())
-                                            .orElseThrow(() -> new NotFoundException(Member.class,
-                                                                                     "Member not found"));
+    if (Objects.nonNull(request.getMemberNo())) {
+      Member member = memberRepository.findById(request.getMemberNo())
+          .orElseThrow(() -> new NotFoundException(Member.class,
+              "Member not found"));
 
-            author.setMember(member);
-        }
-
-        authorRepository.save(author);
+      author.setMember(member);
     }
 
-    @Override
-    public void updateAuthor(UpdateAuthorRequest request) {
-        authorRepository.findById(request.getId());
+    authorRepository.save(author);
+  }
 
-        Author author = Author.builder()
-                              .name(request.getName())
-                              .build();
+  @Override
+  public void updateAuthor(UpdateAuthorRequest request) {
+    authorRepository.findById(request.getId());
 
-        if (Objects.nonNull(request.getMemberNo())) {
-            Member member = memberRepository.findById(request.getMemberNo())
-                                            .orElseThrow(() -> new NotFoundException(Member.class,
-                                                                                     "Member not found"));
+    Author author = Author.builder()
+        .name(request.getName())
+        .build();
 
-            author.setMember(member);
-        }
+    if (Objects.nonNull(request.getMemberNo())) {
+      Member member = memberRepository.findById(request.getMemberNo())
+          .orElseThrow(() -> new NotFoundException(Member.class,
+              "Member not found"));
 
-        authorRepository.save(author);
+      author.setMember(member);
     }
 
-    @Override
-    public void deleteAuthor(DeleteIdRequest request) {
-        Long id = request.getId();
+    authorRepository.save(author);
+  }
 
-        productAuthorRepository.deleteByPk_AuthorId(id);
-        authorRepository.deleteById(id);
-    }
+  @Override
+  public void deleteAuthor(DeleteIdRequest request) {
+    Long id = request.getId();
 
-    @Override
-    @Transactional(readOnly = true)
-    public Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable) {
-        return authorRepository.findAllBy(pageable);
-    }
+    productAuthorRepository.deleteByPk_AuthorId(id);
+    authorRepository.deleteById(id);
+  }
 
-    @Override
-    @Transactional(readOnly = true)
-    public RetrieveAuthorResponse retrieveAuthorForEdit(Long authorNo) {
-        return authorRepository.findAuthorById(authorNo);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable) {
+    return authorRepository.findAllBy(pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public RetrieveAuthorResponse retrieveAuthorForUpdate(Long authorNo) {
+    Author author = authorRepository.findById(authorNo).orElseThrow(()->new NotFoundException(Author.class, "author not found"));
+    return new RetrieveAuthorResponse(author);
+  }
 }

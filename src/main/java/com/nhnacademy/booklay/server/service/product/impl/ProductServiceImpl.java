@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -60,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
   private static final Long NOT_FOUND_PRODUCT_ID = 33L;
+  private static final Integer RECENT_DAY = 7;
 
   /**
    * 서적 상품 생성
@@ -109,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
     // category_product
     saveProductCategory(request.getCategoryIds(), savedProduct);
     // subscribe
-    Subscribe subscribe = splitSubscribe(savedProduct, request);
+    Subscribe subscribe = splitSubscribe(savedProduct);
 
     if (request.getPublisher() != null) {
       subscribe.setPublisher(request.getPublisher());
@@ -212,7 +214,7 @@ public class ProductServiceImpl implements ProductService {
     saveProductCategory(request.getCategoryIds(), savedProduct);
 
     // subscribe
-    Subscribe subscribe = splitSubscribe(savedProduct, request);
+    Subscribe subscribe = splitSubscribe(savedProduct);
     subscribe.setId(request.getSubscribeId());
 
     if (Objects.nonNull(request.getPublisher())) {
@@ -353,10 +355,10 @@ public class ProductServiceImpl implements ProductService {
    * 구독 상품 생성 수정 dto에서 subscribe 분리
    *
    * @param product
-   * @param request
+   *
    * @return
    */
-  private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
+  private Subscribe splitSubscribe(Product product) {
     return Subscribe.builder()
         .product(product)
         .build();
@@ -545,6 +547,20 @@ public class ProductServiceImpl implements ProductService {
       productRepository.save(product);
     }
     productDetailRepository.save(productDetail);
+
+  }
+
+  @Override
+  public List<ProductAllInOneResponse> retrieveRecentProducts() throws IOException {
+
+    List<Product> recentProduct = productRepository.findAllRecentProduct(RECENT_DAY);
+
+    List<Long> productIds = recentProduct.stream()
+        .map(product->product.getId())
+        .collect(Collectors.toList());
+
+    return productRepository.findProductList(productIds);
+
 
   }
 }

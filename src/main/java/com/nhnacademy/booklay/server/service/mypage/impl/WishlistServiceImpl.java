@@ -89,25 +89,14 @@ public class WishlistServiceImpl implements WishlistService {
       throws IOException {
     Page<Wishlist> wishlistPage =wishlistRepository.retrieveRegister(memberNo, pageable);
 
-    //TODO: 공부 좀 하고 지우겠습니다.
-//    List<Long> productIds = new ArrayList<>();
-//    for(int i=0; i< wishlistPage.getContent().size(); i++){
-//      productIds.add(wishlistPage.getContent().get(i).getPk().getProductId());
-//    }
-
     List<Long> productIds = wishlistPage.getContent().stream()
         .map(wishlist->wishlist.getPk().getProductId())
         .collect(Collectors.toList());
-
 
     List<RetrieveProductResponse> content = productService.retrieveProductResponses(productIds);
     for(RetrieveProductResponse product : content){
       RestockingNotification.Pk pk = new RestockingNotification.Pk(memberNo, product.getProductId());
       product.setAlarm(restockingNotificationRepository.existsById(pk));
-    }
-
-    for(RetrieveProductResponse product : content) {
-      log.info(product.getAlarm() + "출력");
     }
 
     return new PageImpl<>(content, pageable, wishlistPage.getTotalElements());

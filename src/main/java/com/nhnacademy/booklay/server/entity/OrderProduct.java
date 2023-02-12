@@ -27,12 +27,16 @@ public class OrderProduct {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_no")
+    @JoinColumn(name = "order_no", insertable = false, updatable = false)
     private Order order;
+    @Column(name = "order_no")
+    private Long orderNo;
 
     @OneToOne
-    @JoinColumn(name = "product_no")
+    @JoinColumn(name = "product_no", insertable = false, updatable = false)
     private Product product;
+    @Column(name = "product_no")
+    private Long productNo;
 
     @Column
     private int count;
@@ -41,9 +45,12 @@ public class OrderProduct {
     private int price;
 
     @Builder
-    public OrderProduct(Order order, Product product, int count, int price) {
+    public OrderProduct(Order order, Long orderNo, Product product, Long productNo, int count,
+                        int price) {
         this.order = order;
+        this.orderNo = orderNo;
         this.product = product;
+        this.productNo = productNo;
         this.count = count;
         this.price = price;
     }

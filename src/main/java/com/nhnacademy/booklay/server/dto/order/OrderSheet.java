@@ -11,6 +11,8 @@ public class OrderSheet {
     private List<String> couponCodeList;
     private List<CartDto> cartDtoList;
     @Setter
+    private List<OrderProductDto> orderProductDtoList;
+    @Setter
     private List<SubscribeDto> subscribeProductList;
     private Long productPriceSum;
     private Long usingPoint;
@@ -31,36 +33,5 @@ public class OrderSheet {
     private String receiver;
     private String receiverPhoneNo;
     private String memo;
-//
-//    public DeliveryDetail getDeliveryDetail(){
-//
-//        return DeliveryDetail.builder()
-//            .order(getOrder())
-//            .sender(sender)
-//            .senderPhoneNumber(senderPhoneNo)
-//            .address(address)
-//            .receiver(receiver)
-//            .receiverPhoneNumber(receiverPhoneNo)
-//            .zipCode(zipCode)
-//            .deliveryStatusCodeNo(1)
-//            .memo(memo)
-//            .build();
-//
-//    }
-//
-//    public Order getOrder(){
-//        return Order.builder()
-//            .memberNo(memberNo)
-//            .orderStatusCodeNo(1L)
-//            .productPriceSum(productPriceSum)
-//            .deliveryPrice(deliveryPrice)
-//            .discountPrice(discountPrice)
-//            .pointUsePrice(usingPoint)
-//            .paymentPrice(paymentAmount)
-//            .paymentMethod(paymentMethod)
-//            .giftWrappingPrice(giftWrappingPrice)
-//            .isBlinded(Boolean.FALSE)
-//            .build();
-//    }
 
 }

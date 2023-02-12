@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.OrderCheckRequest;
 import com.nhnacademy.booklay.server.dto.order.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.OrderSheetSaveResponse;
+import com.nhnacademy.booklay.server.dto.order.StorageRequest;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.delivery.DeliveryDetailService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
@@ -34,8 +35,6 @@ public class OrderController {
     private final ProductService productService;
     private final RedisOrderService redisOrderService;
     private final CategoryProductService categoryProductService;
-    private final DeliveryDetailService deliveryDetailService;
-    private final OrderService orderService;
     private final ComplexOrderService complexOrderService;
     @GetMapping("products")
     public ResponseEntity<List<CartRetrieveResponse>> getProductDataByProductList(
@@ -52,12 +51,12 @@ public class OrderController {
 
     //todo 체크 구현 필요
     @PostMapping("check")
-    public ResponseEntity<OrderSheetSaveResponse> saveOrderSheet(@RequestBody
-                                                                 OrderSheet orderSheet){
-        if (complexOrderService.checkOrder(orderSheet) == null){
+    public ResponseEntity<OrderSheetSaveResponse> saveOrderSheet(@RequestBody OrderSheet orderSheet){
+        OrderSheet updatedOrderSheet = complexOrderService.checkOrder(orderSheet);
+        if (updatedOrderSheet == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        OrderSheetSaveResponse orderSheetSaveResponse = redisOrderService.saveOrderSheet(orderSheet);
+        OrderSheetSaveResponse orderSheetSaveResponse = redisOrderService.saveOrderSheet(updatedOrderSheet);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderSheetSaveResponse);
     }
 
@@ -68,9 +67,15 @@ public class OrderController {
         return ResponseEntity.ok(orderSheet);
     }
 
+    @PostMapping("storage/down")
+    public ResponseEntity<Boolean> productStorageDown(@RequestBody StorageRequest storageRequest){
+
+//        Boolean success = productService.
+        return ResponseEntity.ok(Boolean.TRUE);
+    }
+
     /**
      * 주문기록에서 정보를 가져와 영수증으로 저장
-     * 비 구독상품만 해당 //todo 구독 상품 고려 필요
      */
     @PostMapping("recipe/{orderId}")
     public ResponseEntity<String> saveOrderRecipe(@PathVariable String orderId){

@@ -56,7 +56,7 @@ public class FileServiceImpl implements FileService {
         throw new IOException("파일이 손상되었거나 지원하지 않는 형식입니다.");
     }
 
-    public ObjectFile uploadFileResolve(MultipartFile image, FileResolveRequest fileResolveRequest)
+    private ObjectFile uploadFileResolve(MultipartFile image, FileResolveRequest fileResolveRequest)
         throws IOException {
         FileRequest request = storageService.uploadImage(image, fileResolveRequest);
 

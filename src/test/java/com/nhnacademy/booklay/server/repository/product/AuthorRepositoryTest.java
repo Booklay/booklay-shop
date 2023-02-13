@@ -26,13 +26,4 @@ class AuthorRepositoryTest {
   @Autowired
   TestEntityManager entityManager;
 
-//  @Test
-//   void testFindAllBy_Success(){
-//     Page result = authorRepository.findAllBy(any(), any());
-//
-//     assertThat(result.getTotalElements()).isZero();
-//     authorRepository.save(author);
-//
-//     Page<RetrieveAuthorResponse> page = authorRepository.findAllBy(PageRequest.of(0,20));
-//   }
 }

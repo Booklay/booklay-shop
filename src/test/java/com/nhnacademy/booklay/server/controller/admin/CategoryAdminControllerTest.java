@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.controller.admin;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,6 +19,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
+import com.nhnacademy.booklay.server.dto.category.response.CategoryStepResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
@@ -77,6 +79,19 @@ class CategoryAdminControllerTest {
         ReflectionTestUtils.setField(updateDto, "name", category.getName());
         ReflectionTestUtils.setField(updateDto, "isExposure", category.getIsExposure());
 
+    }
+
+    @Test
+    void test_RetrieveCategoryStep() throws Exception {
+
+        given(categoryService.retrieveCategoryStep(1L)).willReturn(new CategoryStepResponse());
+
+        mockMvc.perform(get(URI_PREFIX + "/steps/1"))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andReturn();
+
+        then(categoryService).should(times(1)).retrieveCategoryStep(1L);
     }
 
     @Test

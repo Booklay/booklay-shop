@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,45 +38,51 @@ public class TagAdminController {
 
     // 태그 자체만
     @GetMapping
-    public PageResponse<RetrieveTagResponse> tagPage(Pageable pageable) {
+    public ResponseEntity<PageResponse> tagPage(Pageable pageable) {
         Page<RetrieveTagResponse> response = tagService.retrieveAllTag(pageable);
-        return new PageResponse<>(response);
+        PageResponse result = new PageResponse<>(response);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(result);
     }
 
     @PostMapping
-    public void tagRegister(@Valid @RequestBody CreateTagRequest request) {
+    public ResponseEntity tagRegister(@Valid @RequestBody CreateTagRequest request) {
         tagService.createTag(request);
+       return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
-    public void tagUpdate(@Valid @RequestBody UpdateTagRequest request) {
+    public ResponseEntity tagUpdate(@Valid @RequestBody UpdateTagRequest request) {
         tagService.updateTag(request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @DeleteMapping
-    public void tagDelete(@Valid @RequestBody DeleteIdRequest id) {
+    public ResponseEntity tagDelete(@Valid @RequestBody DeleteIdRequest id) {
         tagService.deleteTag(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // 태그-작품 연동
     @GetMapping("/product/{productNo}")
-    public PageResponse<TagProductResponse> tagProductPage(Pageable pageable,
-                                                           @PathVariable Long productNo) {
-        Page<TagProductResponse> response =
-            tagService.retrieveAllTagWithBoolean(pageable, productNo);
-        return new PageResponse<>(response);
+    public ResponseEntity<PageResponse<TagProductResponse>> tagProductPage(Pageable pageable,
+        @PathVariable Long productNo) {
+        Page<TagProductResponse> response = tagService.retrieveAllTagWithBoolean(pageable, productNo);
+        PageResponse result = new PageResponse<>(response);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(result);
     }
 
     // 태그 작품 연동 생성
     @PostMapping("/product")
-    public void tagProductConnect(@Valid @RequestBody CreateDeleteTagProductRequest request) {
-        log.info("출력 : " + request.getProductNo());
+    public ResponseEntity tagProductConnect(@Valid @RequestBody CreateDeleteTagProductRequest request) {
         tagService.createTagProduct(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/product")
-    public void tagProductDisconnect(@Valid @RequestBody CreateDeleteTagProductRequest request) {
-        log.info("출력 : " + request.getProductNo());
+    public ResponseEntity tagProductDisconnect(@Valid @RequestBody CreateDeleteTagProductRequest request) {
         tagService.deleteTagProduct(request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

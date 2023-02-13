@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.repository.product;
 
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.entity.Product;
@@ -17,16 +18,17 @@ public interface ProductRepositoryCustom {
 
     Page<Product> findNotDeletedByPageable(Pageable pageable);
 
-    Page<ProductAllInOneResponse> findProductPage(Pageable pageable);
+    Page<ProductAllInOneResponse> retrieveProductsInPage(Pageable pageable);
 
-    Page<ProductAllInOneResponse> findProductPage(List<Long> ids, Pageable pageable);
+    Page<ProductAllInOneResponse> retrieveProductsByIdsInPage(List<Long> ids, Pageable pageable);
 
-    List<ProductAllInOneResponse> findProductList(List<Long> ids);
+    List<ProductAllInOneResponse> retrieveProductsByIds(List<Long> ids);
 
-    List<ProductAllInOneResponse> findProductList(List<Long> ids, Pageable pageable);
+    List<ProductAllInOneResponse> retrieveProductsByCondition(List<Long> ids, Pageable pageable);
 
-    ProductAllInOneResponse findProductById(Long id);
+    ProductAllInOneResponse retrieveProductById(Long id);
 
-    List<ProductAllInOneResponse> findAllProducts();
+    List<ProductAllInOneResponse> retrieveAllProducts();
 
+    List<RetrieveAuthorResponse> getAuthorsByProductId(Long productId);
 }

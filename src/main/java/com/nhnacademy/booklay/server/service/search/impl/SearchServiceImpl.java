@@ -1,28 +1,33 @@
 package com.nhnacademy.booklay.server.service.search.impl;
 
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
+import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.entity.document.CategoryDocument;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.documents.CategoryDocumentRepository;
 import com.nhnacademy.booklay.server.repository.documents.ProductDocumentRepository;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.repository.product.TagRepository;
 import com.nhnacademy.booklay.server.service.search.SearchService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -39,6 +44,8 @@ public class SearchServiceImpl implements SearchService {
     private final ProductDocumentRepository productDocumentRepository;
 
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
+    private final AuthorRepository authorRepository;
     private final ProductRepository productRepository;
     private final ElasticsearchOperations operations;
 
@@ -50,11 +57,14 @@ public class SearchServiceImpl implements SearchService {
     public SearchServiceImpl(CategoryDocumentRepository categoryDocumentRepository,
                              ProductDocumentRepository productDocumentRepository,
                              CategoryRepository categoryRepository,
+                             TagRepository tagRepository, AuthorRepository authorRepository,
                              ProductRepository productRepository,
                              ElasticsearchOperations operations) {
         this.categoryDocumentRepository = categoryDocumentRepository;
         this.productDocumentRepository = productDocumentRepository;
         this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
+        this.authorRepository = authorRepository;
         this.productRepository = productRepository;
         this.operations = operations;
     }
@@ -74,10 +84,6 @@ public class SearchServiceImpl implements SearchService {
 
         return getSearchPageResponse(pageable, productDocumentSearchHits, "전체 상품");
 
-    }
-
-    private static void loggingQueryInfo(Query query) {
-        log.info(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
     }
 
     @Override
@@ -104,13 +110,13 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchPageResponse<SearchProductResponse> searchProductsByCategory(Long categoryId,
-                                                                Pageable pageable) {
+    public SearchPageResponse<SearchProductResponse> searchProductsByCategory(SearchIdRequest request,
+        Pageable pageable) {
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
 
         NativeSearchQuery query =
             queryBuilder
-                .withQuery(nestedQueryForId("categories", categoryId))
+                .withQuery(nestedQueryForId(request.getClassification(), request.getId()))
                 .withPageable(pageable).build();
 
         loggingQueryInfo(query);
@@ -118,25 +124,50 @@ public class SearchServiceImpl implements SearchService {
         SearchHits<ProductDocument>
             productDocumentSearchHits = operations.search(query, ProductDocument.class);
 
-        Optional<Category> category = categoryRepository.findById(categoryId);
-
-        String searchTitle = category.isPresent() ? category.get().getName() : "알 수 없는 카테고리 정보";
+        String searchTitle = getSearchTitle(request);
 
         return getSearchPageResponse(pageable, productDocumentSearchHits, searchTitle);
     }
 
-    private SearchPageResponse<SearchProductResponse> getSearchPageResponse(Pageable pageable,
-                                                                            SearchHits<ProductDocument> productDocumentSearchHits,
-                                                                            String searchTitle) {
+    private String getSearchTitle(SearchIdRequest request) {
 
-        List<SearchProductResponse> list = convertHitsToResponse(getHits(productDocumentSearchHits));
+        try {
+            if (request.getClassification().equals("tags")) {
+                Tag tag = tagRepository.findById(request.getId()).orElseThrow();
 
-        return new SearchPageResponse<>(
-            searchTitle,
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            list.size() / pageable.getPageSize(),
-            list);
+                return tag.getName();
+            } else if (request.getClassification().equals("categories")) {
+                Category category = categoryRepository.findById(request.getId()).orElseThrow();
+
+                return category.getName();
+            } else if (request.getClassification().equals("authors")) {
+                Author author = authorRepository.findById(request.getId()).orElseThrow();
+
+                return author.getName();
+            }
+
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
+
+        return "알 수 없는 검색 정보";
+    }
+
+    @Override
+    public List<SearchProductResponse> getLatestProducts() {
+
+        Query query = new NativeSearchQueryBuilder()
+            .withSorts(
+                SortBuilders.fieldSort("createdAt")
+            ).withMaxResults(8)
+            .build();
+
+        loggingQueryInfo(query);
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = operations.search(query, ProductDocument.class);
+
+        return convertHitsToResponse(getHits(productDocumentSearchHits));
     }
 
     @Override
@@ -154,7 +185,7 @@ public class SearchServiceImpl implements SearchService {
 
 //        상품 인덱스 저장
 
-        List<ProductAllInOneResponse> products = productRepository.findAllProducts();
+        List<ProductAllInOneResponse> products = productRepository.retrieveAllProducts();
         List<ProductDocument> productDocuments = new ArrayList<>();
 
         if (!products.isEmpty()) {
@@ -167,7 +198,20 @@ public class SearchServiceImpl implements SearchService {
             productDocumentRepository.saveAll(productDocuments);
         }
 
+    }
 
+    private SearchPageResponse<SearchProductResponse> getSearchPageResponse(Pageable pageable,
+                                                                            SearchHits<ProductDocument> productDocumentSearchHits,
+                                                                            String searchTitle) {
+
+        List<SearchProductResponse> list = convertHitsToResponse(getHits(productDocumentSearchHits));
+
+        return new SearchPageResponse<>(
+            searchTitle,
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            list.size() / pageable.getPageSize(),
+            list);
     }
 
 
@@ -200,18 +244,14 @@ public class SearchServiceImpl implements SearchService {
     private <T> List<T> getHits(SearchHits<T> searchHits) {
         List<T> hits = new ArrayList<>();
 
-        searchHits.getSearchHits().forEach(
-            productDocumentSearchHit -> hits.add(productDocumentSearchHit.getContent()));
+        if (Objects.nonNull(searchHits)) {
+            searchHits.getSearchHits().forEach(
+                productDocumentSearchHit -> hits.add(productDocumentSearchHit.getContent()));
+        }
+
 
         return hits;
     }
-
-    /**
-     * 여러 키워드가 들어간 스트링으로 검색하여 아이디 리스트를 반환.
-     *
-     * @param keywords 검색할 키워드들이 들어간 스트링.
-     * @return 검색된 상품들의 아이디 리스트.
-     */
 
     private MatchQueryBuilder searchProductsByOneField(String field, String keywords) {
         return QueryBuilders.matchQuery(field, keywords);
@@ -234,5 +274,9 @@ public class SearchServiceImpl implements SearchService {
 
     private NestedQueryBuilder nestedQueryForId(String path, Long id) {
         return nestedQuery(path, path + ".id", String.valueOf(id));
+    }
+
+    private static void loggingQueryInfo(Query query) {
+        log.debug(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
     }
 }

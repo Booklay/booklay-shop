@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * @author 최규태
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -25,20 +28,41 @@ public class BoardController {
 
   private final PostService postService;
 
+  /**
+   * 게시글 등록
+   *
+   * @param request
+   * @return
+   */
   @PostMapping
   public ResponseEntity<Long> createPost(@RequestBody BoardPostCreateRequest request) {
-    Long result =  postService.createPost(request);
+    Long result = postService.createPost(request);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(result);
   }
 
+  /**
+   * 상품 문의 게시글 페이지로 조회
+   *
+   * @param productId
+   * @param pageable
+   * @return
+   */
   @GetMapping("/product/{productId}")
   public ResponseEntity<PageResponse<PostResponse>> retrieveProductQNA(@PathVariable Long productId,
       Pageable pageable) {
     Page<PostResponse> content = postService.retrieveProductQNA(productId, pageable);
 
     PageResponse<PostResponse> response = new PageResponse<>(content);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(response);
+  }
+
+  @GetMapping("/{postId}")
+  public ResponseEntity<PostResponse> viewPost(@PathVariable Long postId) {
+    PostResponse response = postService.retrievePostById(postId);
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(response);

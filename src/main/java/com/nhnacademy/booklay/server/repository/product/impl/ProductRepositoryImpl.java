@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -295,16 +296,24 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     });
   }
 
-  @Override
-  public List<Product> findAllRecentProduct(Integer recentDay) {
-    QProduct product = QProduct.product;
+    /**
+     * 상품 번호로 작가 목록 호출
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public List<RetrieveAuthorResponse> getAuthorsByProductId(Long productId){
+        JPQLQuery<AuthorsInProduct> query = getAuthorsInProductList();
+        QProductDetail productDetail = QProductDetail.productDetail;
 
-    return from(product)
-        .where(product.createdAt.after(LocalDateTime.now().minusDays(recentDay)))
-        .select(product)
-        .fetch();
-  }
+        List<AuthorsInProduct> authorsInProductList = query.where(productDetail.product.id.eq(productId)).fetch();
+        List<RetrieveAuthorResponse> authorList = authorsInProductList.stream()
+            .map(authors->authors.getAuthor())
+            .collect(Collectors.toList());;
 
+        return authorList;
+    }
 }
 
 

@@ -11,13 +11,16 @@ import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.post.PostRepository;
 import com.nhnacademy.booklay.server.repository.post.PostTypeRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
@@ -60,7 +63,21 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<PostResponse> retrieveProductQNA(Long productId, Pageable pageable) {
     return postRepository.findAllByProductIdPage(productId, pageable);
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PostResponse retrievePostById(Long postId) {
+    Post post = postRepository.findById(postId).orElse(null);
+
+    PostResponse response = new PostResponse(post);
+    if(Objects.nonNull(post.getProductId())){
+      response.setAuthorList(productRepository.getAuthorsByProductId(post.getProductId().getId()));
+    }
+    return response;
+  }
+
 }

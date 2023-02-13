@@ -1,10 +1,14 @@
 package com.nhnacademy.booklay.server.dto.board.response;
 
+import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.entity.Post;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -25,6 +29,9 @@ public class PostResponse {
   LocalDateTime updatedAt;
 
   String writer;
+
+  @Setter
+  List<RetrieveAuthorResponse> authorList = new ArrayList<>();
 
   public PostResponse(Post post) {
     this.postId = post.getPostId();

@@ -34,7 +34,7 @@ drop table if exists owned_ebook cascade;
 
 drop table if exists point_history cascade;
 
-drop table if exists product_ask_comment cascade;
+drop table if exists comment cascade;
 
 drop table if exists post cascade;
 
@@ -434,7 +434,7 @@ create table post
         foreign key (product_no) references product (product_no)
 );
 
-create table product_ask_comment
+create table comment
 (
     comment_no bigint not null
         primary key auto_increment,
@@ -446,12 +446,12 @@ create table product_ask_comment
     updated_at datetime null,
     group_order int not null,
     depth int not null,
-    constraint FK_member_TO_product_ask_comment_1
+    constraint FK_member_TO_comment_1
         foreign key (member_no) references member (member_no),
-    constraint FK_post_TO_product_ask_comment_1
+    constraint FK_post_TO_comment_1
         foreign key (post_no) references post (post_no),
-    constraint FK_product_ask_comment_TO_product_ask_comment_1
-        foreign key (group_comment_no) references product_ask_comment (comment_no)
+    constraint FK_comment_TO_comment_1
+        foreign key (group_comment_no) references comment (comment_no)
 );
 
 create table product_coupon

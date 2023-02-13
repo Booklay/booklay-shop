@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
@@ -104,10 +105,15 @@ class SearchServiceImplTest {
     @Test
     void searchProductsByCategory() {
 
-        searchService.searchProductsByCategory(1L,Pageable.ofSize(20));
+        SearchIdRequest request1 = new SearchIdRequest();
+
+        ReflectionTestUtils.setField(request1,"classification","categories");
+        ReflectionTestUtils.setField(request1,"id",1L);
+
+        searchService.searchProductsByCategory(request1,Pageable.ofSize(20));
 
         assertDoesNotThrow(
-            () -> searchService.searchProductsByCategory(1L,Pageable.ofSize(20)));
+            () -> searchService.searchProductsByCategory(request1,Pageable.ofSize(20)));
     }
 
     @Test

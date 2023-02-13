@@ -6,9 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SearchCategoryRequest {
+public class SearchIdRequest {
 
     @NotNull
-    private Long categoryId;
+    private String classification;
+
+    @NotNull
+    private Long id;
 
 }

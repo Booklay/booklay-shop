@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.dto.search.request.SearchCategoryRequest;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
 import com.nhnacademy.booklay.server.service.search.SearchService;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +64,7 @@ class SearchControllerTest {
         ReflectionTestUtils.setField(request,"classification","keywords");
         ReflectionTestUtils.setField(request,"keywords","키워드");
 
-        mockMvc.perform(post(URI_PREFIX + "/products?page=0")
+        mockMvc.perform(post(URI_PREFIX + "/products/keywords?page=0")
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -76,12 +76,13 @@ class SearchControllerTest {
     @Test
     void searchProductsByCategory() throws Exception {
 
-        SearchCategoryRequest categoryRequest = new SearchCategoryRequest();
+        SearchIdRequest searchIdRequest = new SearchIdRequest();
 
-        ReflectionTestUtils.setField(categoryRequest,"categoryId",1L);
+        ReflectionTestUtils.setField(searchIdRequest,"classification","categories");
+        ReflectionTestUtils.setField(searchIdRequest,"id",1L);
 
-        mockMvc.perform(post(URI_PREFIX + "/products/category?page=0")
-                .content(mapper.writeValueAsString(categoryRequest))
+        mockMvc.perform(post(URI_PREFIX + "/products?page=0")
+                .content(mapper.writeValueAsString(searchIdRequest))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())

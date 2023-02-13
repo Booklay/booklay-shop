@@ -3,11 +3,10 @@ package com.nhnacademy.booklay.server.service.mypage.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.given;
 
 import com.nhnacademy.booklay.server.dto.mypage.response.WishlistAndAlarmBooleanResponse;
-import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteWishlistAndAlarmRequest;
+import com.nhnacademy.booklay.server.dto.product.request.WishlistAndAlarmRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -63,7 +62,7 @@ class WishlistServiceImplTest {
   @Mock
   ProductService productService;
 
-  CreateDeleteWishlistAndAlarmRequest request;
+  WishlistAndAlarmRequest request;
   CreateUpdateProductBookRequest bookRequest;
   Product product;
   Member member;
@@ -71,7 +70,7 @@ class WishlistServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    request = new CreateDeleteWishlistAndAlarmRequest(1L, 1L);
+    request = new WishlistAndAlarmRequest(1L, 1L);
     bookRequest = DummyCart.getDummyProductBookDto();
 
     product = DummyCart.getDummyProduct(bookRequest);
@@ -136,13 +135,18 @@ class WishlistServiceImplTest {
   @Test
   void retrieveExists(){
     //given
-    Long memberNo = member.getMemberNo();
+    WishlistAndAlarmRequest booleanRequest = new WishlistAndAlarmRequest(1L,1L);
 
-    given(wishlistRepository.existsByPk_MemberId(memberNo)).willReturn(true);
-    given(restockingNotificationRepository.existsByPk_MemberId(memberNo)).willReturn(false);
+    Wishlist.Pk wishlistPk = new Pk(booleanRequest.getMemberNo(), booleanRequest.getProductId());
+    RestockingNotification.Pk alarmPk = new RestockingNotification.Pk(booleanRequest.getMemberNo(),
+        booleanRequest.getProductId());
+
+    given(wishlistRepository.existsById(wishlistPk)).willReturn(true);
+    given(restockingNotificationRepository.existsById(alarmPk)).willReturn(false);
+
 
     //when
-    WishlistAndAlarmBooleanResponse result = wishlistService.retrieveExists(memberNo);
+    WishlistAndAlarmBooleanResponse result = wishlistService.retrieveExists(booleanRequest);
 
     //then
     assertThat(result.getWishlist()).isEqualTo(true);

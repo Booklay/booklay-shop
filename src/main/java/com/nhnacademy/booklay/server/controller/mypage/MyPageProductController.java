@@ -2,7 +2,7 @@ package com.nhnacademy.booklay.server.controller.mypage;
 
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.mypage.response.WishlistAndAlarmBooleanResponse;
-import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteWishlistAndAlarmRequest;
+import com.nhnacademy.booklay.server.dto.product.request.WishlistAndAlarmRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.service.mypage.RestockingNotificationService;
 import com.nhnacademy.booklay.server.service.mypage.WishlistService;
@@ -37,7 +37,7 @@ public class MyPageProductController {
   /**
    * 위시리스트 목록 조회
    * @param pageable
-   * @param memberId
+   * @param memberNo
    * @return
    * @throws IOException
    */
@@ -55,14 +55,14 @@ public class MyPageProductController {
    * @param request
    */
   @PostMapping("/wishlist")
-  public void createWishlist(@RequestBody CreateDeleteWishlistAndAlarmRequest request) {
+  public void createWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.createWishlist(request);
   }
 
 
   /**
    * 재입고 알림 목록 조회
-   * @param memberId
+   * @param memberNo
    * @param pageable
    * @return
    * @throws IOException
@@ -81,7 +81,7 @@ public class MyPageProductController {
    * @param request
    */
   @DeleteMapping("/wishlist")
-  public void deleteWishlist(@RequestBody CreateDeleteWishlistAndAlarmRequest request) {
+  public void deleteWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.deleteWishlist(request);
   }
 
@@ -90,7 +90,7 @@ public class MyPageProductController {
    * @param request
    */
   @PostMapping("/alarm")
-  public void createAlarm(@RequestBody CreateDeleteWishlistAndAlarmRequest request) {
+  public void createAlarm(@RequestBody WishlistAndAlarmRequest request) {
     restockingNotificationService.createAlarm(request);
   }
 
@@ -99,14 +99,20 @@ public class MyPageProductController {
    * @param request
    */
   @DeleteMapping("/alarm")
-  public void deleteAlarm(@RequestBody CreateDeleteWishlistAndAlarmRequest request) {
+  public void deleteAlarm(@RequestBody WishlistAndAlarmRequest request) {
     restockingNotificationService.deleteAlarm(request);
   }
 
-  @GetMapping("/boolean/{memberNo}")
+
+  /**
+   * 상품 상세 정보 조회시 위시리스트, 재입고 알림 등록 여부 확인
+   * @param request
+   * @return
+   */
+  @PostMapping("/boolean")
   public ResponseEntity<WishlistAndAlarmBooleanResponse> retrieveMemberProduct(
-      @PathVariable Long memberNo) {
+      @RequestBody WishlistAndAlarmRequest request) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(wishlistService.retrieveExists(memberNo));
+        .body(wishlistService.retrieveExists(request));
   }
 }

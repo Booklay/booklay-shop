@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductRespons
 import com.nhnacademy.booklay.server.service.mypage.RestockingNotificationService;
 import com.nhnacademy.booklay.server.service.mypage.WishlistService;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,76 +37,102 @@ public class MyPageProductController {
 
   /**
    * 위시리스트 목록 조회
+   *
    * @param pageable
    * @param memberNo
    * @return
    * @throws IOException
    */
   @GetMapping("/wishlist/{memberNo}")
-  public PageResponse<RetrieveProductResponse> retrieveWishlist(Pageable pageable,
+  public ResponseEntity<PageResponse<RetrieveProductResponse>> retrieveWishlist(Pageable pageable,
       @PathVariable Long memberNo)
       throws IOException {
     Page<RetrieveProductResponse> responses = wishlistService.retrievePage(memberNo, pageable);
-    return new PageResponse<>(responses);
+    PageResponse page = new PageResponse<>(responses);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(page);
   }
 
+  @GetMapping("/index/wishlist/{memberNo}")
+  public ResponseEntity<List<RetrieveProductResponse>> retrieveIndexWishlist(
+      @PathVariable Long memberNo)
+      throws IOException {
+    List<RetrieveProductResponse> responses = wishlistService.retrieveWishlist(memberNo);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(responses);
+  }
 
   /**
    * 위시리스트 등록
+   *
    * @param request
    */
   @PostMapping("/wishlist")
-  public void createWishlist(@RequestBody WishlistAndAlarmRequest request) {
+  public ResponseEntity createWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.createWishlist(request);
+    return ResponseEntity.status(HttpStatus.OK)
+        .build();
   }
-
 
   /**
    * 재입고 알림 목록 조회
+   *
    * @param memberNo
    * @param pageable
    * @return
    * @throws IOException
    */
   @GetMapping("/alarm/{memberNo}")
-  public PageResponse<RetrieveProductResponse> retrieveNotification(
+  public ResponseEntity<PageResponse<RetrieveProductResponse>> retrieveNotification(
       Pageable pageable, @PathVariable Long memberNo)
       throws IOException {
     Page<RetrieveProductResponse> responses = restockingNotificationService.retrievePage(memberNo,
         pageable);
-    return new PageResponse<>(responses);
+    PageResponse page = new PageResponse<>(responses);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(page);
   }
 
   /**
    * 위시리스트 삭제
+   *
    * @param request
    */
   @DeleteMapping("/wishlist")
-  public void deleteWishlist(@RequestBody WishlistAndAlarmRequest request) {
+  public ResponseEntity deleteWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.deleteWishlist(request);
+    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
   /**
    * 재입고 알림 등록
+   *
    * @param request
    */
   @PostMapping("/alarm")
-  public void createAlarm(@RequestBody WishlistAndAlarmRequest request) {
+  public ResponseEntity createAlarm(@RequestBody WishlistAndAlarmRequest request) {
     restockingNotificationService.createAlarm(request);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   /**
    * 재입고 알림 등록 취소
+   *
    * @param request
    */
   @DeleteMapping("/alarm")
-  public void deleteAlarm(@RequestBody WishlistAndAlarmRequest request) {
+  public ResponseEntity deleteAlarm(@RequestBody WishlistAndAlarmRequest request) {
     restockingNotificationService.deleteAlarm(request);
+    return ResponseEntity.status(HttpStatus.ACCEPTED)
+        .build();
   }
-
 
   /**
    * 상품 상세 정보 조회시 위시리스트, 재입고 알림 등록 여부 확인
+   *
    * @param request
    * @return
    */

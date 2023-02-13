@@ -30,9 +30,5 @@ public interface ProductRepositoryCustom {
 
     List<ProductAllInOneResponse> retrieveAllProducts();
 
-    List<Product> findAllRecentProduct(Integer recentDay);
-    
-    List<ProductAllInOneResponse> findAllProducts();
-    
     List<RetrieveAuthorResponse> getAuthorsByProductId(Long productId);
 }

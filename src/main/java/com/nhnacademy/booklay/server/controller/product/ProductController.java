@@ -63,11 +63,4 @@ public class ProductController {
     return productRelationService.retrieveRecommendProducts(productId);
   }
 
-  @GetMapping("/recent")
-  public ResponseEntity<List<ProductAllInOneResponse>> retrieveRecentProducts() throws IOException {
-    List<ProductAllInOneResponse> responses = productService.retrieveRecentProducts();
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(responses);
-  }
-
 }

@@ -69,6 +69,7 @@ class CategoryServiceTest {
         ReflectionTestUtils.setField(updateRequest, "isExposure", category.getIsExposure());
     }
 
+
     @Test
     @DisplayName("카테고리 생성 성공")
     void testCreateCategory() {

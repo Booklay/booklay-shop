@@ -42,6 +42,7 @@ public class WishlistServiceImpl implements WishlistService {
   private final MemberRepository memberRepository;
 
   private final ProductService productService;
+  private final static Integer LIMIT = 5;
 
   @Override
   public void createWishlist(WishlistAndAlarmRequest request) {
@@ -110,5 +111,17 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     return new PageImpl<>(content, pageable, wishlistPage.getTotalElements());
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<RetrieveProductResponse> retrieveWishlist(Long memberNo) throws IOException {
+    List<Wishlist> wishs = wishlistRepository.retrieveWishlist(memberNo, LIMIT);
+
+    List<Long> productIds = wishs.stream()
+        .map(wishlist -> wishlist.getPk().getProductId())
+        .collect(Collectors.toList());
+
+    return productService.retrieveProductResponses(productIds);
   }
 }

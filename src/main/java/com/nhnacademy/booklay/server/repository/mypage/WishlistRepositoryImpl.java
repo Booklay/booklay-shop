@@ -30,4 +30,14 @@ public class WishlistRepositoryImpl extends QuerydslRepositorySupport implements
         .select(wishlist.count());
     return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
   }
+
+  @Override
+  public List<Wishlist> retrieveWishlist(Long memberId, Integer limit) {
+    QWishlist wishlist = QWishlist.wishlist;
+
+    return from(wishlist).where(wishlist.pk.memberId.eq(memberId))
+        .select(wishlist)
+        .limit(limit)
+        .fetch();
+  }
 }

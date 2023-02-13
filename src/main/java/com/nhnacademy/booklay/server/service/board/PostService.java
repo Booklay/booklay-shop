@@ -10,4 +10,6 @@ public interface PostService {
   Long createPost(BoardPostCreateRequest request);
 
   Page<PostResponse> retrieveProductQNA(Long productId, Pageable pageable);
+
+  PostResponse retrievePostById(Long postId);
 }

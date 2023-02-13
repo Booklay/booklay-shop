@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class OrderStatusServiceImpl implements OrderStatusService{
 
     private Map<Long, String> cachedCode;
-    OrderStatusCodeRepository orderStatusCodeRepository;
+    private final OrderStatusCodeRepository orderStatusCodeRepository;
 
 
     @Override

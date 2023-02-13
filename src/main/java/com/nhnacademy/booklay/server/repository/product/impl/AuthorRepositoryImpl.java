@@ -42,18 +42,4 @@ public class AuthorRepositoryImpl extends QuerydslRepositorySupport
         .select(author.count());
     return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
   }
-
-  @Override
-  public RetrieveAuthorResponse findAuthorById(Long authorNo) {
-    QAuthor author = QAuthor.author;
-    QMember member = QMember.member;
-
-    return from(author)
-        .leftJoin(member).on(author.member.eq(member))
-        .where(author.authorId.eq(authorNo))
-        .select(Projections.constructor(RetrieveAuthorResponse.class,
-            author,
-            member))
-        .fetchOne();
-  }
 }

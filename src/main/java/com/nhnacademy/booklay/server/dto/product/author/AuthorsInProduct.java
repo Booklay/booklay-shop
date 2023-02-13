@@ -15,7 +15,7 @@ public class AuthorsInProduct {
 
     public AuthorsInProduct(Long productId, Author author) {
         this.productId = productId;
-        this.author = new RetrieveAuthorResponse(author, Objects.nonNull(author.getMember()) ? author.getMember() : null);
+        this.author = new RetrieveAuthorResponse(author);
     }
 
 }

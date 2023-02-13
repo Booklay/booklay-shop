@@ -9,5 +9,4 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface AuthorRepositoryCustom {
     Page<RetrieveAuthorResponse> findAllBy(Pageable pageable);
 
-    RetrieveAuthorResponse findAuthorById(Long authorNo);
 }

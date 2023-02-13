@@ -27,12 +27,12 @@ public class RetrieveAuthorResponse {
         this.member = member;
     }
 
-    public RetrieveAuthorResponse(Author author, Member member) {
+    public RetrieveAuthorResponse(Author author) {
         this.authorNo = author.getAuthorId();
         this.name = author.getName();
 
         if (Objects.nonNull(member)) {
-            this.member = new MemberForAuthorResponse(member.getMemberNo(), member.getMemberId());
+            this.member = new MemberForAuthorResponse(author.getMember().getMemberNo(), author.getMember().getMemberId());
         }
 
     }

@@ -18,16 +18,21 @@ public interface ProductRepositoryCustom {
 
     Page<Product> findNotDeletedByPageable(Pageable pageable);
 
-    Page<ProductAllInOneResponse> findProductPage(Pageable pageable);
+    Page<ProductAllInOneResponse> retrieveProductsInPage(Pageable pageable);
 
-    Page<ProductAllInOneResponse> findProductPage(List<Long> ids, Pageable pageable);
+    Page<ProductAllInOneResponse> retrieveProductsByIdsInPage(List<Long> ids, Pageable pageable);
 
-    List<ProductAllInOneResponse> findProductList(List<Long> ids);
+    List<ProductAllInOneResponse> retrieveProductsByIds(List<Long> ids);
 
-    List<ProductAllInOneResponse> findProductList(List<Long> ids, Pageable pageable);
+    List<ProductAllInOneResponse> retrieveProductsByCondition(List<Long> ids, Pageable pageable);
 
-    ProductAllInOneResponse findProductById(Long id);
+    ProductAllInOneResponse retrieveProductById(Long id);
 
+    List<ProductAllInOneResponse> retrieveAllProducts();
+
+    List<Product> findAllRecentProduct(Integer recentDay);
+    
     List<ProductAllInOneResponse> findAllProducts();
+    
     List<RetrieveAuthorResponse> getAuthorsByProductId(Long productId);
 }

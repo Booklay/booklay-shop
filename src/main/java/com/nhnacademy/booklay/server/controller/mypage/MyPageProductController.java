@@ -41,17 +41,17 @@ public class MyPageProductController {
    * @return
    * @throws IOException
    */
-  @GetMapping("/wishlist/{memberId}")
+  @GetMapping("/wishlist/{memberNo}")
   public PageResponse<RetrieveProductResponse> retrieveWishlist(Pageable pageable,
-      @PathVariable Long memberId)
+      @PathVariable Long memberNo)
       throws IOException {
-    Page<RetrieveProductResponse> responses = wishlistService.retrievePage(memberId, pageable);
+    Page<RetrieveProductResponse> responses = wishlistService.retrievePage(memberNo, pageable);
     return new PageResponse<>(responses);
   }
 
 
   /**
-   * 위시리스트 등록 삭제
+   * 위시리스트 등록
    * @param request
    */
   @PostMapping("/wishlist")
@@ -67,11 +67,11 @@ public class MyPageProductController {
    * @return
    * @throws IOException
    */
-  @GetMapping("/alarm/{memberId}")
+  @GetMapping("/alarm/{memberNo}")
   public PageResponse<RetrieveProductResponse> retrieveNotification(
-      Pageable pageable, @PathVariable Long memberId)
+      Pageable pageable, @PathVariable Long memberNo)
       throws IOException {
-    Page<RetrieveProductResponse> responses = restockingNotificationService.retrievePage(memberId,
+    Page<RetrieveProductResponse> responses = restockingNotificationService.retrievePage(memberNo,
         pageable);
     return new PageResponse<>(responses);
   }

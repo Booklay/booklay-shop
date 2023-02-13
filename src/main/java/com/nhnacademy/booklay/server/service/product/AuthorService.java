@@ -21,5 +21,5 @@ public interface AuthorService {
 
     Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable);
 
-    RetrieveAuthorResponse retrieveAuthorForEdit(Long authorNo);
+    RetrieveAuthorResponse retrieveAuthorForUpdate(Long authorNo);
 }

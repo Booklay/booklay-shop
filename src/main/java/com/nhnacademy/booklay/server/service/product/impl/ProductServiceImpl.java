@@ -60,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
   private static final Long NOT_FOUND_PRODUCT_ID = 33L;
+  private static final Integer RECENT_DAY = 7;
 
   /**
    * 서적 상품 생성
@@ -109,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
     // category_product
     saveProductCategory(request.getCategoryIds(), savedProduct);
     // subscribe
-    Subscribe subscribe = splitSubscribe(savedProduct, request);
+    Subscribe subscribe = splitSubscribe(savedProduct);
 
     if (request.getPublisher() != null) {
       subscribe.setPublisher(request.getPublisher());
@@ -128,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
     //TODO: 못찾는거 예외처리
-    return productRepository.findProductById(id);
+    return productRepository.retrieveProductById(id);
   }
 
   /**
@@ -212,7 +213,7 @@ public class ProductServiceImpl implements ProductService {
     saveProductCategory(request.getCategoryIds(), savedProduct);
 
     // subscribe
-    Subscribe subscribe = splitSubscribe(savedProduct, request);
+    Subscribe subscribe = splitSubscribe(savedProduct);
     subscribe.setId(request.getSubscribeId());
 
     if (Objects.nonNull(request.getPublisher())) {
@@ -353,10 +354,10 @@ public class ProductServiceImpl implements ProductService {
    * 구독 상품 생성 수정 dto에서 subscribe 분리
    *
    * @param product
-   * @param request
+   *
    * @return
    */
-  private Subscribe splitSubscribe(Product product, CreateUpdateProductSubscribeRequest request) {
+  private Subscribe splitSubscribe(Product product) {
     return Subscribe.builder()
         .product(product)
         .build();
@@ -516,7 +517,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
-    return productRepository.findProductPage(pageable);
+    return productRepository.retrieveProductsInPage(pageable);
   }
 
 //  @Transactional(readOnly = true)
@@ -527,7 +528,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductAllInOneResponse findProductById(Long productId) {
-    return productRepository.findProductById(productId);
+    return productRepository.retrieveProductById(productId);
   }
 
   /**
@@ -547,5 +548,6 @@ public class ProductServiceImpl implements ProductService {
     productDetailRepository.save(productDetail);
 
   }
+
 }
 

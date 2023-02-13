@@ -8,14 +8,11 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 @Service
 @RequiredArgsConstructor
@@ -45,13 +42,12 @@ public class CouponZoneIssueService {
 
         String message = operations.get(requestId);
 
-        CouponMemberResponse response = new CouponMemberResponse(message);
-        return response;
+        return new CouponMemberResponse(message);
     }
 
     @KafkaListener(topics = "${message.topic.coupon.response}", groupId = "${spring.kafka.consumer.group-id}", containerFactory = "kafkaListenerContainerFactory")
     public void responseIssueCouponToMember(CouponIssueResponseMessage message) {
-        log.debug("Message Processed :: " + message.getMessage());
+        log.info("Message Processed :: " + message.getMessage());
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         operations.set(message.getUuid(), message.getMessage());
     }

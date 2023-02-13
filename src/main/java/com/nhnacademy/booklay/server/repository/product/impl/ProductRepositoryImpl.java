@@ -296,16 +296,6 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     });
   }
 
-  @Override
-  public List<Product> findAllRecentProduct(Integer recentDay) {
-    QProduct product = QProduct.product;
-
-    return from(product)
-        .where(product.createdAt.after(LocalDateTime.now().minusDays(recentDay)))
-        .select(product)
-        .fetch();
-  }
-
     /**
      * 상품 번호로 작가 목록 호출
      *

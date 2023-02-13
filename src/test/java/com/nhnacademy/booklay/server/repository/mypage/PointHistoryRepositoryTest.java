@@ -128,7 +128,7 @@ class PointHistoryRepositoryTest {
         pointHistoryRepository.save(point4);
 
         //when
-        pointHistoryRepository.deleteAllByMember_MemberNo(point1.getMember().getMemberNo());
+        pointHistoryRepository.deleteAllByMemberNo(point1.getMember().getMemberNo());
         Page<PointHistoryRetrieveResponse> response =
             pointHistoryRepository.retrievePointHistoryByMemberNo(point1.getMember().getMemberNo(),
                 PageRequest.of(0, 1));

@@ -102,8 +102,8 @@ public class DeliveryDestinationController {
     public ResponseEntity<ErrorResponse> handleDeliveryDestinationLimitExceededException(
         DeliveryDestinationLimitExceededException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body(ErrorResponse.builder().code(
-                                                    DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE)
+                             .body(ErrorResponse.builder()
+                                                .code(DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE)
                                                 .message(ex.getMessage()).build());
     }
 

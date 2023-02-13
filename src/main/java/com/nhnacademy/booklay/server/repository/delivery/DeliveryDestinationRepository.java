@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeliveryDestinationRepository
     extends JpaRepository<DeliveryDestination, Long>, DeliveryDestinationRepositoryCustom {
-    Optional<DeliveryDestination> findByIsDefaultDestination(Boolean isDefaultDestination);
-
-    int countByMember_MemberNo(Long memberNo);
-    void deleteAllByMember_MemberNo(Long memberNo);
+    Optional<DeliveryDestination> findByIdAndMemberNo(Long addressId, Long memberNo);
+    Optional<DeliveryDestination> findByMemberNoAndIsDefaultDestinationIsTrue(Long memberNo);
+    int deleteByIdAndMemberNo(Long addressId, Long memberNo);
+    int countByMemberNo(Long memberNo);
+    void deleteAllByMemberNo(Long memberNo);
 }

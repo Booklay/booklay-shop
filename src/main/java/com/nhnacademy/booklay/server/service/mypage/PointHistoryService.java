@@ -15,4 +15,6 @@ public interface PointHistoryService {
     TotalPointRetrieveResponse retrieveTotalPoint(Long memberNo);
 
     void presentPoint(Long memberNo, PointPresentRequest pointPresentRequest);
+
+    void deleteAllByMemberNo(Long memberNo);
 }

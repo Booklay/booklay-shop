@@ -29,7 +29,6 @@ import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedExcept
 import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
-import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
 import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.GenderRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository;
@@ -39,6 +38,9 @@ import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import com.nhnacademy.booklay.server.service.delivery.DeliveryDestinationService;
+import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -60,8 +62,9 @@ public class MemberServiceImpl implements MemberService {
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
     private final BlockedMemberDetailRepository blockedMemberDetailRepository;
-    private final DeliveryDestinationRepository deliveryDestinationRepository;
+    private final DeliveryDestinationService deliveryDestinationService;
     private final PointHistoryRepository pointHistoryRepository;
+    private final PointHistoryService pointHistoryService;
 
     private final GetMemberService getMemberService;
 
@@ -270,8 +273,8 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMember(Long memberNo) {
         Member member = getMemberService.getMemberNo(memberNo);
         member.deleteMember();
-        deliveryDestinationRepository.deleteAllByMember_MemberNo(memberNo);
-        pointHistoryRepository.deleteAllByMember_MemberNo(memberNo);
+        deliveryDestinationService.deleteAllDeliveryDestination(memberNo);
+        pointHistoryService.deleteAllByMemberNo(memberNo);
     }
 
 
@@ -287,10 +290,7 @@ public class MemberServiceImpl implements MemberService {
             () -> new AuthorityNotFoundException(authorityName));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
-        MemberAuthority memberAuthority = memberAuthorityRepository.findById(pk).orElseThrow(
-            () -> new NotFoundException(MemberAuthority.class, "member authority not found"));
-
-        memberAuthorityRepository.delete(memberAuthority);
+        memberAuthorityRepository.deleteById(pk);
     }
 
 }

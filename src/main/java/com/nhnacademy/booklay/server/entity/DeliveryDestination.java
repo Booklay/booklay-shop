@@ -34,6 +34,9 @@ public class DeliveryDestination {
     @JoinColumn(name = "member_no")
     private Member member;
 
+    @Column(name = "member_no", insertable = false, updatable = false)
+    private Long memberNo;
+
     @Column
     private String name;
 

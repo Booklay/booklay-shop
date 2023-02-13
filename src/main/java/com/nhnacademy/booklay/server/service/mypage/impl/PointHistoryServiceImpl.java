@@ -81,4 +81,9 @@ public class PointHistoryServiceImpl implements PointHistoryService {
                                                         member.getMemberId() + "에게 포인트 선물받기")
                                                     .build());
     }
+
+    @Override
+    public void deleteAllByMemberNo(Long memberNo) {
+        pointHistoryRepository.deleteAllByMemberNo(memberNo);
+    }
 }

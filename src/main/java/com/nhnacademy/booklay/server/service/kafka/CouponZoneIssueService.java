@@ -46,8 +46,7 @@ public class CouponZoneIssueService {
         String message = operations.get(requestId);
 
 
-        CouponMemberResponse response = new CouponMemberResponse(message);
-        return response;
+        return new CouponMemberResponse(message);
     }
 
     @KafkaListener(topics = "${message.topic.coupon.response}", groupId = "${spring.kafka.consumer.group-id}", containerFactory = "kafkaListenerContainerFactory")

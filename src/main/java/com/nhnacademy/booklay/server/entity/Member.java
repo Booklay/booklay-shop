@@ -37,6 +37,8 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender_no")
     private Gender gender;
+    @Column(name = "gender_no", insertable = false, updatable = false)
+    private Long genderNo;
 
     @Column(name = "member_id")
     private String memberId;

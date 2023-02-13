@@ -9,7 +9,7 @@ import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationNotFo
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
-import com.nhnacademy.booklay.server.service.member.GetMemberService;
+
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryDestinationServiceImpl implements DeliveryDestinationService {
     private final DeliveryDestinationRepository deliveryDestinationRepository;
     private final MemberRepository memberRepository;
-    private final GetMemberService getMemberService;
-
-    private void releaseDefaultDeliveryDestination(Boolean isDefaultDestination) {
-        Optional<DeliveryDestination> deliveryDestinationOp =
-            deliveryDestinationRepository.findByIsDefaultDestination(true);
-        if (deliveryDestinationOp.isPresent() && isDefaultDestination) {
-            deliveryDestinationOp.get().setIsDefaultDestination(false);
-        }
-    }
 
     @Override
     public void createDeliveryDestination(Long memberNo,
@@ -40,9 +31,10 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         Member member = memberRepository.findByMemberNo(memberNo)
                                         .orElseThrow(() -> new MemberNotFoundException(memberNo));
 
-        releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination());
-
         checkDeliveryDestinationLimit(memberNo);
+        if (requestDto.getIsDefaultDestination()){
+            releaseDefaultDeliveryDestination(memberNo);
+        }
 
         DeliveryDestination deliveryDestination = requestDto.toEntity(member);
 
@@ -52,11 +44,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     @Override
     @Transactional(readOnly = true)
     public DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo) {
-        DeliveryDestination deliveryDestination = deliveryDestinationRepository.findById(addressNo)
-                                                                               .orElseThrow(
-                                                                                   () -> new IllegalArgumentException());
-
-        return DeliveryDestinationRetrieveResponse.fromEntity(deliveryDestination);
+        return DeliveryDestinationRetrieveResponse.fromEntity(retrieveDeliveryDestinationEntity(addressNo));
     }
 
     @Override
@@ -65,35 +53,51 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         return deliveryDestinationRepository.retrieveDeliveryDestinationByMemberNo(memberNo);
     }
 
-    @Transactional(readOnly = true)
-    public DeliveryDestination checkExistsDeliveryDestination(Long addressNo) {
-        return deliveryDestinationRepository.findById(addressNo)
-                                            .orElseThrow(
-                                                () -> new DeliveryDestinationNotFoundException(
-                                                    addressNo));
-    }
-
     @Override
     public void updateDeliveryDestination(Long memberNo, Long addressNo,
                                           DeliveryDestinationCURequest requestDto) {
-        getMemberService.getMemberNo(memberNo);
-        DeliveryDestination deliveryDestination = checkExistsDeliveryDestination(addressNo);
-
-        releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination());
-
+        DeliveryDestination deliveryDestination = retrieveDeliveryDestinationEntity(addressNo, memberNo);
+        if (Boolean.FALSE.equals(deliveryDestination.getIsDefaultDestination()) &&
+                requestDto.getIsDefaultDestination()){
+            releaseDefaultDeliveryDestination(memberNo);
+        }
         deliveryDestination.update(requestDto);
+        deliveryDestinationRepository.save(deliveryDestination);
     }
 
     @Override
     public void deleteDeliveryDestination(Long memberNo, Long addressNo) {
-        getMemberService.getMemberNo(memberNo);
-        DeliveryDestination deliveryDestination = checkExistsDeliveryDestination(addressNo);
-
-        deliveryDestinationRepository.delete(deliveryDestination);
+        deliveryDestinationRepository.deleteByIdAndMemberNo(memberNo, addressNo);
     }
 
+    @Override
+    public void deleteAllDeliveryDestination(Long memberNo) {
+        deliveryDestinationRepository.deleteAllByMemberNo(memberNo);
+    }
+
+    private void releaseDefaultDeliveryDestination(Long memberNo) {
+        Optional<DeliveryDestination> deliveryDestinationOp =
+                deliveryDestinationRepository.findByMemberNoAndIsDefaultDestinationIsTrue(memberNo);
+        deliveryDestinationOp.ifPresent(deliveryDestination -> {
+            deliveryDestination.setIsDefaultDestination(false);
+            deliveryDestinationRepository.save(deliveryDestination);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public DeliveryDestination retrieveDeliveryDestinationEntity(Long addressNo) {
+        return deliveryDestinationRepository.findById(addressNo)
+                .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));
+    }
+    @Transactional(readOnly = true)
+    public DeliveryDestination retrieveDeliveryDestinationEntity(Long addressNo, Long memberNo) {
+        return deliveryDestinationRepository.findByIdAndMemberNo(addressNo, memberNo)
+                .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));
+    }
+
+
     private void checkDeliveryDestinationLimit(Long memberNo) {
-        if (deliveryDestinationRepository.countByMember_MemberNo(memberNo) >= 10) {
+        if (deliveryDestinationRepository.countByMemberNo(memberNo) >= 10) {
             throw new DeliveryDestinationLimitExceededException();
         }
     }

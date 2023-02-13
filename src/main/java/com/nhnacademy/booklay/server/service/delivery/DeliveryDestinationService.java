@@ -19,4 +19,6 @@ public interface DeliveryDestinationService {
                                    DeliveryDestinationCURequest requestDto);
 
     void deleteDeliveryDestination(Long memberNo, Long addressNo);
+
+    void deleteAllDeliveryDestination(Long memberNo);
 }

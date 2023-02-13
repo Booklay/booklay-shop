@@ -137,8 +137,8 @@ class DeliveryDestinationRepositoryTest {
         deliveryDestinationRepository.save(address4);
 
         //when
-        deliveryDestinationRepository.deleteAllByMember_MemberNo(address1.getMember().getMemberNo());
-        int count = deliveryDestinationRepository.countByMember_MemberNo(address1.getMember().getMemberNo());
+        deliveryDestinationRepository.deleteAllByMemberNo(address1.getMember().getMemberNo());
+        int count = deliveryDestinationRepository.countByMemberNo(address1.getMember().getMemberNo());
 
         assertThat(count).isZero();
     }

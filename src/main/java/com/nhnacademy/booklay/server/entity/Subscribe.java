@@ -31,6 +31,8 @@ public class Subscribe {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
+    @Column(name = "product_no", insertable = false, updatable = false)
+    private Long productNo;
 
     @Column(name = "subscribe_week", nullable = false)
     private int subscribeWeek;

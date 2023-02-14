@@ -64,6 +64,10 @@ public class Dummy {
             .name("집")
             .zipCode("61452")
             .address("광주광역시 동구 필문대로 309")
+            .addressDetail("조선대학교")
+            .addressSubDetail("(학동)")
+            .receiver("홍길동")
+            .receiverPhoneNo("010-1111-1111")
             .isDefaultDestination(true)
             .build();
         return deliveryDestination;
@@ -300,7 +304,8 @@ public class Dummy {
     }
 
     public static DeliveryDestinationCURequest getDummyDeliveryDestinationCreateRequest() {
-        return new DeliveryDestinationCURequest("집", "12345", "서울특별시 송파구 올림픽로 240", "", "", true);
+        return new DeliveryDestinationCURequest("집", "12345", "서울특별시 송파구 올림픽로 240", "호수공원",
+            "(올림픽로)", "심청이", "010-2222-2222", true);
     }
 
     public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {

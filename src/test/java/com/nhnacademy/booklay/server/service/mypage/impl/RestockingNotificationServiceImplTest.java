@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteWishlistAndAlarmRequest;
+import com.nhnacademy.booklay.server.dto.product.request.WishlistAndAlarmRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -54,7 +54,7 @@ class RestockingNotificationServiceImplTest {
   @Mock
   ProductService productService;
 
-  CreateDeleteWishlistAndAlarmRequest request;
+  WishlistAndAlarmRequest request;
   CreateUpdateProductBookRequest bookRequest;
   Product product;
   Member member;
@@ -62,7 +62,7 @@ class RestockingNotificationServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    request = new CreateDeleteWishlistAndAlarmRequest(1L, 1L);
+    request = new WishlistAndAlarmRequest(1L, 1L);
     bookRequest = DummyCart.getDummyProductBookDto();
 
     product = DummyCart.getDummyProduct(bookRequest);

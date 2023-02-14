@@ -1,6 +1,5 @@
 server:
   port: 9090
-
 spring:
   jpa:
     hibernate:
@@ -48,3 +47,6 @@ message:
     coupon:
       request: coupon-zone-request-dev
       response: coupon-zone-response-dev
+logging:
+  level:
+    root: debug

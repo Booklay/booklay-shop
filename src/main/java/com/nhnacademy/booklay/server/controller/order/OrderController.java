@@ -54,8 +54,10 @@ public class OrderController {
         if (updatedOrderSheet == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        OrderSheetSaveResponse orderSheetSaveResponse = redisOrderService.saveOrderSheet(updatedOrderSheet);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderSheetSaveResponse);
+        String uuid = redisOrderService.saveOrderSheet(updatedOrderSheet);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new OrderSheetSaveResponse(uuid, Boolean.TRUE, updatedOrderSheet.getPaymentAmount()));
     }
 
 

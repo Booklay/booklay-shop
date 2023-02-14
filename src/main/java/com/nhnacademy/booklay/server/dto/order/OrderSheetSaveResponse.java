@@ -7,4 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class OrderSheetSaveResponse {
     private String orderId;
+    private Boolean valid;
+    private Long paymentAmount;
 }

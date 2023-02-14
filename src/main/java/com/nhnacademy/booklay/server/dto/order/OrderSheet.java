@@ -2,6 +2,8 @@ package com.nhnacademy.booklay.server.dto.order;
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import java.util.List;
+
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +16,8 @@ public class OrderSheet {
     private List<OrderProductDto> orderProductDtoList;
     @Setter
     private List<SubscribeDto> subscribeProductList;
+    @Setter
+    private CouponUseRequest couponUseRequest;
     private Long productPriceSum;
     private Long usingPoint;
     private Long deliveryPrice;

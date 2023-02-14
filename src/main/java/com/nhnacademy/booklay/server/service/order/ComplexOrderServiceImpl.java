@@ -49,7 +49,6 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
     private final OrderProductService orderProductService;
     private final RestService restService;
     private final String gatewayIp;
-    private final ObjectMapper objectMapper;
     @Override
     public OrderSheet checkOrder(OrderSheet orderSheet, MemberInfo memberInfo) {
         Map<Long, CartDto> cartDtoMap = new HashMap<>();
@@ -66,7 +65,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
             multiValueMap.put("couponCodeList", orderSheet.getCouponCodeList());
             ApiEntity<List<CouponRetrieveResponseFromProduct>> apiEntity = restService.get(
-                gatewayIp + "coupon/v1/coupons/codes", multiValueMap,
+                gatewayIp + "/coupon/v1/coupons/codes", multiValueMap,
                 new ParameterizedTypeReference<>() {});
             apiEntity.getBody().forEach(couponRetrieveResponseFromProduct -> {
                 couponMap.add(couponRetrieveResponseFromProduct.getProductNo(), couponRetrieveResponseFromProduct);
@@ -109,10 +108,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             //저장
             orderSheet.setSubscribeProductList(subscribeCartDtoList);
             orderSheet.setOrderProductDtoList(orderProductDtoList);
-
-            //쿠폰 사용전송
-            String couponUsingUrl = gatewayIp + "/coupon/v1/coupons/using";
-            restService.post(couponUsingUrl, objectMapper.convertValue(couponUseRequest, Map.class), void.class);
+            orderSheet.setCouponUseRequest(couponUseRequest);
 
             return orderSheet;
         }

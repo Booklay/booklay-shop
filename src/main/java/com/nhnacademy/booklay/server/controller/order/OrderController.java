@@ -1,17 +1,21 @@
 package com.nhnacademy.booklay.server.controller.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
 import com.nhnacademy.booklay.server.dto.order.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.OrderSheetSaveResponse;
 import com.nhnacademy.booklay.server.dto.order.StorageRequest;
 import com.nhnacademy.booklay.server.entity.Order;
+import com.nhnacademy.booklay.server.service.RestService;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
 import com.nhnacademy.booklay.server.service.order.RedisOrderService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,10 @@ public class OrderController {
     private final RedisOrderService redisOrderService;
     private final CategoryProductService categoryProductService;
     private final ComplexOrderService complexOrderService;
+
+    private final RestService restService;
+    private final String gatewayIp;
+    private final ObjectMapper objectMapper;
     @GetMapping("products")
     public ResponseEntity<List<CartRetrieveResponse>> getProductDataByProductList(
         @RequestParam("productNoList") List<Long> productNoList) {
@@ -81,6 +89,12 @@ public class OrderController {
     public ResponseEntity<Long> saveOrderReceipt(@PathVariable String orderId){
         OrderSheet orderSheet = redisOrderService.retrieveOrderSheet(orderId);
         Order order = complexOrderService.saveReceipt(orderSheet);
+        //쿠폰 사용전송
+        String couponUsingUrl = gatewayIp + "/coupon/v1/coupons/using";
+        CouponUseRequest couponUseRequest = orderSheet.getCouponUseRequest();
+        couponUseRequest.getCategoryCouponList().forEach(couponUsingDto -> couponUsingDto.setUsedTargetNo(order.getId()));
+        restService.post(couponUsingUrl, objectMapper.convertValue(orderSheet.getCouponUseRequest(), Map.class), void.class);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(order.getId());
     }
 

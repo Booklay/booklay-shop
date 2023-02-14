@@ -32,7 +32,7 @@ public class OrderProduct {
     @Column(name = "order_no")
     private Long orderNo;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_no", insertable = false, updatable = false)
     private Product product;
     @Column(name = "product_no")

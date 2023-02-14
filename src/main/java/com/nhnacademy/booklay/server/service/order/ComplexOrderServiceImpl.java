@@ -31,11 +31,13 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ComplexOrderServiceImpl implements ComplexOrderService{
     private final OrderService orderService;
     private final OrderStatusService orderStatusService;
@@ -84,9 +86,6 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             });
         }
 
-
-
-
         //todo 주문 유효 체크
         List<Product> productList = productService.retrieveProductListByProductNoList(productNoList);
 
@@ -96,7 +95,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             List<OrderProductDto> orderProductDtoList = new ArrayList<>();
             productList.forEach(product -> {
                 productListMap.put(product.getId(), product);
-                orderProductDtoList.add(new OrderProductDto(product.getId(), cartDtoMap.get(product.getId()).getCount(), product.getPrice()));
+                orderProductDtoList.add(new OrderProductDto(product.getId(), product.getTitle(), cartDtoMap.get(product.getId()).getCount(), product.getPrice().intValue()));
             });
             //subscribe 상품 분할
             List<Subscribe> subscribeList = subscribeService.retrieveSubscribeListByProductNoList(productNoList);
@@ -112,7 +111,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             orderSheet.setOrderProductDtoList(orderProductDtoList);
 
             //쿠폰 사용전송
-            String couponUsingUrl = gatewayIp + "coupon/v1/coupons/using";
+            String couponUsingUrl = gatewayIp + "/coupon/v1/coupons/using";
             restService.post(couponUsingUrl, objectMapper.convertValue(couponUseRequest, Map.class), void.class);
 
             return orderSheet;
@@ -146,11 +145,11 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
     @Override
     public OrderReceipt retrieveOrderReceipt(Long orderNo, Long memberNo) {
         Order order = orderService.retrieveOrder(orderNo);
-        if (!Objects.equals(order.getMemberNo(), memberNo)){
+        if (order.getMemberNo()!= null && !Objects.equals(order.getMemberNo(), memberNo)){
             return new OrderReceipt();
         }
         List<OrderProduct> orderProductList = orderProductService.retrieveOrderProductListByOrderNo(orderNo);
-        List<DeliveryDetail> deliveryDetailList = deliveryDetailService.retrieveDeliveryDetailByMemberNoAndOrderNo(memberNo, orderNo);
+        List<DeliveryDetail> deliveryDetailList = deliveryDetailService.retrieveDeliveryDetailByMemberNoAndOrderNo(order.getMemberNo() == null?null:memberNo, orderNo);
         OrderReceipt orderReceipt = new OrderReceipt(order);
         orderReceipt.setOrderStatus(orderStatusService.retrieveOrderStatusCodeName(orderReceipt.getOrderStatusNo()));
         orderReceipt.setOrderProductDtoList(

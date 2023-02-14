@@ -37,6 +37,10 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class WebConfig {
 
+    @Bean
+    public String gatewayIp(@Value("${booklay.gateway-origin}") String ip) {
+        return ip;
+    }
     @Value("${booklay.secure.p12_password}")
     private String p12Password;
 

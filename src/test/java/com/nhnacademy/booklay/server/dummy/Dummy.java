@@ -161,10 +161,13 @@ public class Dummy {
     }
 
     public static DeliveryDetail getDummyDeliveryDetail() {
-
+            Order order = getDummyOrder();
+            DeliveryStatusCode deliveryStatusCode = getDummyDeliveryStatusCode();
         DeliveryDetail deliveryDetail = DeliveryDetail.builder()
-            .order(getDummyOrder())
-            .statusCode(getDummyDeliveryStatusCode())
+            .order(order)
+            .orderNo(order.getId())
+            .statusCode(deliveryStatusCode)
+            .deliveryStatusCodeNo(deliveryStatusCode.getId())
             .zipCode("11111")
             .address("우리집 바둑이네 밥그릇")
             .sender("Dumb")
@@ -191,7 +194,9 @@ public class Dummy {
     public static Order getDummyOrder() {
         Order order = Order.builder()
             .member(Dummy.getDummyMember())
+            .memberNo(Dummy.getDummyMember().getMemberNo())
             .orderStatusCode(getDummyOrderStatusCode())
+            .orderStatusCodeNo(getDummyOrderStatusCode().getId())
             .productPriceSum(30000L)
             .deliveryPrice(1000L)
             .discountPrice(0L)

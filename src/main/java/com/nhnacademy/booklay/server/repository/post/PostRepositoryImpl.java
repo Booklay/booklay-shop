@@ -22,6 +22,8 @@ public class PostRepositoryImpl extends QuerydslRepositorySupport implements Pos
     QPost post = QPost.post;
 
     List<PostResponse> content = from(post).where(post.productId.id.eq(productId))
+        .orderBy(post.groupNo.postId.desc(),
+            post.groupOrder.asc())
         .select(Projections.constructor(PostResponse.class, post))
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())

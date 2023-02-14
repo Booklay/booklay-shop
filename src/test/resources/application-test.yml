@@ -35,6 +35,8 @@ cloud:
   container: /booklay_storage/
 
 booklay:
+  gateway-origin: http://localhost:8080
+  gw-url: http://127.0.0.1
   secure:
     appkey: 500rMJPT021TnyNl
     db_username: 06bd87410af34cdabe826c117fb76771

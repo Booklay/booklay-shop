@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RestockingNotificationRepository
     extends JpaRepository<RestockingNotification, RestockingNotification.Pk>, RestockingNotificationRepositoryCustom {
-  Boolean existsByPk_MemberId(Long memberId);
 }

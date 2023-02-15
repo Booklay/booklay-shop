@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class Review {
 
@@ -63,7 +66,7 @@ public class Review {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "is_deleted" ,nullable = false)
+    @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
     @CreatedDate
@@ -77,18 +80,5 @@ public class Review {
     @Column(name = "modified_at")
     private LocalDateTime modifyAt;
 
-    @Builder
-    public Review(Long id, Product product, Long productNo, Member member, Long memberNo,
-                  ObjectFile objectFile, Long imageNo, Long score, String content, Boolean isDeleted) {
-        this.id = id;
-        this.product = product;
-        this.productNo = productNo;
-        this.member = member;
-        this.memberNo = memberNo;
-        this.objectFile = objectFile;
-        this.imageNo = imageNo;
-        this.score = score;
-        this.content = content;
-        this.isDeleted = isDeleted;
-    }
+
 }

@@ -87,10 +87,13 @@ public class Post {
     @Column(name = "is_answered")
     private boolean isAnswered;
 
+    @Column(name="is_deleted")
+    private boolean isDeleted;
+
 
     @Builder
     public Post(PostType postTypeId, Member memberId, Integer groupOrder, Integer depth, String title,
-                String content, boolean isViewPublic, Post groupNo) {
+                String content, boolean isViewPublic, Post groupNo, boolean  isDeleted) {
         this.postTypeId = postTypeId;
         this.memberId = memberId;
         this.groupOrder = groupOrder;
@@ -99,5 +102,6 @@ public class Post {
         this.content = content;
         this.isViewPublic = isViewPublic;
         this.groupNo = groupNo;
+        this.isDeleted = isDeleted;
     }
 }

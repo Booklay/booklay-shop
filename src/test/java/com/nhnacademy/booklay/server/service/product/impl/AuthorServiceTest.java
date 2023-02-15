@@ -99,7 +99,7 @@ class AuthorServiceTest {
   void testAuthorUpdateWithoutMember_success() {
     UpdateAuthorRequest request = new UpdateAuthorRequest(1L, "최규태");
 
-    given(authorRepository.findById(request.getId())).willReturn(any());
+    given(authorRepository.findById(request.getId())).willReturn(Optional.ofNullable(author));
     if (Objects.nonNull(request.getMemberNo())) {
       given(memberRepository.findById(request.getMemberNo())).willReturn(
           Optional.ofNullable(member));

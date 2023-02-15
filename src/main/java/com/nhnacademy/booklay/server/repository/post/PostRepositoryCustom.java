@@ -14,4 +14,6 @@ public interface PostRepositoryCustom {
   void updateUpperPostByGroupNoPostId(Long postId, Integer rebaseOrder);
 
   Integer countChildByGroupNo(Long groupNo);
+
+  void deleteByPostIdAndMemberNo(Long postId, Long memberNo);
 }

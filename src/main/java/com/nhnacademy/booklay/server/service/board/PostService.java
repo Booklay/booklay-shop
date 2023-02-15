@@ -15,4 +15,6 @@ public interface PostService {
   PostResponse retrievePostById(Long postId);
 
   Long updatePost(BoardPostUpdateRequest request);
+
+  void deletePost(Long memberId, Long postId);
 }

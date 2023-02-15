@@ -4,6 +4,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
+import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.service.board.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author 최규태
@@ -76,5 +79,12 @@ public class BoardController {
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(response);
+  }
+
+  @DeleteMapping("/{postId}")
+  public ResponseEntity deletePost(MemberInfo memberInfo, @PathVariable Long postId){
+    log.info("출력" + memberInfo.getMemberNo());
+    postService.deletePost(memberInfo.getMemberNo(), postId);
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }
 }

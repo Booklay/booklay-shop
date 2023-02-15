@@ -28,6 +28,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -156,10 +157,8 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<SearchProductResponse> getLatestProducts() {
 
-        Query query = new NativeSearchQueryBuilder()
-            .withSorts(
-                SortBuilders.fieldSort("createdAt")
-            ).withMaxResults(8)
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+            .withSorts(SortBuilders.fieldSort("createdAt").order(SortOrder.DESC)).withMaxResults(8)
             .build();
 
         loggingQueryInfo(query);
@@ -277,6 +276,6 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private static void loggingQueryInfo(Query query) {
-        log.debug(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
+        log.warn(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
     }
 }

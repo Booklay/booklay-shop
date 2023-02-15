@@ -50,11 +50,10 @@ public class AuthorServiceImpl implements AuthorService {
 
   @Override
   public void updateAuthor(UpdateAuthorRequest request) {
-    authorRepository.findById(request.getId());
+    Author author = authorRepository.findById(request.getId())
+        .orElseThrow(() -> new NotFoundException(Author.class, "author not found"));
 
-    Author author = Author.builder()
-        .name(request.getName())
-        .build();
+    author.setName(request.getName());
 
     if (Objects.nonNull(request.getMemberNo())) {
       Member member = memberRepository.findById(request.getMemberNo())
@@ -84,7 +83,8 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   @Transactional(readOnly = true)
   public RetrieveAuthorResponse retrieveAuthorForUpdate(Long authorNo) {
-    Author author = authorRepository.findById(authorNo).orElseThrow(()->new NotFoundException(Author.class, "author not found"));
+    Author author = authorRepository.findById(authorNo)
+        .orElseThrow(() -> new NotFoundException(Author.class, "author not found"));
     return new RetrieveAuthorResponse(author);
   }
 }

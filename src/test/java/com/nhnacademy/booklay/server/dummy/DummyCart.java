@@ -60,6 +60,7 @@ public class DummyCart {
         .title("dummy title")
         .content("dummy content for test")
         .isViewPublic(true)
+        .isDeleted(false)
         .build();
 
     return post;
@@ -75,6 +76,7 @@ public class DummyCart {
         .content("dummy test comment")
         .groupOrder(0L)
         .depth(0L)
+        .isDeleted(false)
         .build();
 
     return comment;

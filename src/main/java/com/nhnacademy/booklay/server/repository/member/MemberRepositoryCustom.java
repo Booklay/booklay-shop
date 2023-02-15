@@ -13,6 +13,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface MemberRepositoryCustom {
     Optional<Member> retrieveValidMemberByMemberNo(Long memberNo);
 
+    Optional<Member> retrieveValidMemberByMemberId(String memberId);
+
     Optional<MemberLoginResponse> retrieveMemberByUserId(String userId);
 
     Page<MemberRetrieveResponse> retrieveAll(Pageable pageable);

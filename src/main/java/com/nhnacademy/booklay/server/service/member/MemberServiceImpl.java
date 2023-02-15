@@ -266,6 +266,7 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * myPage main을 위한 메소드
+     * 개인정보 마스킹처리
      *
      * @param memberNo
      * @return

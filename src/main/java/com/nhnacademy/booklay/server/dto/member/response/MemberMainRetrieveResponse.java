@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class MemberMainRetrieveResponse {
     private Long memberNo;
     private String gender;
@@ -25,9 +27,9 @@ public class MemberMainRetrieveResponse {
     private Integer currentTotalPoint;
 
     public void maskingMember() {
-        this.memberId.replaceAll("(?<=.{2}).", "*");
-        this.name.replaceAll("(?<=.{2}).", "*");
-        this.phoneNo.replaceAll("(?<=.{7}).", "*");
-        this.email.replaceAll("(?<=.{5}).", "*");
+        this.memberId = this.memberId.replaceAll("(?<=.{3}).", "*");
+        this.name = this.name.replaceAll("(?<=.{2}).", "*");
+        this.phoneNo = this.phoneNo.replaceAll("(?<=.{7}).", "*");
+        this.email = this.email.replaceAll("[a-z,A-Z,0-9]+@", "******@");
     }
 }

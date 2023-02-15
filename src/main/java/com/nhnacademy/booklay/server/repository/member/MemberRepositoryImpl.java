@@ -27,6 +27,61 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
     }
 
     @Override
+    public Optional<Member> retrieveValidMemberByMemberNo(Long memberNo) {
+        QMember qMember = QMember.member;
+
+        Member member = from(qMember)
+            .where(qMember.memberNo.eq(memberNo))
+            .where(qMember.isBlocked.eq(false).and(qMember.deletedAt.isNull()))
+            .select(Projections.constructor(Member.class,
+                qMember.memberNo,
+                qMember.gender,
+                qMember.memberId,
+                qMember.password,
+                qMember.nickname,
+                qMember.name,
+                qMember.birthday,
+                qMember.phoneNo,
+                qMember.email,
+                qMember.createdAt,
+                qMember.updatedAt,
+                qMember.deletedAt,
+                qMember.isBlocked
+            ))
+            .fetchFirst();
+
+        return Optional.ofNullable(member);
+    }
+
+
+    @Override
+    public Optional<Member> retrieveValidMemberByMemberId(String memberId) {
+        QMember qMember = QMember.member;
+
+        Member member = from(qMember)
+            .where(qMember.memberId.eq(memberId))
+            .where(qMember.isBlocked.eq(false).and(qMember.deletedAt.isNull()))
+            .select(Projections.constructor(Member.class,
+                qMember.memberNo,
+                qMember.gender,
+                qMember.memberId,
+                qMember.password,
+                qMember.nickname,
+                qMember.name,
+                qMember.birthday,
+                qMember.phoneNo,
+                qMember.email,
+                qMember.createdAt,
+                qMember.updatedAt,
+                qMember.deletedAt,
+                qMember.isBlocked
+            ))
+            .fetchFirst();
+
+        return Optional.ofNullable(member);
+    }
+
+    @Override
     public Optional<MemberLoginResponse> retrieveMemberByUserId(String userId) {
 
         QMember member = QMember.member;
@@ -38,11 +93,11 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
             .where(member.memberId.eq(userId).and(member.deletedAt.isNull()))
             .select(Projections.constructor(MemberLoginResponse.class,
-                                            member.memberId,
-                                            member.password,
-                                            authority.name,
-                                            member.email,
-                                            member.isBlocked))
+                member.memberId,
+                member.password,
+                authority.name,
+                member.email,
+                member.isBlocked))
             .fetchOne();
 
         return Optional.ofNullable(memberLoginResponse);

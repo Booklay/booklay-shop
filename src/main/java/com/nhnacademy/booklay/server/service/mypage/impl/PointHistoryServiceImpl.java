@@ -89,7 +89,8 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     @Override
     public void presentPoint(Long memberNo, PointPresentRequest requestDto) {
         Member member = getMemberService.getValidMemberByMemberNo(memberNo);
-        Member targetMember = getMemberService.getMemberId(requestDto.getTargetMemberId());
+        Member targetMember =
+            getMemberService.getValidMemberByMemberId(requestDto.getTargetMemberId());
 
         createPointHistory(PointHistoryCreateRequest.builder()
             .memberNo(memberNo)

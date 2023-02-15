@@ -26,4 +26,9 @@ public class GetMemberService {
         return memberRepository.retrieveValidMemberByMemberNo(memberNo)
             .orElseThrow(() -> new MemberNotFoundException(memberNo));
     }
+
+    public Member getValidMemberByMemberId(String memberId) {
+        return memberRepository.retrieveValidMemberByMemberId(memberId)
+            .orElseThrow(() -> new MemberNotFoundException(memberId));
+    }
 }

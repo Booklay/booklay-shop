@@ -53,6 +53,35 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         return Optional.ofNullable(member);
     }
 
+    리
+    @Override
+
+    public Optional<Member> retrieveValidMemberByMemberId(String memberId) {
+        QMember qMember = QMember.member;
+
+        Member member = from(qMember)
+            .where(qMember.memberId.eq(memberId))
+            .where(qMember.isBlocked.eq(false).and(qMember.deletedAt.isNull()))
+            .select(Projections.constructor(Member.class,
+                qMember.memberNo,
+                qMember.gender,
+                qMember.memberId,
+                qMember.password,
+                qMember.nickname,
+                qMember.name,
+                qMember.birthday,
+                qMember.phoneNo,
+                qMember.email,
+                qMember.createdAt,
+                qMember.updatedAt,
+                qMember.deletedAt,
+                qMember.isBlocked
+            ))
+            .fetchFirst();
+
+        return Optional.ofNullable(member);
+    }
+
     @Override
     public Optional<MemberLoginResponse> retrieveMemberByUserId(String userId) {
 

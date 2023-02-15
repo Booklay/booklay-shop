@@ -27,14 +27,18 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     private final PointHistoryRepository pointHistoryRepository;
     private final GetMemberService getMemberService;
 
-
+    /**
+     * 포인트 적립, 사용 시 내역 만드는 메소드
+     *
+     * @param requestDto
+     */
     @Override
     public void createPointHistory(PointHistoryCreateRequest requestDto) {
-        Member member = getMemberService.getMemberNo(requestDto.getMemberNo());
+        Member member = getMemberService.getValidMemberByMemberNo(requestDto.getMemberNo());
 
         TotalPointRetrieveResponse recentlyPointHistory =
             pointHistoryRepository.retrieveLatestPointHistory(requestDto.getMemberNo())
-                                  .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
+                .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
 
         Integer currentTotalPoint = recentlyPointHistory.getTotalPoint();
 
@@ -46,39 +50,59 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         pointHistoryRepository.save(pointHistory);
     }
 
+    /**
+     * 특정 회원의 포인트 내역 보여주는 메소드
+     *
+     * @param memberNo
+     * @param pageable
+     * @return
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<PointHistoryRetrieveResponse> retrievePointHistorys(Long memberNo,
                                                                     Pageable pageable) {
+        getMemberService.getValidMemberByMemberNo(memberNo);
         return pointHistoryRepository.retrievePointHistoryByMemberNo(memberNo, pageable);
     }
 
+    /**
+     * 특정 회원의 현재 누적 포인트 보여주는 메소드
+     *
+     * @param memberNo
+     * @return
+     */
     @Override
     @Transactional(readOnly = true)
     public TotalPointRetrieveResponse retrieveTotalPoint(Long memberNo) {
-        getMemberService.getMemberNo(memberNo);
+        getMemberService.getValidMemberByMemberNo(memberNo);
 
         return pointHistoryRepository.retrieveLatestPointHistory(memberNo)
-                                     .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
+            .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
     }
 
+    /**
+     * 회원 간 포인트 선물 시 처리하는 로직
+     *
+     * @param memberNo
+     * @param requestDto
+     */
     @Override
     public void presentPoint(Long memberNo, PointPresentRequest requestDto) {
-        Member member = getMemberService.getMemberNo(memberNo);
+        Member member = getMemberService.getValidMemberByMemberNo(memberNo);
         Member targetMember = getMemberService.getMemberId(requestDto.getTargetMemberId());
 
         createPointHistory(PointHistoryCreateRequest.builder()
-                                                    .memberNo(memberNo)
-                                                    .point(-(requestDto.getTargetPoint()))
-                                                    .updatedDetail(
-                                                        targetMember.getMemberId() + "에게 포인트 선물하기")
-                                                    .build());
+            .memberNo(memberNo)
+            .point(-(requestDto.getTargetPoint()))
+            .updatedDetail(
+                targetMember.getMemberId() + "에게 포인트 선물하기")
+            .build());
 
         createPointHistory(PointHistoryCreateRequest.builder()
-                                                    .memberNo(targetMember.getMemberNo())
-                                                    .point(requestDto.getTargetPoint())
-                                                    .updatedDetail(
-                                                        member.getMemberId() + "에게 포인트 선물받기")
-                                                    .build());
+            .memberNo(targetMember.getMemberNo())
+            .point(requestDto.getTargetPoint())
+            .updatedDetail(
+                member.getMemberId() + "에게 포인트 선물받기")
+            .build());
     }
 }

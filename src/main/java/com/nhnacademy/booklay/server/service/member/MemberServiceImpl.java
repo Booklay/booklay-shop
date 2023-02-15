@@ -70,6 +70,12 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberAlreadyExistedException(memberId);
         }
     }
+
+    /**
+     * 회원가입 시 회원 생성하는 메소드
+     *
+     * @param createDto
+     */
     @Override
     public void createMember(MemberCreateRequest createDto) {
         checkExistsMemberId(createDto.getMemberId());
@@ -84,7 +90,7 @@ public class MemberServiceImpl implements MemberService {
 
         MemberAuthority memberAuthority =
             new MemberAuthority(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()),
-                                member, authority);
+                member, authority);
 
         memberRepository.save(member);
         memberGradeRepository.save(member.addGrade("white"));
@@ -100,6 +106,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
+     * 회원 권한 만드는 메소드
      * 이미 존재하는 권한 설정 시 에러
      * admin과 author 권한 동시에 존재 시 에러
      *
@@ -139,11 +146,17 @@ public class MemberServiceImpl implements MemberService {
         memberAuthorityRepository.save(memberAuthority);
     }
 
+    /**
+     * 회원 탈퇴 시 처리하는 메소드
+     *
+     * @param memberNo
+     * @param request
+     */
     @Override
     public void createBlockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        if(member.getIsBlocked()) {
+        if (member.getIsBlocked()) {
             throw new AlreadyBlockedMemberException(member);
         }
 
@@ -155,6 +168,13 @@ public class MemberServiceImpl implements MemberService {
         blockedMemberDetailRepository.save(blockedMemberDetail);
     }
 
+    /**
+     * 특정 회원의 등급내역 보여주는 메소드
+     *
+     * @param memberNo
+     * @param pageable
+     * @return
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo,

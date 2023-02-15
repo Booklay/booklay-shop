@@ -195,13 +195,17 @@ create table blocked_member_detail
 
 create table delivery_destination
 (
-    delivery_destination_no bigint not null
+    delivery_destination_no bigint       not null
         primary key auto_increment,
-    member_no bigint not null,
-    name varchar(50) not null,
-    zip_code char(5) not null,
-    address varchar(50) not null,
-    is_default_destination boolean null,
+    member_no               bigint       not null,
+    name                    varchar(50)  not null,
+    zip_code                char(5)      not null,
+    address                 varchar(100) not null,
+    address_detail          varchar(50) null,
+    address_sub_detail      varchar(50) null,
+    receiver                varchar(50)  not null,
+    receiver_phone_no       varchar(15)  not null,
+    is_default_destination  boolean null,
     constraint FK_member_TO_delivery_destination_1
         foreign key (member_no) references member (member_no)
 );

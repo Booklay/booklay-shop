@@ -53,9 +53,8 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         return Optional.ofNullable(member);
     }
 
-    리
-    @Override
 
+    @Override
     public Optional<Member> retrieveValidMemberByMemberId(String memberId) {
         QMember qMember = QMember.member;
 

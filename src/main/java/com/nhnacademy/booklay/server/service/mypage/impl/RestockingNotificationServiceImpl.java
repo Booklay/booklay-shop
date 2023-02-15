@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.service.mypage.impl;
 
-import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteWishlistAndAlarmRequest;
+import com.nhnacademy.booklay.server.dto.product.request.WishlistAndAlarmRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Product;
@@ -53,7 +53,7 @@ public class RestockingNotificationServiceImpl implements RestockingNotification
   }
 
   @Override
-  public void createAlarm(CreateDeleteWishlistAndAlarmRequest request) {
+  public void createAlarm(WishlistAndAlarmRequest request) {
     Product product = productRepository.findById(request.getProductId()).orElseThrow(()->new NotFoundException(Product.class, "product not found"));
     Member member = memberRepository.findById(request.getMemberNo()).orElseThrow(()->new NotFoundException(Member.class, "member not found"));
     RestockingNotification.Pk pk = new RestockingNotification.Pk(request.getMemberNo(),
@@ -69,7 +69,7 @@ public class RestockingNotificationServiceImpl implements RestockingNotification
   }
 
   @Override
-  public void deleteAlarm(CreateDeleteWishlistAndAlarmRequest request) {
+  public void deleteAlarm(WishlistAndAlarmRequest request) {
     alarmPkValidation(request);
     RestockingNotification.Pk pk = new RestockingNotification.Pk(request.getMemberNo(),
         request.getProductId());
@@ -82,7 +82,7 @@ public class RestockingNotificationServiceImpl implements RestockingNotification
   }
 
 
-  public void alarmPkValidation(CreateDeleteWishlistAndAlarmRequest request) {
+  public void alarmPkValidation(WishlistAndAlarmRequest request) {
     if (!memberRepository.existsById(request.getMemberNo())) {
       throw new NotFoundException(Member.class, "member not found");
     }

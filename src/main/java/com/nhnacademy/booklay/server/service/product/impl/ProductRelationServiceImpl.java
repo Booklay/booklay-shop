@@ -74,8 +74,8 @@ public class ProductRelationServiceImpl implements ProductRelationService {
 
   @Override
   public void deleteProductRelation(CreateDeleteProductRelationRequest request){
-    productRepository.findById(request.getBaseId()).orElseThrow(()->new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
-    productRepository.findById(request.getTargetId()).orElseThrow(()->new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
-    productRelationRepository.deleteByBaseAndTargetId(request.getBaseId(), request.getTargetId());
+    Product baseProduct = productRepository.findById(request.getBaseId()).orElseThrow(()->new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
+    Product targetProduct = productRepository.findById(request.getTargetId()).orElseThrow(()->new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
+    productRelationRepository.deleteByBaseAndTargetId(baseProduct.getId(), targetProduct.getId());
   }
 }

@@ -1,6 +1,5 @@
 server:
   port: 9090
-
 spring:
   jpa:
     hibernate:
@@ -23,6 +22,8 @@ cloud:
   container: /booklay_storage/
 
 booklay:
+  gateway-origin: http://localhost:8080
+  gw-url: http://127.0.0.1
   secure:
     appkey: 500rMJPT021TnyNl
     db_username: 06bd87410af34cdabe826c117fb76771
@@ -46,3 +47,6 @@ message:
     coupon:
       request: coupon-zone-request-dev
       response: coupon-zone-response-dev
+logging:
+  level:
+    root: debug

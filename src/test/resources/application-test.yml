@@ -24,7 +24,7 @@ spring:
 
   kafka:
     consumer:
-      group-id: shop
+      group-id: shop-test
 
 cloud:
   auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
@@ -35,6 +35,8 @@ cloud:
   container: /booklay_storage/
 
 booklay:
+  gateway-origin: http://localhost:8080
+  gw-url: http://127.0.0.1
   secure:
     appkey: 500rMJPT021TnyNl
     db_username: 06bd87410af34cdabe826c117fb76771

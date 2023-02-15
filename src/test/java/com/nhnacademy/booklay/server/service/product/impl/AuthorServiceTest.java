@@ -1,10 +1,9 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.will;
 
 import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
@@ -13,7 +12,6 @@ import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorR
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.Member;
-import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
@@ -76,6 +74,8 @@ class AuthorServiceTest {
           Optional.ofNullable(member));
       author.setMember(member);
     }
+
+    ReflectionTestUtils.setField(author,"authorId", 1L);
 
     authorService.createAuthor(requestWithoutMember);
 
@@ -171,5 +171,19 @@ class AuthorServiceTest {
     //then
     BDDMockito.then(productAuthorRepository).should().deleteByPk_AuthorId(deleteIdRequest.getId());
     BDDMockito.then(authorRepository).should().deleteById(deleteIdRequest.getId());
+  }
+
+  @Test
+  void testAuthorRetrieveForUpdate_success() {
+    Long authorId = 1L;
+    //given
+    ReflectionTestUtils.setField(author, "authorId", authorId);
+    given(authorRepository.findById(authorId)).willReturn(Optional.ofNullable(author));
+
+    //when
+    authorService.retrieveAuthorForUpdate(authorId);
+
+    //then
+    BDDMockito.then(authorRepository).should().findById(authorId);
   }
 }

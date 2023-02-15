@@ -11,17 +11,13 @@ import com.nhnacademy.booklay.server.dto.stroage.request.auth.PasswordCredential
 import com.nhnacademy.booklay.server.dto.stroage.response.ObjectFileResponse;
 import com.nhnacademy.booklay.server.dto.stroage.response.auth.AccessResponse;
 import com.nhnacademy.booklay.server.service.storage.StorageService;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +41,6 @@ public class CloudStorageService implements StorageService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-
     private AccessResponse accessResponse;
 
     @Value("${cloud.auth-url}")
@@ -65,7 +60,7 @@ public class CloudStorageService implements StorageService {
     private static final String DIR = System.getProperty("java.io.tmpdir");
     private static final String LOCAL_DIR = System.getProperty("user.home");
 
-    public String requestToken() {
+    private String requestToken() {
         PasswordCredentials passwordCredentials = new PasswordCredentials(userName, password);
         Auth auth = new Auth(tenantId, passwordCredentials);
         AccessRequest accessRequest = new AccessRequest(auth);

@@ -62,9 +62,11 @@ public class Post {
     private Integer depth;
 
     @Column
+    @Setter
     private String title;
 
     @Column
+    @Setter
     private String content;
 
     @CreatedDate
@@ -78,6 +80,7 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_view_public")
+    @Setter
     private boolean isViewPublic;
 
     @Setter

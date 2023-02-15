@@ -9,6 +9,8 @@ import lombok.Getter;
 public class BoardPostUpdateRequest {
 
   @NotNull
+  private Long postId;
+  @NotNull
   private String title;
   @NotNull
   private String content;

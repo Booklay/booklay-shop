@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author 최규태
@@ -48,7 +47,7 @@ public class BoardController {
   }
 
   @PutMapping
-  public ResponseEntity<Long> updatePost(@RequestBody BoardPostUpdateRequest request){
+  public ResponseEntity<Long> updatePost(@RequestBody BoardPostUpdateRequest request) {
     Long result = postService.updatePost(request);
 
     return ResponseEntity.status(HttpStatus.CREATED)
@@ -82,7 +81,7 @@ public class BoardController {
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity deletePost(MemberInfo memberInfo, @PathVariable Long postId){
+  public ResponseEntity deletePost(MemberInfo memberInfo, @PathVariable Long postId) {
     log.info("출력" + memberInfo.getMemberNo());
     postService.deletePost(memberInfo.getMemberNo(), postId);
     return ResponseEntity.status(HttpStatus.ACCEPTED).build();

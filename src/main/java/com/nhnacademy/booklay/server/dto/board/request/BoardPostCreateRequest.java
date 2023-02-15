@@ -6,17 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class BoardPostCreateRequest {
 
-  Integer postTypeNo;
-  Long memberNo;
-  Long productNo;
-  Long groupNo;
-  Integer groupOrderNo;
-  Integer depth;
-  String title;
-  String content;
-  Boolean viewPublic;
-  Boolean answered;
+  private Integer postTypeNo;
+  private Long memberNo;
+  private Long productNo;
+  private Long groupNo;
+  private Integer groupOrderNo;
+  private Integer depth;
+  private String title;
+  private String content;
+  private Boolean viewPublic;
+  private Boolean answered;
 }

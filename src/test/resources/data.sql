@@ -534,11 +534,12 @@ create table review
         primary key auto_increment,
     product_no bigint not null,
     member_no bigint not null,
-    image_no bigint not null,
+    image_no bigint null,
     score int not null,
     content text not null,
     created_at datetime not null,
     modified_at datetime null,
+    is_deleted boolean not null default 0,
     constraint FK_image_TO_review_1
         foreign key (image_no) references object_file (file_no),
     constraint FK_member_TO_review_1

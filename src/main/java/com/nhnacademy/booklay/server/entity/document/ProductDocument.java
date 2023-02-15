@@ -42,18 +42,17 @@ public class ProductDocument {
     @Id
     private Long id;
     private Long thumbnail;
-
-    //검색 키워드
     private String title;
     private String shortDescription;
     private String longDescription;
+
     private String publisher;
     private Long price;
     @Field(type = FieldType.Date, format = {date_hour_minute_second_millis, epoch_millis})
     private LocalDateTime createdAt;
-
     private List<AuthorInfo> authors;
     private List<TagInfo> tags;
+
     private List<CategoryInfo> categories;
     private Boolean isDeleted;
     private Boolean isSelling;
@@ -86,17 +85,17 @@ public class ProductDocument {
 
             .id(product.getInfo().getId())
             .thumbnail(product.getInfo().getObjectFileId())
-
             .title(product.getInfo().getTitle())
             .shortDescription(product.getInfo().getShortDescription())
             .longDescription(product.getInfo().getLongDescription())
+
             .publisher(publisher)
             .price(product.getInfo().getPrice())
-
             .authors(authorInfos)
             .tags(tagInfos)
             .categories(categoryInfos)
 
+            .createdAt(product.getInfo().getCreatedAt())
             .isDeleted(product.getInfo().isDeleted())
             .isSelling(product.getInfo().isSelling())
 

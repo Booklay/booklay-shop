@@ -28,12 +28,12 @@ public class Cart {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_no")
+    @JoinColumn(name = "member_no", insertable = false, updatable = false)
     @MapsId("memberId")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_no")
+    @JoinColumn(name = "product_no", insertable = false, updatable = false)
     @MapsId("productId")
     private Product product;
 

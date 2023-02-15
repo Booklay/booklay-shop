@@ -14,7 +14,9 @@ import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +48,6 @@ public class MemberController {
     private static final String ADMIN_AND_AUTHOR_AUTHORITY_CANNOT_EXIST_TOGETHER_ERROR_CODE =
         "AdminAndAuthorAuthorityCannotExistTogether";
     private static final String ALREADY_EXIST_AUTHORITY_ERROR_CODE = "AlreadyExistAuthority";
-
 
     private final MemberService memberService;
 
@@ -116,12 +117,13 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMember(
+    public ResponseEntity<Map<String, Long>> createMember(
         @Valid @RequestBody MemberCreateRequest memberCreateRequest) {
 
-        memberService.createMember(memberCreateRequest);
+        Long memberNo = memberService.createMember(memberCreateRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .build();
+                             .body(Collections.singletonMap("memberNo", memberNo));
     }
 
     @PutMapping("/{memberNo}")

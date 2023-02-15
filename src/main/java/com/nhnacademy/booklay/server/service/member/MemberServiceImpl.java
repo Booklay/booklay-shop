@@ -70,14 +70,14 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberAlreadyExistedException(memberId);
         }
     }
-
+    
     /**
      * 회원가입 시 회원 생성하는 메소드
      *
      * @param createDto
      */
     @Override
-    public void createMember(MemberCreateRequest createDto) {
+    public Long createMember(MemberCreateRequest createDto) {
         checkExistsMemberId(createDto.getMemberId());
 
         Gender gender = genderRepository.findByName(createDto.getGender()).orElseThrow(
@@ -92,10 +92,13 @@ public class MemberServiceImpl implements MemberService {
             new MemberAuthority(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()),
                 member, authority);
 
-        memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
         memberGradeRepository.save(member.addGrade("white"));
         memberAuthorityRepository.save(memberAuthority);
+
+        return savedMember.getMemberNo();
     }
+
     @Override
     public void createMemberGrade(Long memberNo, String gradeName) {
         Member member = getMemberService.getMemberNo(memberNo);

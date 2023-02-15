@@ -428,6 +428,7 @@ create table post
     updated_at datetime null,
     is_view_public boolean not null,
     is_answered boolean null,
+    is_deleted boolean not null,
     constraint FK_member_TO_post_1
         foreign key (member_no) references member (member_no),
     constraint FK_post_TO_post_1
@@ -450,6 +451,7 @@ create table comment
     updated_at datetime null,
     group_order int not null,
     depth int not null,
+    is_deleted boolean not null,
     constraint FK_member_TO_comment_1
         foreign key (member_no) references member (member_no),
     constraint FK_post_TO_comment_1

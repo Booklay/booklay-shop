@@ -6,11 +6,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,32 +29,45 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class Review {
 
     @Id
     @Column(name = "review_no")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_no", nullable = false)
+    @JoinColumn(name = "product_no", nullable = false, insertable = false, updatable = false)
     private Product product;
 
+    @Column(name = "product_no")
+    private Long productNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_no", nullable = false)
+    @JoinColumn(name = "member_no", nullable = false, insertable = false, updatable = false)
     private Member member;
 
+    @Column(name = "member_no")
+    private Long memberNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_no", nullable = false)
+    @JoinColumn(name = "image_no", insertable = false, updatable = false)
     private ObjectFile objectFile;
 
+    @Column(name = "image_no")
+    private Long imageNo;
+
     @Column(nullable = false)
-    private int score;
+    private Long score;
 
     @Column(nullable = false)
     private String content;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
 
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -60,18 +77,8 @@ public class Review {
     @Setter
     @LastModifiedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "modify_at")
+    @Column(name = "modified_at")
     private LocalDateTime modifyAt;
 
-    public Review(Long id, Product product, Member member, ObjectFile objectFile, int score,
-                  String content,
-                  LocalDateTime createdAt) {
-        this.id = id;
-        this.product = product;
-        this.member = member;
-        this.objectFile = objectFile;
-        this.score = score;
-        this.content = content;
-        this.createdAt = createdAt;
-    }
+
 }

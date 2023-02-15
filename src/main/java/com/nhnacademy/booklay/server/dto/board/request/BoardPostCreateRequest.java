@@ -12,8 +12,8 @@ public class BoardPostCreateRequest {
   Integer postTypeNo;
   Long memberNo;
   Long productNo;
-  Long groupPostNo;
-  Integer groupOrder;
+  Long groupNo;
+  Integer groupOrderNo;
   Integer depth;
   String title;
   String content;

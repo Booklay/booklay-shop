@@ -17,7 +17,7 @@ public class PostResponse {
   Long postId;
   Integer postTypeNo;
   Long memberNo;
-  Long productNo;
+  Long productId;
   Long groupPostNo;
   Integer groupOrder;
   Integer depth;
@@ -37,7 +37,7 @@ public class PostResponse {
     this.postId = post.getPostId();
     this.postTypeNo = post.getPostTypeId().getPostTypeId();
     this.memberNo = post.getMemberId().getMemberNo();
-    this.productNo = Objects.nonNull(post.getProductId()) ? post.getProductId().getId() : null;
+    this.productId = Objects.nonNull(post.getProductId()) ? post.getProductId().getId() : null;
     this.groupPostNo = Objects.nonNull(post.getGroupNo()) ? post.getGroupNo().getPostId() : null;
     this.groupOrder = Objects.nonNull(post.getGroupOrder()) ? post.getGroupOrder() : null;
     this.depth = post.getDepth();

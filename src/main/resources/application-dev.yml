@@ -47,6 +47,6 @@ message:
     coupon:
       request: coupon-zone-request-dev
       response: coupon-zone-response-dev
-logging:
-  level:
-    root: debug
+#logging:
+#  level:
+#    root: debug

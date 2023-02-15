@@ -51,7 +51,10 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "group_post_no")
     private Post groupNo;
+    @Column(name = "group_post_no", insertable = false, updatable = false)
+    private Long realGroupNo;
 
+    @Setter
     @Column(name = "group_order")
     private Integer groupOrder;
 
@@ -84,8 +87,7 @@ public class Post {
 
     @Builder
     public Post(PostType postTypeId, Member memberId, Integer groupOrder, Integer depth, String title,
-                String content,
-                boolean isViewPublic) {
+                String content, boolean isViewPublic, Post groupNo) {
         this.postTypeId = postTypeId;
         this.memberId = memberId;
         this.groupOrder = groupOrder;
@@ -93,5 +95,6 @@ public class Post {
         this.title = title;
         this.content = content;
         this.isViewPublic = isViewPublic;
+        this.groupNo = groupNo;
     }
 }

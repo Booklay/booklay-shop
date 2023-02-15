@@ -25,7 +25,7 @@ public class MemberInfo {
 
     public MemberInfo(Map<String, String[]> paramMap) {
 
-        String[] memberInfoFieldName = new String[]{"memberNo", "gender", "memberId", "nickname", "name", "birthday", "phoneNo", "email"};
+        String[] memberInfoFieldName = new String[]{"member_info_memberNo", "member_info_gender", "member_info_memberId", "member_info_nickname", "member_info_name", "member_info_birthday", "member_info_phoneNo", "member_info_email"};
         int arrayCount = 0;
         String memberNoString = readMap(memberInfoFieldName[arrayCount++], paramMap);
         this.memberNo = memberNoString==null?null:Long.parseLong(memberNoString);

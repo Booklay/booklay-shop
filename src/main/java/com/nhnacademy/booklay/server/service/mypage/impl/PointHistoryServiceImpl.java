@@ -30,7 +30,6 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     /**
      * 포인트 적립, 사용 시 내역 만드는 메소드
      *
-     * @param requestDto
      */
     @Override
     public void createPointHistory(PointHistoryCreateRequest requestDto) {
@@ -53,9 +52,6 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     /**
      * 특정 회원의 포인트 내역 보여주는 메소드
      *
-     * @param memberNo
-     * @param pageable
-     * @return
      */
     @Override
     @Transactional(readOnly = true)
@@ -68,8 +64,6 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     /**
      * 특정 회원의 현재 누적 포인트 보여주는 메소드
      *
-     * @param memberNo
-     * @return
      */
     @Override
     @Transactional(readOnly = true)
@@ -83,8 +77,6 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     /**
      * 회원 간 포인트 선물 시 처리하는 로직
      *
-     * @param memberNo
-     * @param requestDto
      */
     @Override
     public void presentPoint(Long memberNo, PointPresentRequest requestDto) {

@@ -49,4 +49,4 @@ message:
       response: coupon-zone-response-dev
 logging:
   level:
-    root: debug
+    root: info

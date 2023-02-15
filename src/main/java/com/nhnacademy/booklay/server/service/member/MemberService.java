@@ -25,7 +25,7 @@ public interface MemberService {
 
     Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable);
 
-    void createMember(MemberCreateRequest memberCreateRequest);
+    Long createMember(MemberCreateRequest memberCreateRequest);
 
     void updateMember(Long memberNo, MemberUpdateRequest memberUpdateRequest);
 

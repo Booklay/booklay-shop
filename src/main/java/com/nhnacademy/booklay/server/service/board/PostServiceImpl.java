@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.board;
 
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
+import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Post;
@@ -86,6 +87,19 @@ public class PostServiceImpl implements PostService {
     Post savedPost = postRepository.save(post);
 
     return savedPost.getPostId();
+  }
+
+  @Override
+  public Long updatePost(BoardPostUpdateRequest request) {
+    Post post = postRepository.findById(request.getPostId()).orElse(null);
+
+    post.setTitle(request.getTitle());
+    post.setContent(request.getContent());
+    post.setViewPublic(request.getViewPublic());
+
+    postRepository.save(post);
+
+    return post.getPostId();
   }
 
   @Override

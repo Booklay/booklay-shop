@@ -53,7 +53,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         return Optional.ofNullable(member);
     }
 
-
     @Override
     public Optional<Member> retrieveValidMemberByMemberId(String memberId) {
         QMember qMember = QMember.member;
@@ -180,17 +179,18 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
                                             member.gender.name,
                                             member.memberId,
                                             member.nickname,
-                                            member.name,
-                                            member.birthday,
-                                            member.phoneNo,
-                                            member.email,
-                                            member.createdAt,
-                                            member.updatedAt,
-                                            member.deletedAt,
-                                            member.isBlocked,
-                                            memberGrade.name,
-                                            authority.name))
-            .fetchOne();
+                member.name,
+                member.birthday,
+                member.phoneNo,
+                member.email,
+                member.createdAt,
+                member.updatedAt,
+                member.deletedAt,
+                member.isBlocked,
+                memberGrade.name,
+                authority.name))
+            .fetchFirst();
+        //TODO : 원래 fetchOne() 인데 2개 나옴(booklay2 계정문제 추측)
 
         return Optional.ofNullable(memberRetrieveResponse);
     }

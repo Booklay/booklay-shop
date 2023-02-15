@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
@@ -56,8 +57,18 @@ public class MemberController {
 
         MemberRetrieveResponse memberResponse = memberService.retrieveMember(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberResponse);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberResponse);
+    }
+
+    @GetMapping("/main/{memberNo}")
+    public ResponseEntity<MemberMainRetrieveResponse> retrieveMemberMain(
+        @PathVariable Long memberNo) {
+
+        MemberMainRetrieveResponse memberMainResponse = memberService.retrieveMemberMain(memberNo);
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberMainResponse);
     }
 
     @GetMapping("/email/{email}")
@@ -66,9 +77,9 @@ public class MemberController {
 
         MemberLoginResponse memberResponse =
             memberService.retrieveMemberByEmail(email)
-                         .orElseThrow(() -> new NotFoundException(
-                             MemberNotFoundException.class,
-                             MEMBER_NOT_FOUND_ERROR_CODE));
+                .orElseThrow(() -> new NotFoundException(
+                    MemberNotFoundException.class,
+                    MEMBER_NOT_FOUND_ERROR_CODE));
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)

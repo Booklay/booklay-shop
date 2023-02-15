@@ -113,10 +113,12 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         QMember member = QMember.member;
         QAuthority authority = QAuthority.authority;
         QMemberAuthority memberAuthority = QMemberAuthority.memberAuthority;
+        QMemberGrade memberGrade = QMemberGrade.memberGrade;
 
         MemberRetrieveResponse memberRetrieveResponse = from(member)
             .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
             .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
+            .innerJoin(memberGrade).on(member.memberNo.eq(memberGrade.member.memberNo))
             .where(member.email.eq(email))
             .select(Projections.constructor(MemberRetrieveResponse.class,
                                             member.memberNo,
@@ -130,7 +132,9 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
                                             member.createdAt,
                                             member.updatedAt,
                                             member.deletedAt,
-                                            member.isBlocked))
+                                            member.isBlocked,
+                                            memberGrade.name,
+                                            authority.name))
             .fetchOne();
 
         return Optional.ofNullable(memberRetrieveResponse);

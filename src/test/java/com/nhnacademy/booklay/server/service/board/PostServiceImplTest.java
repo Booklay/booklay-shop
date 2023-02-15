@@ -80,7 +80,7 @@ class PostServiceImplTest {
     Post savePost = Post.builder()
         .postTypeId(postType)
         .memberId(member)
-        .groupOrder(request.getGroupOrder())
+        .groupOrder(request.getGroupOrderNo())
         .depth(request.getDepth())
         .title(request.getTitle())
         .content(request.getContent())
@@ -92,8 +92,8 @@ class PostServiceImplTest {
           Optional.ofNullable(product));
       savePost.setProductId(product);
     }
-    if (request.getGroupPostNo() != null) {
-      given(postRepository.findById(request.getGroupPostNo())).willReturn(
+    if (request.getGroupOrderNo() != null) {
+      given(postRepository.findById(Long.valueOf(request.getGroupOrderNo()))).willReturn(
           Optional.ofNullable(post));
       savePost.setGroupNo(post);
     }

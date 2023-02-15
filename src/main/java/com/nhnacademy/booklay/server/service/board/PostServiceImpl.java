@@ -43,6 +43,7 @@ public class PostServiceImpl implements PostService {
         .title(request.getTitle())
         .content(request.getContent())
         .isViewPublic(request.getViewPublic())
+        .isDeleted(false)
         .build();
 
     if (request.getProductNo() != null) {
@@ -120,4 +121,8 @@ public class PostServiceImpl implements PostService {
     return response;
   }
 
+  @Override
+  public void deletePost(Long memberId, Long postId) {
+    postRepository.deleteByPostIdAndMemberNo(postId, memberId);
+  }
 }

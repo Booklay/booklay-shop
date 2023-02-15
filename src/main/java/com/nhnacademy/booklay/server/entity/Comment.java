@@ -65,14 +65,18 @@ public class Comment {
   @Column(name = "group_order")
   private Long groupOrder;
 
+  @Column(name="is_deleted")
+  private boolean isDeleted;
+
   @Builder
   public Comment(Post postId, Member memberId, Comment groupNo, String content, Long depth,
-      Long groupOrder) {
+      Long groupOrder, boolean isDeleted) {
     this.postId = postId;
     this.memberId = memberId;
     this.groupNo = groupNo;
     this.content = content;
     this.depth = depth;
     this.groupOrder = groupOrder;
+    this.isDeleted = isDeleted;
   }
 }

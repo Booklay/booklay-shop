@@ -48,4 +48,12 @@ public class PostRepositoryImpl extends QuerydslRepositorySupport implements Pos
     return Math.toIntExact(
         from(post).where(post.realGroupNo.eq(groupNo)).select(post.count()).fetchFirst());
   }
+
+  @Override
+  public void deleteByPostIdAndMemberNo(Long postId, Long memberNo) {
+    QPost post = QPost.post;
+
+    update(post).where(post.postId.eq(postId), post.memberId.memberNo.eq(memberNo))
+        .set(post.isDeleted, true).execute();
+  }
 }

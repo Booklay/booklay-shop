@@ -43,6 +43,9 @@ public class CouponZoneController {
             .body(response);
     }
 
+    /**
+     * 사용자가 requestId로 쿠푠 발급에 대한 응답을 요청합니다.
+     */
     @GetMapping("/{requestId}")
     public ResponseEntity<CouponMemberResponse> responseIssueCoupon(@PathVariable String requestId) {
         CouponMemberResponse response = issueService.getResponse(requestId);

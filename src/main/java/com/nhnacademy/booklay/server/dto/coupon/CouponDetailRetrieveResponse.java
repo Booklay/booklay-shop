@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @RequiredArgsConstructor
 @Builder
+@ToString
 public class CouponDetailRetrieveResponse {
     private final Long id;
     private final String name;

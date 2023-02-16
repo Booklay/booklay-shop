@@ -299,6 +299,7 @@ public class MemberServiceImpl implements MemberService {
         return response;
     }
 
+
     @Override
     public void blockMemberCancel(Long blockedMemberDetailId) {
         BlockedMemberDetail blockedMemberDetail =
@@ -351,6 +352,29 @@ public class MemberServiceImpl implements MemberService {
             () -> new NotFoundException(MemberAuthority.class, "member authority not found"));
 
         memberAuthorityRepository.delete(memberAuthority);
+    }
+    @Override
+    public boolean checkMemberId(String memberId) {
+        if (memberRepository.existsByMemberId(memberId)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkNickName(String nickName) {
+        if(memberRepository.existsByNickname(nickName)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkEMail(String eMail) {
+        if(memberRepository.existsByEmail(eMail)) {
+            return true;
+        }
+        return false;
     }
 
 }

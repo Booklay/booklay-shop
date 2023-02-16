@@ -51,7 +51,10 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "group_post_no")
     private Post groupNo;
+    @Column(name = "group_post_no", insertable = false, updatable = false)
+    private Long realGroupNo;
 
+    @Setter
     @Column(name = "group_order")
     private Integer groupOrder;
 
@@ -59,9 +62,11 @@ public class Post {
     private Integer depth;
 
     @Column
+    @Setter
     private String title;
 
     @Column
+    @Setter
     private String content;
 
     @CreatedDate
@@ -75,17 +80,20 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_view_public")
+    @Setter
     private boolean isViewPublic;
 
     @Setter
     @Column(name = "is_answered")
     private boolean isAnswered;
 
+    @Column(name="is_deleted")
+    private boolean isDeleted;
+
 
     @Builder
     public Post(PostType postTypeId, Member memberId, Integer groupOrder, Integer depth, String title,
-                String content,
-                boolean isViewPublic) {
+                String content, boolean isViewPublic, Post groupNo, boolean  isDeleted) {
         this.postTypeId = postTypeId;
         this.memberId = memberId;
         this.groupOrder = groupOrder;
@@ -93,5 +101,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.isViewPublic = isViewPublic;
+        this.groupNo = groupNo;
+        this.isDeleted = isDeleted;
     }
 }

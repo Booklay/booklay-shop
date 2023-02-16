@@ -16,7 +16,7 @@ public class DummyNum3 {
             .build();
         ReflectionTestUtils.setField(objectFile, "id", 1L);
         Product product = Product.builder()
-            .objectFile(objectFile)
+            .thumbnailNo(1L)
             .price(1L)
             .pointRate(1L)
             .isSelling(true)

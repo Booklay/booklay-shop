@@ -32,7 +32,7 @@ public class ProductResponse {
 
     public ProductResponse(Product product) {
         this.id = product.getId();
-        this.objectFileId = product.getObjectFile().getId();
+        this.objectFileId = product.getThumbnailNo();
         this.title = product.getTitle();
         this.createdAt = product.getCreatedAt();
         this.price = product.getPrice();

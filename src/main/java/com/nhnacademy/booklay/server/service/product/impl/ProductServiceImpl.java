@@ -1,11 +1,16 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
+import static com.nhnacademy.booklay.server.service.search.impl.SearchServiceImpl.convertHitsToResponse;
+
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -15,7 +20,9 @@ import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.entity.ProductTag;
 import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
@@ -24,7 +31,9 @@ import com.nhnacademy.booklay.server.repository.product.CategoryProductRepositor
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
+import com.nhnacademy.booklay.server.repository.product.TagRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.storage.FileService;
 import java.io.IOException;
@@ -51,6 +60,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
+  private final TagRepository tagRepository;
   private final CategoryRepository categoryRepository;
   private final ProductDetailRepository productDetailRepository;
   private final CategoryProductRepository categoryProductRepository;
@@ -59,9 +69,11 @@ public class ProductServiceImpl implements ProductService {
   private final SubscribeRepository subscribeRepository;
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
+  private final ProductTagRepository productTagRepository;
   private static final Long NOT_FOUND_PRODUCT_ID = 33L;
   private static final Integer RECENT_DAY = 7;
 
+  private static final String PRODUCT_NOT_FOUND = "product not found";
   /**
    * 서적 상품 생성
    *
@@ -112,9 +124,7 @@ public class ProductServiceImpl implements ProductService {
     // subscribe
     Subscribe subscribe = splitSubscribe(savedProduct);
 
-    if (request.getPublisher() != null) {
-      subscribe.setPublisher(request.getPublisher());
-    }
+    subscribe.setPublisher(request.getPublisher());
     subscribeRepository.save(subscribe);
     return savedProduct.getId();
   }
@@ -128,7 +138,6 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
-    //TODO: 못찾는거 예외처리
     return productRepository.retrieveProductById(id);
   }
 
@@ -142,7 +151,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
-      throw new NotFoundException(Product.class, "product not found");
+      throw new NotFoundException(Product.class, PRODUCT_NOT_FOUND);
     }
     Product product = splitProduct(request);
     product.setId(request.getProductId());
@@ -181,7 +190,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public void softDelete(Long productId) {
     Product targetProduct = productRepository.findById(productId)
-        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+        .orElseThrow(() -> new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
 
     targetProduct.setDeleted(true);
 
@@ -216,9 +225,7 @@ public class ProductServiceImpl implements ProductService {
     Subscribe subscribe = splitSubscribe(savedProduct);
     subscribe.setId(request.getSubscribeId());
 
-    if (Objects.nonNull(request.getPublisher())) {
-      subscribe.setPublisher(request.getPublisher());
-    }
+    subscribe.setPublisher(request.getPublisher());
 
     if (!subscribeRepository.existsById(subscribe.getId())) {
       throw new IllegalArgumentException();
@@ -264,9 +271,16 @@ public class ProductServiceImpl implements ProductService {
    * @throws IOException
    */
   private Product splitProduct(CreateUpdateProductBookRequest request) throws IOException {
-    MultipartFile thumbnail = request.getImage();
+    Long objectFileNo = 0L;
 
-    ObjectFile objectFile = fileService.uploadFile(thumbnail);
+    if (Objects.nonNull(request.getImage())) {
+      MultipartFile thumbnail = request.getImage();
+      ObjectFile objectFile = fileService.uploadFile(thumbnail);
+      objectFileNo = objectFile.getId();
+    }
+    if (Objects.isNull(request.getImage())) {
+      objectFileNo = request.getOriginalImage();
+    }
 
     return Product.builder()
         .price(request.getPrice())
@@ -275,7 +289,7 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .objectFile(objectFile)
+        .thumbnailNo(objectFileNo)
         .isSelling(request.getSelling())
         .build();
   }
@@ -334,9 +348,16 @@ public class ProductServiceImpl implements ProductService {
    */
   private Product splitProductSubscribe(CreateUpdateProductSubscribeRequest request)
       throws IOException {
-    MultipartFile thumbnail = request.getImage();
+    Long objectFileNo = 0L;
 
-    ObjectFile objectFile = fileService.uploadFile(thumbnail);
+    if (Objects.nonNull(request.getImage())) {
+      MultipartFile thumbnail = request.getImage();
+      ObjectFile objectFile = fileService.uploadFile(thumbnail);
+      objectFileNo = objectFile.getId();
+    }
+    if (Objects.isNull(request.getImage())) {
+      objectFileNo = request.getOriginalImage();
+    }
 
     return Product.builder()
         .price(request.getPrice())
@@ -345,7 +366,7 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .objectFile(objectFile)
+        .thumbnailNo(objectFileNo)
         .isSelling(request.getSelling())
         .build();
   }
@@ -354,7 +375,6 @@ public class ProductServiceImpl implements ProductService {
    * 구독 상품 생성 수정 dto에서 subscribe 분리
    *
    * @param product
-   *
    * @return
    */
   private Subscribe splitSubscribe(Product product) {
@@ -402,8 +422,6 @@ public class ProductServiceImpl implements ProductService {
     return new PageImpl<>(assembledContent, products.getPageable(),
         products.getTotalElements());
   }
-
-
 
 
   /**
@@ -467,7 +485,7 @@ public class ProductServiceImpl implements ProductService {
 
     for (int i = 0; i < productIds.size(); i++) {
       Product product = productRepository.findById(productIds.get(i))
-          .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+          .orElseThrow(() -> new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
 
       // 책 상품이라면
       if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
@@ -520,12 +538,6 @@ public class ProductServiceImpl implements ProductService {
     return productRepository.retrieveProductsInPage(pageable);
   }
 
-//  @Transactional(readOnly = true)
-//  @Override
-//  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
-//    return productRepository.findProductPage(productNoList, pageable);
-//  }
-
   @Override
   public ProductAllInOneResponse findProductById(Long productId) {
     return productRepository.retrieveProductById(productId);
@@ -545,8 +557,108 @@ public class ProductServiceImpl implements ProductService {
       product.setSelling(false);
       productRepository.save(product);
     }
+
     productDetailRepository.save(productDetail);
 
+  }
+
+  @Override
+  public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
+
+    Page<Product> page = productRepository.findNotDeletedByPageable(pageable);
+
+    List<ProductAllInOneResponse> all = getProducts(page.getContent());
+
+    return getSearchPageResponse("전체 상품", page, all);
+
+  }
+
+  @Override
+  public List<SearchProductResponse> getLatestEights(){
+    List<Product> list = productRepository.findTop8ByIsDeletedOrderByCreatedAtDesc(false);
+
+    List<ProductAllInOneResponse> products = getProducts(list);
+
+    List<ProductDocument> productDocuments = getDocumentList(products);
+
+    return convertHitsToResponse(productDocuments);
+  }
+
+
+  @Override
+  public SearchPageResponse<SearchProductResponse> retrieveProductByRequest(SearchIdRequest request, Pageable pageable) {
+
+    List<Long> ids = new ArrayList<>();
+    String title = "알 수 없는 검색 정보";
+
+    if (request.getClassification().equals("categories")) {
+      List<CategoryProduct> list = categoryProductRepository.findByCategory_Id(request.getId());
+      title = Objects.requireNonNull(categoryRepository.findById(request.getId())).get().getName();
+      list.forEach(x -> ids.add(x.getProduct().getId()));
+    }else if (request.getClassification().equals("tags")) {
+      List<ProductTag> list = productTagRepository.findAllByTagId(request.getId());
+      list.forEach(x -> ids.add(x.getProduct().getId()));
+      title = Objects.requireNonNull(tagRepository.findById(request.getId())).get().getName();
+    }else if (request.getClassification().equals("authors")) {
+      List<ProductAuthor> list = productAuthorRepository.findAllByAuthor_AuthorId(request.getId());
+      list.forEach(x -> ids.add(x.getProductDetail().getProduct().getId()));
+      title = Objects.requireNonNull(authorRepository.findById(request.getId())).get().getName();
+    }
+
+    if (ids.isEmpty()) {
+      return getSearchPageResponse(title, Page.empty(), List.of());
+    } else {
+      Page<Product> page = productRepository.findByIdInAndIsDeleted(ids, false, pageable);
+      List<ProductAllInOneResponse> all = getProducts(page.getContent());
+      return getSearchPageResponse(title, page, all);
+    }
+
+  }
+
+
+  private List<ProductAllInOneResponse> getProducts(List<Product> list) {
+    List<Long> ids = new ArrayList<>();
+
+    list.forEach(x -> ids.add(x.getId()));
+
+    return productRepository.retrieveProductsByIds(ids);
+  }
+
+  private Page<ProductAllInOneResponse> getProducts(List<Product> list, Pageable pageable) {
+    List<Long> ids = new ArrayList<>();
+
+    list.forEach(x -> ids.add(x.getId()));
+
+    return productRepository.retrieveProductsByIdsInPage(ids, pageable);
+  }
+
+  private static List<ProductDocument> getDocumentList(List<ProductAllInOneResponse> list) {
+    List<ProductDocument> productDocuments = new ArrayList<>();
+
+    if (!list.isEmpty()) {
+      list.forEach(product -> {
+        if (!product.getInfo().isDeleted()) {
+          productDocuments.add(ProductDocument.fromEntity(product));
+        }});}
+
+    return productDocuments;
+  }
+
+  private SearchPageResponse<SearchProductResponse> getSearchPageResponse(
+      String title, Page<Product> page, List<ProductAllInOneResponse> list) {
+
+    List<ProductDocument> productDocuments = getDocumentList(list);
+
+    List<SearchProductResponse> responses = convertHitsToResponse(productDocuments);
+
+    return SearchPageResponse.<SearchProductResponse>builder()
+        .searchKeywords(title)
+        .totalHits(page.getTotalElements())
+        .pageNumber(page.getNumber())
+        .pageSize(page.getSize())
+        .totalPages(page.getTotalPages())
+        .data(responses)
+        .build();
   }
 
 }

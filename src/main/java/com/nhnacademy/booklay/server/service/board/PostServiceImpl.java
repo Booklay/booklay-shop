@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.board;
 
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
+import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Post;
@@ -28,20 +29,24 @@ public class PostServiceImpl implements PostService {
   private final PostTypeRepository postTypeRepository;
   private final MemberRepository memberRepository;
 
+  private static final Integer POST_TYPE_NOTICE = 5;
+  private static final String POST_NOT_FOUND = "post not found";
+
   @Override
   public Long createPost(BoardPostCreateRequest request) {
     PostType postType = postTypeRepository.findById(request.getPostTypeNo())
         .orElseThrow(() -> new NotFoundException(PostType.class, "post type not found"));
     Member writer = memberRepository.findById(request.getMemberNo())
         .orElseThrow(() -> new NotFoundException(Member.class, "member not found"));
+
     Post post = Post.builder()
         .postTypeId(postType)
         .memberId(writer)
-        .groupOrder(request.getGroupOrder())
         .depth(request.getDepth())
         .title(request.getTitle())
         .content(request.getContent())
         .isViewPublic(request.getViewPublic())
+        .isDeleted(false)
         .build();
 
     if (request.getProductNo() != null) {
@@ -49,17 +54,63 @@ public class PostServiceImpl implements PostService {
           .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
       post.setProductId(product);
     }
-    if (request.getGroupPostNo() != null) {
-      Post groupPost = postRepository.findById(request.getGroupPostNo())
-          .orElseThrow(() -> new NotFoundException(Post.class, "post not found"));
-      post.setGroupNo(groupPost);
-    }
     if (request.getAnswered() != null) {
       post.setAnswered(request.getAnswered());
     }
+
+    //요청에 그룹 번호가 지정되어 있다면
+    if (request.getGroupNo() != null) {
+      Post groupPost = postRepository.findById(request.getGroupNo())
+          .orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
+      post.setGroupNo(groupPost);
+
+      //요청에 order 요구사항이 없다면 숫자 센 다음 +1
+      if (Objects.isNull(request.getGroupOrderNo())) {
+        Integer currentOrderNo = postRepository.countChildByGroupNo(groupPost.getRealGroupNo());
+        post.setGroupOrder(currentOrderNo + 1);
+      }
+
+      //요청에 order 가 들어있다면
+      if (Objects.nonNull(request.getGroupOrderNo())) {
+        //그데로 넣어주고
+        post.setGroupOrder(request.getGroupOrderNo());
+
+        //상위 order 전부 +1해서 수정 저장
+        postRepository.updateUpperPostByGroupNoPostId(request.getGroupNo(),
+            request.getGroupOrderNo());
+      }
+    }
+    //요청에 그룹번호가 없는 아예 첫 게시글이라면 그룹번호 지정 후 오더 0으로 설정
+    if (request.getGroupNo() == null) {
+      Integer baseGroupOrder = 0;
+      post.setGroupOrder(baseGroupOrder);
+      Post saveForGroupNo = postRepository.save(post);
+      post.setGroupNo(saveForGroupNo);
+    }
+
     Post savedPost = postRepository.save(post);
 
     return savedPost.getPostId();
+  }
+
+  @Override
+  public Long updatePost(BoardPostUpdateRequest request) {
+    Post post = postRepository.findById(request.getPostId())
+        .orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
+
+    post.setTitle(request.getTitle());
+    post.setContent(request.getContent());
+    post.setViewPublic(request.getViewPublic());
+
+    postRepository.save(post);
+
+    return post.getPostId();
+  }
+
+  @Override
+  public Long updateConfirmAnswer(Long postId) {
+    postRepository.confirmAnswerByPostId(postId);
+    return postId;
   }
 
   @Override
@@ -70,14 +121,25 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
+  public Page<PostResponse> retrieveNotice(Pageable pageable) {
+    return postRepository.findAllNotice(POST_TYPE_NOTICE, pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
   public PostResponse retrievePostById(Long postId) {
-    Post post = postRepository.findById(postId).orElse(null);
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
 
     PostResponse response = new PostResponse(post);
-    if(Objects.nonNull(post.getProductId())){
+    if (Objects.nonNull(post.getProductId())) {
       response.setAuthorList(productRepository.getAuthorsByProductId(post.getProductId().getId()));
     }
     return response;
   }
 
+  @Override
+  public void deletePost(Long memberId, Long postId) {
+    postRepository.deleteByPostIdAndMemberNo(postId, memberId);
+  }
 }

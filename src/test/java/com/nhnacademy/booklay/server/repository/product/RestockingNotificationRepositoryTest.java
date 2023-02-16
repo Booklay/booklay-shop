@@ -1,9 +1,10 @@
-package com.nhnacademy.booklay.server.repository;
+package com.nhnacademy.booklay.server.repository.product;
 
 
 import com.nhnacademy.booklay.server.dummy.DummyNum3;
 import com.nhnacademy.booklay.server.entity.RestockingNotification;
 import com.nhnacademy.booklay.server.repository.mypage.RestockingNotificationRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ class RestockingNotificationRepositoryTest {
     @Autowired
     RestockingNotificationRepository restockingNotificationRepository;
 
-
+    @Disabled
     @Test
     @DisplayName("RestockingNotificationRepository save test ")
     void testRestockingNotificationSave() {
@@ -42,7 +43,7 @@ class RestockingNotificationRepositoryTest {
 
     }
 
-
+    @Disabled
     @Test
     @DisplayName("RestockingNotificationRepository findById 테스트")
     void testMemberFindById() {

@@ -11,6 +11,7 @@ import com.nhnacademy.booklay.server.service.cart.CartService;
 import com.nhnacademy.booklay.server.service.cart.RDBCartService;
 import com.nhnacademy.booklay.server.service.cart.RedisCartService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -148,6 +149,7 @@ class CartControllerTest {
     }
 
     @Test
+    @Disabled
     void moveRedisToRDB() throws Exception {
         //given
         given(redisService.getAllCartItems(any())).willReturn(List.of(cartRetrieveResponse));

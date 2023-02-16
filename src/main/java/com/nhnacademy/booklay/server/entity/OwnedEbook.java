@@ -34,7 +34,6 @@ public class OwnedEbook {
     @JoinColumn(name = "member_no")
     Member member;
 
-
     @Builder
     public OwnedEbook(Product product, Member member) {
         this.product = product;

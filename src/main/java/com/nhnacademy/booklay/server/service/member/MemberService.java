@@ -11,6 +11,7 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResp
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public interface MemberService {
 
     Page<MemberRetrieveResponse> retrieveMembers(Pageable pageable);
 
-    void createMember(MemberCreateRequest memberCreateRequest);
+    Long createMember(MemberCreateRequest memberCreateRequest);
 
     void updateMember(Long memberNo, MemberUpdateRequest memberUpdateRequest);
 
@@ -61,4 +62,6 @@ public interface MemberService {
     MemberChartRetrieveResponse retrieveMemberChart();
 
     MemberGradeChartRetrieveResponse retrieveMemberGradeChart();
+
+    MemberMainRetrieveResponse retrieveMemberMain(Long memberNo);
 }

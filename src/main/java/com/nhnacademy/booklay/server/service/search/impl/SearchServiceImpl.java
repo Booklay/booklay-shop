@@ -28,6 +28,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -156,10 +157,8 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<SearchProductResponse> getLatestProducts() {
 
-        Query query = new NativeSearchQueryBuilder()
-            .withSorts(
-                SortBuilders.fieldSort("createdAt")
-            ).withMaxResults(8)
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+            .withSorts(SortBuilders.fieldSort("createdAt").order(SortOrder.DESC)).withMaxResults(8)
             .build();
 
         loggingQueryInfo(query);
@@ -206,12 +205,14 @@ public class SearchServiceImpl implements SearchService {
 
         List<SearchProductResponse> list = convertHitsToResponse(getHits(productDocumentSearchHits));
 
-        return new SearchPageResponse<>(
-            searchTitle,
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            list.size() / pageable.getPageSize(),
-            list);
+        return SearchPageResponse.<SearchProductResponse>builder()
+            .searchKeywords(searchTitle)
+            .totalHits(productDocumentSearchHits.getTotalHits())
+            .pageNumber(pageable.getPageNumber())
+            .pageSize(pageable.getPageSize())
+            .totalPages((list.size() / pageable.getPageSize()) + 1)
+            .data(list)
+            .build();
     }
 
 
@@ -231,6 +232,7 @@ public class SearchServiceImpl implements SearchService {
      * @return 아이디 리스트.
      * @param <T> 도큐먼트 타입.
      */
+
     private <T> List<Long> getHitIds(SearchHits<T> searchHits) {
         List<Long> hitIds = new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.mypage.impl;
 
+import com.nhnacademy.booklay.server.dto.ApiEntity;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
 import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
@@ -7,8 +8,10 @@ import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveRespo
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
+import com.nhnacademy.booklay.server.service.RestService;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,15 +29,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class PointHistoryServiceImpl implements PointHistoryService {
     private final PointHistoryRepository pointHistoryRepository;
     private final GetMemberService getMemberService;
+    private final RestService restService;
+    private final String gatewayIp;
 
 
+    /**
+     * 포인트 적립, 사용 시 내역 만드는 메소드
+     *
+     */
     @Override
     public void createPointHistory(PointHistoryCreateRequest requestDto) {
-        Member member = getMemberService.getMemberNo(requestDto.getMemberNo());
+        Member member = getMemberService.getValidMemberByMemberNo(requestDto.getMemberNo());
 
         TotalPointRetrieveResponse recentlyPointHistory =
             pointHistoryRepository.retrieveLatestPointHistory(requestDto.getMemberNo())
-                                  .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
+                .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
 
         Integer currentTotalPoint = recentlyPointHistory.getTotalPoint();
 
@@ -46,39 +55,53 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         pointHistoryRepository.save(pointHistory);
     }
 
+    /**
+     * 특정 회원의 포인트 내역 보여주는 메소드
+     *
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<PointHistoryRetrieveResponse> retrievePointHistorys(Long memberNo,
                                                                     Pageable pageable) {
+        getMemberService.getValidMemberByMemberNo(memberNo);
         return pointHistoryRepository.retrievePointHistoryByMemberNo(memberNo, pageable);
     }
 
+    /**
+     * 특정 회원의 현재 누적 포인트 보여주는 메소드
+     *
+     */
     @Override
     @Transactional(readOnly = true)
     public TotalPointRetrieveResponse retrieveTotalPoint(Long memberNo) {
-        getMemberService.getMemberNo(memberNo);
+        getMemberService.getValidMemberByMemberNo(memberNo);
 
         return pointHistoryRepository.retrieveLatestPointHistory(memberNo)
-                                     .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
+            .orElseGet(() -> new TotalPointRetrieveResponse(null, 0));
     }
 
+    /**
+     * 회원 간 포인트 선물 시 처리하는 메소드
+     *
+     */
     @Override
     public void presentPoint(Long memberNo, PointPresentRequest requestDto) {
-        Member member = getMemberService.getMemberNo(memberNo);
-        Member targetMember = getMemberService.getMemberId(requestDto.getTargetMemberId());
+        Member member = getMemberService.getValidMemberByMemberNo(memberNo);
+        Member targetMember =
+            getMemberService.getValidMemberByMemberId(requestDto.getTargetMemberId());
 
         createPointHistory(PointHistoryCreateRequest.builder()
-                                                    .memberNo(memberNo)
-                                                    .point(-(requestDto.getTargetPoint()))
-                                                    .updatedDetail(
-                                                        targetMember.getMemberId() + "에게 포인트 선물하기")
-                                                    .build());
+            .memberNo(memberNo)
+            .point(-(requestDto.getTargetPoint()))
+            .updatedDetail(
+                targetMember.getMemberId() + "에게 포인트 선물하기")
+            .build());
 
         createPointHistory(PointHistoryCreateRequest.builder()
-                                                    .memberNo(targetMember.getMemberNo())
-                                                    .point(requestDto.getTargetPoint())
-                                                    .updatedDetail(
-                                                        member.getMemberId() + "에게 포인트 선물받기")
-                                                    .build());
+            .memberNo(targetMember.getMemberNo())
+            .point(requestDto.getTargetPoint())
+            .updatedDetail(
+                member.getMemberId() + "에게 포인트 선물받기")
+            .build());
     }
 }

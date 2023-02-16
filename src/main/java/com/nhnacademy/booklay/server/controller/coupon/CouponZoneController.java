@@ -30,8 +30,7 @@ public class CouponZoneController {
     private final CouponZoneIssueService issueService;
 
     /**
-     *
-     * @param request
+     * 쿠폰 요청을 보낸 후에, 사용자가 응답을 요청하는 requestId를 보냅니다.
      */
     @PostMapping
     public ResponseEntity<CouponIssueResponse> issueCouponAtCouponZone(@RequestBody CouponIssueRequest request) {

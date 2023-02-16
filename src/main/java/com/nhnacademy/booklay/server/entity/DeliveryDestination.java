@@ -40,8 +40,20 @@ public class DeliveryDestination {
     @Column(name = "zip_code")
     private String zipCode;
 
-    @Column
+    @Column(name = "address")
     private String address;
+
+    @Column(name = "address_detail")
+    private String addressDetail;
+
+    @Column(name = "address_sub_detail")
+    private String addressSubDetail;
+
+    @Column(name = "receiver")
+    private String receiver;
+
+    @Column(name = "receiver_phone_no")
+    private String receiverPhoneNo;
 
     @Setter
     @Column(name = "is_default_destination")
@@ -49,18 +61,28 @@ public class DeliveryDestination {
 
     @Builder
     public DeliveryDestination(Member member, String name, String zipCode, String address,
+                               String addressDetail, String addressSubDetail,
+                               String receiver, String receiverPhoneNo,
                                Boolean isDefaultDestination) {
         this.member = member;
         this.name = name;
         this.zipCode = zipCode;
         this.address = address;
+        this.addressDetail = addressDetail;
+        this.addressSubDetail = addressSubDetail;
+        this.receiver = receiver;
+        this.receiverPhoneNo = receiverPhoneNo;
         this.isDefaultDestination = isDefaultDestination;
     }
 
     public void update(DeliveryDestinationCURequest requestDto) {
         this.name = requestDto.getName();
         this.zipCode = requestDto.getZipCode();
-        this.address = requestDto.getAddress() + " " + requestDto.getAddressDetail() + " " + requestDto.getAddDetail();
+        this.address = requestDto.getAddress();
+        this.addressDetail = requestDto.getAddressDetail();
+        this.addressSubDetail = requestDto.getAddressSubDetail();
+        this.receiver = requestDto.getReceiver();
+        this.receiverPhoneNo = requestDto.getReceiverPhoneNo();
         this.isDefaultDestination = requestDto.getIsDefaultDestination();
     }
 }

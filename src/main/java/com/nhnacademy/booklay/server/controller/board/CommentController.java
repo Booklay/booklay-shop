@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.controller.board;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.board.request.CommentRequest;
 import com.nhnacademy.booklay.server.dto.board.response.CommentResponse;
+import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.service.board.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class CommentController {
   public ResponseEntity<PageResponse<CommentResponse>> retrieveCommentPage(
       @PathVariable Long postId, Pageable pageable){
     Page<CommentResponse> result =  commentService.retrieveCommentPage(postId, pageable);
-    PageResponse<CommentResponse> page = new PageResponse<CommentResponse>(result);
+    PageResponse<CommentResponse> page = new PageResponse(result);
     return ResponseEntity.status(HttpStatus.OK).body(page);
   }
 
@@ -52,9 +53,9 @@ public class CommentController {
         .body(result);
   }
 
-  @DeleteMapping
-  public ResponseEntity deleteComment(@RequestBody CommentRequest request) {
-    commentService.deleteComment(request);
+  @DeleteMapping("/{commentId}")
+  public ResponseEntity deleteComment(@PathVariable Long commentId, MemberInfo memberInfo) {
+    commentService.deleteComment(commentId, memberInfo.getMemberNo());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 }

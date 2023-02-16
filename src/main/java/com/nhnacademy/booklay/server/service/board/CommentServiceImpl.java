@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public Page<CommentResponse> retrieveCommentPage(Long postId, Pageable pageable) {
-    return null;
+    return commentRepository.findAllByPostIdAndPageable(postId, pageable);
   }
 
   @Override
@@ -94,12 +94,13 @@ public class CommentServiceImpl implements CommentService {
     return saved.getCommentId();
   }
 
-  //이거 그냥 id 만 받아서 지우게 수정할거
   @Override
-  public void deleteComment(CommentRequest request) {
-    Comment original = commentRepository.findById(request.getPostId())
+  public void deleteComment(Long commentId, Long memberNo) {
+    Comment original = commentRepository.findById(commentId)
         .orElseThrow(() -> new NotFoundException(Comment.class, "comment not found"));
 
-    commentRepository.deleteById(original.getCommentId());
+    if(original.getMemberId().getMemberNo().equals(memberNo)) {
+      commentRepository.softDelete(commentId);
+    }
   }
 }

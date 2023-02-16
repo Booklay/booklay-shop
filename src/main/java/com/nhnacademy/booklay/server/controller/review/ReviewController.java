@@ -2,9 +2,10 @@ package com.nhnacademy.booklay.server.controller.review;
 
 import com.nhnacademy.booklay.server.dto.review.request.ReviewCreateRequest;
 import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.service.review.ReviewService;
-import java.util.List;
+import java.util.Objects;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +44,15 @@ public class ReviewController {
     }
 
     @GetMapping("/products/{productId}")
-    public ResponseEntity<List<RetrieveReviewResponse>> retrieveReviewByProductId(@PathVariable Long productId, Pageable pageable) {
+    public ResponseEntity<SearchPageResponse<RetrieveReviewResponse>> retrieveReviewByProductId(@PathVariable Long productId, Pageable pageable) {
 
-        List<RetrieveReviewResponse> response = reviewService.retrieveReviewListByProductId(productId, pageable);
+        SearchPageResponse<RetrieveReviewResponse> response =
+                reviewService.retrieveReviewListByProductId(productId, pageable);
 
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(response);
+        return Objects.isNull(response)
+            ? ResponseEntity.status(HttpStatus.OK).build()
+            : ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+
     }
 
     @GetMapping("/{reviewId}")
@@ -62,6 +66,6 @@ public class ReviewController {
 
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReviewByReviewId(@PathVariable Long reviewId) {
-        return reviewService.deleteReviewById(reviewId) ? ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        return reviewService.deleteReviewById(reviewId) ? ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build() : ResponseEntity.status(HttpStatus.OK).build();
     }
 }

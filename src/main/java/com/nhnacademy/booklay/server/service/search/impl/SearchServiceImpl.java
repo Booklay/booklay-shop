@@ -232,7 +232,7 @@ public class SearchServiceImpl implements SearchService {
      * @return 아이디 리스트.
      * @param <T> 도큐먼트 타입.
      */
-    
+
     private <T> List<Long> getHitIds(SearchHits<T> searchHits) {
         List<Long> hitIds = new ArrayList<>();
 

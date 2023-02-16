@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.review;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.review.request.ReviewCreateRequest;
 import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.entity.Review;
 import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.repository.ReviewRepository;
@@ -13,8 +14,10 @@ import com.nhnacademy.booklay.server.service.storage.FileService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +49,7 @@ public class ReviewService {
                 Integer reviewPoint = NON_IMAGE;
 
                 Long objectFileId = null;
-                if (!Objects.nonNull(file)) {
+                if (Objects.nonNull(file)) {
                     objectFileId = fileService.uploadFile(file).getId();
                     reviewPoint = INCLUDE_IMAGE;
                 }
@@ -78,26 +81,38 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<RetrieveReviewResponse> retrieveReviewListByProductId(Long productId,
-                                                                      Pageable pageable) {
+    public SearchPageResponse<RetrieveReviewResponse> retrieveReviewListByProductId(Long productId,
+                                                                                    Pageable pageable) {
 
         try {
-            List<Review> reviewList = reviewRepository.findReviewsByProductNoAndIsDeleted(productId, false, pageable);
+            Page<Review> reviewPage = reviewRepository.findReviewsByProductNoAndIsDeleted(productId, false, pageable);
 
             List<RetrieveReviewResponse> reviews = new ArrayList<>();
 
-            reviewList.forEach(
+            List<Review> allReviews = reviewRepository.findReviewsByProductNoAndIsDeleted(productId, false);
+
+            AtomicReference<Float> score = new AtomicReference<>((float) 0);
+            allReviews.forEach(x -> score.updateAndGet(v -> v + x.getScore()));
+
+            Float scoreAverage = score.get() / allReviews.size();
+
+            reviewPage.getContent().forEach(
                 review -> reviews.add(new RetrieveReviewResponse(review))
             );
 
-            return reviews;
+            return SearchPageResponse.<RetrieveReviewResponse>builder()
+                .totalHits(reviewPage.getTotalElements())
+                .pageNumber(reviewPage.getNumber())
+                .pageSize(reviewPage.getSize())
+                .totalPages(reviewPage.getTotalPages())
+                .data(reviews)
+                .averageScore(String.format("%.1f", scoreAverage))
+                .build();
+
         } catch (Exception e) {
-
-            log.error(" Retrieve Review List By ProductId : {}", e.getMessage());
+            log.error(" Retrieve Review List By ProductId Failed : {}", e.getMessage());
+            return null;
         }
-
-        return List.of();
-
 
     }
 

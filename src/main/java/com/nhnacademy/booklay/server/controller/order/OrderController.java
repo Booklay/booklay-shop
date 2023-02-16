@@ -55,7 +55,6 @@ public class OrderController {
                 .body(new OrderSheetSaveResponse(uuid, Boolean.TRUE, updatedOrderSheet.getPaymentAmount()));
     }
 
-
     @GetMapping("sheet/{orderId}")
     public ResponseEntity<OrderSheet> retrieveOrderSheet(@PathVariable String orderId){
         OrderSheet orderSheet = redisOrderService.retrieveOrderSheet(orderId);
@@ -75,9 +74,12 @@ public class OrderController {
     @PostMapping("receipt/{orderId}")
     public ResponseEntity<Long> saveOrderReceipt(@PathVariable String orderId){
         OrderSheet orderSheet = redisOrderService.retrieveOrderSheet(orderId);
-        Order order = complexOrderService.saveReceipt(orderSheet);
+        if (orderSheet.getOrderNo() == null){
+            Order order = complexOrderService.saveReceipt(orderSheet);
+            return ResponseEntity.status(HttpStatus.CREATED).body(order.getId());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderSheet.getOrderNo());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(order.getId());
     }
 
     @GetMapping("receipt/{orderNo}")

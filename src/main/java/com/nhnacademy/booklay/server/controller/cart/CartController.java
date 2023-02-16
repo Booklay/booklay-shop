@@ -54,8 +54,8 @@ public class CartController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCart(MemberInfo memberInfo,
-                                           @RequestParam(STRING_CART_ID) String cartId,
-                                           @RequestParam(STRING_PRODUCT_NO) Long productNo) {
+                                           @RequestParam(value = STRING_CART_ID, required = false) String cartId,
+                                           @RequestParam(value = STRING_PRODUCT_NO, required = false) Long productNo) {
         CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartId);
         cartServiceAndKeyDto.getCartService().deleteCartItem(cartServiceAndKeyDto.getKey(),
                                                              productNo);
@@ -74,14 +74,15 @@ public class CartController {
 
     @DeleteMapping("/buy")
     public ResponseEntity<Void> deleteCarts(MemberInfo memberInfo,
-                                            @RequestParam(STRING_CART_ID) String cartId,
-                                            @RequestParam(STRING_PRODUCT_NO_LIST)
+                                            @RequestParam(value = STRING_CART_ID,required = false) String cartId,
+                                            @RequestParam(value = STRING_PRODUCT_NO_LIST,required = false)
                                             List<Long> productNoList) {
-        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartId);
-        cartServiceAndKeyDto.getCartService().deleteCartItems(cartServiceAndKeyDto.getKey(),
-                                                              productNoList);
-        return ResponseEntity.ok()
-                             .build();
+        if (productNoList != null && !(memberInfo.getMemberNo() == null && cartId == null)){
+            CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartId);
+            cartServiceAndKeyDto.getCartService().deleteCartItems(cartServiceAndKeyDto.getKey(),
+                    productNoList);
+        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("login/{cartId}")

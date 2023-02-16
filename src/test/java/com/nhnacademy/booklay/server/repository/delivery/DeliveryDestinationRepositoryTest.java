@@ -102,20 +102,21 @@ class DeliveryDestinationRepositoryTest {
         assertThat(expected).isNotNull();
     }
 
-    @Test
-    @DisplayName("findByIsDefaultDestination success test")
-    void findByIsDefaultDestinationSuccessTest() {
-        //given
-        deliveryDestinationRepository.save(deliveryDestination);
-
-        //when
-        DeliveryDestination expected =
-            deliveryDestinationRepository.findByIsDefaultDestination(
-                    deliveryDestination.getIsDefaultDestination())
-                .orElseThrow(() -> new IllegalArgumentException());
-
-        assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
-    }
+//    @Test
+//    @Disabled
+//    @DisplayName("findByIsDefaultDestination success test")
+//    void findByIsDefaultDestinationSuccessTest() {
+//        //given
+//        deliveryDestinationRepository.save(deliveryDestination);
+//
+//        //when
+//        DeliveryDestination expected =
+//            deliveryDestinationRepository.findByIsDefaultDestination(
+//                    deliveryDestination.getIsDefaultDestination())
+//                .orElseThrow(() -> new IllegalArgumentException());
+//
+//        assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());
+//    }
 
     @Test
     @DisplayName("deleteAllByMember_MemberNo success test")

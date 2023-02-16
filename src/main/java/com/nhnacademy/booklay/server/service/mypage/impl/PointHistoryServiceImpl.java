@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.mypage.impl;
 
+import com.nhnacademy.booklay.server.dto.ApiEntity;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
 import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
@@ -7,8 +8,10 @@ import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveRespo
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
+import com.nhnacademy.booklay.server.service.RestService;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class PointHistoryServiceImpl implements PointHistoryService {
     private final PointHistoryRepository pointHistoryRepository;
     private final GetMemberService getMemberService;
+    private final RestService restService;
+    private final String gatewayIp;
+
 
     /**
      * 포인트 적립, 사용 시 내역 만드는 메소드
@@ -75,7 +81,7 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     }
 
     /**
-     * 회원 간 포인트 선물 시 처리하는 로직
+     * 회원 간 포인트 선물 시 처리하는 메소드
      *
      */
     @Override

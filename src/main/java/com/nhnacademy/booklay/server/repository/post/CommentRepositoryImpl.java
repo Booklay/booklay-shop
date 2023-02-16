@@ -40,16 +40,7 @@ public class CommentRepositoryImpl extends QuerydslRepositorySupport implements
 
     List<CommentResponse> commentList = from(comment).where(comment.postId.postId.eq(postId))
         .select(Projections.constructor(CommentResponse.class,
-            comment.commentId,
-            comment.memberId.memberNo,
-            comment.memberId.name,
-            comment.content,
-            comment.createdAt,
-            comment.updatedAt,
-            comment.realGroupNo,
-            comment.groupOrder,
-            comment.depth
-        ))
+            comment))
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())
         .fetch();

@@ -27,6 +27,7 @@ public class OrderSheet {
     private Long paymentMethod;
     private String orderId;
 
+    @Setter
     private Long memberNo;
     private String sender;
     private String senderPhoneNo;
@@ -38,4 +39,6 @@ public class OrderSheet {
     private String receiverPhoneNo;
     private String memo;
 
+    @Setter
+    private Long orderNo;
 }

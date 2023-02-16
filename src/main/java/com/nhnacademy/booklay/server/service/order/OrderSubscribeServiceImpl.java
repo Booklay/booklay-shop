@@ -28,7 +28,7 @@ public class OrderSubscribeServiceImpl implements OrderSubscribeService{
             .amounts(subscribeDto.getCount())
             .price(subscribeDto.getPrice())
             .startAt(LocalDate.now())
-            .finishAt(LocalDate.now().plusDays(subscribeDto.getCount()))
+            .finishAt(LocalDate.now().plusMonths(subscribeDto.getCount()))
             .build());
     }
 
@@ -48,7 +48,7 @@ public class OrderSubscribeServiceImpl implements OrderSubscribeService{
             .amounts(orderSubscribe.getAmounts()+renewMonth)
             .price(orderSubscribe.getPrice())
             .startAt(LocalDate.now())
-            .finishAt(LocalDate.now().plusMonths(orderSubscribe.getAmounts()+renewMonth))
+            .finishAt(LocalDate.now().plusMonths((long)orderSubscribe.getAmounts()+renewMonth))
             .build());
     }
 

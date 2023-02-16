@@ -28,12 +28,16 @@ public class DeliveryDestinationRepositoryImpl extends QuerydslRepositorySupport
             .innerJoin(gender).on(member.gender.id.eq(gender.id))
             .where(deliveryDestination.member.memberNo.eq(memberNo).and(member.deletedAt.isNull()))
             .select(Projections.constructor(DeliveryDestinationRetrieveResponse.class,
-                                            deliveryDestination.id,
-                                            member.memberNo,
-                                            deliveryDestination.name,
-                                            deliveryDestination.zipCode,
-                                            deliveryDestination.address,
-                                            deliveryDestination.isDefaultDestination))
+                deliveryDestination.id,
+                member.memberNo,
+                deliveryDestination.name,
+                deliveryDestination.zipCode,
+                deliveryDestination.address,
+                deliveryDestination.addressDetail,
+                deliveryDestination.addressSubDetail,
+                deliveryDestination.receiver,
+                deliveryDestination.receiverPhoneNo,
+                deliveryDestination.isDefaultDestination))
             .fetch();
     }
 }

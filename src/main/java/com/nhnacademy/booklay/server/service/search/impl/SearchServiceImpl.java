@@ -28,6 +28,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -85,6 +86,34 @@ public class SearchServiceImpl implements SearchService {
         return getSearchPageResponse(pageable, productDocumentSearchHits, "전체 상품");
 
     }
+//    @Override
+//    public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
+//
+//        Page<ProductAllInOneResponse> products = productRepository.retrieveProductsInPage(pageable);
+//        List<ProductDocument> productDocuments = new ArrayList<>();
+//
+//        if (!products.getContent().isEmpty()) {
+//            AtomicInteger count = new AtomicInteger(1);
+//            products.getContent().forEach(product -> {
+//                if (!product.getInfo().isDeleted()) {
+//                    productDocuments.add(ProductDocument.fromEntity(product));
+//                    log.info(" Docs Add Counts : {}", count.getAndIncrement());
+//                }
+//            });
+//        }
+//
+//        List<SearchProductResponse> list = convertHitsToResponse(productDocuments);
+//
+//        return SearchPageResponse.<SearchProductResponse>builder()
+//            .searchKeywords("전체 상품")
+//            .totalHits(products.getTotalElements())
+//            .pageNumber(pageable.getPageNumber())
+//            .pageSize(pageable.getPageSize())
+//            .totalPages((list.size() / pageable.getPageSize()) + 1)
+//            .data(list)
+//            .build();
+//
+//    }
 
     @Override
     public SearchPageResponse<SearchProductResponse> searchProductsByKeywords(
@@ -156,10 +185,8 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<SearchProductResponse> getLatestProducts() {
 
-        Query query = new NativeSearchQueryBuilder()
-            .withSorts(
-                SortBuilders.fieldSort("createdAt")
-            ).withMaxResults(8)
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+            .withSorts(SortBuilders.fieldSort("createdAt").order(SortOrder.DESC)).withMaxResults(8)
             .build();
 
         loggingQueryInfo(query);
@@ -191,8 +218,10 @@ public class SearchServiceImpl implements SearchService {
         if (!products.isEmpty()) {
             AtomicInteger count = new AtomicInteger(1);
             products.forEach(product -> {
-                productDocuments.add(ProductDocument.fromEntity(product));
-                log.info(" Docs Add Counts : {}", count.getAndIncrement());
+                if (!product.getInfo().isDeleted()) {
+                    productDocuments.add(ProductDocument.fromEntity(product));
+                    log.info(" Docs Add Counts : {}", count.getAndIncrement());
+                }
             });
 
             productDocumentRepository.saveAll(productDocuments);
@@ -206,16 +235,18 @@ public class SearchServiceImpl implements SearchService {
 
         List<SearchProductResponse> list = convertHitsToResponse(getHits(productDocumentSearchHits));
 
-        return new SearchPageResponse<>(
-            searchTitle,
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            list.size() / pageable.getPageSize(),
-            list);
+        return SearchPageResponse.<SearchProductResponse>builder()
+            .searchKeywords(searchTitle)
+            .totalHits(productDocumentSearchHits.getTotalHits())
+            .pageNumber(pageable.getPageNumber())
+            .pageSize(pageable.getPageSize())
+            .totalPages((list.size() / pageable.getPageSize()) + 1)
+            .data(list)
+            .build();
     }
 
 
-    private List<SearchProductResponse> convertHitsToResponse(List<ProductDocument> list) {
+    public static List<SearchProductResponse> convertHitsToResponse(List<ProductDocument> list) {
 
         List<SearchProductResponse> responses = new ArrayList<>();
 
@@ -231,6 +262,7 @@ public class SearchServiceImpl implements SearchService {
      * @return 아이디 리스트.
      * @param <T> 도큐먼트 타입.
      */
+
     private <T> List<Long> getHitIds(SearchHits<T> searchHits) {
         List<Long> hitIds = new ArrayList<>();
 

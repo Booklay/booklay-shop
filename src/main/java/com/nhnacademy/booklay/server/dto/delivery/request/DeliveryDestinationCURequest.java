@@ -17,17 +17,24 @@ public class DeliveryDestinationCURequest {
     @NotBlank
     private final String address;
     private final String addressDetail;
-    private final String addDetail;
+    private final String addressSubDetail;
+    @NotBlank
+    private final String receiver;
+    @NotBlank
+    private final String receiverPhoneNo;
     @NotNull
     private final Boolean isDefaultDestination;
 
     public DeliveryDestination toEntity(Member member) {
         return DeliveryDestination.builder()
-                                  .member(member)
-                                  .name(this.name)
-                                  .zipCode(this.zipCode)
-                                  .address(this.address+ " " + this.addressDetail + " " + this.addDetail)
-                                  .isDefaultDestination(this.isDefaultDestination)
-                                  .build();
+            .member(member)
+            .name(this.name)
+            .zipCode(this.zipCode)
+            .address(this.address).addressDetail(this.addressDetail)
+            .addressSubDetail(this.addressSubDetail)
+            .receiver(this.receiver)
+            .receiverPhoneNo(this.receiverPhoneNo)
+            .isDefaultDestination(this.isDefaultDestination)
+            .build();
     }
 }

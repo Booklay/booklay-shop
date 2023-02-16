@@ -22,6 +22,7 @@ public class PostRepositoryImpl extends QuerydslRepositorySupport implements Pos
     QPost post = QPost.post;
 
     List<PostResponse> content = from(post).where(post.productId.id.eq(productId))
+        .orderBy(post.realGroupNo.desc(), post.groupOrder.asc())
         .select(Projections.constructor(PostResponse.class, post))
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())
@@ -31,5 +32,53 @@ public class PostRepositoryImpl extends QuerydslRepositorySupport implements Pos
         .where(post.productId.id.eq(productId))
         .select(post.count());
     return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+  }
+
+  @Override
+  public Page<PostResponse> findAllNotice(Integer postTypeNo, Pageable pageable) {
+    QPost post = QPost.post;
+
+    List<PostResponse> content = from(post).where(post.postTypeId.postTypeId.eq(postTypeNo))
+        .orderBy(post.createdAt.desc())
+        .select(Projections.constructor(PostResponse.class, post))
+        .limit(pageable.getPageSize())
+        .offset(pageable.getOffset())
+        .fetch();
+
+    JPQLQuery<Long> count = from(post)
+        .where(post.postTypeId.postTypeId.eq(postTypeNo))
+        .select(post.count());
+    return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+  }
+
+  @Override
+  public void updateUpperPostByGroupNoPostId(Long groupNo, Integer rebaseOrder) {
+    QPost post = QPost.post;
+    update(post).where(post.realGroupNo.eq(groupNo), post.groupOrder.goe(rebaseOrder))
+        .set(post.groupOrder, post.groupOrder.add(1)).execute();
+  }
+
+  @Override
+  public Long confirmAnswerByPostId(Long postId) {
+    QPost post = QPost.post;
+
+    update(post).where(post.realGroupNo.eq(postId)).set(post.isAnswered, true).execute();
+    return postId;
+  }
+
+  @Override
+  public Integer countChildByGroupNo(Long groupNo) {
+    QPost post = QPost.post;
+
+    return Math.toIntExact(
+        from(post).where(post.realGroupNo.eq(groupNo)).select(post.count()).fetchFirst());
+  }
+
+  @Override
+  public void deleteByPostIdAndMemberNo(Long postId, Long memberNo) {
+    QPost post = QPost.post;
+
+    update(post).where(post.postId.eq(postId), post.memberId.memberNo.eq(memberNo))
+        .set(post.isDeleted, true).execute();
   }
 }

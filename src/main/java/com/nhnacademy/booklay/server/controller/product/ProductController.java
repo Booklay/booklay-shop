@@ -3,6 +3,9 @@ package com.nhnacademy.booklay.server.controller.product;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
@@ -11,11 +14,14 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,6 +67,35 @@ public class ProductController {
   public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
       throws IOException {
     return productRelationService.retrieveRecommendProducts(productId);
+  }
+
+  @GetMapping("/all")
+  public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchAll(Pageable pageable) {
+
+    SearchPageResponse<SearchProductResponse> pageResponse = productService.getAllProducts(pageable);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(pageResponse);
+  }
+
+  @GetMapping("/latest")
+  public ResponseEntity<List<SearchProductResponse>> getLatestProduct() {
+
+    List<SearchProductResponse> pageResponse = productService.getLatestEights();
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(pageResponse);
+  }
+
+  @PostMapping("/request")
+  public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchByRequest(
+      @RequestBody SearchIdRequest request, Pageable pageable) {
+
+    SearchPageResponse<SearchProductResponse> pageResponse =
+        productService.retrieveProductByRequest(request, PageRequest.of(pageable.getPageNumber(), 16));
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(pageResponse);
   }
 
 }

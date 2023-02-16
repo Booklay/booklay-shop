@@ -109,7 +109,4 @@ class PostServiceImplTest {
     assertThat(result).isEqualTo(savePost.getPostId());
   }
 
-  @Test
-  void retrieveProductQNA() {
-  }
 }

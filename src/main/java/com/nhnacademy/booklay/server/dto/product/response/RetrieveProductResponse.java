@@ -44,7 +44,7 @@ public class RetrieveProductResponse {
   public RetrieveProductResponse(Product product, ProductDetail productDetail,
       List<RetrieveAuthorResponse> authorsNo) {
     this.productId = product.getId();
-    this.objectFileId = product.getObjectFile().getId();
+    this.objectFileId = product.getThumbnailNo();
     this.title = product.getTitle();
     this.price = product.getPrice();
     this.pointRate = product.getPointRate();
@@ -57,7 +57,7 @@ public class RetrieveProductResponse {
 
   public RetrieveProductResponse(Product product, Subscribe subscribe) {
     this.productId = product.getId();
-    this.objectFileId = product.getObjectFile().getId();
+    this.objectFileId = product.getThumbnailNo();
     this.title = product.getTitle();
     this.price = product.getPrice();
     this.pointRate = product.getPointRate();

@@ -13,11 +13,13 @@ import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,8 +98,10 @@ public class ProductAdminController {
                 consumes = { MediaType.APPLICATION_JSON_VALUE,
                     MediaType.MULTIPART_FORM_DATA_VALUE })
     public Long postBookUpdater(@RequestPart CreateUpdateProductBookRequest request,
-                                @RequestPart MultipartFile imgFile) throws Exception {
-        request.setImage(imgFile);
+                                @Nullable @RequestPart MultipartFile imgFile) throws Exception {
+        if(Objects.nonNull(imgFile)) {
+            request.setImage(imgFile);
+        }
         return productService.updateBookProduct(request);
     }
 
@@ -137,8 +141,10 @@ public class ProductAdminController {
                 consumes = { MediaType.APPLICATION_JSON_VALUE,
                     MediaType.MULTIPART_FORM_DATA_VALUE })
     public Long postSubscribeUpdater(@RequestPart CreateUpdateProductSubscribeRequest request,
-                                     @RequestPart MultipartFile imgFile) throws Exception {
-        request.setImage(imgFile);
+        @Nullable @RequestPart MultipartFile imgFile) throws Exception {
+        if(Objects.nonNull(imgFile)) {
+            request.setImage(imgFile);
+        }
         return productService.updateSubscribeProduct(request);
     }
 

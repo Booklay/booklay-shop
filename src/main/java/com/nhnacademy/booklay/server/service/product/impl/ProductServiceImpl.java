@@ -62,6 +62,7 @@ public class ProductServiceImpl implements ProductService {
   private static final Long NOT_FOUND_PRODUCT_ID = 33L;
   private static final Integer RECENT_DAY = 7;
 
+  private static final String PRODUCT_NOT_FOUND = "product not found";
   /**
    * 서적 상품 생성
    *
@@ -112,9 +113,7 @@ public class ProductServiceImpl implements ProductService {
     // subscribe
     Subscribe subscribe = splitSubscribe(savedProduct);
 
-    if (request.getPublisher() != null) {
-      subscribe.setPublisher(request.getPublisher());
-    }
+    subscribe.setPublisher(request.getPublisher());
     subscribeRepository.save(subscribe);
     return savedProduct.getId();
   }
@@ -128,7 +127,6 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional(readOnly = true)
   public ProductAllInOneResponse retrieveBookData(Long id) {
-    //TODO: 못찾는거 예외처리
     return productRepository.retrieveProductById(id);
   }
 
@@ -142,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
     if (!productRepository.existsById(request.getProductId())) {
-      throw new NotFoundException(Product.class, "product not found");
+      throw new NotFoundException(Product.class, PRODUCT_NOT_FOUND);
     }
     Product product = splitProduct(request);
     product.setId(request.getProductId());
@@ -181,7 +179,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public void softDelete(Long productId) {
     Product targetProduct = productRepository.findById(productId)
-        .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+        .orElseThrow(() -> new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
 
     targetProduct.setDeleted(true);
 
@@ -216,9 +214,7 @@ public class ProductServiceImpl implements ProductService {
     Subscribe subscribe = splitSubscribe(savedProduct);
     subscribe.setId(request.getSubscribeId());
 
-    if (Objects.nonNull(request.getPublisher())) {
-      subscribe.setPublisher(request.getPublisher());
-    }
+    subscribe.setPublisher(request.getPublisher());
 
     if (!subscribeRepository.existsById(subscribe.getId())) {
       throw new IllegalArgumentException();
@@ -264,9 +260,16 @@ public class ProductServiceImpl implements ProductService {
    * @throws IOException
    */
   private Product splitProduct(CreateUpdateProductBookRequest request) throws IOException {
-    MultipartFile thumbnail = request.getImage();
+    Long objectFileNo = 0L;
 
-    ObjectFile objectFile = fileService.uploadFile(thumbnail);
+    if (Objects.nonNull(request.getImage())) {
+      MultipartFile thumbnail = request.getImage();
+      ObjectFile objectFile = fileService.uploadFile(thumbnail);
+      objectFileNo = objectFile.getId();
+    }
+    if (Objects.isNull(request.getImage())) {
+      objectFileNo = request.getOriginalImage();
+    }
 
     return Product.builder()
         .price(request.getPrice())
@@ -275,7 +278,7 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .objectFile(objectFile)
+        .thumbnailNo(objectFileNo)
         .isSelling(request.getSelling())
         .build();
   }
@@ -334,9 +337,16 @@ public class ProductServiceImpl implements ProductService {
    */
   private Product splitProductSubscribe(CreateUpdateProductSubscribeRequest request)
       throws IOException {
-    MultipartFile thumbnail = request.getImage();
+    Long objectFileNo = 0L;
 
-    ObjectFile objectFile = fileService.uploadFile(thumbnail);
+    if (Objects.nonNull(request.getImage())) {
+      MultipartFile thumbnail = request.getImage();
+      ObjectFile objectFile = fileService.uploadFile(thumbnail);
+      objectFileNo = objectFile.getId();
+    }
+    if (Objects.isNull(request.getImage())) {
+      objectFileNo = request.getOriginalImage();
+    }
 
     return Product.builder()
         .price(request.getPrice())
@@ -345,7 +355,7 @@ public class ProductServiceImpl implements ProductService {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .objectFile(objectFile)
+        .thumbnailNo(objectFileNo)
         .isSelling(request.getSelling())
         .build();
   }
@@ -354,7 +364,6 @@ public class ProductServiceImpl implements ProductService {
    * 구독 상품 생성 수정 dto에서 subscribe 분리
    *
    * @param product
-   *
    * @return
    */
   private Subscribe splitSubscribe(Product product) {
@@ -402,8 +411,6 @@ public class ProductServiceImpl implements ProductService {
     return new PageImpl<>(assembledContent, products.getPageable(),
         products.getTotalElements());
   }
-
-
 
 
   /**
@@ -467,7 +474,7 @@ public class ProductServiceImpl implements ProductService {
 
     for (int i = 0; i < productIds.size(); i++) {
       Product product = productRepository.findById(productIds.get(i))
-          .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
+          .orElseThrow(() -> new NotFoundException(Product.class, PRODUCT_NOT_FOUND));
 
       // 책 상품이라면
       if (productDetailRepository.existsProductDetailByProductId(product.getId())) {
@@ -519,12 +526,6 @@ public class ProductServiceImpl implements ProductService {
   public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
     return productRepository.retrieveProductsInPage(pageable);
   }
-
-//  @Transactional(readOnly = true)
-//  @Override
-//  public Page<ProductAllInOneResponse> retrieveProductListByProductNoList(List<Long> productNoList, Pageable pageable) {
-//    return productRepository.findProductPage(productNoList, pageable);
-//  }
 
   @Override
   public ProductAllInOneResponse findProductById(Long productId) {

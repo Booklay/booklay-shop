@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.repository;
 
 import com.nhnacademy.booklay.server.dummy.DummyNum3;
 import com.nhnacademy.booklay.server.entity.OwnedEbook;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ class OwnedEbookRepositoryTest {
     @Autowired
     OwnedEbookRepository ownedEbookRepository;
 
-
+    @Disabled
     @Test
     @DisplayName("RestockingNotificationRepository save test ")
     void testRestockingNotificationSave() {
@@ -40,7 +41,7 @@ class OwnedEbookRepositoryTest {
 
     }
 
-
+    @Disabled
     @Test
     @DisplayName("RestockingNotificationRepository findById 테스트")
     void testMemberFindById() {

@@ -52,6 +52,40 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    /**
+     * 회원가입 시 아이디 중복체크 메소드
+     * @param memberId
+     * @return
+     */
+    @GetMapping("/exist/{memberId}")
+    public ResponseEntity<Boolean> existMemberId(@PathVariable String memberId){
+        boolean result = memberService.checkMemberId(memberId);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(result);
+    }
+    /**
+     * 회원가입 시 닉네임 중복체크 메소드
+     * @param nickName
+     * @return
+     */
+    @GetMapping("/exist/nickName/{nickName}")
+    public ResponseEntity<Boolean> existNickName(@PathVariable String nickName){
+        boolean result = memberService.checkNickName(nickName);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(result);
+    }
+    /**
+     * 회원가입 시 이메일 중복체크 메소드
+     * @param eMail
+     * @return
+     */
+    @GetMapping("/exist/eMail/{eMail}")
+    public ResponseEntity<Boolean> existEMail(@PathVariable String eMail){
+        boolean result = memberService.checkEMail(eMail);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(result);
+    }
+
     @GetMapping("/{memberNo}")
     public ResponseEntity<MemberRetrieveResponse> retrieveMember(@PathVariable Long memberNo) {
 

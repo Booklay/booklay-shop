@@ -132,6 +132,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
                                             member.updatedAt,
                                             member.deletedAt,
                                             member.isBlocked))
+            .distinct()
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();

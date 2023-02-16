@@ -64,4 +64,10 @@ public interface MemberService {
     MemberGradeChartRetrieveResponse retrieveMemberGradeChart();
 
     MemberMainRetrieveResponse retrieveMemberMain(Long memberNo);
+
+    boolean checkMemberId(String memberId);
+
+    boolean checkNickName(String nickName);
+
+    boolean checkEMail(String eMail);
 }

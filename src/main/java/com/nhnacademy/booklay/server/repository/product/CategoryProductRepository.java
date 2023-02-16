@@ -17,4 +17,6 @@ public interface CategoryProductRepository extends
 
     List<CategoryProduct> findAllByPk_ProductId(Long productId);
     List<CategoryProduct> findAllByPk_ProductIdIn(List<Long> productId);
+
+    List<CategoryProduct> findByCategory_Id(Long categoryId);
 }

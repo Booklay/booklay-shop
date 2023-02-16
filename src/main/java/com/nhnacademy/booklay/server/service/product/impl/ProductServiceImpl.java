@@ -8,6 +8,7 @@ import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubs
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.entity.Author;
@@ -19,6 +20,7 @@ import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.entity.ProductTag;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
@@ -29,7 +31,9 @@ import com.nhnacademy.booklay.server.repository.product.CategoryProductRepositor
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
+import com.nhnacademy.booklay.server.repository.product.TagRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.storage.FileService;
 import java.io.IOException;
@@ -56,6 +60,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
+  private final TagRepository tagRepository;
   private final CategoryRepository categoryRepository;
   private final ProductDetailRepository productDetailRepository;
   private final CategoryProductRepository categoryProductRepository;
@@ -64,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
   private final SubscribeRepository subscribeRepository;
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
+  private final ProductTagRepository productTagRepository;
   private static final Long NOT_FOUND_PRODUCT_ID = 33L;
   private static final Integer RECENT_DAY = 7;
 
@@ -551,6 +557,7 @@ public class ProductServiceImpl implements ProductService {
       product.setSelling(false);
       productRepository.save(product);
     }
+
     productDetailRepository.save(productDetail);
 
   }
@@ -558,20 +565,12 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
 
-    Page<ProductAllInOneResponse> products = productRepository.retrieveProductsInPage(pageable);
+    Page<Product> page = productRepository.findNotDeletedByPageable(pageable);
 
-    List<ProductDocument> productDocuments = getDocumentList(products.getContent());
+    List<ProductAllInOneResponse> all = getProducts(page.getContent());
 
-    List<SearchProductResponse> list = convertHitsToResponse(productDocuments);
+    return getSearchPageResponse("전체 상품", page, all);
 
-    return SearchPageResponse.<SearchProductResponse>builder()
-        .searchKeywords("전체 상품")
-        .totalHits(products.getTotalElements())
-        .pageNumber(pageable.getPageNumber())
-        .pageSize(pageable.getPageSize())
-        .totalPages((list.size() / pageable.getPageSize()) + 1)
-        .data(list)
-        .build();
   }
 
   @Override
@@ -585,12 +584,52 @@ public class ProductServiceImpl implements ProductService {
     return convertHitsToResponse(productDocuments);
   }
 
+
+  @Override
+  public SearchPageResponse<SearchProductResponse> retrieveProductByRequest(SearchIdRequest request, Pageable pageable) {
+
+    List<Long> ids = new ArrayList<>();
+    String title = "알 수 없는 검색 정보";
+
+    if (request.getClassification().equals("categories")) {
+      List<CategoryProduct> list = categoryProductRepository.findByCategory_Id(request.getId());
+      title = Objects.requireNonNull(categoryRepository.findById(request.getId())).get().getName();
+      list.forEach(x -> ids.add(x.getProduct().getId()));
+    }else if (request.getClassification().equals("tags")) {
+      List<ProductTag> list = productTagRepository.findAllByTagId(request.getId());
+      list.forEach(x -> ids.add(x.getProduct().getId()));
+      title = Objects.requireNonNull(tagRepository.findById(request.getId())).get().getName();
+    }else if (request.getClassification().equals("authors")) {
+      List<ProductAuthor> list = productAuthorRepository.findAllByAuthor_AuthorId(request.getId());
+      list.forEach(x -> ids.add(x.getProductDetail().getProduct().getId()));
+      title = Objects.requireNonNull(authorRepository.findById(request.getId())).get().getName();
+    }
+
+    if (ids.isEmpty()) {
+      return getSearchPageResponse(title, Page.empty(), List.of());
+    } else {
+      Page<Product> page = productRepository.findByIdInAndIsDeleted(ids, false, pageable);
+      List<ProductAllInOneResponse> all = getProducts(page.getContent());
+      return getSearchPageResponse(title, page, all);
+    }
+
+  }
+
+
   private List<ProductAllInOneResponse> getProducts(List<Product> list) {
     List<Long> ids = new ArrayList<>();
 
     list.forEach(x -> ids.add(x.getId()));
 
     return productRepository.retrieveProductsByIds(ids);
+  }
+
+  private Page<ProductAllInOneResponse> getProducts(List<Product> list, Pageable pageable) {
+    List<Long> ids = new ArrayList<>();
+
+    list.forEach(x -> ids.add(x.getId()));
+
+    return productRepository.retrieveProductsByIdsInPage(ids, pageable);
   }
 
   private static List<ProductDocument> getDocumentList(List<ProductAllInOneResponse> list) {
@@ -603,6 +642,23 @@ public class ProductServiceImpl implements ProductService {
         }});}
 
     return productDocuments;
+  }
+
+  private SearchPageResponse<SearchProductResponse> getSearchPageResponse(
+      String title, Page<Product> page, List<ProductAllInOneResponse> list) {
+
+    List<ProductDocument> productDocuments = getDocumentList(list);
+
+    List<SearchProductResponse> responses = convertHitsToResponse(productDocuments);
+
+    return SearchPageResponse.<SearchProductResponse>builder()
+        .searchKeywords(title)
+        .totalHits(page.getTotalElements())
+        .pageNumber(page.getNumber())
+        .pageSize(page.getSize())
+        .totalPages(page.getTotalPages())
+        .data(responses)
+        .build();
   }
 
 }

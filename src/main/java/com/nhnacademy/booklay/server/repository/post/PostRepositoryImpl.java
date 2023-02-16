@@ -35,6 +35,23 @@ public class PostRepositoryImpl extends QuerydslRepositorySupport implements Pos
   }
 
   @Override
+  public Page<PostResponse> findAllNotice(Integer postTypeNo, Pageable pageable) {
+    QPost post = QPost.post;
+
+    List<PostResponse> content = from(post).where(post.postTypeId.postTypeId.eq(postTypeNo))
+        .orderBy(post.createdAt.desc())
+        .select(Projections.constructor(PostResponse.class, post))
+        .limit(pageable.getPageSize())
+        .offset(pageable.getOffset())
+        .fetch();
+
+    JPQLQuery<Long> count = from(post)
+        .where(post.postTypeId.postTypeId.eq(postTypeNo))
+        .select(post.count());
+    return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+  }
+
+  @Override
   public void updateUpperPostByGroupNoPostId(Long groupNo, Integer rebaseOrder) {
     QPost post = QPost.post;
     update(post).where(post.realGroupNo.eq(groupNo), post.groupOrder.goe(rebaseOrder))

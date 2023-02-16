@@ -46,6 +46,11 @@ public class BoardController {
         .body(result);
   }
 
+  /**
+   * 게시글 수정
+   * @param request
+   * @return
+   */
   @PutMapping
   public ResponseEntity<Long> updatePost(@RequestBody BoardPostUpdateRequest request) {
     Long result = postService.updatePost(request);
@@ -65,6 +70,16 @@ public class BoardController {
   public ResponseEntity<PageResponse<PostResponse>> retrieveProductQNA(@PathVariable Long productId,
       Pageable pageable) {
     Page<PostResponse> content = postService.retrieveProductQNA(productId, pageable);
+
+    PageResponse<PostResponse> response = new PageResponse<>(content);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(response);
+  }
+
+  @GetMapping("/notice")
+  public ResponseEntity<PageResponse<PostResponse>> retrieveNotice(Pageable pageable){
+    Page<PostResponse> content = postService.retrieveNotice(pageable);
 
     PageResponse<PostResponse> response = new PageResponse<>(content);
 

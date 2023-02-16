@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @Slf4j
 @Configuration
 @EnableElasticsearchRepositories // elasticsearch repository 허용
-public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
+public class ElasticSearchConfig extends AbstractElasticsearchConfiguration implements AutoCloseable {
 
     @Value("${booklay.elasticsearch.uri}")
     private String hostAndPort;
@@ -27,12 +27,24 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
             .withSocketTimeout(30000)
             .build();
 
-        try{
+        try {
             return RestClients.create(clientConfiguration).rest();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ElasticsearchException(e.getMessage());
         }
 
     }
 
+    @Override
+    public void close() throws Exception {
+        ClientConfiguration clientConfiguration = ClientConfiguration.builder()
+            .connectedTo(hostAndPort)
+            .withConnectTimeout(10000)
+            .withSocketTimeout(30000)
+            .build();
+
+
+        RestClients.create(clientConfiguration).close();
+
+    }
 }

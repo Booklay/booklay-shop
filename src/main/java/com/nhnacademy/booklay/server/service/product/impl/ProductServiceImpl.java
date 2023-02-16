@@ -22,6 +22,7 @@ import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.ProductTag;
 import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -74,6 +76,7 @@ public class ProductServiceImpl implements ProductService {
   private static final Integer RECENT_DAY = 7;
 
   private static final String PRODUCT_NOT_FOUND = "product not found";
+  private static final String UNKNOWN_SEARCH = "알 수 없는 검색 정보";
   /**
    * 서적 상품 생성
    *
@@ -589,20 +592,23 @@ public class ProductServiceImpl implements ProductService {
   public SearchPageResponse<SearchProductResponse> retrieveProductByRequest(SearchIdRequest request, Pageable pageable) {
 
     List<Long> ids = new ArrayList<>();
-    String title = "알 수 없는 검색 정보";
+    String title;
 
     if (request.getClassification().equals("categories")) {
       List<CategoryProduct> list = categoryProductRepository.findByCategory_Id(request.getId());
-      title = Objects.requireNonNull(categoryRepository.findById(request.getId())).get().getName();
       list.forEach(x -> ids.add(x.getProduct().getId()));
+      Optional<Category> category = categoryRepository.findById(request.getId());
+      title = category.isPresent() ? category.get().getName() : UNKNOWN_SEARCH;
     }else if (request.getClassification().equals("tags")) {
       List<ProductTag> list = productTagRepository.findAllByTagId(request.getId());
       list.forEach(x -> ids.add(x.getProduct().getId()));
-      title = Objects.requireNonNull(tagRepository.findById(request.getId())).get().getName();
+      Optional<Tag> tag = tagRepository.findById(request.getId());
+      title = tag.isPresent() ? tag.get().getName() : UNKNOWN_SEARCH;
     }else if (request.getClassification().equals("authors")) {
       List<ProductAuthor> list = productAuthorRepository.findAllByAuthor_AuthorId(request.getId());
       list.forEach(x -> ids.add(x.getProductDetail().getProduct().getId()));
-      title = Objects.requireNonNull(authorRepository.findById(request.getId())).get().getName();
+      Optional<Author> author = authorRepository.findById(request.getId());
+      title = author.isPresent() ? author.get().getName() : UNKNOWN_SEARCH;
     }
 
     if (ids.isEmpty()) {
@@ -622,14 +628,6 @@ public class ProductServiceImpl implements ProductService {
     list.forEach(x -> ids.add(x.getId()));
 
     return productRepository.retrieveProductsByIds(ids);
-  }
-
-  private Page<ProductAllInOneResponse> getProducts(List<Product> list, Pageable pageable) {
-    List<Long> ids = new ArrayList<>();
-
-    list.forEach(x -> ids.add(x.getId()));
-
-    return productRepository.retrieveProductsByIdsInPage(ids, pageable);
   }
 
   private static List<ProductDocument> getDocumentList(List<ProductAllInOneResponse> list) {

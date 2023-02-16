@@ -74,8 +74,8 @@ public class DummyCart {
         .memberId(dummyMember)
         .groupNo(null)
         .content("dummy test comment")
-        .groupOrder(0L)
-        .depth(0L)
+        .groupOrder(0)
+        .depth(1)
         .isDeleted(false)
         .build();
 
@@ -90,7 +90,7 @@ public class DummyCart {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .objectFile(getDummyFile())
+        .thumbnailNo(1L)
         .isSelling(request.getSelling())
         .build();
   }
@@ -103,7 +103,7 @@ public class DummyCart {
         .title(request.getTitle())
         .shortDescription(request.getShortDescription())
         .longDescription(request.getLongDescription())
-        .objectFile(getDummyFile())
+        .thumbnailNo(1L)
         .isSelling(request.getSelling())
         .build();
   }

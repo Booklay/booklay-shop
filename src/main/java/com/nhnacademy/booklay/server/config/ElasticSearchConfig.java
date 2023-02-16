@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +23,16 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
         ClientConfiguration clientConfiguration = ClientConfiguration.builder()
             .connectedTo(hostAndPort)
+            .withConnectTimeout(10000)
+            .withSocketTimeout(30000)
             .build();
 
-        return RestClients.create(clientConfiguration).rest();
+        try{
+            return RestClients.create(clientConfiguration).rest();
+        }catch (Exception e){
+            throw new ElasticsearchException(e.getMessage());
+        }
+
     }
 
 }

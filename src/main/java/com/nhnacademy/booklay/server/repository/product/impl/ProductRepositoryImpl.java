@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.repository.product.impl;
 
+
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.product.author.AuthorsInProduct;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -22,7 +23,6 @@ import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.product.ProductRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
 
@@ -104,7 +105,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
      */
     @Override
     public List<ProductAllInOneResponse> retrieveAllProducts() {
-        return retrieveProductsByCondition(List.of(), Pageable.unpaged());
+        return retrieveProductsByCondition(List.of(), Pageable.unpaged(), Sort.unsorted());
     }
 
     /**
@@ -118,7 +119,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     JPQLQuery<Long> count = from(product)
         .select(product.count());
 
-        List<ProductAllInOneResponse> productList = retrieveProductsByCondition(List.of(), pageable);
+        List<ProductAllInOneResponse> productList = retrieveProductsByCondition(List.of(), pageable, Sort.unsorted());
 
     return PageableExecutionUtils.getPage(productList, pageable, count::fetchFirst);
   }
@@ -128,7 +129,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
      */
     @Override
     public List<ProductAllInOneResponse> retrieveProductsByIds(List<Long> ids) {
-        return retrieveProductsByCondition(ids, Pageable.unpaged());
+        return retrieveProductsByCondition(ids, Pageable.unpaged(), Sort.unsorted());
     }
 
     /**
@@ -142,7 +143,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
     JPQLQuery<Long> count = from(product)
         .select(product.count());
 
-        List<ProductAllInOneResponse> productList = retrieveProductsByCondition(ids, pageable);
+        List<ProductAllInOneResponse> productList = retrieveProductsByCondition(ids, pageable, Sort.unsorted());
 
     return PageableExecutionUtils.getPage(productList, pageable, count::fetchFirst);
   }
@@ -155,7 +156,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
 
     log.info("요청된 번호 : {}", id);
 
-        return retrieveProductsByCondition(List.of(id), Pageable.unpaged())
+        return retrieveProductsByCondition(List.of(id), Pageable.unpaged(), Sort.unsorted())
             .stream()
             .findFirst()
             .orElseThrow(() -> new NotFoundException(Product.class, "존재하지 않는 상품 번호입니다."));
@@ -165,7 +166,7 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
      * 상품에 대한 조인 쿼리들을 매개변수에 따라 쿼리를 추가하고 fetch() 후에 리턴하는 메소드.
      */
     @Override
-    public List<ProductAllInOneResponse> retrieveProductsByCondition(List<Long> ids, Pageable pageable) {
+    public List<ProductAllInOneResponse> retrieveProductsByCondition(List<Long> ids, Pageable pageable, Sort sort) {
 
     QProduct product = QProduct.product;
     QProductTag productTag = QProductTag.productTag;
@@ -308,12 +309,12 @@ public class ProductRepositoryImpl extends QuerydslRepositorySupport implements
         QProductDetail productDetail = QProductDetail.productDetail;
 
         List<AuthorsInProduct> authorsInProductList = query.where(productDetail.product.id.eq(productId)).fetch();
-        List<RetrieveAuthorResponse> authorList = authorsInProductList.stream()
-            .map(authors->authors.getAuthor())
-            .collect(Collectors.toList());;
 
-        return authorList;
+      return authorsInProductList.stream()
+          .map(AuthorsInProduct::getAuthor)
+          .collect(Collectors.toList());
     }
+
 }
 
 

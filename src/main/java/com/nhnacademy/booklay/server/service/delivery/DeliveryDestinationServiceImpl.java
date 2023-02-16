@@ -26,9 +26,10 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     private final MemberRepository memberRepository;
     private final GetMemberService getMemberService;
 
-    private void releaseDefaultDeliveryDestination(Boolean isDefaultDestination) {
+    private void releaseDefaultDeliveryDestination(Boolean isDefaultDestination, Long memberNo) {
         Optional<DeliveryDestination> deliveryDestinationOp =
-            deliveryDestinationRepository.findByIsDefaultDestination(true);
+            deliveryDestinationRepository.findByIsDefaultDestinationAndMember_MemberNo(true,
+                memberNo);
         if (deliveryDestinationOp.isPresent() && isDefaultDestination) {
             deliveryDestinationOp.get().setIsDefaultDestination(false);
         }
@@ -40,7 +41,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         Member member = memberRepository.findByMemberNo(memberNo)
                                         .orElseThrow(() -> new MemberNotFoundException(memberNo));
 
-        releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination());
+        releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination(), memberNo);
 
         checkDeliveryDestinationLimit(memberNo);
 
@@ -79,7 +80,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         getMemberService.getMemberNo(memberNo);
         DeliveryDestination deliveryDestination = checkExistsDeliveryDestination(addressNo);
 
-        releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination());
+        releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination(), memberNo);
 
         deliveryDestination.update(requestDto);
     }

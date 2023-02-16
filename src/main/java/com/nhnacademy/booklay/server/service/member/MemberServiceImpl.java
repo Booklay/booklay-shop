@@ -11,7 +11,9 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResp
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Gender;
@@ -260,6 +262,41 @@ public class MemberServiceImpl implements MemberService {
     public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
         //TODO : 객체 만들어서 리턴하기
         return MemberGradeChartRetrieveResponse.builder().build();
+    }
+
+    /**
+     * myPage main을 위한 메소드
+     * 개인정보 마스킹처리
+     *
+     * @param memberNo
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public MemberMainRetrieveResponse retrieveMemberMain(Long memberNo) {
+        Member member = getMemberService.getValidMemberByMemberNo(memberNo);
+        MemberGrade grade = memberGradeRepository.retrieveCurrentMemberGrade(memberNo)
+            .orElseThrow();
+        TotalPointRetrieveResponse point =
+            pointHistoryRepository.retrieveLatestPointHistory(memberNo)
+                .orElse(new TotalPointRetrieveResponse(null, 0));
+
+        MemberMainRetrieveResponse response = MemberMainRetrieveResponse.builder()
+            .memberNo(memberNo)
+            .gender(member.getGender().getName())
+            .memberId(member.getMemberId())
+            .nickname(member.getNickname())
+            .name(member.getName())
+            .birthday(member.getBirthday())
+            .phoneNo(member.getPhoneNo())
+            .email(member.getEmail())
+            .memberGrade(grade.getName())
+            .currentTotalPoint(point.getTotalPoint())
+            .build();
+
+        response.maskingMember();
+
+        return response;
     }
 
     @Override

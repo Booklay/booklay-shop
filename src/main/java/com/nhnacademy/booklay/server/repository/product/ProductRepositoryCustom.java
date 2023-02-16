@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.entity.Product;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
@@ -24,11 +25,12 @@ public interface ProductRepositoryCustom {
 
     List<ProductAllInOneResponse> retrieveProductsByIds(List<Long> ids);
 
-    List<ProductAllInOneResponse> retrieveProductsByCondition(List<Long> ids, Pageable pageable);
+    List<ProductAllInOneResponse> retrieveProductsByCondition(List<Long> ids, Pageable pageable, Sort sort);
 
     ProductAllInOneResponse retrieveProductById(Long id);
 
     List<ProductAllInOneResponse> retrieveAllProducts();
 
     List<RetrieveAuthorResponse> getAuthorsByProductId(Long productId);
+
 }

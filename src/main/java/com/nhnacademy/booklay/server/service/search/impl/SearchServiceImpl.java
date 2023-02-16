@@ -29,6 +29,7 @@ import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -70,20 +71,48 @@ public class SearchServiceImpl implements SearchService {
         this.operations = operations;
     }
 
+//    @Override
+//    public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
+//
+//        Query query = new NativeSearchQueryBuilder()
+//            .withQuery(
+//                QueryBuilders.matchAllQuery()
+//            ).withPageable(pageable).build();
+//
+//        loggingQueryInfo(query);
+//
+//        SearchHits<ProductDocument>
+//            productDocumentSearchHits = operations.search(query, ProductDocument.class);
+//
+//        return getSearchPageResponse(pageable, productDocumentSearchHits, "전체 상품");
+//
+//    }
     @Override
     public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
 
-        Query query = new NativeSearchQueryBuilder()
-            .withQuery(
-                QueryBuilders.matchAllQuery()
-            ).withPageable(pageable).build();
+        Page<ProductAllInOneResponse> products = productRepository.retrieveProductsInPage(pageable);
+        List<ProductDocument> productDocuments = new ArrayList<>();
 
-        loggingQueryInfo(query);
+        if (!products.getContent().isEmpty()) {
+            AtomicInteger count = new AtomicInteger(1);
+            products.getContent().forEach(product -> {
+                if (!product.getInfo().isDeleted()) {
+                    productDocuments.add(ProductDocument.fromEntity(product));
+                    log.info(" Docs Add Counts : {}", count.getAndIncrement());
+                }
+            });
+        }
 
-        SearchHits<ProductDocument>
-            productDocumentSearchHits = operations.search(query, ProductDocument.class);
+        List<SearchProductResponse> list = convertHitsToResponse(productDocuments);
 
-        return getSearchPageResponse(pageable, productDocumentSearchHits, "전체 상품");
+        return SearchPageResponse.<SearchProductResponse>builder()
+            .searchKeywords("전체 상품")
+            .totalHits(products.getTotalElements())
+            .pageNumber(pageable.getPageNumber())
+            .pageSize(pageable.getPageSize())
+            .totalPages((list.size() / pageable.getPageSize()) + 1)
+            .data(list)
+            .build();
 
     }
 
@@ -190,8 +219,10 @@ public class SearchServiceImpl implements SearchService {
         if (!products.isEmpty()) {
             AtomicInteger count = new AtomicInteger(1);
             products.forEach(product -> {
-                productDocuments.add(ProductDocument.fromEntity(product));
-                log.info(" Docs Add Counts : {}", count.getAndIncrement());
+                if (!product.getInfo().isDeleted()) {
+                    productDocuments.add(ProductDocument.fromEntity(product));
+                    log.info(" Docs Add Counts : {}", count.getAndIncrement());
+                }
             });
 
             productDocumentRepository.saveAll(productDocuments);
@@ -216,7 +247,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    private List<SearchProductResponse> convertHitsToResponse(List<ProductDocument> list) {
+    public static List<SearchProductResponse> convertHitsToResponse(List<ProductDocument> list) {
 
         List<SearchProductResponse> responses = new ArrayList<>();
 

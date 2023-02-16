@@ -5,6 +5,8 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
+import com.nhnacademy.booklay.server.dto.coupon.response.CouponIssueResponse;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
@@ -371,5 +373,9 @@ public class Dummy {
         ReflectionTestUtils.setField(blockedMemberDetail, "blockedAt", LocalDateTime.now());
 
         return blockedMemberDetail;
+    }
+
+    public static CouponIssueRequest getDummyCouponIssueRequest() {
+        return new CouponIssueRequest(1L, 1L);
     }
 }

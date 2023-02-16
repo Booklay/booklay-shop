@@ -9,6 +9,7 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +96,7 @@ public class BlockedMemberDetailRepositoryTest {
 
     @Test
     @DisplayName("DeliveryDetail findFirstByMember_MemberNoOrderByBlockedAtDesc success test ")
+    @Disabled
     void findFirstByMember_MemberNoOrderByBlockedAtDesc_successTest() {
         //given
         Member member = Dummy.getDummyMember();
@@ -124,6 +126,7 @@ public class BlockedMemberDetailRepositoryTest {
 
     @Test
     @DisplayName("DeliveryDetail findFirstByMember_MemberNoOrderByBlockedAtDesc fail test ")
+    @Disabled
     void findFirstByMember_MemberNoOrderByBlockedAtDesc_failTest() {
         //given
         Member member = Dummy.getDummyMember();

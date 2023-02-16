@@ -29,15 +29,11 @@ public class CartController {
     private static final String STRING_PRODUCT_NO = "productNo";
     private static final String STRING_PRODUCT_NO_LIST = "productNoList";
     //todo 품절체크
-    @ModelAttribute("memberNo")
-    public Long getMemberNo(MemberInfo memberInfo){
-        return memberInfo.getMemberNo();
-    }
     @GetMapping
     public ResponseEntity<List<CartRetrieveResponse>> getCart(
-        @ModelAttribute("memberNo") Long memberNo,
+        MemberInfo memberInfo,
         @RequestParam(STRING_CART_ID) String cartId) {
-        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberNo, cartId);
+        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartId);
         List<CartRetrieveResponse> cartList = cartServiceAndKeyDto.getCartService().getAllCartItems(
             cartServiceAndKeyDto.getKey());
         return ResponseEntity.status(HttpStatus.OK)
@@ -46,20 +42,21 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> setCart(@ModelAttribute("memberNo") Long memberNo,
+    public ResponseEntity<Void> setCart(MemberInfo memberInfo,
                                         @Valid @RequestBody CartAddRequest cartAddRequest) {
         CartServiceAndKeyDto cartServiceAndKeyDto =
-            getCartServiceAndKeyDto(memberNo, cartAddRequest.getCartId());
+            getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartAddRequest.getCartId());
+        cartAddRequest.setCartId(cartServiceAndKeyDto.getKey());
         cartServiceAndKeyDto.getCartService().setCartItem(cartAddRequest);
         return ResponseEntity.ok()
                              .build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCart(@ModelAttribute("memberNo") Long memberNo,
-                                           @RequestParam(STRING_CART_ID) String cartId,
-                                           @RequestParam(STRING_PRODUCT_NO) Long productNo) {
-        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberNo, cartId);
+    public ResponseEntity<Void> deleteCart(MemberInfo memberInfo,
+                                           @RequestParam(value = STRING_CART_ID, required = false) String cartId,
+                                           @RequestParam(value = STRING_PRODUCT_NO, required = false) Long productNo) {
+        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartId);
         cartServiceAndKeyDto.getCartService().deleteCartItem(cartServiceAndKeyDto.getKey(),
                                                              productNo);
         return ResponseEntity.ok()
@@ -67,34 +64,35 @@ public class CartController {
     }
 
     @DeleteMapping("all")
-    public ResponseEntity<Void> deleteAllCart(@ModelAttribute("memberNo") Long memberNo,
+    public ResponseEntity<Void> deleteAllCart(MemberInfo memberInfo,
                                               @RequestParam(STRING_CART_ID) String cartId) {
-        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberNo, cartId);
+        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartId);
         cartServiceAndKeyDto.getCartService().deleteAllCartItems(cartServiceAndKeyDto.getKey());
         return ResponseEntity.ok()
                              .build();
     }
 
     @DeleteMapping("/buy")
-    public ResponseEntity<Void> deleteCarts(@ModelAttribute("memberNo") Long memberNo,
-                                            @RequestParam(STRING_CART_ID) String cartId,
-                                            @RequestParam(STRING_PRODUCT_NO_LIST)
+    public ResponseEntity<Void> deleteCarts(MemberInfo memberInfo,
+                                            @RequestParam(value = STRING_CART_ID,required = false) String cartId,
+                                            @RequestParam(value = STRING_PRODUCT_NO_LIST,required = false)
                                             List<Long> productNoList) {
-        CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberNo, cartId);
-        cartServiceAndKeyDto.getCartService().deleteCartItems(cartServiceAndKeyDto.getKey(),
-                                                              productNoList);
-        return ResponseEntity.ok()
-                             .build();
+        if (productNoList != null && !(memberInfo.getMemberNo() == null && cartId == null)){
+            CartServiceAndKeyDto cartServiceAndKeyDto = getCartServiceAndKeyDto(memberInfo.getMemberNo(), cartId);
+            cartServiceAndKeyDto.getCartService().deleteCartItems(cartServiceAndKeyDto.getKey(),
+                    productNoList);
+        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("login/{cartId}")
-    public ResponseEntity<Void> moveRedisToRDB(@ModelAttribute("memberNo") Long memberNo,
+    public ResponseEntity<Void> moveRedisToRDB(MemberInfo memberInfo,
                                                @PathVariable String cartId) {
         List<CartRetrieveResponse> allCartItems = redisCartService.getAllCartItems(cartId);
         redisCartService.deleteAllCartItems(cartId);
         for (CartRetrieveResponse cartRetrieveResponse : allCartItems) {
             rdbCartService.setCartItem(
-                new CartAddRequest(cartId, cartRetrieveResponse.getProductNo(),
+                new CartAddRequest(memberInfo.getMemberNo().toString(), cartRetrieveResponse.getProductNo(),
                                    cartRetrieveResponse.getProductCount()));
         }
         return ResponseEntity.ok()

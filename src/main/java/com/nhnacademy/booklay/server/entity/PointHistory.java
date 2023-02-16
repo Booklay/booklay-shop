@@ -34,6 +34,8 @@ public class PointHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
+    @Column(name = "member_no", insertable = false, updatable = false)
+    private Long memberNo;
 
     @Column
     private Integer point;

@@ -145,7 +145,7 @@ public class BlockedMemberDetailRepositoryTest {
 
         //when
         BlockedMemberDetail expected = blockedMemberDetailRepository.findFirstByMember_MemberNoOrderByBlockedAtDesc(member.getMemberNo())
-            .orElseThrow(() -> new IllegalArgumentException());
+            .orElseThrow(IllegalArgumentException::new);
 
         //then
         assertThat(expected.getReason()).isNotEqualTo(blockedMemberDetail1.getReason());

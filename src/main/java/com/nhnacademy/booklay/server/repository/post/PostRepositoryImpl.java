@@ -42,6 +42,14 @@ public class PostRepositoryImpl extends QuerydslRepositorySupport implements Pos
   }
 
   @Override
+  public Long confirmAnswerByPostId(Long postId) {
+    QPost post = QPost.post;
+
+    update(post).where(post.realGroupNo.eq(postId)).set(post.isAnswered, true).execute();
+    return postId;
+  }
+
+  @Override
   public Integer countChildByGroupNo(Long groupNo) {
     QPost post = QPost.post;
 

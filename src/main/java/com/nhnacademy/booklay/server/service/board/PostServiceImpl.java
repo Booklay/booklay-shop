@@ -107,6 +107,12 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  public Long updateConfirmAnswer(Long postId) {
+    postRepository.confirmAnswerByPostId(postId);
+    return postId;
+  }
+
+  @Override
   @Transactional(readOnly = true)
   public Page<PostResponse> retrieveProductQNA(Long productId, Pageable pageable) {
     return postRepository.findAllByProductIdPage(productId, pageable);

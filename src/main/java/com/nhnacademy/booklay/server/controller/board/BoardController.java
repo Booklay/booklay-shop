@@ -72,6 +72,11 @@ public class BoardController {
         .body(response);
   }
 
+  /**
+   * 게시글 조회
+   * @param postId
+   * @return
+   */
   @GetMapping("/{postId}")
   public ResponseEntity<PostResponse> viewPost(@PathVariable Long postId) {
     PostResponse response = postService.retrievePostById(postId);
@@ -80,6 +85,18 @@ public class BoardController {
         .body(response);
   }
 
+  @PutMapping("/confirm/{postId}")
+  public ResponseEntity<Long> confirmAnswer(@PathVariable Long postId){
+    Long response = postService.updateConfirmAnswer(postId);
+    return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+  }
+
+  /**
+   * 게시글 소프트 딜리트
+   * @param memberInfo
+   * @param postId
+   * @return
+   */
   @DeleteMapping("/{postId}")
   public ResponseEntity deletePost(MemberInfo memberInfo, @PathVariable Long postId) {
     log.info("출력" + memberInfo.getMemberNo());

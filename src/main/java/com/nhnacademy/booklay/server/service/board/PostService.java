@@ -17,4 +17,6 @@ public interface PostService {
   Long updatePost(BoardPostUpdateRequest request);
 
   void deletePost(Long memberId, Long postId);
+
+  Long updateConfirmAnswer(Long postId);
 }

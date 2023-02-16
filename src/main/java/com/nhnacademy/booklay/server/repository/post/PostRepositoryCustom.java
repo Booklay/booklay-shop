@@ -16,4 +16,6 @@ public interface PostRepositoryCustom {
   Integer countChildByGroupNo(Long groupNo);
 
   void deleteByPostIdAndMemberNo(Long postId, Long memberNo);
+
+  Long confirmAnswerByPostId(Long postId);
 }

@@ -13,6 +13,11 @@ spring:
     consumer:
       group-id: shop-dev
 
+  servlet:
+    multipart:
+      max-request-size: 200MB
+      max-file-size: 200MB
+
 cloud:
   auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
   user-name: sjun0322@naver.com
@@ -47,6 +52,8 @@ message:
     coupon:
       request: coupon-zone-request-dev
       response: coupon-zone-response-dev
+
+
 
 logging:
   level:

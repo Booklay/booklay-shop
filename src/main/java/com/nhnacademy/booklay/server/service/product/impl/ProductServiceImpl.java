@@ -1,11 +1,15 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
+import static com.nhnacademy.booklay.server.service.search.impl.SearchServiceImpl.convertHitsToResponse;
+
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.BookSubscribe;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -16,6 +20,7 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
@@ -548,6 +553,56 @@ public class ProductServiceImpl implements ProductService {
     }
     productDetailRepository.save(productDetail);
 
+  }
+
+  @Override
+  public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
+
+    Page<ProductAllInOneResponse> products = productRepository.retrieveProductsInPage(pageable);
+
+    List<ProductDocument> productDocuments = getDocumentList(products.getContent());
+
+    List<SearchProductResponse> list = convertHitsToResponse(productDocuments);
+
+    return SearchPageResponse.<SearchProductResponse>builder()
+        .searchKeywords("전체 상품")
+        .totalHits(products.getTotalElements())
+        .pageNumber(pageable.getPageNumber())
+        .pageSize(pageable.getPageSize())
+        .totalPages((list.size() / pageable.getPageSize()) + 1)
+        .data(list)
+        .build();
+  }
+
+  @Override
+  public List<SearchProductResponse> getLatestEights(){
+    List<Product> list = productRepository.findTop8ByIsDeletedOrderByCreatedAtDesc(false);
+
+    List<ProductAllInOneResponse> products = getProducts(list);
+
+    List<ProductDocument> productDocuments = getDocumentList(products);
+
+    return convertHitsToResponse(productDocuments);
+  }
+
+  private List<ProductAllInOneResponse> getProducts(List<Product> list) {
+    List<Long> ids = new ArrayList<>();
+
+    list.forEach(x -> ids.add(x.getId()));
+
+    return productRepository.retrieveProductsByIds(ids);
+  }
+
+  private static List<ProductDocument> getDocumentList(List<ProductAllInOneResponse> list) {
+    List<ProductDocument> productDocuments = new ArrayList<>();
+
+    if (!list.isEmpty()) {
+      list.forEach(product -> {
+        if (!product.getInfo().isDeleted()) {
+          productDocuments.add(ProductDocument.fromEntity(product));
+        }});}
+
+    return productDocuments;
   }
 
 }

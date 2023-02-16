@@ -96,8 +96,7 @@ public class BlockedMemberDetailRepositoryTest {
 
     @Test
     @DisplayName("DeliveryDetail findFirstByMember_MemberNoOrderByBlockedAtDesc success test ")
-    @Disabled
-    void findFirstByMember_MemberNoOrderByBlockedAtDesc_successTest() {
+    void findFirstByMember_MemberNoOrderByBlockedAtDesc_successTest() throws InterruptedException {
         //given
         Member member = Dummy.getDummyMember();
 
@@ -114,6 +113,7 @@ public class BlockedMemberDetailRepositoryTest {
 
         memberRepository.save(member);
         blockedMemberDetailRepository.save(blockedMemberDetail1);
+        Thread.sleep(500);
         blockedMemberDetailRepository.save(blockedMemberDetail2);
 
         //when
@@ -126,8 +126,7 @@ public class BlockedMemberDetailRepositoryTest {
 
     @Test
     @DisplayName("DeliveryDetail findFirstByMember_MemberNoOrderByBlockedAtDesc fail test ")
-    @Disabled
-    void findFirstByMember_MemberNoOrderByBlockedAtDesc_failTest() {
+    void findFirstByMember_MemberNoOrderByBlockedAtDesc_failTest() throws InterruptedException {
         //given
         Member member = Dummy.getDummyMember();
 
@@ -144,6 +143,7 @@ public class BlockedMemberDetailRepositoryTest {
 
         memberRepository.save(member);
         blockedMemberDetailRepository.save(blockedMemberDetail1);
+        Thread.sleep(500);
         blockedMemberDetailRepository.save(blockedMemberDetail2);
 
         //when

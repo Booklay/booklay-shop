@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,11 +33,12 @@ public class Product {
     @Setter
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "thumbnail_no")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "thumbnail_no", updatable = false,  insertable = false)
     private ObjectFile objectFile;
 
-    @Column(name = "thumbnail_no", insertable = false, updatable = false)
+    @Setter
+    @Column(name = "thumbnail_no")
     private Long thumbnailNo;
 
     @Column
@@ -73,10 +75,10 @@ public class Product {
     private boolean isDeleted = false;
 
     @Builder
-    public Product(ObjectFile objectFile, String title, Long price, Long pointRate,
+    public Product(Long thumbnailNo, String title, Long price, Long pointRate,
                    String shortDescription, String longDescription, boolean isSelling,
                    boolean pointMethod) {
-        this.objectFile = objectFile;
+        this.thumbnailNo = thumbnailNo;
         this.title = title;
         this.price = price;
         this.pointRate = pointRate;

@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.order;
+package com.nhnacademy.booklay.server.dto.order.payment;
 
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import java.time.LocalDateTime;

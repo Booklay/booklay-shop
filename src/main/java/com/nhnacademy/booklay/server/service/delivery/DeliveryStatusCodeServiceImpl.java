@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class DeliveryStatusCodeServiceImpl implements DeliveryStatusCodeService{
     private Map<Integer, String> cachedCode;
     private final DeliveryStatusCodeRepository deliveryStatusCodeRepository;
@@ -38,7 +40,7 @@ public class DeliveryStatusCodeServiceImpl implements DeliveryStatusCodeService{
     }
 
     @PostConstruct
-    @Scheduled(cron = "0/10 * * * *")
+    @Scheduled(cron = "0/10 * * * * *")
     private void updateCachedCode(){
         List<DeliveryStatusCode> deliveryStatusCodeList = deliveryStatusCodeRepository.findAll();
         Map<Integer, String> newCachedCode = new HashMap<>();

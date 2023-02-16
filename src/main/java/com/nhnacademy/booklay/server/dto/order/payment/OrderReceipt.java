@@ -1,5 +1,6 @@
-package com.nhnacademy.booklay.server.dto.order;
+package com.nhnacademy.booklay.server.dto.order.payment;
 
+import com.nhnacademy.booklay.server.dto.order.OrderProductDto;
 import com.nhnacademy.booklay.server.entity.Order;
 import java.time.LocalDateTime;
 import java.util.List;

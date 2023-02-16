@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.repository.delivery;
 
-import com.nhnacademy.booklay.server.dto.order.OrderReceipt;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import java.util.List;
 import java.util.Optional;

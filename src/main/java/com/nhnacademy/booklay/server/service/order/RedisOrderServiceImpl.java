@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.service.order;
 
-import com.nhnacademy.booklay.server.dto.order.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

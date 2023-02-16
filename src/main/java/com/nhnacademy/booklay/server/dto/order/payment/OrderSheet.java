@@ -1,6 +1,7 @@
-package com.nhnacademy.booklay.server.dto.order;
+package com.nhnacademy.booklay.server.dto.order.payment;
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.dto.order.OrderProductDto;
 import java.util.List;
 
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
@@ -41,4 +42,7 @@ public class OrderSheet {
 
     @Setter
     private Long orderNo;
+    private String orderTitle;
+    @Setter
+    private Integer pointAccumulate;
 }

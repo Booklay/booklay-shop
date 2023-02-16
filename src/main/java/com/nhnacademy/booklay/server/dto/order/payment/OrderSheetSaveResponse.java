@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.order;
+package com.nhnacademy.booklay.server.dto.order.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,4 +9,6 @@ public class OrderSheetSaveResponse {
     private String orderId;
     private Boolean valid;
     private Long paymentAmount;
+    private String reason;
+    private Integer reasonType;
 }

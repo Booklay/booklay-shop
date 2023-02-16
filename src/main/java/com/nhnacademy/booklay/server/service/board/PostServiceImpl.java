@@ -29,6 +29,8 @@ public class PostServiceImpl implements PostService {
   private final PostTypeRepository postTypeRepository;
   private final MemberRepository memberRepository;
 
+  private static final String POST_NOT_FOUND = "post not found";
+
   @Override
   public Long createPost(BoardPostCreateRequest request) {
     PostType postType = postTypeRepository.findById(request.getPostTypeNo())
@@ -58,7 +60,7 @@ public class PostServiceImpl implements PostService {
     //요청에 그룹 번호가 지정되어 있다면
     if (request.getGroupNo() != null) {
       Post groupPost = postRepository.findById(request.getGroupNo())
-          .orElseThrow(() -> new NotFoundException(Post.class, "post not found"));
+          .orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
       post.setGroupNo(groupPost);
 
       //요청에 order 요구사항이 없다면 숫자 센 다음 +1
@@ -79,8 +81,8 @@ public class PostServiceImpl implements PostService {
     }
     //요청에 그룹번호가 없는 아예 첫 게시글이라면 그룹번호 지정 후 오더 0으로 설정
     if (request.getGroupNo() == null) {
-      Integer base_groupOrder = 0;
-      post.setGroupOrder(base_groupOrder);
+      Integer baseGroupOrder = 0;
+      post.setGroupOrder(baseGroupOrder);
       Post saveForGroupNo = postRepository.save(post);
       post.setGroupNo(saveForGroupNo);
     }
@@ -92,7 +94,8 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public Long updatePost(BoardPostUpdateRequest request) {
-    Post post = postRepository.findById(request.getPostId()).orElse(null);
+    Post post = postRepository.findById(request.getPostId())
+        .orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
 
     post.setTitle(request.getTitle());
     post.setContent(request.getContent());
@@ -112,7 +115,8 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional(readOnly = true)
   public PostResponse retrievePostById(Long postId) {
-    Post post = postRepository.findById(postId).orElse(null);
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
 
     PostResponse response = new PostResponse(post);
     if (Objects.nonNull(post.getProductId())) {

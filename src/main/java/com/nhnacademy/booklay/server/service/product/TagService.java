@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,4 +28,6 @@ public interface TagService {
     void createTagProduct(CreateDeleteTagProductRequest request);
 
     void deleteTagProduct(CreateDeleteTagProductRequest request);
+
+    boolean tagNameChecker(String name);
 }

@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
+import com.nhnacademy.booklay.server.dto.common.MemberInfoPostGetter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -34,7 +35,9 @@ public class MemberAspect {
     /**
      * GetMapping 에 MemberInfo 추가
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.GetMapping) && execution(* *.*(.., com.nhnacademy.booklay.server.dto.common.MemberInfo, ..))")
+    @Around("(@annotation(org.springframework.web.bind.annotation.DeleteMapping)||" +
+            "@annotation(org.springframework.web.bind.annotation.GetMapping)) " +
+            "&& execution(* *.*(.., com.nhnacademy.booklay.server.dto.common.MemberInfo, ..))")
     public Object injectMemberToGetMapping(ProceedingJoinPoint pjp) throws Throwable {
         log.info("Method: {}", pjp.getSignature().getName());
         HttpServletRequest request =
@@ -54,14 +57,17 @@ public class MemberAspect {
     /**
      * PostMapping 에 MemberInfo 추가
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.PostMapping) && execution(* *.*(.., com.nhnacademy.booklay.server.dto.common.MemberInfo, ..))")
+    @Around("(@annotation(org.springframework.web.bind.annotation.PostMapping)||" +
+            "@annotation(org.springframework.web.bind.annotation.PutMapping)||" +
+            "@annotation(org.springframework.web.bind.annotation.PatchMapping)) " +
+            "&& execution(* *.*(.., com.nhnacademy.booklay.server.dto.common.MemberInfo, ..))")
     public Object injectMemberToPostMapping(ProceedingJoinPoint pjp) throws Throwable {
         log.info("Method: {}", pjp.getSignature().getName());
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         ContentCachingRequestWrapper requestWrapper = getRequestWrapper(request);
         String requestBody = getRequestBody(requestWrapper);
-        MemberInfo memberInfo = objectMapper.readValue(requestBody, MemberInfo.class);
+        MemberInfo memberInfo = new MemberInfo(objectMapper.readValue(requestBody, MemberInfoPostGetter.class));
         Object[] args = Arrays.stream(pjp.getArgs())
                 .map(arg -> {
                     if (arg instanceof MemberInfo) {

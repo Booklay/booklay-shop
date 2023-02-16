@@ -1,7 +1,7 @@
 package com.nhnacademy.booklay.server.config;
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
-import com.nhnacademy.booklay.server.dto.order.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

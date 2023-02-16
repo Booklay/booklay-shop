@@ -30,6 +30,8 @@ public class PostResponse {
 
   String writer;
 
+  Boolean deleted;
+
   @Setter
   List<RetrieveAuthorResponse> authorList = new ArrayList<>();
 
@@ -48,5 +50,6 @@ public class PostResponse {
     this.createdAt = post.getCreatedAt();
     this.updatedAt = post.getUpdatedAt();
     this.writer = post.getMemberId().getNickname();
+    this.deleted = post.isDeleted();
   }
 }

@@ -19,6 +19,8 @@ public class CreateUpdateProductBookRequest {
     private Long productId;
     @Setter
     private MultipartFile image;
+
+    private Long originalImage;
     @NotNull
     private String title;
     @NotNull

@@ -23,6 +23,7 @@ public class CreateUpdateProductSubscribeRequest {
     private String title;
     @Setter
     private MultipartFile image;
+    private Long originalImage;
     @NotNull
     private Long price;
     @NotNull

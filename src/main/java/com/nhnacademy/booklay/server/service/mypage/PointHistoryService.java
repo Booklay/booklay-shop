@@ -15,4 +15,5 @@ public interface PointHistoryService {
     TotalPointRetrieveResponse retrieveTotalPoint(Long memberNo);
 
     void presentPoint(Long memberNo, PointPresentRequest pointPresentRequest);
+
 }

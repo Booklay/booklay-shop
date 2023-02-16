@@ -29,6 +29,7 @@ public class PostServiceImpl implements PostService {
   private final PostTypeRepository postTypeRepository;
   private final MemberRepository memberRepository;
 
+  private static final Integer POST_TYPE_NOTICE = 5;
   private static final String POST_NOT_FOUND = "post not found";
 
   @Override
@@ -116,6 +117,12 @@ public class PostServiceImpl implements PostService {
   @Transactional(readOnly = true)
   public Page<PostResponse> retrieveProductQNA(Long productId, Pageable pageable) {
     return postRepository.findAllByProductIdPage(productId, pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<PostResponse> retrieveNotice(Pageable pageable) {
+    return postRepository.findAllNotice(POST_TYPE_NOTICE, pageable);
   }
 
   @Override

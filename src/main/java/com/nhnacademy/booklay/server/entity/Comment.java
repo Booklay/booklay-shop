@@ -45,12 +45,15 @@ public class Comment {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "group_comment_no")
   private Comment groupNo;
+  @Column(name = "group_comment_no", insertable = false, updatable = false)
+  private Long realGroupNo;
 
+  @Setter
   @Column
   private String content;
 
   @Column
-  private Long depth;
+  private Integer depth;
 
   @CreatedDate
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -62,17 +65,22 @@ public class Comment {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
+  @Setter
   @Column(name = "group_order")
-  private Long groupOrder;
+  private Integer groupOrder;
+
+  @Column(name="is_deleted")
+  private boolean isDeleted;
 
   @Builder
-  public Comment(Post postId, Member memberId, Comment groupNo, String content, Long depth,
-      Long groupOrder) {
+  public Comment(Post postId, Member memberId, Comment groupNo, String content, Integer depth,
+      Integer groupOrder, boolean isDeleted) {
     this.postId = postId;
     this.memberId = memberId;
     this.groupNo = groupNo;
     this.content = content;
     this.depth = depth;
     this.groupOrder = groupOrder;
+    this.isDeleted = isDeleted;
   }
 }

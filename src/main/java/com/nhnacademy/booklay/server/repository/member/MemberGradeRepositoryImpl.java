@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.entity.QMemberGrade;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -46,5 +47,22 @@ public class MemberGradeRepositoryImpl extends QuerydslRepositorySupport
             .select(memberGrade.count());
 
         return PageableExecutionUtils.getPage(content, pageable, count::fetchFirst);
+    }
+
+    @Override
+    public Optional<MemberGrade> retrieveCurrentMemberGrade(Long memberNo) {
+        QMemberGrade memberGrade = QMemberGrade.memberGrade;
+
+        MemberGrade grade = from(memberGrade)
+            .where(memberGrade.member.memberNo.eq(memberNo))
+            .orderBy(memberGrade.date.desc())
+            .select(Projections.constructor(MemberGrade.class,
+                memberGrade.id,
+                memberGrade.member,
+                memberGrade.name,
+                memberGrade.date))
+            .fetchFirst();
+
+        return Optional.ofNullable(grade);
     }
 }

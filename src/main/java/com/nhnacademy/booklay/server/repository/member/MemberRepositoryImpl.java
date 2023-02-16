@@ -27,6 +27,60 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
     }
 
     @Override
+    public Optional<Member> retrieveValidMemberByMemberNo(Long memberNo) {
+        QMember qMember = QMember.member;
+
+        Member member = from(qMember)
+            .where(qMember.memberNo.eq(memberNo))
+            .where(qMember.isBlocked.eq(false).and(qMember.deletedAt.isNull()))
+            .select(Projections.constructor(Member.class,
+                qMember.memberNo,
+                qMember.gender,
+                qMember.memberId,
+                qMember.password,
+                qMember.nickname,
+                qMember.name,
+                qMember.birthday,
+                qMember.phoneNo,
+                qMember.email,
+                qMember.createdAt,
+                qMember.updatedAt,
+                qMember.deletedAt,
+                qMember.isBlocked
+            ))
+            .fetchFirst();
+
+        return Optional.ofNullable(member);
+    }
+
+    @Override
+    public Optional<Member> retrieveValidMemberByMemberId(String memberId) {
+        QMember qMember = QMember.member;
+
+        Member member = from(qMember)
+            .where(qMember.memberId.eq(memberId))
+            .where(qMember.isBlocked.eq(false).and(qMember.deletedAt.isNull()))
+            .select(Projections.constructor(Member.class,
+                qMember.memberNo,
+                qMember.gender,
+                qMember.memberId,
+                qMember.password,
+                qMember.nickname,
+                qMember.name,
+                qMember.birthday,
+                qMember.phoneNo,
+                qMember.email,
+                qMember.createdAt,
+                qMember.updatedAt,
+                qMember.deletedAt,
+                qMember.isBlocked
+            ))
+            .fetchFirst();
+
+        return Optional.ofNullable(member);
+    }
+
+    @Override
     public Optional<MemberLoginResponse> retrieveMemberByUserId(String userId) {
 
         QMember member = QMember.member;
@@ -38,11 +92,11 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
             .where(member.memberId.eq(userId).and(member.deletedAt.isNull()))
             .select(Projections.constructor(MemberLoginResponse.class,
-                                            member.memberId,
-                                            member.password,
-                                            authority.name,
-                                            member.email,
-                                            member.isBlocked))
+                member.memberId,
+                member.password,
+                authority.name,
+                member.email,
+                member.isBlocked))
             .fetchOne();
 
         return Optional.ofNullable(memberLoginResponse);
@@ -113,25 +167,30 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
         QMember member = QMember.member;
         QAuthority authority = QAuthority.authority;
         QMemberAuthority memberAuthority = QMemberAuthority.memberAuthority;
+        QMemberGrade memberGrade = QMemberGrade.memberGrade;
 
         MemberRetrieveResponse memberRetrieveResponse = from(member)
             .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
             .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
+            .innerJoin(memberGrade).on(member.memberNo.eq(memberGrade.member.memberNo))
             .where(member.email.eq(email))
             .select(Projections.constructor(MemberRetrieveResponse.class,
                                             member.memberNo,
                                             member.gender.name,
                                             member.memberId,
                                             member.nickname,
-                                            member.name,
-                                            member.birthday,
-                                            member.phoneNo,
-                                            member.email,
-                                            member.createdAt,
-                                            member.updatedAt,
-                                            member.deletedAt,
-                                            member.isBlocked))
-            .fetchOne();
+                member.name,
+                member.birthday,
+                member.phoneNo,
+                member.email,
+                member.createdAt,
+                member.updatedAt,
+                member.deletedAt,
+                member.isBlocked,
+                memberGrade.name,
+                authority.name))
+            .fetchFirst();
+        //TODO : 원래 fetchOne() 인데 2개 나옴(booklay2 계정문제 추측)
 
         return Optional.ofNullable(memberRetrieveResponse);
     }

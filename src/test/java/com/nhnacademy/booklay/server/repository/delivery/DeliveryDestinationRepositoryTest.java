@@ -110,8 +110,9 @@ class DeliveryDestinationRepositoryTest {
 
         //when
         DeliveryDestination expected =
-            deliveryDestinationRepository.findByIsDefaultDestination(
-                    deliveryDestination.getIsDefaultDestination())
+            deliveryDestinationRepository.findByIsDefaultDestinationAndMember_MemberNo(
+                    deliveryDestination.getIsDefaultDestination(),
+                    deliveryDestination.getMember().getMemberNo())
                 .orElseThrow(() -> new IllegalArgumentException());
 
         assertThat(expected.getId()).isEqualTo(deliveryDestination.getId());

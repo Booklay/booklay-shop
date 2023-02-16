@@ -7,6 +7,7 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
@@ -14,7 +15,9 @@ import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +50,6 @@ public class MemberController {
         "AdminAndAuthorAuthorityCannotExistTogether";
     private static final String ALREADY_EXIST_AUTHORITY_ERROR_CODE = "AlreadyExistAuthority";
 
-
     private final MemberService memberService;
 
     @GetMapping("/{memberNo}")
@@ -55,8 +57,18 @@ public class MemberController {
 
         MemberRetrieveResponse memberResponse = memberService.retrieveMember(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberResponse);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberResponse);
+    }
+
+    @GetMapping("/main/{memberNo}")
+    public ResponseEntity<MemberMainRetrieveResponse> retrieveMemberMain(
+        @PathVariable Long memberNo) {
+
+        MemberMainRetrieveResponse memberMainResponse = memberService.retrieveMemberMain(memberNo);
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberMainResponse);
     }
 
     @GetMapping("/email/{email}")
@@ -65,9 +77,9 @@ public class MemberController {
 
         MemberLoginResponse memberResponse =
             memberService.retrieveMemberByEmail(email)
-                         .orElseThrow(() -> new NotFoundException(
-                             MemberNotFoundException.class,
-                             MEMBER_NOT_FOUND_ERROR_CODE));
+                .orElseThrow(() -> new NotFoundException(
+                    MemberNotFoundException.class,
+                    MEMBER_NOT_FOUND_ERROR_CODE));
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
@@ -116,12 +128,13 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMember(
+    public ResponseEntity<Map<String, Long>> createMember(
         @Valid @RequestBody MemberCreateRequest memberCreateRequest) {
 
-        memberService.createMember(memberCreateRequest);
+        Long memberNo = memberService.createMember(memberCreateRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .build();
+                             .body(Collections.singletonMap("memberNo", memberNo));
     }
 
     @PutMapping("/{memberNo}")

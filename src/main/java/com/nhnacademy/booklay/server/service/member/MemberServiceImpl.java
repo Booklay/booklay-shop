@@ -11,7 +11,9 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResp
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Gender;
@@ -70,8 +72,14 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberAlreadyExistedException(memberId);
         }
     }
+    
+    /**
+     * 회원가입 시 회원 생성하는 메소드
+     *
+     * @param createDto
+     */
     @Override
-    public void createMember(MemberCreateRequest createDto) {
+    public Long createMember(MemberCreateRequest createDto) {
         checkExistsMemberId(createDto.getMemberId());
 
         Gender gender = genderRepository.findByName(createDto.getGender()).orElseThrow(
@@ -84,12 +92,15 @@ public class MemberServiceImpl implements MemberService {
 
         MemberAuthority memberAuthority =
             new MemberAuthority(new MemberAuthority.Pk(member.getMemberNo(), authority.getId()),
-                                member, authority);
+                member, authority);
 
-        memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
         memberGradeRepository.save(member.addGrade("white"));
         memberAuthorityRepository.save(memberAuthority);
+
+        return savedMember.getMemberNo();
     }
+
     @Override
     public void createMemberGrade(Long memberNo, String gradeName) {
         Member member = getMemberService.getMemberNo(memberNo);
@@ -100,6 +111,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
+     * 회원 권한 만드는 메소드
      * 이미 존재하는 권한 설정 시 에러
      * admin과 author 권한 동시에 존재 시 에러
      *
@@ -139,11 +151,17 @@ public class MemberServiceImpl implements MemberService {
         memberAuthorityRepository.save(memberAuthority);
     }
 
+    /**
+     * 회원 탈퇴 시 처리하는 메소드
+     *
+     * @param memberNo
+     * @param request
+     */
     @Override
     public void createBlockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        if(member.getIsBlocked()) {
+        if (member.getIsBlocked()) {
             throw new AlreadyBlockedMemberException(member);
         }
 
@@ -155,6 +173,13 @@ public class MemberServiceImpl implements MemberService {
         blockedMemberDetailRepository.save(blockedMemberDetail);
     }
 
+    /**
+     * 특정 회원의 등급내역 보여주는 메소드
+     *
+     * @param memberNo
+     * @param pageable
+     * @return
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<MemberGradeRetrieveResponse> retrieveMemberGrades(Long memberNo,
@@ -237,6 +262,41 @@ public class MemberServiceImpl implements MemberService {
     public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
         //TODO : 객체 만들어서 리턴하기
         return MemberGradeChartRetrieveResponse.builder().build();
+    }
+
+    /**
+     * myPage main을 위한 메소드
+     * 개인정보 마스킹처리
+     *
+     * @param memberNo
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public MemberMainRetrieveResponse retrieveMemberMain(Long memberNo) {
+        Member member = getMemberService.getValidMemberByMemberNo(memberNo);
+        MemberGrade grade = memberGradeRepository.retrieveCurrentMemberGrade(memberNo)
+            .orElseThrow();
+        TotalPointRetrieveResponse point =
+            pointHistoryRepository.retrieveLatestPointHistory(memberNo)
+                .orElse(new TotalPointRetrieveResponse(null, 0));
+
+        MemberMainRetrieveResponse response = MemberMainRetrieveResponse.builder()
+            .memberNo(memberNo)
+            .gender(member.getGender().getName())
+            .memberId(member.getMemberId())
+            .nickname(member.getNickname())
+            .name(member.getName())
+            .birthday(member.getBirthday())
+            .phoneNo(member.getPhoneNo())
+            .email(member.getEmail())
+            .memberGrade(grade.getName())
+            .currentTotalPoint(point.getTotalPoint())
+            .build();
+
+        response.maskingMember();
+
+        return response;
     }
 
     @Override

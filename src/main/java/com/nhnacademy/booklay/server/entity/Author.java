@@ -35,6 +35,7 @@ public class Author {
     private Member member;
 
     @Column(length = 50)
+    @Setter
     private String name;
 
     @Builder

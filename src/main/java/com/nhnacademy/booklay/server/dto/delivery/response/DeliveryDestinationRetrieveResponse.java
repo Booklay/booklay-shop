@@ -17,29 +17,39 @@ public class DeliveryDestinationRetrieveResponse {
     private String name;
     private String zipCode;
     private String address;
+    private String addressDetail;
+    private String addressSubDetail;
+    private String receiver;
+    private String receiverPhoneNo;
     private Boolean isDefaultDestination;
 
     public static DeliveryDestinationRetrieveResponse fromEntity(
         DeliveryDestination deliveryDestination) {
         return DeliveryDestinationRetrieveResponse.builder()
             .id(deliveryDestination.getId())
-            .memberNo(
-                deliveryDestination.getMember().getMemberNo())
-                                                  .address(deliveryDestination.getAddress())
-                                                  .name(deliveryDestination.getName())
-                                                  .zipCode(deliveryDestination.getZipCode())
-                                                  .isDefaultDestination(
-                                                      deliveryDestination.getIsDefaultDestination())
-                                                  .build();
+            .memberNo(deliveryDestination.getMember().getMemberNo())
+            .name(deliveryDestination.getName())
+            .zipCode(deliveryDestination.getZipCode())
+            .address(deliveryDestination.getAddress())
+            .addressDetail(deliveryDestination.getAddressDetail())
+            .addressSubDetail(deliveryDestination.getAddressSubDetail())
+            .receiver(deliveryDestination.getReceiver())
+            .receiverPhoneNo(deliveryDestination.getReceiverPhoneNo())
+            .isDefaultDestination(deliveryDestination.getIsDefaultDestination())
+            .build();
     }
 
     public DeliveryDestination toEntity(Member member) {
         return DeliveryDestination.builder()
-                                  .name(this.name)
-                                  .member(member)
-                                  .zipCode(this.zipCode)
-                                  .address(this.address)
-                                  .isDefaultDestination(this.isDefaultDestination)
-                                  .build();
+            .name(this.name)
+            .member(member)
+            .zipCode(this.zipCode)
+            .address(this.address)
+            .addressDetail(this.addressDetail)
+            .addressSubDetail(this.addressSubDetail)
+            .receiver(this.receiver)
+            .receiverPhoneNo(this.receiverPhoneNo)
+            .isDefaultDestination(this.isDefaultDestination)
+            .build();
     }
 }

@@ -40,6 +40,10 @@ public class TagServiceImpl implements TagService {
     private final ProductRepository productRepository;
 
 
+    /**
+     * 태그 생성
+     * @param request
+     */
     @Override
     @Transactional
     public void createTag(CreateTagRequest request) {
@@ -51,6 +55,10 @@ public class TagServiceImpl implements TagService {
        tagRepository.save(tag);
     }
 
+    /**
+     * 태그 수정
+     * @param request
+     */
     @Override
     @Transactional
     public void updateTag(UpdateTagRequest request) {
@@ -63,12 +71,21 @@ public class TagServiceImpl implements TagService {
         tagRepository.save(tag);
     }
 
+    /**
+     * 페이지로 태그 조회
+     * @param pageable
+     * @return
+     */
     @Override
     @Transactional
     public Page<RetrieveTagResponse> retrieveAllTag(Pageable pageable) {
         return tagRepository.findAllBy(pageable, RetrieveTagResponse.class);
     }
 
+    /**
+     * 태그 삭제
+     * @param request
+     */
     @Override
     @Transactional
     public void deleteTag(DeleteIdRequest request) {
@@ -81,18 +98,32 @@ public class TagServiceImpl implements TagService {
         tagRepository.deleteById(id);
     }
 
+    /**
+     * 태그 존재하는지 검사
+     * @param id
+     */
     private void tagExistValidator(Long id) {
         if (!tagRepository.existsById(id)) {
             throw new NotFoundException(Tag.class, "tag not found");
         }
     }
 
+    /**
+     * 태그 이름 증복 검사
+     * @param name
+     */
     private void tagNameValidator(String name) {
         if (tagRepository.existsByName(name)) {
             throw new IllegalArgumentException(name + " tag is already exist");
         }
     }
 
+    /**
+     * 상품에 등록된 태그인지 boolean 넣어서 조회
+     * @param pageable
+     * @param productNo
+     * @return
+     */
     @Override
     public Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo) {
         if (!productRepository.existsById(productNo)) {
@@ -120,6 +151,10 @@ public class TagServiceImpl implements TagService {
                               basicPageDto.getTotalElements());
     }
 
+    /**
+     * 상품과 태그 연동
+     * @param request
+     */
     @Override
     public void createTagProduct(CreateDeleteTagProductRequest request) {
         ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
@@ -136,10 +171,19 @@ public class TagServiceImpl implements TagService {
         productTagRepository.save(productTag);
     }
 
+    /**
+     * 상품과 태그 연동 취소
+     * @param request
+     */
     @Override
     public void deleteTagProduct(CreateDeleteTagProductRequest request) {
         ProductTag.Pk pk = new Pk(request.getProductNo(), request.getTagId());
 
         productTagRepository.deleteById(pk);
+    }
+
+    @Override
+    public boolean tagNameChecker(String name){
+        return tagRepository.existsByName(name);
     }
 }

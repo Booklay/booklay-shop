@@ -46,7 +46,7 @@ class CommentServiceImplTest {
     // Then
     assertThat(commentResponsePage.getContent().size()).isEqualTo(1);
     CommentResponse commentResponse = commentResponsePage.getContent().get(0);
-    assertThat(commentResponse.getContent()).isEqualTo("Test comment");
+    assertThat(commentResponse.getContent()).isEqualTo("dummy test comment");
   }
 
   @Test

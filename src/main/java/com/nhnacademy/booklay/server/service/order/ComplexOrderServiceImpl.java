@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import com.nhnacademy.booklay.server.utils.ControllerUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
     private final OrderProductService orderProductService;
     private final CategoryProductService categoryProductService;
     private final PointHistoryService pointHistoryService;
+    private final RedisOrderService redisOrderService;
     private final RestService restService;
     private final String gatewayIp;
     private final ObjectMapper objectMapper;
@@ -83,22 +86,25 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         }
 
         MultiValueMap<String, Long> productCategoryMap = new LinkedMultiValueMap<>();
+        Map<Long, Integer> productMap = new HashMap<>();
         List<Product> productList = productService.retrieveProductListByProductNoList(productNoList);
         AtomicReference<Integer> productDiscountedTotalPrice = new AtomicReference<>(0);
         AtomicReference<Integer> productTotalPrice = new AtomicReference<>(0);
         //상품리스트를 맵형태로 조회하기 쉽게 변경
         productList.forEach(product -> {
             List<CouponRetrieveResponseFromProduct> retrieveResponseFromProductList = couponMap.get(product.getId());
-            Long price = product.getPrice();
-            productTotalPrice.updateAndGet(v -> v + price.intValue());
+            long price = product.getPrice() * cartDtoMap.get(product.getId()).getCount();
+            productTotalPrice.updateAndGet(v -> v + (int) price);
             if (retrieveResponseFromProductList == null){
-                productDiscountedTotalPrice.updateAndGet(v -> v+price.intValue());
+                productMap.put(product.getId(), (int) price);
+                productDiscountedTotalPrice.updateAndGet(v -> v+ (int) price);
                 return;
             }
-            Integer discountPrice = retrieveResponseFromProductList.stream().map(couponRetrieveResponseFromProduct ->
-                    getDiscountAmount(couponRetrieveResponseFromProduct, price.intValue()))
+            int discountPrice = retrieveResponseFromProductList.stream().map(couponRetrieveResponseFromProduct ->
+                    getDiscountAmount(couponRetrieveResponseFromProduct, (int) price))
                     .reduce(Integer::sum).orElse(0);
-            Integer discountedPrice = discountPrice>price?0:price.intValue()-discountPrice;
+            Integer discountedPrice = discountPrice>price?0: (int) price -discountPrice;
+            productMap.put(product.getId(), discountedPrice);
             productDiscountedTotalPrice.updateAndGet(v -> v + discountedPrice);
         });
         int paymentPrice = 0;
@@ -118,7 +124,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         }));
 
         List<CouponRetrieveResponseFromProduct> orderCouponList = couponMap.get(null);
-        int orderCouponDiscountSum = getOrderCouponDiscountSum(productCategoryMap, orderCouponList);
+        int orderCouponDiscountSum = getOrderCouponDiscountSum(productMap, productCategoryMap, orderCouponList);
         //할인된 최종금액
         discountedTotalPrice = Math.max(productDiscountedTotalPrice.get() - orderCouponDiscountSum, 0);
         //할인된 최종금액 - 사용 포인트 + 배송비 + 포장비
@@ -127,6 +133,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
 
         if (paymentPrice==orderSheet.getPaymentAmount()){
             updateOrderSheet(orderSheet, cartDtoMap, productNoList, couponUseRequest, productList);
+            orderSheet.setMemberNo(memberInfo.getMemberNo());
             return orderSheet;
         }
         return null;
@@ -161,7 +168,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         orderSheet.setCouponUseRequest(couponUseRequest);
     }
 
-    private int getOrderCouponDiscountSum(MultiValueMap<String, Long> productCategoryMap, List<CouponRetrieveResponseFromProduct> orderCouponList) {
+    private int getOrderCouponDiscountSum(Map<Long, Integer> productMap, MultiValueMap<String, Long> productCategoryMap, List<CouponRetrieveResponseFromProduct> orderCouponList) {
         int orderCouponDiscountSum = 0;
         String higherCategory = null;
         if (orderCouponList != null){
@@ -170,7 +177,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             }
             for(CouponRetrieveResponseFromProduct orderCoupon : orderCouponList){
                 Integer categoryPriceSum = Objects.requireNonNull(productCategoryMap.get(orderCoupon.getCategoryNo().toString())).
-                        stream().reduce(Long::sum).orElse(0L).intValue();
+                        stream().map(productMap::get).reduce(Integer::sum).orElse(0);
                 Integer categoryDiscountAmount = getDiscountAmount(orderCoupon, categoryPriceSum);
                 orderCouponDiscountSum += categoryDiscountAmount>categoryPriceSum?categoryPriceSum:categoryDiscountAmount;
             }
@@ -206,9 +213,8 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
      */
     private boolean couponDataGetAndParsing(OrderSheet orderSheet, CouponUseRequest couponUseRequest, MultiValueMap<Long, CouponRetrieveResponseFromProduct> couponMap, MemberInfo memberInfo) {
         if (orderSheet.getCouponCodeList()!=null){
-            MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+            MultiValueMap<String, String> multiValueMap = ControllerUtil.getMemberInfoMultiValueMap(memberInfo);
             multiValueMap.put("couponCodeList", orderSheet.getCouponCodeList());
-            multiValueMap.setAll(objectMapper.convertValue(memberInfo, Map.class));
             ApiEntity<List<CouponRetrieveResponseFromProduct>> apiEntity = restService.get(
                 gatewayIp + "/coupon/v1/coupons/codes", multiValueMap,
                 new ParameterizedTypeReference<>() {});
@@ -263,7 +269,8 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         CouponUseRequest couponUseRequest = orderSheet.getCouponUseRequest();
         couponUseRequest.getCategoryCouponList().forEach(couponUsingDto -> couponUsingDto.setUsedTargetNo(order.getId()));
         restService.post(couponUsingUrl, objectMapper.convertValue(orderSheet.getCouponUseRequest(), Map.class), void.class);
-
+        orderSheet.setOrderNo(order.getId());
+        redisOrderService.saveOrderSheet(orderSheet);
         return order;
     }
 

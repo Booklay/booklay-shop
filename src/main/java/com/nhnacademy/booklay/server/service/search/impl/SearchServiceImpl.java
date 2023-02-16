@@ -279,6 +279,6 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private static void loggingQueryInfo(Query query) {
-        log.warn(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
+        log.debug(" \n Query : \n {}", ((NativeSearchQuery) query).getQuery());
     }
 }

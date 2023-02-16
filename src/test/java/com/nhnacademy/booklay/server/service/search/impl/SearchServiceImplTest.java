@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.search.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -13,6 +14,7 @@ import com.nhnacademy.booklay.server.dto.search.request.SearchKeywordsRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
+import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.documents.CategoryDocumentRepository;
 import com.nhnacademy.booklay.server.repository.documents.ProductDocumentRepository;
@@ -27,6 +29,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.SearchHitsImpl;
+import org.springframework.data.elasticsearch.core.TotalHitsRelation;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @Slf4j
@@ -73,6 +79,12 @@ class SearchServiceImplTest {
     @Test
     void getAllProducts() {
 
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = new SearchHitsImpl<>(1L, TotalHitsRelation.OFF,1L, null, List.of(), null,null);
+
+        given(operations.search(any(Query.class), eq(ProductDocument.class)))
+            .willReturn(productDocumentSearchHits);
+
         SearchPageResponse<SearchProductResponse> pageResponse = searchService.getAllProducts(Pageable.ofSize(20));
 
         assertThat(pageResponse.getData()).isNotNull();
@@ -80,6 +92,13 @@ class SearchServiceImplTest {
 
     @Test
     void searchProductsByKeywords() {
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = new SearchHitsImpl<>(1L, TotalHitsRelation.OFF,1L, null, List.of(), null,null);
+
+        given(operations.search(any(Query.class), eq(ProductDocument.class)))
+            .willReturn(productDocumentSearchHits);
+
 
         ReflectionTestUtils.setField(request,"classification","keywords");
         ReflectionTestUtils.setField(request,"keywords","키워드");
@@ -93,6 +112,13 @@ class SearchServiceImplTest {
     @Test
     void searchProductsByKeywords_ByKeywordTextField() {
 
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = new SearchHitsImpl<>(1L, TotalHitsRelation.OFF,1L, null, List.of(), null,null);
+
+        given(operations.search(any(Query.class), eq(ProductDocument.class)))
+            .willReturn(productDocumentSearchHits);
+
+
         ReflectionTestUtils.setField(request,"classification","categories");
         ReflectionTestUtils.setField(request,"keywords","국내");
 
@@ -104,6 +130,13 @@ class SearchServiceImplTest {
 
     @Test
     void searchProductsByCategory() {
+
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = new SearchHitsImpl<>(1L, TotalHitsRelation.OFF,1L, null, List.of(), null,null);
+
+        given(operations.search(any(Query.class), eq(ProductDocument.class)))
+            .willReturn(productDocumentSearchHits);
+
 
         SearchIdRequest request1 = new SearchIdRequest();
 

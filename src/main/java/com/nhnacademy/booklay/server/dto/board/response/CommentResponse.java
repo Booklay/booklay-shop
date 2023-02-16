@@ -19,5 +19,5 @@ public class CommentResponse {
   Long groupCommentNo;
   Integer groupOrder;
   Integer depth;
-
+  Boolean deleted;
 }

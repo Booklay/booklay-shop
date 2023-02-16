@@ -48,7 +48,8 @@ public class CommentRepositoryImpl extends QuerydslRepositorySupport implements
             comment.updatedAt,
             comment.realGroupNo,
             comment.groupOrder,
-            comment.depth
+            comment.depth,
+            comment.isDeleted
         ))
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())

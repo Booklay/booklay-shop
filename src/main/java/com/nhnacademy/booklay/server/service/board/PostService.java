@@ -12,9 +12,14 @@ public interface PostService {
 
   Page<PostResponse> retrieveProductQNA(Long productId, Pageable pageable);
 
+  Page<PostResponse> retrieveNotice(Pageable pageable);
+
   PostResponse retrievePostById(Long postId);
+
 
   Long updatePost(BoardPostUpdateRequest request);
 
   void deletePost(Long memberId, Long postId);
+
+  Long updateConfirmAnswer(Long postId);
 }

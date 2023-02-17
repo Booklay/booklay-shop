@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.recycler.Recycler.V;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -70,8 +71,7 @@ public class MyPageProductController {
    * @param request
    */
   @PostMapping("/wishlist")
-  public ResponseEntity createWishlist(@RequestBody WishlistAndAlarmRequest request) {
-    wishlistService.createWishlist(request);
+  public ResponseEntity<Void> createWishlist(@RequestBody WishlistAndAlarmRequest request) {wishlistService.createWishlist(request);
     return ResponseEntity.status(HttpStatus.OK)
         .build();
   }
@@ -102,7 +102,7 @@ public class MyPageProductController {
    * @param request
    */
   @DeleteMapping("/wishlist")
-  public ResponseEntity deleteWishlist(@RequestBody WishlistAndAlarmRequest request) {
+  public ResponseEntity<Void> deleteWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.deleteWishlist(request);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
@@ -113,7 +113,7 @@ public class MyPageProductController {
    * @param request
    */
   @PostMapping("/alarm")
-  public ResponseEntity createAlarm(@RequestBody WishlistAndAlarmRequest request) {
+  public ResponseEntity<Void> createAlarm(@RequestBody WishlistAndAlarmRequest request) {
     restockingNotificationService.createAlarm(request);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
@@ -124,7 +124,7 @@ public class MyPageProductController {
    * @param request
    */
   @DeleteMapping("/alarm")
-  public ResponseEntity deleteAlarm(@RequestBody WishlistAndAlarmRequest request) {
+  public ResponseEntity<Void> deleteAlarm(@RequestBody WishlistAndAlarmRequest request) {
     restockingNotificationService.deleteAlarm(request);
     return ResponseEntity.status(HttpStatus.ACCEPTED)
         .build();

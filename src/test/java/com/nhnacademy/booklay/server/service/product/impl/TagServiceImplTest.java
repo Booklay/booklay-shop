@@ -287,4 +287,12 @@ class TagServiceImplTest {
     then(productTagRepository).should().deleteById(any());
 
   }
+
+  @Test
+  void tagExistsChecker(){
+    String name = "tag";
+    tagService.tagNameChecker(name);
+
+    BDDMockito.then(tagRepository).should().existsByName(name);
+  }
 }

@@ -13,5 +13,7 @@ public interface ProductTagRepository
 
     List<ProductTag> findAllByPk_ProductId(Long id);
 
+    List<ProductTag> findAllByTagId(Long tagId);
+
 
 }

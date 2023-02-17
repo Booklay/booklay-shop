@@ -38,6 +38,7 @@ import com.nhnacademy.booklay.server.repository.member.MemberAuthorityRepository
 import com.nhnacademy.booklay.server.repository.member.MemberGradeRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
+import com.nhnacademy.booklay.server.utils.Grade;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -95,7 +96,7 @@ public class MemberServiceImpl implements MemberService {
                 member, authority);
 
         Member savedMember = memberRepository.save(member);
-        memberGradeRepository.save(member.addGrade("white"));
+        memberGradeRepository.save(member.addGrade(Grade.WHITE.getKorGrade()));
         memberAuthorityRepository.save(memberAuthority);
 
         return savedMember.getMemberNo();
@@ -299,6 +300,7 @@ public class MemberServiceImpl implements MemberService {
         return response;
     }
 
+
     @Override
     public void blockMemberCancel(Long blockedMemberDetailId) {
         BlockedMemberDetail blockedMemberDetail =
@@ -351,6 +353,29 @@ public class MemberServiceImpl implements MemberService {
             () -> new NotFoundException(MemberAuthority.class, "member authority not found"));
 
         memberAuthorityRepository.delete(memberAuthority);
+    }
+    @Override
+    public boolean checkMemberId(String memberId) {
+        if (memberRepository.existsByMemberId(memberId)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkNickName(String nickName) {
+        if(memberRepository.existsByNickname(nickName)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkEMail(String eMail) {
+        if(memberRepository.existsByEmail(eMail)) {
+            return true;
+        }
+        return false;
     }
 
 }

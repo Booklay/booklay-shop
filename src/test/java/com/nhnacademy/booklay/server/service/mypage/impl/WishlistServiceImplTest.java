@@ -149,8 +149,8 @@ class WishlistServiceImplTest {
     WishlistAndAlarmBooleanResponse result = wishlistService.retrieveExists(booleanRequest);
 
     //then
-    assertThat(result.getWishlist()).isEqualTo(true);
-    assertThat(result.getAlarm()).isEqualTo(false);
+    assertThat(result.getWishlist()).isTrue();
+    assertThat(result.getAlarm()).isFalse();
   }
 
   @Test
@@ -178,5 +178,23 @@ class WishlistServiceImplTest {
 
     //then
     assertThat(result.getTotalElements()).isEqualTo(content.size());
+  }
+
+  @Test
+  void retrieveWishlist() throws IOException {
+    Long memberNo = 1L;
+    int LIMIT = 5;
+    List<Wishlist> wishs = new ArrayList<>();
+    wishs.add(new Wishlist(pk));
+
+    given(wishlistRepository.retrieveWishlist(memberNo, LIMIT)).willReturn(wishs);
+
+    List<Long> productIds = wishs.stream()
+        .map(wishlist -> wishlist.getPk().getProductId())
+        .collect(Collectors.toList());
+
+    wishlistService.retrieveWishlist(memberNo);
+
+    BDDMockito.then(productService).should().retrieveProductResponses(productIds);
   }
 }

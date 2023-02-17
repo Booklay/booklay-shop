@@ -6,6 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
@@ -26,6 +28,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -222,5 +226,15 @@ class CategoryServiceTest {
             .isInstanceOf(NotFoundException.class)
             .hasMessageContaining(NOT_FOUND_MESSAGE);
 
+    }
+
+    @Test
+    void retrieveCategory(){
+
+        given(categoryRepository.findAllBy(Pageable.unpaged(), CategoryResponse.class)).willReturn(Page.empty());
+
+        categoryService.retrieveCategory(Pageable.unpaged());
+
+        then(categoryRepository).should(times(1)).findAllBy(Pageable.unpaged(), CategoryResponse.class);
     }
 }

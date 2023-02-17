@@ -25,6 +25,8 @@
             **/*.java
         </sonar.issue.ignore.multicriteria.e1.resourceKey>
 
+        <sonar.exclusions>**/Q*.java</sonar.exclusions>
+
     </properties>
 
     <dependencies>

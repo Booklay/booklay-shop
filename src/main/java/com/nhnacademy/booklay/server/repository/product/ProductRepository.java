@@ -10,7 +10,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
     List<Product> findTop8ByIsDeletedOrderByCreatedAtDesc(boolean isDeleted);
 
-    Page<Product> findByIdInAndIsDeleted(List<Long> ids, boolean isDeleted, Pageable pageable);
+    Page<Product> findAllByIsDeletedOrderByCreatedAtDesc(boolean isDeleted, Pageable pageable);
+    Page<Product> findByIdInAndIsDeletedOrderByCreatedAtDesc(List<Long> ids, boolean isDeleted, Pageable pageable);
 
     <T> Page<T> findAllBy(Pageable pageable, Class<T> type);
 }

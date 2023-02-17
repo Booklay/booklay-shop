@@ -23,4 +23,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("update CategoryProduct ca set ca.pk.categoryId = :changeId where ca.pk.categoryId = :existId")
     int updateProductCategory(@Param("existId") Long existId, @Param("changeId") Long changeId);
 
+    @Modifying
+    @Query("update Coupon c set c.category.id = :changeId where c.category.id = :existId")
+    int updateCoupon(@Param("existId") Long existId, @Param("changeId") Long changeId);
+
 }

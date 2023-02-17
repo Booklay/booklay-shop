@@ -5,9 +5,7 @@ import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryStepResponse;
-import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.exception.controller.DeleteFailedException;
-import com.nhnacademy.booklay.server.exception.controller.UpdateFailedException;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
@@ -61,9 +59,10 @@ public class CategoryAdminController {
         try {
             categoryService.createCategory(createDto);
         } catch (NotFoundException e) {
-            throw new CreateFailedException("카테고리 생성 실패, 부모 카테고리가 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .build();
         } catch (AlreadyExistedException e) {
-            log.error("카테고리 생성 실패, 이미 존재하는 카테고리 입니다.");
+            log.error("카테고리 생성 실패, 이미 존재하는 카테고리 번호 입니다.");
         }
 
         categoryResponse = categoryService.retrieveCategory(createDto.getId());
@@ -96,9 +95,9 @@ public class CategoryAdminController {
         try {
             categoryService.updateCategory(updateDto, categoryId);
         } catch (NotFoundException e) {
-            throw new UpdateFailedException("카테고리 수정 실패");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .build();
         }
-
 
         CategoryResponse categoryResponse = categoryService.retrieveCategory(updateDto.getId());
 

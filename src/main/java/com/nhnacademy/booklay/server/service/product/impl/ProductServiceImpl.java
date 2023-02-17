@@ -568,7 +568,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
 
-    Page<Product> page = productRepository.findNotDeletedByPageable(pageable);
+    Page<Product> page = productRepository.findAllByIsDeletedOrderByCreatedAtDesc(false, pageable);
 
     List<ProductAllInOneResponse> all = getProducts(page.getContent());
 
@@ -592,7 +592,7 @@ public class ProductServiceImpl implements ProductService {
   public SearchPageResponse<SearchProductResponse> retrieveProductByRequest(SearchIdRequest request, Pageable pageable) {
 
     List<Long> ids = new ArrayList<>();
-    String title;
+    String title = "";
 
     if (request.getClassification().equals("categories")) {
       List<CategoryProduct> list = categoryProductRepository.findByCategory_Id(request.getId());
@@ -614,13 +614,12 @@ public class ProductServiceImpl implements ProductService {
     if (ids.isEmpty()) {
       return getSearchPageResponse(title, Page.empty(), List.of());
     } else {
-      Page<Product> page = productRepository.findByIdInAndIsDeleted(ids, false, pageable);
+      Page<Product> page = productRepository.findByIdInAndIsDeletedOrderByCreatedAtDesc(ids, false, pageable);
       List<ProductAllInOneResponse> all = getProducts(page.getContent());
       return getSearchPageResponse(title, page, all);
     }
 
   }
-
 
   private List<ProductAllInOneResponse> getProducts(List<Product> list) {
     List<Long> ids = new ArrayList<>();

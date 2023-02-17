@@ -9,7 +9,6 @@ import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -90,6 +89,9 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(updateRequest.toEntity(parentCategory));
 
         if (!categoryId.equals(updateRequest.getId())) {
+            categoryRepository.updateParentCategory(categoryId, updateRequest.getId());
+            categoryRepository.updateProductCategory(categoryId, updateRequest.getId());
+
             categoryRepository.delete(category);
         }
     }

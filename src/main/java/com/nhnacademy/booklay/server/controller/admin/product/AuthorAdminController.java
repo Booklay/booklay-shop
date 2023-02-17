@@ -53,19 +53,19 @@ public class AuthorAdminController {
     }
 
     @PostMapping
-    public ResponseEntity authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
+    public ResponseEntity<Void> authorRegister(@Valid @RequestBody CreateAuthorRequest request) {
         authorService.createAuthor(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
-    public ResponseEntity authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
+    public ResponseEntity<Void> authorUpdate(@Valid @RequestBody UpdateAuthorRequest request) {
        authorService.updateAuthor(request);
        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @DeleteMapping
-    public ResponseEntity authorDelete(@Valid @RequestBody DeleteIdRequest request) {
+    public ResponseEntity<Void> authorDelete(@Valid @RequestBody DeleteIdRequest request) {
         authorService.deleteAuthor(request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

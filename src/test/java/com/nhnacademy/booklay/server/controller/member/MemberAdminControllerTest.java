@@ -63,7 +63,7 @@ class MemberAdminControllerTest {
 
     @Test
     @DisplayName("관리자의 회원리스트 검색 테스트")
-    void testRetrieveMembers() throws Exception {
+    void retrieveMembersSuccessTest() throws Exception {
         //given
         PageImpl<MemberRetrieveResponse> page = new PageImpl<>(List.of());
 
@@ -77,7 +77,7 @@ class MemberAdminControllerTest {
 
     @Test
     @DisplayName("관리자의 단일회원 조회 성공 테스트")
-    void retrieveMemberTest_Success() throws Exception {
+    void retrieveMemberSuccessTest() throws Exception {
         //mocking
         when(memberService.retrieveMember(member.getMemberNo())).thenReturn(memberRetrieveResponse);
 

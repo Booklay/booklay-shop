@@ -95,6 +95,12 @@ public class MemberController {
             .body(memberResponse);
     }
 
+    /**
+     * Mypage의 main 부분 보여주는 데이터 리턴
+     *
+     * @param memberNo 해당 회원의 번호
+     * @return
+     */
     @GetMapping("/main/{memberNo}")
     public ResponseEntity<MemberMainRetrieveResponse> retrieveMemberMain(
         @PathVariable Long memberNo) {

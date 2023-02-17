@@ -209,6 +209,8 @@ public class Dummy {
             .paymentMethod(3L)
             .giftWrappingPrice(4500L)
             .isBlinded(false)
+                .orderTitle("Dummy외 0건")
+                .pointAccumulate(0)
             .build();
 
         ReflectionTestUtils.setField(order, "id", 1L);

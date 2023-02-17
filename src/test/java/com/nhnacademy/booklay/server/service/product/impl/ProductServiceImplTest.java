@@ -403,11 +403,11 @@ class ProductServiceImplTest {
   @Test
   void getAllProducts(){
 
-    given(productRepository.findNotDeletedByPageable(PageRequest.of(0,16))).willReturn(Page.empty());
+    given(productRepository.findAllByIsDeletedOrderByCreatedAtDesc(false, PageRequest.of(0,16))).willReturn(Page.empty());
 
     productService.getAllProducts(PageRequest.of(0,16));
 
-    then(productRepository).should(times(1)).findNotDeletedByPageable(PageRequest.of(0,16));
+    then(productRepository).should(times(1)).findAllByIsDeletedOrderByCreatedAtDesc(false, PageRequest.of(0,16));
 
   }
 

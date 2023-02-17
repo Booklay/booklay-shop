@@ -254,6 +254,8 @@ create table `order`
     payment_method int not null,
     gift_wrapping_price int not null,
     is_blinded boolean not null,
+    order_title varchar(50) NOT NULL,
+    point_accumulate int DEFAULT '0',
     constraint FK_member_TO_order_1
         foreign key (member_no) references member (member_no),
     constraint FK_order_status_code_TO_order_1

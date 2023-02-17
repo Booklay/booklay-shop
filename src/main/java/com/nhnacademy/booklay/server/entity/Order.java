@@ -73,11 +73,21 @@ public class Order {
     @Column(name = "is_blinded")
     private Boolean isBlinded;
 
+    @Column(name = "order_title")
+    private String orderTitle;
+
+    @Column(name = "point_accumulate")
+    private Integer pointAccumulate;
+
+
+
     @Builder
-    public Order(Member member, Long memberNo, OrderStatusCode orderStatusCode,
+    public Order(Long id, Member member, Long memberNo, OrderStatusCode orderStatusCode,
                  Long orderStatusCodeNo, LocalDateTime orderedAt, Long productPriceSum,
                  Long deliveryPrice, Long discountPrice, Long pointUsePrice, Long paymentPrice,
-                 Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded) {
+                 Long paymentMethod, Long giftWrappingPrice, Boolean isBlinded, String orderTitle,
+                 Integer pointAccumulate) {
+        this.id = id;
         this.member = member;
         this.memberNo = memberNo;
         this.orderStatusCode = orderStatusCode;
@@ -91,5 +101,7 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.giftWrappingPrice = giftWrappingPrice;
         this.isBlinded = isBlinded;
+        this.orderTitle = orderTitle;
+        this.pointAccumulate = pointAccumulate;
     }
 }

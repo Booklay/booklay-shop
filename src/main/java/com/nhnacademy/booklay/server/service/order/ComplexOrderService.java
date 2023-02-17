@@ -1,8 +1,8 @@
 package com.nhnacademy.booklay.server.service.order;
 
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
-import com.nhnacademy.booklay.server.dto.order.OrderReceipt;
-import com.nhnacademy.booklay.server.dto.order.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import com.nhnacademy.booklay.server.entity.Order;
 
 public interface ComplexOrderService {

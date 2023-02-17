@@ -1,10 +1,9 @@
 package com.nhnacademy.booklay.server.service.delivery;
 
-import com.nhnacademy.booklay.server.dto.order.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import com.nhnacademy.booklay.server.entity.DeliveryDetail;
 import com.nhnacademy.booklay.server.repository.delivery.DeliveryDetailRepository;
 import com.nhnacademy.booklay.server.service.order.OrderService;
-import com.nhnacademy.booklay.server.service.order.OrderStatusService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class DeliveryDetailServiceImpl implements DeliveryDetailService{
     }
 
     /**
-     * todo 쿠폰 반환은 프론트에서 따로 쏴주게 하기
+     *
      */
     public void refundDelivery(Long memberNo, Long orderNo){
         List<DeliveryDetail> deliveryDetailList = deliveryDetailRepository.findAllByOrder_MemberNoAndOrder_Id(memberNo, orderNo);

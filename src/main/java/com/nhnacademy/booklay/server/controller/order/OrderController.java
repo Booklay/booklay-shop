@@ -1,17 +1,22 @@
 package com.nhnacademy.booklay.server.controller.order;
 
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.cart.CartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
-import com.nhnacademy.booklay.server.dto.order.OrderReceipt;
-import com.nhnacademy.booklay.server.dto.order.OrderSheet;
-import com.nhnacademy.booklay.server.dto.order.OrderSheetSaveResponse;
-import com.nhnacademy.booklay.server.dto.order.StorageRequest;
+import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheetCheckResponse;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheetSaveResponse;
+import com.nhnacademy.booklay.server.dto.order.payment.StorageRequest;
 import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
+import com.nhnacademy.booklay.server.service.order.OrderService;
 import com.nhnacademy.booklay.server.service.order.RedisOrderService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +34,7 @@ public class OrderController {
     private final RedisOrderService redisOrderService;
     private final CategoryProductService categoryProductService;
     private final ComplexOrderService complexOrderService;
+    private final OrderService orderService;
 
     @GetMapping("products")
     public ResponseEntity<List<CartRetrieveResponse>> getProductDataByProductList(
@@ -46,13 +52,16 @@ public class OrderController {
     @PostMapping("check")
     public ResponseEntity<OrderSheetSaveResponse> saveOrderSheet(@RequestBody OrderSheet orderSheet, MemberInfo memberInfo){
         OrderSheet updatedOrderSheet = complexOrderService.checkOrder(orderSheet, memberInfo);
-        if (updatedOrderSheet == null){
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+        if (updatedOrderSheet instanceof OrderSheetCheckResponse){
+            return ResponseEntity.status(HttpStatus.OK)
+                .body(new OrderSheetSaveResponse(null , false, null
+                    , ((OrderSheetCheckResponse) updatedOrderSheet).getReason(),
+                    ((OrderSheetCheckResponse) updatedOrderSheet).getReasonType()));
         }
         String uuid = redisOrderService.saveOrderSheet(updatedOrderSheet);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new OrderSheetSaveResponse(uuid, Boolean.TRUE, updatedOrderSheet.getPaymentAmount()));
+                .body(new OrderSheetSaveResponse(uuid, Boolean.TRUE, updatedOrderSheet.getPaymentAmount(), null, null));
     }
 
     @GetMapping("sheet/{orderId}")
@@ -86,6 +95,12 @@ public class OrderController {
     public ResponseEntity<OrderReceipt> retrieveOrderReceipt(@PathVariable Long orderNo, MemberInfo memberInfo){
 
         return ResponseEntity.ok(complexOrderService.retrieveOrderReceipt(orderNo, memberInfo.getMemberNo()));
+    }
+
+    @GetMapping("receipt/list")
+    public ResponseEntity<PageResponse<OrderListRetrieveResponse>> retrieveOrderReceiptPage(MemberInfo memberInfo, Pageable pageable){
+        return ResponseEntity.ok(orderService.retrieveOrderListRetrieveResponsePageByMemberNoAndBlind(
+            memberInfo.getMemberNo(), Boolean.FALSE, pageable));
     }
 
 }

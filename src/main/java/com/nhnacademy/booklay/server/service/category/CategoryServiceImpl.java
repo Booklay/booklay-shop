@@ -91,6 +91,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (!categoryId.equals(updateRequest.getId())) {
             categoryRepository.updateParentCategory(categoryId, updateRequest.getId());
             categoryRepository.updateProductCategory(categoryId, updateRequest.getId());
+            categoryRepository.updateCoupon(categoryId, updateRequest.getId());
 
             categoryRepository.delete(category);
         }

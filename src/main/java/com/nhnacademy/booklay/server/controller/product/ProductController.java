@@ -48,7 +48,7 @@ public class ProductController {
   @GetMapping
   public ResponseEntity<PageResponse<ProductAllInOneResponse>> getProductPage(Pageable pageable) {
     Page<ProductAllInOneResponse> response = productService.getProductsPage(pageable);
-    PageResponse body = new PageResponse<>(response);
+    PageResponse<ProductAllInOneResponse> body = new PageResponse<>(response);
     return ResponseEntity.status(HttpStatus.OK).body(body);
   }
 

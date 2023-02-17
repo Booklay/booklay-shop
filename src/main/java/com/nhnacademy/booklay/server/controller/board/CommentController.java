@@ -35,7 +35,7 @@ public class CommentController {
   public ResponseEntity<PageResponse<CommentResponse>> retrieveCommentPage(
       @PathVariable Long postId, Pageable pageable) {
     Page<CommentResponse> result = commentService.retrieveCommentPage(postId, pageable);
-    PageResponse<CommentResponse> page = new PageResponse(result);
+    PageResponse<CommentResponse> page = new PageResponse<>(result);
     return ResponseEntity.status(HttpStatus.OK).body(page);
   }
 

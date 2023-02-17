@@ -30,6 +30,5 @@ public class MemberMainRetrieveResponse {
         this.memberId = this.memberId.replaceAll("(?<=.{3}).", "*");
         this.name = this.name.replaceAll("(?<=.{2}).", "*");
         this.phoneNo = this.phoneNo.replaceAll("(?<=.{7}).", "*");
-        this.email = this.email.replaceAll("[a-z,A-Z,0-9]+@", "******@");
     }
 }

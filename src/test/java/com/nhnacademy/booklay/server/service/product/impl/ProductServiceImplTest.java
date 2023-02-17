@@ -4,12 +4,15 @@ package com.nhnacademy.booklay.server.service.product.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Author;
@@ -395,4 +398,44 @@ class ProductServiceImplTest {
 
     assertThat(result.get(0).getPrice()).isEqualTo(productResponses.get(0).getPrice());
   }
+
+
+  @Test
+  void getAllProducts(){
+
+    given(productRepository.findAllByIsDeletedOrderByCreatedAtDesc(false, PageRequest.of(0,16))).willReturn(Page.empty());
+
+    productService.getAllProducts(PageRequest.of(0,16));
+
+    then(productRepository).should(times(1)).findAllByIsDeletedOrderByCreatedAtDesc(false, PageRequest.of(0,16));
+
+  }
+
+  @Test
+  void getLatestEights(){
+
+    given(productRepository.findTop8ByIsDeletedOrderByCreatedAtDesc(false))
+        .willReturn(List.of());
+
+    productService.getLatestEights();
+
+    then(productRepository)
+        .should(times(1)).findTop8ByIsDeletedOrderByCreatedAtDesc(false);
+
+  }
+
+  @Test
+  void retrieveProductByRequest(){
+
+    SearchIdRequest searchIdRequest = new SearchIdRequest();
+
+    ReflectionTestUtils.setField(searchIdRequest, "classification", "categories");
+    ReflectionTestUtils.setField(searchIdRequest, "id", 101001L);
+
+    productService.retrieveProductByRequest(searchIdRequest, PageRequest.of(0,16));
+
+    then(productRepository).shouldHaveNoInteractions();
+
+  }
+
 }

@@ -299,8 +299,10 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
             );
         }
         //포인트 사용
-        pointHistoryService.createPointHistory(new PointHistoryCreateRequest(
-                order.getMemberNo(), -orderSheet.getUsingPoint().intValue(), "포인트 사용(주문 할인)"));
+        if (orderSheet.getUsingPoint()>0){
+            pointHistoryService.createPointHistory(new PointHistoryCreateRequest(
+                    order.getMemberNo(), -orderSheet.getUsingPoint().intValue(), "포인트 사용(주문 할인)"));
+        }
         //쿠폰 사용전송
         String couponUsingUrl = gatewayIp + "/coupon/v1/coupons/using";
         CouponUseRequest couponUseRequest = orderSheet.getCouponUseRequest();

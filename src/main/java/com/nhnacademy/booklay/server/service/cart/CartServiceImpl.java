@@ -36,7 +36,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void deleteAllCartByPkList(List<Cart.Pk> pkList) {
-        cartRepository.deleteAllById(pkList);
+        for (Cart.Pk pk:pkList){
+            cartRepository.deleteAllByPk_MemberIdAndPk_ProductId(pk.getMemberId(), pk.getProductId());
+        }
     }
 
     @Override

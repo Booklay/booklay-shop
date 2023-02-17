@@ -25,6 +25,7 @@ public class Cart {
     @Column(name = "count")
     private Integer count;
 
+    @Getter
     @Embeddable
     @EqualsAndHashCode
     @NoArgsConstructor

@@ -35,26 +35,26 @@ public class CommentController {
   public ResponseEntity<PageResponse<CommentResponse>> retrieveCommentPage(
       @PathVariable Long postId, Pageable pageable) {
     Page<CommentResponse> result = commentService.retrieveCommentPage(postId, pageable);
-    PageResponse<CommentResponse> page = new PageResponse(result);
+    PageResponse<CommentResponse> page = new PageResponse<>(result);
     return ResponseEntity.status(HttpStatus.OK).body(page);
   }
 
   @PostMapping
-  public ResponseEntity createComment(@RequestBody CommentRequest request) {
+  public ResponseEntity<Long> createComment(@RequestBody CommentRequest request) {
     Long result = commentService.createComment(request);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(result);
   }
 
   @PutMapping
-  public ResponseEntity updateComment(@RequestBody CommentRequest request) {
+  public ResponseEntity<Long> updateComment(@RequestBody CommentRequest request) {
     Long result = commentService.updateComment(request);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(result);
   }
 
   @DeleteMapping("/{commentId}")
-  public ResponseEntity deleteComment(@PathVariable Long commentId, MemberInfo memberInfo) {
+  public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, MemberInfo memberInfo) {
     commentService.deleteComment(commentId, memberInfo.getMemberNo());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }

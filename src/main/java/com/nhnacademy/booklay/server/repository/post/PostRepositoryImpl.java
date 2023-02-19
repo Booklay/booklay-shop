@@ -13,6 +13,9 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 public class PostRepositoryImpl extends QuerydslRepositorySupport implements PostRepositoryCustom {
 
+  private static final Integer POST_TYPE_NOTICE = 5;
+  private static final Integer POST_TYPE_PRODUCT = 2;
+
   public PostRepositoryImpl() {
     super(Post.class);
   }
@@ -80,5 +83,13 @@ public class PostRepositoryImpl extends QuerydslRepositorySupport implements Pos
 
     update(post).where(post.postId.eq(postId), post.memberId.memberNo.eq(memberNo))
         .set(post.isDeleted, true).execute();
+  }
+
+  @Override
+  public List<PostResponse> findNoticeList(Integer pageLimit) {
+    QPost post = QPost.post;
+
+    return from(post).where(post.postTypeId.postTypeId.eq(POST_TYPE_NOTICE)).orderBy(post.createdAt.desc())
+        .select(Projections.constructor(PostResponse.class, post)).limit(pageLimit).fetch();
   }
 }

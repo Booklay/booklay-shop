@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public Long createComment(CommentRequest request) {
-    log.info("출력 : " + request.getPostId());
+
     Post post = postRepository.findById(request.getPostId())
         .orElseThrow(() -> new NotFoundException(Post.class, "post not found"));
     Member writer = memberRepository.findById(request.getMemberNo())
@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
             request.getGroupOrder());
       }
     }
-    //요청에 그룹번호가 없는 아예 첫 게시글이라면 그룹번호 지정 후 오더 0으로 설정
+    //요청에 그룹번호가 없는 아예 첫 댓글이라면 그룹번호 지정 후 오더 0으로 설정
     if (request.getGroupCommentNo() == null) {
       Integer baseGroupOrder = 0;
       comment.setGroupOrder(baseGroupOrder);

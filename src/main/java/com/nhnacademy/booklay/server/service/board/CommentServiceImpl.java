@@ -85,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public Long updateComment(CommentRequest request) {
-    Comment original = commentRepository.findById(request.getPostId())
+    Comment original = commentRepository.findById(request.getCommentId())
         .orElseThrow(() -> new NotFoundException(Comment.class, "comment not found"));
 
     original.setContent(request.getContent());

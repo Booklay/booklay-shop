@@ -9,8 +9,8 @@ import com.nhnacademy.booklay.server.repository.product.ProductRelationRepositor
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import com.nhnacademy.booklay.server.service.product.cache.ProductResponseCacheWrapService;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,19 +32,15 @@ public class ProductRelationServiceImpl implements ProductRelationService {
   private final ProductService productService;
   private final ProductRepository productRepository;
   private static final String PRODUCT_NOT_FOUND = "product not found";
-
+  private final ProductResponseCacheWrapService productResponseCacheWrapService;
   //productId를 통해서 연관 상품 목록 호출
   @Override
   public List<RetrieveProductResponse> retrieveRecommendProducts(Long productId)
       throws IOException {
 
-    if(productRelationRepository.existsAllByBaseProduct_Id(productId)) {
       List<Long> recommendProductIds = productRelationRepository.findRecommendIdsByBaseProductId(
           productId);
-      return productService.retrieveProductResponses(recommendProductIds);
-    }
-
-    return new ArrayList<>();
+      return productResponseCacheWrapService.cacheRetrieveProductResponseList(recommendProductIds);
   }
 
   @Override

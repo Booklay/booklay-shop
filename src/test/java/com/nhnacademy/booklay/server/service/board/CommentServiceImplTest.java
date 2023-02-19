@@ -8,11 +8,15 @@ import static org.mockito.BDDMockito.given;
 import com.nhnacademy.booklay.server.dto.board.response.CommentResponse;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Comment;
+import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.post.CommentRepository;
 import java.util.Collections;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +34,15 @@ class CommentServiceImplTest {
 
   @Mock
   CommentRepository commentRepository;
+
+
+  Comment comment;
+
+  @BeforeEach
+  void setUp(){
+    comment = DummyCart.getDummyComment();
+
+  }
 
   @Test
   public void testRetrieveCommentPage() {
@@ -59,5 +73,16 @@ class CommentServiceImplTest {
 
   @Test
   void deleteComment() {
+    Long commentId = 1L;
+    Long memberNo = 1L;
+    ReflectionTestUtils.setField(comment, "commentId", 1L);
+
+    given(commentRepository.findById(commentId)).willReturn(Optional.ofNullable(comment));
+
+    commentService.deleteComment(commentId, memberNo);
+
+    if(comment.getMemberId().getMemberNo().equals(memberNo)){
+      BDDMockito.then(commentRepository).should().softDelete(commentId);
+    }
   }
 }

@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.board;
 
-import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
@@ -39,6 +38,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 게시글 생성
+   *
    * @param request
    * @return
    */
@@ -64,6 +64,7 @@ public class PostServiceImpl implements PostService {
           .orElseThrow(() -> new NotFoundException(Product.class, "product not found"));
       post.setProductId(product);
     }
+
     if (request.getAnswered() != null) {
       post.setAnswered(request.getAnswered());
     }
@@ -105,13 +106,13 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 게시글 수정
+   *
    * @param request
    * @return
    */
   @Override
   public Long updatePost(BoardPostUpdateRequest request) {
-    Post post = postRepository.findById(request.getPostId())
-        .orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
+    Post post = postRepository.findById(request.getPostId()).orElseThrow(() -> new NotFoundException(Post.class, POST_NOT_FOUND));
 
     post.setTitle(request.getTitle());
     post.setContent(request.getContent());
@@ -124,6 +125,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 답변 승인
+   *
    * @param postId
    * @return
    */
@@ -135,6 +137,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 상품 QNA 게시판 조회
+   *
    * @param productId
    * @param pageable
    * @return
@@ -147,6 +150,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 공지사항 게시판 조회
+   *
    * @param pageable
    * @return
    */
@@ -158,6 +162,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * pageLimit 수 만큼 최신 공지사항 조회
+   *
    * @param pageLimit
    * @return
    */
@@ -168,6 +173,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 게시글 조회
+   *
    * @param postId
    * @return
    */
@@ -186,6 +192,7 @@ public class PostServiceImpl implements PostService {
 
   /**
    * 게시글 소프트 딜리트
+   *
    * @param memberId
    * @param postId
    */

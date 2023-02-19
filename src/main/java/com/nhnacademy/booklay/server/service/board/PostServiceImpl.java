@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.service.board;
 
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
@@ -12,6 +13,7 @@ import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.post.PostRepository;
 import com.nhnacademy.booklay.server.repository.post.PostTypeRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @Author:최규태
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,6 +37,11 @@ public class PostServiceImpl implements PostService {
   private static final Integer POST_TYPE_NOTICE = 5;
   private static final String POST_NOT_FOUND = "post not found";
 
+  /**
+   * 게시글 생성
+   * @param request
+   * @return
+   */
   @Override
   public Long createPost(BoardPostCreateRequest request) {
     PostType postType = postTypeRepository.findById(request.getPostTypeNo())
@@ -93,6 +103,11 @@ public class PostServiceImpl implements PostService {
     return savedPost.getPostId();
   }
 
+  /**
+   * 게시글 수정
+   * @param request
+   * @return
+   */
   @Override
   public Long updatePost(BoardPostUpdateRequest request) {
     Post post = postRepository.findById(request.getPostId())
@@ -107,24 +122,55 @@ public class PostServiceImpl implements PostService {
     return post.getPostId();
   }
 
+  /**
+   * 답변 승인
+   * @param postId
+   * @return
+   */
   @Override
   public Long updateConfirmAnswer(Long postId) {
     postRepository.confirmAnswerByPostId(postId);
     return postId;
   }
 
+  /**
+   * 상품 QNA 게시판 조회
+   * @param productId
+   * @param pageable
+   * @return
+   */
   @Override
   @Transactional(readOnly = true)
   public Page<PostResponse> retrieveProductQNA(Long productId, Pageable pageable) {
     return postRepository.findAllByProductIdPage(productId, pageable);
   }
 
+  /**
+   * 공지사항 게시판 조회
+   * @param pageable
+   * @return
+   */
   @Override
   @Transactional(readOnly = true)
   public Page<PostResponse> retrieveNotice(Pageable pageable) {
     return postRepository.findAllNotice(POST_TYPE_NOTICE, pageable);
   }
 
+  /**
+   * pageLimit 수 만큼 최신 공지사항 조회
+   * @param pageLimit
+   * @return
+   */
+  @Override
+  public List<PostResponse> retrieveNoticeList(Integer pageLimit) {
+    return postRepository.findNoticeList(pageLimit);
+  }
+
+  /**
+   * 게시글 조회
+   * @param postId
+   * @return
+   */
   @Override
   @Transactional(readOnly = true)
   public PostResponse retrievePostById(Long postId) {
@@ -138,6 +184,11 @@ public class PostServiceImpl implements PostService {
     return response;
   }
 
+  /**
+   * 게시글 소프트 딜리트
+   * @param memberId
+   * @param postId
+   */
   @Override
   public void deletePost(Long memberId, Long postId) {
     postRepository.deleteByPostIdAndMemberNo(postId, memberId);

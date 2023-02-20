@@ -15,5 +15,5 @@ public interface OrderService {
     Order saveOrder(OrderSheet orderSheet);
 
     void deleteOrder(Long orderNo);
-
+    Boolean confirmOrder(Long orderNo, Long memberNo);
 }

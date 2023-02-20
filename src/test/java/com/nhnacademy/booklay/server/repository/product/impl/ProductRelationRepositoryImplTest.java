@@ -20,10 +20,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@Transactional
 class ProductRelationRepositoryImplTest {
 
   @Autowired
@@ -41,12 +44,30 @@ class ProductRelationRepositoryImplTest {
   @Autowired
   private ObjectFileRepository objectFileRepository;
 
+  void clearRepo(String entityName, JpaRepository jpaRepository) {
+    jpaRepository.deleteAll();
+
+    String query =
+        String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName,
+            entityName);
+
+    this.entityManager
+        .getEntityManager()
+        .createNativeQuery(query)
+        .executeUpdate();
+  }
+
   @BeforeEach
   void setup() {
     em = entityManager.getEntityManager();
+    clearRepo("product_relation", productRelationRepository);
 
     objectFile= DummyCart.getDummyFile();
+    entityManager.persist(objectFile);
+
     baseProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
+    entityManager.persist(baseProduct);
+
 //    ReflectionTestUtils.setField(baseProduct, "productId", 1L);
     targetProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductSubscribeDto());
 //    ReflectionTestUtils.setField(targetProduct, "productId", 2L);
@@ -58,14 +79,14 @@ class ProductRelationRepositoryImplTest {
   void findRecommendIdsByBaseProductId() {
     //given
     objectFileRepository.save(objectFile);
-    baseProduct = productRepository.save(baseProduct);
-    targetProduct = productRepository.save(targetProduct);
+    Product savedBaseProduct = productRepository.save(baseProduct);
+    Product savedTargetProduct = productRepository.save(targetProduct);
 
     productRelationRepository.save(
-        ProductRelation.builder().relatedProduct(targetProduct).baseProduct(baseProduct).build());
+        ProductRelation.builder().relatedProduct(savedTargetProduct).baseProduct(savedBaseProduct).build());
 
     //when
-    List<Long> relationProductIds =  productRelationRepository.findRecommendIdsByBaseProductId(baseProduct.getId());
+    List<Long> relationProductIds =  productRelationRepository.findRecommendIdsByBaseProductId(savedBaseProduct.getId());
 
     //then
     assertThat(relationProductIds.size()).isEqualTo(1);
@@ -82,10 +103,11 @@ class ProductRelationRepositoryImplTest {
     baseProduct = productRepository.save(baseProduct);
     targetProduct = productRepository.save(targetProduct);
 
+    em.clear();
+
     //when
     productRelationRepository.existsByBaseAndTargetId(baseProduct.getId(), targetProduct.getId());
 
-    em.clear();
   }
 //
 //  @Test

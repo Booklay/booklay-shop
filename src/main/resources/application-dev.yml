@@ -1,6 +1,10 @@
 server:
   port: 9090
+
 spring:
+  application:
+    name: booklay-shop
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -53,11 +57,11 @@ message:
       request: coupon-zone-request-dev
       response: coupon-zone-response-dev
 
-project:
-  build:
-    outputDirectory: outputDir
-    directory: dir
-
 logging:
   level:
     root: info
+    config: info
+    repository: debug
+    service: debug
+    controller: debug
+  config: classpath:logback/logback-spring.xml

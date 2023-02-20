@@ -34,6 +34,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /**
@@ -58,6 +59,7 @@ class TagServiceImplTest {
 
   CreateTagRequest request;
   Tag tag;
+  Product product;
 
   @BeforeEach
   void setup() {
@@ -67,6 +69,9 @@ class TagServiceImplTest {
     tag = Tag.builder()
         .name(request.getName())
         .build();
+
+    product = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
+    ReflectionTestUtils.setField(product, "id", 1L);
   }
 
   @Test
@@ -183,12 +188,13 @@ class TagServiceImplTest {
   @Test
   void testRetrieveTagPageWithBoolean_success(){
 //given
-    given(productRepository.existsById(any())).willReturn(true);
+    Pageable pageable = PageRequest.of(1, 20);
+    given(productRepository.findById(1L)).willReturn(Optional.ofNullable(product));
 
-    given(tagRepository.findAllBy(any(), any())).willReturn(Page.empty());
+    given(tagRepository.findAllBy(pageable, RetrieveTagResponse.class)).willReturn(Page.empty());
 
     //when
-    Page<TagProductResponse> pageResponse = tagService.retrieveAllTagWithBoolean(PageRequest.of(0, 10), any());
+    Page<TagProductResponse> pageResponse = tagService.retrieveAllTagWithBoolean(pageable, 1L);
 
     //then
     BDDMockito.then(tagRepository).should().findAllBy(any(), any());

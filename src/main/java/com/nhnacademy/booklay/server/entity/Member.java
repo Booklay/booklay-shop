@@ -95,7 +95,7 @@ public class Member {
         this.isBlocked = isBlocked;
     }
 
-    public void updateMember(MemberUpdateRequest request, Gender gender) {
+    public Member updateMember(MemberUpdateRequest request, Gender gender) {
         this.gender = gender;
         this.password = request.getPassword();
         this.nickname = request.getNickname();
@@ -103,6 +103,8 @@ public class Member {
         this.birthday = request.getBirthday();
         this.phoneNo = request.getPhoneNo();
         this.email = request.getEmail();
+
+        return this;
     }
 
     public void deleteMember() {

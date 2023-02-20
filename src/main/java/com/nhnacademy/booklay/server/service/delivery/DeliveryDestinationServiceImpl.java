@@ -113,9 +113,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     @Transactional(readOnly = true)
     public DeliveryDestination checkExistsDeliveryDestination(Long addressNo) {
         return deliveryDestinationRepository.findById(addressNo)
-            .orElseThrow(
-                () -> new DeliveryDestinationNotFoundException(
-                    addressNo));
+            .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));
     }
 
     /**
@@ -133,7 +131,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
 
         releaseDefaultDeliveryDestination(requestDto.getIsDefaultDestination(), memberNo);
 
-        deliveryDestination.update(requestDto);
+        deliveryDestinationRepository.save(deliveryDestination.update(requestDto));
     }
 
     /**

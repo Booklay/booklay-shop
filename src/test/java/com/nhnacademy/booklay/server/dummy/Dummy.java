@@ -6,11 +6,13 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
-import com.nhnacademy.booklay.server.dto.coupon.response.CouponIssueResponse;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -379,5 +381,40 @@ public class Dummy {
 
     public static CouponIssueRequest getDummyCouponIssueRequest() {
         return new CouponIssueRequest(1L, 1L);
+    }
+
+    public static MemberLoginResponse getDummyMemberLoginResponse() {
+        return new MemberLoginResponse(getDummyMember().getMemberId(),
+            getDummyMember().getPassword(),
+            "member",
+            getDummyMember().getEmail(),
+            getDummyMember().getIsBlocked()
+        );
+    }
+
+    public static MemberRetrieveResponse getDummyMemberRetrieveResponse() {
+        return MemberRetrieveResponse.builder()
+            .memberNo(getDummyMember().getMemberNo())
+            .gender(getDummyMember().getGender().getName())
+            .memberId(getDummyMember().getMemberId())
+            .nickname(getDummyMember().getNickname())
+            .name(getDummyMember().getName())
+            .birthday(getDummyMember().getBirthday())
+            .phoneNo(getDummyMember().getPhoneNo())
+            .email(getDummyMember().getEmail())
+            .createdAt(getDummyMember().getCreatedAt())
+            .updatedAt(getDummyMember().getUpdatedAt())
+            .deletedAt(getDummyMember().getDeletedAt())
+            .isBlocked(getDummyMember().getIsBlocked())
+            .memberGrade("화이트")
+            .authority("member")
+            .build();
+    }
+
+    public static MemberAuthorityRetrieveResponse getDummyMemberAuthorityRetrieveResponse() {
+        return MemberAuthorityRetrieveResponse.builder()
+            .id(getDummyMemberAuthority().getAuthority().getId())
+            .name(getDummyMemberAuthority().getAuthority().getName())
+            .build();
     }
 }

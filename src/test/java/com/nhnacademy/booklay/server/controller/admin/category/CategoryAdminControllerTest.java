@@ -1,11 +1,15 @@
 package com.nhnacademy.booklay.server.controller.admin.category;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,7 +22,6 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
-import com.nhnacademy.booklay.server.dto.category.response.CategoryStepResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
@@ -27,6 +30,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,12 +38,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-@WebMvcTest(CategoryAdminController.class)
-@MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com")
+@WebMvcTest(CategoryAdminController.class)
+@ExtendWith(RestDocumentationExtension.class)
+@MockBean(JpaMetamodelMappingContext.class)
 class CategoryAdminControllerTest {
 
     @MockBean
@@ -60,7 +69,19 @@ class CategoryAdminControllerTest {
     private static final String URI_PREFIX = "/admin/categories";
 
     @BeforeEach
-    void setUp() {
+    void setUp(WebApplicationContext webApplicationContext,
+               RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+            .apply(documentationConfiguration(restDocumentation))
+            .alwaysDo(print())
+            .alwaysDo(document("{ClassName}/{methodName}",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint())
+                )
+            )
+            .build();
+
+
         objectMapper = new ObjectMapper();
         category = Dummy.getDummyCategory();
 
@@ -85,9 +106,8 @@ class CategoryAdminControllerTest {
     @Test
     void test_RetrieveCategoryStep() throws Exception {
 
-        given(categoryService.retrieveCategoryStep(1L)).willReturn(new CategoryStepResponse());
-
-        mockMvc.perform(get(URI_PREFIX + "/steps/1"))
+        mockMvc.perform(get(URI_PREFIX + "/steps/1")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
@@ -99,7 +119,6 @@ class CategoryAdminControllerTest {
     @DisplayName("카테고리 등록 성공")
     void testRegisterCategory() throws Exception {
         //given
-        given(categoryService.retrieveCategory(category.getId())).willReturn(categoryResponse);
 
         //then
         mockMvc.perform(post(URI_PREFIX)
@@ -108,9 +127,12 @@ class CategoryAdminControllerTest {
             .andExpect(status().isCreated())
             .andDo(print())
             .andReturn();
+
+        then(categoryService).should(times(1)).retrieveCategory(101L);
+
     }
 
-    //    @Test
+    @Test
     @DisplayName("카테고리 등록 실패, 입력값 오류")
     void testCreateCategory_ifCreateRequestIncludeNullOrBlank_throwsValidationFailedException()
         throws Exception {

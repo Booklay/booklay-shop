@@ -2,6 +2,9 @@ server:
   port: 9090
 
 spring:
+  application:
+    name: booklay-shop
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -49,13 +52,17 @@ booklay:
   elasticsearch:
     uri: 133.186.210.108:9200
 
-project:
-  build:
-    outputDirectory: outputDir
-    directory: dir
-
 message:
   topic:
     coupon:
       request: coupon-zone-request
       response: coupon-zone-response
+
+logging:
+  level:
+    root: info
+    config: info
+    repository: info
+    service: info
+    controller: info
+  config: classpath:logback/logback-spring.xml

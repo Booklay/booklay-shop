@@ -58,7 +58,8 @@ booklay:
 
 project:
   build:
-    outputDirectory: output
+    outputDirectory: outputDir
+    directory: dir
 
 message:
   topic:

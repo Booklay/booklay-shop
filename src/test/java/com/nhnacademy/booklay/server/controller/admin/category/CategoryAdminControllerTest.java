@@ -66,7 +66,8 @@ class CategoryAdminControllerTest {
     CategoryCreateRequest createDto;
     CategoryUpdateRequest updateDto;
 
-    private static final String URI_PREFIX = "/admin/categories";
+    private static final String IDENTIFIER = "admin/categories";
+    private static final String URI_PREFIX = "/" + IDENTIFIER;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext,

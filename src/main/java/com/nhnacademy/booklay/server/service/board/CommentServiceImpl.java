@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public Long createComment(CommentRequest request) {
-    log.info("출력 : " + request.getPostId());
+
     Post post = postRepository.findById(request.getPostId())
         .orElseThrow(() -> new NotFoundException(Post.class, "post not found"));
     Member writer = memberRepository.findById(request.getMemberNo())
@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
             request.getGroupOrder());
       }
     }
-    //요청에 그룹번호가 없는 아예 첫 게시글이라면 그룹번호 지정 후 오더 0으로 설정
+    //요청에 그룹번호가 없는 아예 첫 댓글이라면 그룹번호 지정 후 오더 0으로 설정
     if (request.getGroupCommentNo() == null) {
       Integer baseGroupOrder = 0;
       comment.setGroupOrder(baseGroupOrder);
@@ -85,22 +85,26 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public Long updateComment(CommentRequest request) {
-    Comment original = commentRepository.findById(request.getPostId())
-        .orElseThrow(() -> new NotFoundException(Comment.class, "comment not found"));
+
+    Comment original = commentRepository.findById(request.getCommentId()).orElseThrow(() -> new NotFoundException(Comment.class, "comment not found"));
 
     original.setContent(request.getContent());
 
     Comment saved = commentRepository.save(original);
     return saved.getCommentId();
+
   }
 
   @Override
   public void deleteComment(Long commentId, Long memberNo) {
+
     Comment original = commentRepository.findById(commentId)
         .orElseThrow(() -> new NotFoundException(Comment.class, "comment not found"));
 
     if(original.getMemberId().getMemberNo().equals(memberNo)) {
       commentRepository.softDelete(commentId);
     }
+
   }
+
 }

@@ -55,7 +55,8 @@ message:
 
 project:
   build:
-    outputDirectory: output
+    outputDirectory: outputDir
+    directory: dir
 
 logging:
   level:

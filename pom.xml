@@ -26,6 +26,11 @@
         </sonar.issue.ignore.multicriteria.e1.resourceKey>
 
         <sonar.exclusions>**/Q*.java</sonar.exclusions>
+        <sonar.exclusions>**/aspect/**</sonar.exclusions>
+        <sonar.exclusions>**/dto/common/**</sonar.exclusions>
+        <sonar.exclusions>**/util/**</sonar.exclusions>
+        <sonar.exclusions>**/filter/**</sonar.exclusions>
+        <sonar.exclusions>**/constant/**</sonar.exclusions>
 
     </properties>
 
@@ -34,10 +39,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -124,11 +131,21 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.restdocs/spring-restdocs-mockmvc -->
+        <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-mockmvc</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

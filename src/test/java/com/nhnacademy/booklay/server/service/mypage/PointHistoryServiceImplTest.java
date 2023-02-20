@@ -80,7 +80,7 @@ class PointHistoryServiceImplTest {
 
     @Test
     @DisplayName("특정 회원 포인트 조회 테스트")
-    void retrievePointHistorysSuccessTest() {
+    void retrievePointHistoriesSuccessTest() {
         //given
         PageRequest pageRequest = PageRequest.of(0, 10);
         given(pointHistoryRepository.retrievePointHistoryByMemberNo(member.getMemberNo(),

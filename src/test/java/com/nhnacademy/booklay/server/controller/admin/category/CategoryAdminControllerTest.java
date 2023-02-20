@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.controller.admin;
+package com.nhnacademy.booklay.server.controller.admin.category;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.controller.admin.category.CategoryAdminController;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
@@ -29,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +39,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CategoryAdminController.class)
 @MockBean(JpaMetamodelMappingContext.class)
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com")
 class CategoryAdminControllerTest {
 
     @MockBean

@@ -37,7 +37,9 @@ class ProductRelationRepositoryImplTest {
   EntityManager em;
 
   Product baseProduct;
+  Product savedBaseProduct;
   Product targetProduct;
+  Product savedTargetProduct;
   ObjectFile objectFile;
   @Autowired
   private ProductRepository productRepository;
@@ -63,14 +65,18 @@ class ProductRelationRepositoryImplTest {
     clearRepo("product_relation", productRelationRepository);
 
     objectFile= DummyCart.getDummyFile();
-    entityManager.persist(objectFile);
+    ObjectFile savedFile = entityManager.persist(objectFile);
 
     baseProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
-    entityManager.persist(baseProduct);
+    baseProduct.setThumbnailNo(savedFile.getId());
+    savedBaseProduct = productRepository.save(baseProduct);
 
-//    ReflectionTestUtils.setField(baseProduct, "productId", 1L);
     targetProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductSubscribeDto());
-//    ReflectionTestUtils.setField(targetProduct, "productId", 2L);
+    targetProduct.setThumbnailNo(savedFile.getId());
+    savedTargetProduct = productRepository.save(targetProduct);
+
+    productRelationRepository.save(
+        ProductRelation.builder().relatedProduct(savedTargetProduct).baseProduct(savedBaseProduct).build());
 
   }
 
@@ -78,12 +84,8 @@ class ProductRelationRepositoryImplTest {
   @Order(0)
   void findRecommendIdsByBaseProductId() {
     //given
-    objectFileRepository.save(objectFile);
-    Product savedBaseProduct = productRepository.save(baseProduct);
-    Product savedTargetProduct = productRepository.save(targetProduct);
 
-    productRelationRepository.save(
-        ProductRelation.builder().relatedProduct(savedTargetProduct).baseProduct(savedBaseProduct).build());
+
 
     //when
     List<Long> relationProductIds =  productRelationRepository.findRecommendIdsByBaseProductId(savedBaseProduct.getId());

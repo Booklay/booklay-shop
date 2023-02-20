@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
+import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductTag;
 import com.nhnacademy.booklay.server.entity.ProductTag.Pk;
@@ -36,6 +37,7 @@ class ProductTagRepositoryImplTest {
   Product product;
   Product savedProduct;
   Tag tag;
+  Tag savedTag;
 
   @Autowired
   private ProductRepository productRepository;
@@ -62,12 +64,13 @@ class ProductTagRepositoryImplTest {
   void setUp() {
     clearRepo("product", productRepository);
 
-    objectFileRepository.save(DummyCart.getDummyFile());
+    ObjectFile savedFile = objectFileRepository.save(DummyCart.getDummyFile());
     product = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
-    savedProduct = entityManager.persist(product);
+    product.setThumbnailNo(savedFile.getId());
+    savedProduct = productRepository.save(product);
 
     tag = new Tag("test tag");
-    Tag savedTag = entityManager.persist(tag);
+    savedTag = tagRepository.save(tag);
 
     ProductTag productTag = ProductTag.builder().product(savedProduct).tag(savedTag)
         .pk(new Pk(savedProduct.getId(), savedTag.getId())).build();

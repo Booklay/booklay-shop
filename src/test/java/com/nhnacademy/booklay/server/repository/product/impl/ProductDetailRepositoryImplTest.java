@@ -69,10 +69,11 @@ class ProductDetailRepositoryImplTest {
     request = DummyCart.getDummyProductBookDto();
 
     objectFile = DummyCart.getDummyFile();
-    entityManager.persist(objectFile);
+    ObjectFile savedFile = entityManager.persist(objectFile);
 
     product =DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
-    Product savedProduct = entityManager.persist(product);
+    product.setThumbnailNo(savedFile.getId());
+    Product savedProduct = productRepository.save(product);
 
     ProductDetail productDetail = ProductDetail.builder()
         .product(savedProduct)

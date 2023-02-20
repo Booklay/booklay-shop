@@ -142,6 +142,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
                 updateOrderSheet(orderSheet, cartDtoMap, productNoList, couponUseRequest,
                     productList);
                 orderSheet.setMemberNo(memberInfo.getMemberNo());
+                orderSheet.setPointAccumulate(pointAccumulateSum.get());
                 return orderSheet;
             }
             return new OrderSheetCheckResponse("주문 정보의 유효성 검사가 실패하였습니다.", 4, Boolean.FALSE);

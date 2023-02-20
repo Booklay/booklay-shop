@@ -37,18 +37,4 @@ public class ProductDetailRepositoryImpl extends QuerydslRepositorySupport imple
                 )).fetch();
     }
 
-    @Override
-    public List<Long> findAuthorIdsByProductDetailId(Long id) {
-        QProductDetail productDetail = QProductDetail.productDetail;
-        QProductAuthor productAuthor = QProductAuthor.productAuthor;
-        QAuthor author = QAuthor.author;
-
-        return from(productDetail)
-            .innerJoin(productAuthor).on(productDetail.id.eq(productAuthor.productDetail.id))
-            .innerJoin(author).on(productAuthor.author.authorId.eq(author.authorId))
-            .where(productDetail.id.eq(id))
-            .select(author.authorId)
-            .fetch();
-    }
-
 }

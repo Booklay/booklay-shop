@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.service.mypage.impl;
 
-import com.nhnacademy.booklay.server.dto.ApiEntity;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
 import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
@@ -11,7 +10,6 @@ import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import com.nhnacademy.booklay.server.service.RestService;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -56,8 +54,11 @@ public class PointHistoryServiceImpl implements PointHistoryService {
     }
 
     /**
-     * 특정 회원의 포인트 내역 보여주는 메소드
+     * 특정 회원의 포인트 내역 조회 메소드
      *
+     * @param memberNo
+     * @param pageable
+     * @return
      */
     @Override
     @Transactional(readOnly = true)
@@ -69,7 +70,8 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
     /**
      * 특정 회원의 현재 누적 포인트 보여주는 메소드
-     *
+     * @param memberNo
+     * @return
      */
     @Override
     @Transactional(readOnly = true)

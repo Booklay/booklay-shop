@@ -53,7 +53,9 @@ message:
       request: coupon-zone-request-dev
       response: coupon-zone-response-dev
 
-
+project:
+  build:
+    outputDirectory: output
 
 logging:
   level:

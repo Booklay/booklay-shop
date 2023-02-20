@@ -19,10 +19,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@Transactional
 class ProductTagRepositoryImplTest {
 
   @Autowired
@@ -30,8 +33,8 @@ class ProductTagRepositoryImplTest {
   @Autowired
   TestEntityManager entityManager;
 
-  EntityManager em;
   Product product;
+  Product savedProduct;
   Tag tag;
 
   @Autowired
@@ -41,21 +44,34 @@ class ProductTagRepositoryImplTest {
   @Autowired
   private ObjectFileRepository objectFileRepository;
 
+
+  void clearRepo(String entityName, JpaRepository jpaRepository) {
+    jpaRepository.deleteAll();
+
+    String query =
+        String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName,
+            entityName);
+
+    this.entityManager
+        .getEntityManager()
+        .createNativeQuery(query)
+        .executeUpdate();
+  }
+
   @BeforeEach
   void setUp() {
-    em = entityManager.getEntityManager();
+    clearRepo("product", productRepository);
 
     objectFileRepository.save(DummyCart.getDummyFile());
     product = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
-    productRepository.save(product);
+    savedProduct = entityManager.persist(product);
 
     tag = new Tag("test tag");
-    tagRepository.save(tag);
+    Tag savedTag = entityManager.persist(tag);
 
-    ProductTag productTag = ProductTag.builder().product(product).tag(tag)
-        .pk(new Pk(product.getId(), tag.getId())).build();
+    ProductTag productTag = ProductTag.builder().product(savedProduct).tag(savedTag)
+        .pk(new Pk(savedProduct.getId(), savedTag.getId())).build();
     productTagRepository.save(productTag);
-
   }
 
   @Test
@@ -63,12 +79,10 @@ class ProductTagRepositoryImplTest {
 
     //when
     List<RetrieveTagResponse> tagResponses = productTagRepository.findTagsByProductId(
-        product.getId());
+        savedProduct.getId());
 
     //then
     assertThat(tagResponses).hasSize(1);
     assertThat(tagResponses.get(0).getName()).isEqualTo(tag.getName());
-
-    em.clear();
   }
 }

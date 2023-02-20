@@ -34,7 +34,7 @@ public class Product {
     @Setter
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "thumbnail_no", updatable = false,  insertable = false)
     private ObjectFile objectFile;
 

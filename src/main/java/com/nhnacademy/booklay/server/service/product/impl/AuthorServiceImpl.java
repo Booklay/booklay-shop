@@ -77,7 +77,7 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   @Transactional(readOnly = true)
   public Page<RetrieveAuthorResponse> retrieveAllAuthor(Pageable pageable) {
-    return authorRepository.findAllBy(pageable);
+    return authorRepository.findAllByPageable(pageable);
   }
 
   @Override

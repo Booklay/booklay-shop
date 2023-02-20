@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<OrderListRetrieveResponse> findAllByMemberNoAndIsBlinded(Long memberNo, Boolean isBlind, Pageable pageable);
 
-    Optional<Order> findByIdAndOrderStatusCodeEquals3AndMemberNo(Long orderNo, Long memberNo);
+    Optional<Order> findByIdAndOrderStatusCodeNoEqualsAndMemberNo(Long orderNo, Long statusCodeNo, Long memberNo);
 }

@@ -11,6 +11,7 @@ public interface CommentService {
   Long createComment(CommentRequest request);
 
   Long updateComment(CommentRequest request);
+
   void deleteComment(Long commentId, Long memberNo);
 
 }

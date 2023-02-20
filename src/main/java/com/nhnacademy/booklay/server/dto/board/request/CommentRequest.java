@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentRequest {
 
+  private Long commentId;
   @NotNull
   private Long postId;
   @NotNull

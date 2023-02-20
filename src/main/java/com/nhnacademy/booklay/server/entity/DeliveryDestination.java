@@ -75,7 +75,7 @@ public class DeliveryDestination {
         this.isDefaultDestination = isDefaultDestination;
     }
 
-    public void update(DeliveryDestinationCURequest requestDto) {
+    public DeliveryDestination update(DeliveryDestinationCURequest requestDto) {
         this.name = requestDto.getName();
         this.zipCode = requestDto.getZipCode();
         this.address = requestDto.getAddress();
@@ -84,5 +84,6 @@ public class DeliveryDestination {
         this.receiver = requestDto.getReceiver();
         this.receiverPhoneNo = requestDto.getReceiverPhoneNo();
         this.isDefaultDestination = requestDto.getIsDefaultDestination();
+        return this;
     }
 }

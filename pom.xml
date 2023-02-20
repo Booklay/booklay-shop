@@ -55,20 +55,24 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -138,21 +142,19 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.restdocs/spring-restdocs-mockmvc -->
+        <!-- Rest Docs Start -->
         <dependency>
             <groupId>org.springframework.restdocs</groupId>
             <artifactId>spring-restdocs-mockmvc</artifactId>
-            <version>3.0.0</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.restdocs/spring-restdocs-asciidoctor -->
         <dependency>
             <groupId>org.springframework.restdocs</groupId>
             <artifactId>spring-restdocs-asciidoctor</artifactId>
             <version>3.0.0</version>
         </dependency>
-
+        <!-- Rest Docs End -->
 
     </dependencies>
 
@@ -212,12 +214,8 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <!-- … -->
-            </plugin>
-
+            <!-- Rest Docs Plugin Start -->
+            <!-- asciidoctor 플러그인 추가 -->
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -232,6 +230,9 @@
                         <configuration>
                             <backend>html</backend>
                             <doctype>book</doctype>
+                            <!-- 생성 된 Snippet 과 연결된 .adoc 을 빌드 했을 때 만들어지는 HTML 파일의 위치 설정 -->
+<!--                                <sourceDirectory>src/main/resources/static/docs/asciidoc</sourceDirectory>-->
+<!--                                <outputDirectory>src/main/resources/static/html</outputDirectory>-->
                         </configuration>
                     </execution>
                 </executions>
@@ -239,12 +240,15 @@
                     <dependency>
                         <groupId>org.springframework.restdocs</groupId>
                         <artifactId>spring-restdocs-asciidoctor</artifactId>
-                        <version>3.0.0</version>
+                        <version>2.0.2.RELEASE</version>
                     </dependency>
                 </dependencies>
             </plugin>
 
+            <!-- 생성된 API 문서를 jar 또는 war 에 패키징하기 위한 설정 -->
+            <!-- 문서가 패키지로 복사되기 전에 생성되야 하므로 위에 Asciidoctor 플러그인 뒤에 선언 -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>
@@ -255,13 +259,14 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
+                            <!-- 생성된 문서를 static/docs 에 복사 -->
                             <outputDirectory>
-                                ${project.build.outputDirectory}/static/docs
+                                ${project.build.outputDirectory}/target/generated-docs
                             </outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${project.build.directory}/generated-docs
+                                        src/main/resources/static/docs/html
                                     </directory>
                                 </resource>
                             </resources>
@@ -269,6 +274,8 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Rest Docs Plugin End -->
+
         </plugins>
     </build>
 

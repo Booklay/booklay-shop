@@ -1,0 +1,4 @@
+= RESTful Notes API Guide
+:snippets: ../../target/generated-snippets
+
+

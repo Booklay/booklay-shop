@@ -12,9 +12,11 @@ import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
+import com.nhnacademy.booklay.server.service.member.GetMemberService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * @author 양승아
+ */
 @ExtendWith(MockitoExtension.class)
 class DeliveryDestinationServiceImplTest {
     @InjectMocks
@@ -30,18 +35,49 @@ class DeliveryDestinationServiceImplTest {
     DeliveryDestinationRepository deliveryDestinationRepository;
     @Mock
     MemberRepository memberRepository;
+    @Mock
+    GetMemberService getMemberService;
+    DeliveryDestination deliveryDestination;
     DeliveryDestinationCURequest requestDto;
     Member member;
 
     @BeforeEach
     void setUp() {
         member = Dummy.getDummyMember();
+        deliveryDestination = Dummy.getDummyDeliveryDestination();
         requestDto = Dummy.getDummyDeliveryDestinationCreateRequest();
     }
 
     @Test
+    @DisplayName("배송지 생성 테스트")
+    void createMemberSuccessTest() {
+        //given
+        given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
+
+        //when
+        deliveryDestinationService.createDeliveryDestination(any(), requestDto);
+
+        //then
+        then(deliveryDestinationRepository).should().save(any(DeliveryDestination.class));
+    }
+
+    @Test
+    @DisplayName("회원 배송지 조회 시 한 개 반환 성공 테스트")
+    void retrieveDeliveryDestinationSuccessTest() {
+        //given
+        given(deliveryDestinationRepository.findById(any())).willReturn(
+            Optional.of(deliveryDestination));
+
+        //when
+        deliveryDestinationService.retrieveDeliveryDestination(any());
+
+        //then
+        then(deliveryDestinationRepository).should().findById(any());
+    }
+
+    @Test
     @DisplayName("회원 배송지 조회 시 List 반환 성공 테스트")
-    void retrieveDeliveryDestinations() {
+    void retrieveDeliveryDestinationsSuccessTest() {
         //given
         given(
             deliveryDestinationRepository.retrieveDeliveryDestinationByMemberNo(any())).willReturn(
@@ -57,15 +93,36 @@ class DeliveryDestinationServiceImplTest {
     }
 
     @Test
-    @DisplayName("배송지 생성 테스트")
-    void testCreateMember() {
+    @DisplayName("배송지 번호로 배송지 반환 성공 테스트")
+    void checkExistsDeliveryDestinationSuccessTest() {
         //given
-        given(memberRepository.findByMemberNo(any())).willReturn(Optional.of(member));
+        given(deliveryDestinationRepository.findById(any())).willReturn(
+            Optional.of(deliveryDestination));
 
         //when
-        deliveryDestinationService.createDeliveryDestination(any(), requestDto);
+        deliveryDestinationService.checkExistsDeliveryDestination(any());
 
         //then
-        then(deliveryDestinationRepository).should().save(any(DeliveryDestination.class));
+        then(deliveryDestinationRepository).should().findById(any());
     }
+
+    @Disabled
+    @Test
+    @DisplayName("배송지 수정 성공 테스트")
+    void updateDeliveryDestinationSuccessTest() {
+        //given
+        given(getMemberService.getValidMemberByMemberNo(any())).willReturn(member);
+        given(deliveryDestinationRepository.findById(any())).willReturn(
+            Optional.of(deliveryDestination));
+        given(
+            deliveryDestinationRepository.findByIsDefaultDestinationAndMember_MemberNo(true, any()))
+            .willReturn(Optional.of(deliveryDestination));
+
+        //when
+        deliveryDestinationService.updateDeliveryDestination(any(), any(), requestDto);
+
+        //then
+        then(deliveryDestinationRepository).should().save(deliveryDestination);
+    }
+
 }

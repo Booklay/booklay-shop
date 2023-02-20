@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.service.delivery;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -10,13 +11,13 @@ import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRe
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationNotFoundException;
 import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.service.member.GetMemberService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -76,6 +77,21 @@ class DeliveryDestinationServiceImplTest {
     }
 
     @Test
+    @DisplayName("회원 배송지 조회 시 한 개 반환 실패 테스트")
+    void retrieveDeliveryDestinationFailTest() {
+        //given
+        given(deliveryDestinationRepository.findById(any())).willThrow(
+            new DeliveryDestinationNotFoundException(any()));
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> deliveryDestinationService.retrieveDeliveryDestination(
+            deliveryDestination.getId()))
+            .isInstanceOf(DeliveryDestinationNotFoundException.class);
+    }
+
+    @Test
     @DisplayName("회원 배송지 조회 시 List 반환 성공 테스트")
     void retrieveDeliveryDestinationsSuccessTest() {
         //given
@@ -106,7 +122,6 @@ class DeliveryDestinationServiceImplTest {
         then(deliveryDestinationRepository).should().findById(any());
     }
 
-    @Disabled
     @Test
     @DisplayName("배송지 수정 성공 테스트")
     void updateDeliveryDestinationSuccessTest() {
@@ -115,14 +130,30 @@ class DeliveryDestinationServiceImplTest {
         given(deliveryDestinationRepository.findById(any())).willReturn(
             Optional.of(deliveryDestination));
         given(
-            deliveryDestinationRepository.findByIsDefaultDestinationAndMember_MemberNo(true, any()))
+            deliveryDestinationRepository.findByIsDefaultDestinationAndMember_MemberNo(true,
+                member.getMemberNo()))
             .willReturn(Optional.of(deliveryDestination));
-
         //when
-        deliveryDestinationService.updateDeliveryDestination(any(), any(), requestDto);
+        deliveryDestinationService.updateDeliveryDestination(member.getMemberNo(),
+            deliveryDestination.getId(), requestDto);
 
         //then
         then(deliveryDestinationRepository).should().save(deliveryDestination);
     }
 
+    @Test
+    @DisplayName("배송지 삭제 성공 테스트")
+    void deleteDeliveryDestination() {
+        //given
+        given(getMemberService.getValidMemberByMemberNo(any())).willReturn(member);
+        given(deliveryDestinationRepository.findById(any())).willReturn(
+            Optional.of(deliveryDestination));
+
+        //when
+        deliveryDestinationService.deleteDeliveryDestination(member.getMemberNo(),
+            deliveryDestination.getId());
+
+        //then
+        then(deliveryDestinationRepository).should().delete(any());
+    }
 }

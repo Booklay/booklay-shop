@@ -12,6 +12,7 @@ endif::[]
 
 == category
 include::admin_categories.adoc[]
+include::comment.adoc[]
 
 == 추가할 도메인
 

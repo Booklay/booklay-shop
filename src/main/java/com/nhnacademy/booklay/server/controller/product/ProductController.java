@@ -53,26 +53,31 @@ public class ProductController {
   }
 
   @GetMapping("/view/{productNo}")
-  public ProductAllInOneResponse retrieveDetailView(@PathVariable Long productNo) {
-    return productService.findProductById(productNo);
+  public ResponseEntity<ProductAllInOneResponse> retrieveDetailView(@PathVariable Long productNo) {
+    ProductAllInOneResponse result = productService.findProductById(productNo);
+
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @GetMapping("/view/subscribe/{subscribeId}")
-  public List<RetrieveProductResponse> retrieveSubscribedBooks(@PathVariable Long subscribeId)
+  public ResponseEntity<List<RetrieveProductResponse>> retrieveSubscribedBooks(@PathVariable Long subscribeId)
       throws IOException {
-    return bookSubscribeService.retrieveBookSubscribe(subscribeId);
+    List<RetrieveProductResponse> result = bookSubscribeService.retrieveBookSubscribe(subscribeId);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @GetMapping("/recommend/{productId}")
-  public List<RetrieveProductResponse> retrieveRecommendProducts(@PathVariable Long productId)
+  public ResponseEntity<List<RetrieveProductResponse>> retrieveRecommendProducts(@PathVariable Long productId)
       throws IOException {
-    return productRelationService.retrieveRecommendProducts(productId);
+    List<RetrieveProductResponse> result = productRelationService.retrieveRecommendProducts(productId);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @GetMapping("/all")
   public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchAll(Pageable pageable) {
 
-    SearchPageResponse<SearchProductResponse> pageResponse = productService.getAllProducts(pageable);
+    SearchPageResponse<SearchProductResponse> pageResponse = productService.getAllProducts(
+        pageable);
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(pageResponse);
@@ -92,7 +97,8 @@ public class ProductController {
       @RequestBody SearchIdRequest request, Pageable pageable) {
 
     SearchPageResponse<SearchProductResponse> pageResponse =
-        productService.retrieveProductByRequest(request, PageRequest.of(pageable.getPageNumber(), 16));
+        productService.retrieveProductByRequest(request,
+            PageRequest.of(pageable.getPageNumber(), 16));
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(pageResponse);

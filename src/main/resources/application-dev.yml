@@ -58,10 +58,15 @@ message:
       response: coupon-zone-response-dev
 
 logging:
-  level:
-    root: info
-    config: info
-    repository: debug
-    service: debug
-    controller: debug
   config: classpath:logback/logback-spring.xml
+
+log:
+  level:
+    root: debug
+    kafka: error
+    redis: error
+    hibernate-sql: error
+    spring-data: error
+    beans-factory: error
+    context: error
+

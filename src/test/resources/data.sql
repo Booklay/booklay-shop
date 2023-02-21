@@ -565,11 +565,11 @@ create table subscribe
 create table book_subscribe
 (
     subscribe_no bigint not null,
-    book_no bigint not null,
+    product_no bigint not null,
     release_date date not null,
-    primary key (subscribe_no, book_no),
+    primary key (subscribe_no, product_no),
     constraint FK_product_detail_TO_book_subscribe_1
-        foreign key (book_no) references product_detail (book_no),
+        foreign key (product_no) references product (product_no),
     constraint FK_subscribe_TO_book_subscribe_1
         foreign key (subscribe_no) references subscribe (subscribe_no)
 );

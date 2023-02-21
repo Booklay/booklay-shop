@@ -56,7 +56,7 @@ public class BoardController {
   public ResponseEntity<Long> updatePost(@RequestBody BoardPostUpdateRequest request) {
     Long result = postService.updatePost(request);
 
-    return ResponseEntity.status(HttpStatus.CREATED)
+    return ResponseEntity.status(HttpStatus.ACCEPTED)
         .body(result);
   }
 

@@ -6,15 +6,10 @@ import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductRelation;
-import com.nhnacademy.booklay.server.repository.ObjectFileRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRelationRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import java.util.List;
-import javax.persistence.EntityManager;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,18 +28,16 @@ class ProductRelationRepositoryImplTest {
   ProductRelationRepository productRelationRepository;
   @Autowired
   TestEntityManager entityManager;
+  @Autowired
+  private ProductRepository productRepository;
 
-  EntityManager em;
 
   Product baseProduct;
   Product savedBaseProduct;
   Product targetProduct;
   Product savedTargetProduct;
+  Product savedUnrelatedProduct;
   ObjectFile objectFile;
-  @Autowired
-  private ProductRepository productRepository;
-  @Autowired
-  private ObjectFileRepository objectFileRepository;
 
   void clearRepo(String entityName, JpaRepository jpaRepository) {
     jpaRepository.deleteAll();
@@ -61,64 +54,64 @@ class ProductRelationRepositoryImplTest {
 
   @BeforeEach
   void setup() {
-    em = entityManager.getEntityManager();
     clearRepo("product_relation", productRelationRepository);
 
-    objectFile= DummyCart.getDummyFile();
+    objectFile = DummyCart.getDummyFile();
     ObjectFile savedFile = entityManager.persist(objectFile);
 
     baseProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
     baseProduct.setThumbnailNo(savedFile.getId());
     savedBaseProduct = productRepository.save(baseProduct);
+    savedUnrelatedProduct = productRepository.save(baseProduct);
 
     targetProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductSubscribeDto());
     targetProduct.setThumbnailNo(savedFile.getId());
     savedTargetProduct = productRepository.save(targetProduct);
 
     productRelationRepository.save(
-        ProductRelation.builder().relatedProduct(savedTargetProduct).baseProduct(savedBaseProduct).build());
+        ProductRelation.builder().relatedProduct(savedTargetProduct).baseProduct(savedBaseProduct)
+            .build());
 
   }
 
   @Test()
   @Order(0)
   void findRecommendIdsByBaseProductId() {
-    //given
-
-
 
     //when
-    List<Long> relationProductIds =  productRelationRepository.findRecommendIdsByBaseProductId(savedBaseProduct.getId());
+    List<Long> relationProductIds = productRelationRepository.findRecommendIdsByBaseProductId(
+        savedBaseProduct.getId());
 
     //then
     assertThat(relationProductIds.size()).isEqualTo(1);
-//    assertThat(relationProductIds.get(0)).isEqualTo(targetProduct.getId());
-
-    em.clear();
+    assertThat(relationProductIds.get(0)).isEqualTo(targetProduct.getId());
   }
 
-  @Disabled
   @Test
   @Order(1)
   void existsByBaseAndTargetId_true() {
-    objectFileRepository.save(objectFile);
-    baseProduct = productRepository.save(baseProduct);
-    targetProduct = productRepository.save(targetProduct);
-
-    em.clear();
-
     //when
-    productRelationRepository.existsByBaseAndTargetId(baseProduct.getId(), targetProduct.getId());
+    boolean result = productRelationRepository.existsByBaseAndTargetId(savedBaseProduct.getId(),
+        savedTargetProduct.getId());
 
+    assertThat(result).isTrue();
   }
-//
-//  @Test
-//  void existsByBaseAndTargetId_false() {
-//    productRelationRepository.existsByBaseAndTargetId(baseProduct.getId(), targetProduct.getId());
-//  }
-//
-//  @Test
-//  void deleteByBaseAndTargetId() {
-//    productRelationRepository.deleteByBaseAndTargetId(baseProduct.getId(), targetProduct.getId());
-//  }
+
+  @Test
+  void existsByBaseAndTargetId_false() {
+
+    boolean result = productRelationRepository.existsByBaseAndTargetId(savedBaseProduct.getId(),
+        savedUnrelatedProduct.getId());
+
+    assertThat(result).isFalse();
+  }
+
+  @Test
+  void deleteByBaseAndTargetId() {
+    productRelationRepository.deleteByBaseAndTargetId(savedBaseProduct.getId(),
+        savedTargetProduct.getId());
+
+    assertThat(productRelationRepository.existsByBaseAndTargetId(savedBaseProduct.getId(),
+        savedUnrelatedProduct.getId())).isFalse();
+  }
 }

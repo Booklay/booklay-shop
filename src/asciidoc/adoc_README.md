@@ -30,7 +30,7 @@ include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]  
 
 <a id="footnote_1">1</a>: 테스트 클래스 폴더   [↩](#a1)
-<a id="footnote_2">2</a>: 테스트 메소드의 간략한 설명  [↩](#a2)
+<a id="footnote_2">2</a>: 테스트 메소드의 간략한 설명  [↩](#a2)  
 <a id="footnote_3">3</a>: 테스트 메소드 별로 생성되는 snippets 경로 지정 [↩](#a3)
     
     :categories: {snippets}/admin/categories ≒ categories = snippets + "/admin/categories"

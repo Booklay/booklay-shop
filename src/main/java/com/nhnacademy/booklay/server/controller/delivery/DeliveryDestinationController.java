@@ -37,16 +37,29 @@ public class DeliveryDestinationController {
 
     private final DeliveryDestinationService deliveryDestinationService;
 
-    @PostMapping("/create/{memberNo}")
+    /**
+     * 배송지 추가 메소드
+     *
+     * @param requestDto 추가할 배송지 정보
+     * @param memberNo   배송지 추가할 회원
+     * @return void
+     */
+    @PostMapping("/{memberNo}")
     public ResponseEntity<Void> createDeliveryDestination(@Valid @RequestBody
                                                           DeliveryDestinationCURequest requestDto,
                                                           @PathVariable Long memberNo) {
         deliveryDestinationService.createDeliveryDestination(memberNo,
-                                                             requestDto);
+            requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .build();
+            .build();
     }
 
+    /**
+     * 배송지 리스트 조회 메소드
+     *
+     * @param memberNo 조회할 배송지를 가진 회원
+     * @return List<DeliveryDestinationRetrieveResponse> 배송지 리스트
+     */
     @GetMapping("/list/{memberNo}")
     public ResponseEntity<List<DeliveryDestinationRetrieveResponse>> retrieveDeliveryDestinations(
         @PathVariable Long memberNo) {
@@ -55,10 +68,16 @@ public class DeliveryDestinationController {
             deliveryDestinationService.retrieveDeliveryDestinations(memberNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(response);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response);
     }
 
+    /**
+     * 배송지 단건 조회 메소드
+     *
+     * @param addressNo 조회할 배송지 번호
+     * @return DeliveryDestinationRetrieveResponse
+     */
     @GetMapping("/{addressNo}")
     public ResponseEntity<DeliveryDestinationRetrieveResponse> retrieveDeliveryDestination(
         @PathVariable Long addressNo) {
@@ -66,10 +85,18 @@ public class DeliveryDestinationController {
             deliveryDestinationService.retrieveDeliveryDestination(addressNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(response);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response);
     }
 
+    /**
+     * 배송지 수정 메소드
+     *
+     * @param requestDto 수정할 정보가 있는 dto
+     * @param memberNo   수정할 배송지를 가진 회원
+     * @param addressNo  수정할 배송지 번호
+     * @return HttpStatus.OK
+     */
     @PostMapping("/update/{memberNo}/{addressNo}")
     public ResponseEntity<Void> updateDeliveryDestination(
         @Valid @RequestBody DeliveryDestinationCURequest requestDto,
@@ -77,34 +104,51 @@ public class DeliveryDestinationController {
         @PathVariable Long addressNo) {
         deliveryDestinationService.updateDeliveryDestination(memberNo, addressNo, requestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                             .build();
+            .build();
     }
 
-    @DeleteMapping("/delete/{memberNo}/{addressNo}")
+    /**
+     * 배송지 삭제 메소드
+     *
+     * @param memberNo  삭제할 배송지를 가진 회원 번호
+     * @param addressNo 삭제할 배송지 번호
+     * @return HttpStatus.OK/void
+     */
+    @DeleteMapping("/{memberNo}/{addressNo}")
     public ResponseEntity<Void> deleteDeliveryDestination(@PathVariable Long memberNo,
                                                           @PathVariable Long addressNo) {
         deliveryDestinationService.deleteDeliveryDestination(memberNo, addressNo);
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .build();
+            .build();
     }
 
+    /**
+     * 배송지 찾을 수 없음 exception
+     *
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(DeliveryDestinationNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDeliveryDestinationNotFoundException(
         DeliveryDestinationNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                             .body(ErrorResponse.builder()
-                                                .code(DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE)
-                                                .message(ex.getMessage()).build());
+            .body(ErrorResponse.builder()
+                .code(DELIVERY_DESTINATION_NOT_FOUND_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 
+    /**
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(DeliveryDestinationLimitExceededException.class)
     public ResponseEntity<ErrorResponse> handleDeliveryDestinationLimitExceededException(
         DeliveryDestinationLimitExceededException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body(ErrorResponse.builder().code(
-                                                    DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE)
-                                                .message(ex.getMessage()).build());
+            .body(ErrorResponse.builder().code(
+                    DELIVERY_DESTINATION_LIMIT_EXCEEDED_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 
 

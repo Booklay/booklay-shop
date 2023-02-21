@@ -65,8 +65,10 @@ public class OrderServiceImpl implements OrderService{
             return Boolean.FALSE;
         }
         Order order = optionalOrder.get();
-        pointHistoryService.createPointHistory(
-                new PointHistoryCreateRequest(order.getMemberNo(), order.getPointAccumulate(), "상품 구매 확정"));
+        if (order.getPointAccumulate() != 0){
+            pointHistoryService.createPointHistory(
+                    new PointHistoryCreateRequest(order.getMemberNo(), order.getPointAccumulate(), "상품 구매 확정"));
+        }
         order.setOrderStatusCodeNo(4L);
         orderRepository.save(order);
         return Boolean.TRUE;

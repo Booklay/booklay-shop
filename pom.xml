@@ -34,6 +34,14 @@
 
     </properties>
 
+    <repositories>
+        <repository>
+            <id>local-repository</id>
+            <name>local-repository</name>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -155,6 +163,29 @@
             <version>3.0.0</version>
         </dependency>
         <!-- Rest Docs End -->
+
+<!--        log & crash 설정 ㅌ-->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20171018</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.logncrash</groupId>
+            <artifactId>toast-logncrash-logback-sdk</artifactId>
+            <version>3.0.5</version>
+        </dependency>
 
     </dependencies>
 

@@ -56,13 +56,19 @@ booklay:
   elasticsearch:
     uri: 133.186.210.108:9200
 
-project:
-  build:
-    outputDirectory: outputDir
-    directory: dir
 
 message:
   topic:
     coupon:
       request: coupon-zone-request
       response: coupon-zone-response
+
+log:
+  level:
+    root: error
+    kafka: error
+    redis: error
+    hibernate-sql: error
+    spring-data: error
+    beans-factory: error
+    context: error

@@ -60,16 +60,19 @@ public class ProductController {
   }
 
   @GetMapping("/view/subscribe/{subscribeId}")
-  public ResponseEntity<List<RetrieveProductResponse>> retrieveSubscribedBooks(@PathVariable Long subscribeId)
+  public ResponseEntity<List<RetrieveProductResponse>> retrieveSubscribedBooks(
+      @PathVariable Long subscribeId)
       throws IOException {
     List<RetrieveProductResponse> result = bookSubscribeService.retrieveBookSubscribe(subscribeId);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @GetMapping("/recommend/{productId}")
-  public ResponseEntity<List<RetrieveProductResponse>> retrieveRecommendProducts(@PathVariable Long productId)
+  public ResponseEntity<List<RetrieveProductResponse>> retrieveRecommendProducts(
+      @PathVariable Long productId)
       throws IOException {
-    List<RetrieveProductResponse> result = productRelationService.retrieveRecommendProducts(productId);
+    List<RetrieveProductResponse> result = productRelationService.retrieveRecommendProducts(
+        productId);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 

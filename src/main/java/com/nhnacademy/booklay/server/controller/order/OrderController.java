@@ -11,6 +11,7 @@ import com.nhnacademy.booklay.server.dto.order.payment.OrderSheetSaveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.StorageRequest;
 import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
+import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
 import com.nhnacademy.booklay.server.service.order.OrderService;
 import com.nhnacademy.booklay.server.service.order.RedisOrderService;
@@ -34,6 +35,7 @@ public class OrderController {
     private final RedisOrderService redisOrderService;
     private final CategoryProductService categoryProductService;
     private final ComplexOrderService complexOrderService;
+    private final PointHistoryService pointHistoryService;
     private final OrderService orderService;
 
     @GetMapping("products")
@@ -101,6 +103,11 @@ public class OrderController {
     public ResponseEntity<PageResponse<OrderListRetrieveResponse>> retrieveOrderReceiptPage(MemberInfo memberInfo, Pageable pageable){
         return ResponseEntity.ok(orderService.retrieveOrderListRetrieveResponsePageByMemberNoAndBlind(
             memberInfo.getMemberNo(), Boolean.FALSE, pageable));
+    }
+
+    @GetMapping("confirm/{orderNo}")
+    public ResponseEntity<Boolean> confirmOrder(@PathVariable Long orderNo, MemberInfo memberInfo){
+        return ResponseEntity.ok(orderService.confirmOrder(orderNo, memberInfo.getMemberNo()));
     }
 
 }

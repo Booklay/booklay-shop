@@ -13,10 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -41,6 +39,7 @@ public class Order {
     @OneToOne
     @JoinColumn(name = "code", insertable = false, updatable = false)
     private OrderStatusCode orderStatusCode;
+    @Setter
     @Column(name = "code")
     private Long orderStatusCodeNo;
 

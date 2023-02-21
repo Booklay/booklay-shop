@@ -42,7 +42,25 @@
             <maxHistory>30</maxHistory>
             <totalSizeCap>3GB</totalSizeCap>
         </rollingPolicy>
+    </appender>
 
+    <appender name="logNCrash" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- Logback의 AsyncAppender 옵션 -->
+        <param name="includeCallerData" value="false"/>
+        <param name="queueSize" value="2048"/>
+        <param name="neverBlock" value="true"/>
+        <param name="maxFlushTime" value="60000"/>
+
+        <!-- Log & Crash Logback SDK의 LogNCrashHttpAppender 옵션 -->
+        <appender name="logNCrashHttp" class="com.toast.java.logncrash.logback.LogNCrashHttpAppender">
+            <param name="appKey" value="h98AoVSn5I3rIctz"/>
+            <param name="logSource" value="${PROJECT_PROFILE}"/>
+            <param name="version" value="1.0.0"/>
+            <param name="logType" value="log"/>
+            <param name="debug" value="false"/>
+            <param name="category" value="booklay_shop_log"/>
+            <param name="errorCodeType" value="action"/>
+        </appender>
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -52,10 +70,21 @@
     </appender>
 
 
-    <root level="${ROOT_LOG_LEVEL}">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
-    </root>
+    <springProfile name="dev">
+        <root level="${ROOT_LOG_LEVEL}">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="${ROOT_LOG_LEVEL}">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="logNCrash" />
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+
 
 <!--    kafka -->
     <logger name="org.apache.kafka" level="${KAFKA_LOG_LEVEL}" additivity="false">

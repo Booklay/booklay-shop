@@ -3,7 +3,6 @@ package com.nhnacademy.booklay.server.service.product.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.will;
 
 import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
 import com.nhnacademy.booklay.server.dto.product.author.request.CreateAuthorRequest;
@@ -132,14 +131,14 @@ class AuthorServiceTest {
   @Test
   void testAuthorRetrieveAll_success() {
     //given
-    given(authorRepository.findAllBy(any())).willReturn(Page.empty());
+    given(authorRepository.findAllByPageable(any())).willReturn(Page.empty());
 
     //when
     Page<RetrieveAuthorResponse> pageResponse = authorService.retrieveAllAuthor(
         PageRequest.of(0, 10));
 
     //then
-    BDDMockito.then(authorRepository).should().findAllBy(any());
+    BDDMockito.then(authorRepository).should().findAllByPageable(any());
 
     assertThat(pageResponse.getTotalElements()).isZero();
   }
@@ -147,14 +146,14 @@ class AuthorServiceTest {
   @Test
   void testAuthorRetrieveAllWithData_success() {
     //given
-    given(authorRepository.findAllBy(any())).willReturn(Page.empty());
+    given(authorRepository.findAllByPageable(any())).willReturn(Page.empty());
 //    given(authorRepository.)
     //when
     Page<RetrieveAuthorResponse> pageResponse = authorService.retrieveAllAuthor(
         PageRequest.of(0, 10));
 
     //then
-    BDDMockito.then(authorRepository).should().findAllBy(any());
+    BDDMockito.then(authorRepository).should().findAllByPageable(any());
 
     assertThat(pageResponse.getTotalElements()).isZero();
   }

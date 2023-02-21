@@ -22,7 +22,7 @@ public class AuthorRepositoryImpl extends QuerydslRepositorySupport
   }
 
   @Override
-  public Page<RetrieveAuthorResponse> findAllBy(Pageable pageable) {
+  public Page<RetrieveAuthorResponse> findAllByPageable(Pageable pageable) {
     QAuthor author = QAuthor.author;
     QMember member = QMember.member;
 

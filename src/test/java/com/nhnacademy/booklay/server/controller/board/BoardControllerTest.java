@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.controller.board;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -21,7 +20,6 @@ import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
-import com.nhnacademy.booklay.server.repository.post.PostRepository;
 import com.nhnacademy.booklay.server.service.board.PostService;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +34,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -115,13 +112,13 @@ class BoardControllerTest {
 
   @Test
   void retrieveProductQNA() throws Exception {
-    Page<PostResponse> page = new PageImpl<>(List.of(), PageRequest.of(0,20), 0);
+    Page<PostResponse> page = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
 
     //mocking
-    when(postService.retrieveProductQNA(1L, PageRequest.of(0,20))).thenReturn(page);
+    when(postService.retrieveProductQNA(1L, PageRequest.of(0, 20))).thenReturn(page);
     PageResponse<PostResponse> result = new PageResponse<>(page);
 
-    mockMvc.perform(get(URI_PREFIX + "/product/"+1))
+    mockMvc.perform(get(URI_PREFIX + "/product/" + 1))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
@@ -130,10 +127,10 @@ class BoardControllerTest {
 
   @Test
   void retrieveNotice() throws Exception {
-    Page<PostResponse> page = new PageImpl<>(List.of(), PageRequest.of(0,20), 0);
+    Page<PostResponse> page = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
 
     //mocking
-    when(postService.retrieveNotice(PageRequest.of(0,20))).thenReturn(page);
+    when(postService.retrieveNotice(PageRequest.of(0, 20))).thenReturn(page);
     PageResponse<PostResponse> result = new PageResponse<>(page);
 
     mockMvc.perform(get(URI_PREFIX + "/notice"))
@@ -162,7 +159,7 @@ class BoardControllerTest {
     Long postId = 1L;
     when(postService.retrievePostById(postId)).thenReturn(postResponse);
 
-    mockMvc.perform(get(URI_PREFIX + "/" +postId))
+    mockMvc.perform(get(URI_PREFIX + "/" + postId))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();

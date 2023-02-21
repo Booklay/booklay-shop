@@ -5,16 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
+import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.entity.ObjectFile;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
+import com.nhnacademy.booklay.server.entity.ProductAuthor.Pk;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
-import com.nhnacademy.booklay.server.repository.ObjectFileRepository;
+import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import java.util.List;
-import org.aspectj.util.Reflection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -36,17 +35,17 @@ class ProductDetailRepositoryImplTest {
   @Autowired
   TestEntityManager entityManager;
 
-  ProductDetail productDetail;
-  @Autowired
-  private ProductAuthorRepository productAuthorRepository;
   @Autowired
   private ProductRepository productRepository;
-  @Autowired
-  private ObjectFileRepository objectFileRepository;
 
   Product product;
   ObjectFile objectFile;
   CreateUpdateProductBookRequest request;
+  Author savedAuthor;
+  @Autowired
+  private ProductAuthorRepository productAuthorRepository;
+  @Autowired
+  private AuthorRepository authorRepository;
 
 
   void clearRepo(String entityName, JpaRepository jpaRepository) {
@@ -71,7 +70,7 @@ class ProductDetailRepositoryImplTest {
     objectFile = DummyCart.getDummyFile();
     ObjectFile savedFile = entityManager.persist(objectFile);
 
-    product =DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
+    product = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
     product.setThumbnailNo(savedFile.getId());
     Product savedProduct = productRepository.save(product);
 
@@ -83,21 +82,27 @@ class ProductDetailRepositoryImplTest {
         .publishedDate(request.getPublishedDate())
         .build();
 
-    productDetailRepository.save(productDetail);
+    ProductDetail savedProductDetail = productDetailRepository.save(productDetail);
+
+    savedAuthor = authorRepository.save(DummyCart.getDummyAuthor());
+
+    ProductAuthor productAuthor = ProductAuthor.builder().productDetail(savedProductDetail)
+        .author(savedAuthor)
+        .pk(new Pk(savedProductDetail.getId(), savedAuthor.getAuthorId()))
+        .build();
+    productAuthorRepository.save(productAuthor);
 
   }
 
   @Test
   void findAuthorsByProductDetailId() {
 
-    //given
-    ProductAuthor productAuthor = DummyCart.getDummyProductAuthor(DummyCart.getDummyProductBookDto());
-
     //when
     List<RetrieveAuthorResponse> result = productDetailRepository.findAuthorsByProductDetailId(1L);
 
     //then
-    assertThat(result).size().isEqualTo(0);
+    assertThat(result).size().isEqualTo(1);
+    assertThat(result.get(0).getName()).isEqualTo(savedAuthor.getName());
 
   }
 

@@ -25,13 +25,13 @@ CI CD 아키텍쳐를 그려주세요
 - 담당자 : 최규태, 이성준
 - 사용 기술 : NHN cloud 오브젝트 스토리지, tui-editor
 - 주요 기능
-    - 상품 관리
-    - 태그
-    - 연관상품
-    - 위시리스트
-    - 작가
-        - 작가가 본인의 서적에서 상품 문의 답변 가능
-    - 리뷰
+  - 상품 관리
+  - 태그
+  - 연관상품
+  - 위시리스트
+  - 작가
+    - 작가는 본인 서적 문의 답변 가능
+  - 리뷰
 
 ### 게시판
 
@@ -43,7 +43,7 @@ CI CD 아키텍쳐를 그려주세요
       - 문의 답변 처리 가능
       - 댓글 작성 가능
     - 공지사항
-      - 관리자만 사용 가능
+      - 관리자만 작성 가능
       - 댓글 작성 불가
   - 계층형 게시판
 
@@ -83,10 +83,12 @@ CI CD 아키텍쳐를 그려주세요
       - 매월 등급 자동 산정
       - 매월 등급별 포인트 자동 지급
     - 회원권한) 사용자, 관리자 등
-    - 차단
-    - 탈퇴
-- 링크
-    - https://github.com/Booklay/booklay-batch
+    - 회원관리
+      - 차단
+      - 탈퇴
+      - 회원 통계
+    - 링크
+        - https://github.com/Booklay/booklay-batch
 
 ### 쿠폰
 
@@ -113,19 +115,33 @@ CI CD 아키텍쳐를 그려주세요
 
 ## 기술
 
+임시구분
+
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 ![](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
-![](https://img.shields.io/badge/redis-CC0000.svg?&style=for-the-badge&logo=redis&logoColor=white)
 ![](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
-![](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
-![](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
-![](https://img.shields.io/badge/SonarLint-CB2029?style=for-the-badge&logo=sonarlint&logoColor=white)
+![](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+![ElasticSearch](https://img.shields.io/badge/-ElasticSearch-005571?style=for-the-badge&logo=elasticsearch)
+
+임시구분 프론트
+
 ![](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-%23005C0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white)
+
+임시구분 DB
+
+![](https://img.shields.io/badge/redis-CC0000.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+
+
 ![](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 ![](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
-![](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+![](https://img.shields.io/badge/SonarLint-CB2029?style=for-the-badge&logo=sonarlint&logoColor=white)
+![](https://img.shields.io/badge/SonarQube-4E9BCD?style=for-the-badge&amp;logo=SonarQube&amp;logoColor=white)
+<a href="https://github.com/nhn"><img src="https://camo.githubusercontent.com/1fb5eae4a4360c5f08dd061260fc68839f26aecc2f3de6859bff0166548b4268/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2533432532462533452532307769746825323025453225393925413525323062792d4e484e5f436c6f75642d6666313431342e737667" alt="code with hearth by NHN Cloud" data-canonical-src="https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg" style="max-width: 100%;"></a>
 
+![](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
 
 ### workspace
 

@@ -68,7 +68,7 @@ class BoardControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("{ClassName}/{methodName}",
+        .alwaysDo(document("board/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )

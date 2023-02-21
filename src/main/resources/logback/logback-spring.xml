@@ -4,11 +4,15 @@
 
     <springProperty name="PROJECT_PROFILE" source="spring.profiles.active"/>
     <springProperty name="PROJECT_NAME" source="spring.application.name"/>
-    <springProperty name="ROOT_LOG_LEVEL" source="logging.level.root"/>
-    <springProperty name="CONTROLLER_LOG_LEVEL" source="logging.level.controller"/>
-    <springProperty name="SERVICE_LOG_LEVEL" source="logging.level.service"/>
-    <springProperty name="REPO_LOG_LEVEL" source="logging.level.repository"/>
-    <springProperty name="CONFIG_LOG_LEVEL" source="logging.level.config"/>
+
+    <springProperty name="ROOT_LOG_LEVEL" source="log.level.root"/>
+
+    <springProperty name="HIBERNATE_LOG_LEVEL" source="log.level.hibernate-sql"/>
+    <springProperty name="KAFKA_LOG_LEVEL" source="log.level.kafka"/>
+    <springProperty name="REDIS_LOG_LEVEL" source="log.level.redis"/>
+    <springProperty name="BEANS_FACTORY_LOG_LEVEL" source="log.level.beans-factory"/>
+    <springProperty name="SPRING_DATA_LOG_LEVEL" source="log.level.spring-data"/>
+    <springProperty name="CONTEXT_LOG_LEVEL" source="log.level.context"/>
 
     <timestamp key="DATE_PATTERN" datePattern="yyyy-MM-dd"/>
     <timestamp key="TIME_PATTERN" datePattern="HH:mm:ss.SSS"/>
@@ -19,7 +23,6 @@
 
     <property name="USER_HOME" value="${HOME}/Documents"/>
     <property name="LOG_PATTERN" value=" ${DATE_PATTERN} ${TIME_PATTERN} [%clr(%5p)] %logger{36} - %msg%n"/>
-
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${USER_HOME}/logs/${PROJECT_NAME}_${PROJECT_PROFILE}/${PROJECT_NAME}_${PROJECT_PROFILE}_${DATE_PATTERN}.log</file>
@@ -48,27 +51,64 @@
         </encoder>
     </appender>
 
-    <root level="ROOT_LOG_LEVEL">
+
+    <root level="${ROOT_LOG_LEVEL}">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
 
-    <logger name="com.nhnacademy.booklay.server.controller" level="CONTROLLER_LOG_LEVEL" additivity="false">
+<!--    kafka -->
+    <logger name="org.apache.kafka" level="${KAFKA_LOG_LEVEL}" additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.nhnacademy.booklay.server.service" level="SERVICE_LOG_LEVEL" additivity="false">
+<!--   Database -->
+    <logger name="org.hibernate" level="${HIBERNATE_LOG_LEVEL}" additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.nhnacademy.booklay.server.repository" level="REPO_LOG_LEVEL" additivity="false">
+    <logger name="org.springframework.orm.jpa" level="${HIBERNATE_LOG_LEVEL}" additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.nhnacademy.booklay.server.config" level="CONFIG_LOG_LEVEL" additivity="false">
+    <logger name="org.springframework.jdbc.datasource" level="${HIBERNATE_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+<!--   spring data -->
+    <logger name="org.springframework.data.repository.config" level="${SPRING_DATA_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="org.springframework.data.repository.core.support" level="${SPRING_DATA_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="org.springframework.data.convert" level="${SPRING_DATA_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+<!--   spring context -->
+    <logger name="org.springframework.context.annotation" level="${CONTEXT_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+<!--  spring beans factory -->
+    <logger name="org.springframework.beans.factory.support" level="${BEANS_FACTORY_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+<!--   redis -->
+    <logger name="org.springframework.data.redis" level="${REDIS_LOG_LEVEL}" additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </logger>

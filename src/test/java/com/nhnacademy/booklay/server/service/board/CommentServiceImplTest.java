@@ -34,6 +34,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+/**
+ * @author : 최규태
+ */
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {

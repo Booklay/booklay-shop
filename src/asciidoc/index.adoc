@@ -9,5 +9,12 @@ endif::[]
 :sectlinks:
 
 = admin api
-include::{docdir}/coupon.adoc[]
 
+== category
+include::admin_categories.adoc[]
+
+== 추가할 도메인
+
+= service api
+
+== 도메인

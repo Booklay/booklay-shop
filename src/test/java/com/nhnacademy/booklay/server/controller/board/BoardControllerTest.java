@@ -116,7 +116,7 @@ class BoardControllerTest {
 
     //mocking
     when(postService.retrieveProductQNA(1L, PageRequest.of(0, 20))).thenReturn(page);
-    PageResponse<PostResponse> result = new PageResponse<>(page);
+    PageResponse<PostResponse> body = new PageResponse<>(page);
 
     mockMvc.perform(get(URI_PREFIX + "/product/" + 1))
         .andExpect(status().isOk())

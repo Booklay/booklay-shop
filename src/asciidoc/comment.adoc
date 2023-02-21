@@ -1,0 +1,34 @@
+== comment
+:comment: {snippets}/comment
+
+:adoc: {comment}/createComment
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+:adoc: {comment}/deleteComment
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+:adoc: {comment}/retrieveCommentPage
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+:adoc: {comment}/updateComment
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]

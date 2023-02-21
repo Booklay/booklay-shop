@@ -2,11 +2,11 @@ package com.nhnacademy.booklay.server.controller.member;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.doThrow;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -22,13 +22,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +45,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -71,6 +80,10 @@ class MemberControllerTest {
     MemberRetrieveResponse responseDto;
     MemberCreateRequest createDto;
     MemberUpdateRequest updateDto;
+    MemberMainRetrieveResponse memberMainRetrieveResponse;
+    MemberLoginResponse memberLoginResponse;
+    MemberRetrieveResponse memberRetrieveResponse;
+    MemberAuthorityRetrieveResponse memberAuthorityRetrieveResponse;
     private static final String IDENTIFIER = "members";
 
     private static final String URI_PREFIX = "/" + IDENTIFIER;
@@ -93,26 +106,78 @@ class MemberControllerTest {
         member = Dummy.getDummyMember();
 
         responseDto = new MemberRetrieveResponse(
-                member.getMemberNo(),
-                member.getGender().getName(),
-                member.getMemberId(),
-                member.getNickname(),
-                member.getName(),
-                member.getBirthday(),
-                member.getPhoneNo(),
-                member.getEmail(),
-                member.getCreatedAt(),
-                member.getUpdatedAt(),
-                member.getDeletedAt(),
-                member.getIsBlocked());
+            member.getMemberNo(),
+            member.getGender().getName(),
+            member.getMemberId(),
+            member.getNickname(),
+            member.getName(),
+            member.getBirthday(),
+            member.getPhoneNo(),
+            member.getEmail(),
+            member.getCreatedAt(),
+            member.getUpdatedAt(),
+            member.getDeletedAt(),
+            member.getIsBlocked());
 
         createDto = Dummy.getDummyMemberCreateRequest();
-
         updateDto = Dummy.getDummyMemberUpdateRequest();
+        memberMainRetrieveResponse = Dummy.getDummyMemberMainRetrieveResponse();
+        memberLoginResponse = Dummy.getDummyMemberLoginResponse();
+        memberRetrieveResponse = Dummy.getDummyMemberRetrieveResponse();
+        memberAuthorityRetrieveResponse = Dummy.getDummyMemberAuthorityRetrieveResponse();
     }
 
     @Test
-    @DisplayName("회원의 본인정보 조회 성공 테스트")
+    @DisplayName("회원가입 시 아이디 중복체크 성공 테스트")
+    void testExistMemberId() throws Exception {
+        //given
+        given(memberService.checkMemberId(any())).willReturn(true);
+
+        //when
+        ResultActions result = mockMvc.perform(get(URI_PREFIX + "/exist/" + member.getMemberId()));
+
+        //then
+        result.andExpect(status().isOk());
+
+        then(memberService).should(times(1)).checkMemberId(any());
+    }
+
+    @Test
+    @DisplayName("회원가입 시 닉네임 중복체크 성공 테스트")
+    void testExistNickName() throws Exception {
+        //given
+        given(memberService.checkNickName(any())).willReturn(true);
+
+        //when
+        ResultActions result =
+            mockMvc.perform(get(URI_PREFIX + "/exist/nickName/" + member.getNickname()));
+
+        //then
+        result.andExpect(status().isOk());
+
+
+        then(memberService).should(times(1)).checkNickName(any());
+    }
+
+    @Test
+    @DisplayName("회원가입 시 이메일 중복체크 성공 테스트")
+    void testExistEMail() throws Exception {
+        //given
+        given(memberService.checkEMail(any())).willReturn(true);
+
+        //when
+        ResultActions result =
+            mockMvc.perform(get(URI_PREFIX + "/exist/eMail/" + member.getEmail()));
+
+        //then
+        result.andExpect(status().isOk());
+
+
+        then(memberService).should(times(1)).checkEMail(any());
+    }
+
+    @Test
+    @DisplayName("회원의 개인정보 조회 성공 테스트")
     void testRetrieveMember() throws Exception {
         //given
         given(memberService.retrieveMember(anyLong())).willReturn(responseDto);
@@ -125,21 +190,123 @@ class MemberControllerTest {
         result.andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$['memberId']").value(member.getMemberId()))
-               .andExpect(jsonPath("$['name']").value("유재석"));
+            .andExpect(jsonPath("$['name']").value("유재석"));
 
         then(memberService).should(times(1)).retrieveMember(member.getMemberNo());
     }
 
+    @Test
+    @DisplayName("회원의 MyPage main 정보 조회 성공 테스트")
+    void testRetrieveMemberMain() throws Exception {
+        //given
+        given(memberService.retrieveMemberMain(any())).willReturn(memberMainRetrieveResponse);
+
+        //when
+        ResultActions result = mockMvc.perform(get(URI_PREFIX + "/main/" + member.getMemberNo())
+            .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$['memberGrade']").value("화이트"))
+            .andExpect(jsonPath("$['currentTotalPoint']").value(1000));
+
+        then(memberService).should(times(1)).retrieveMemberMain(member.getMemberNo());
+    }
 
     @Test
-    @DisplayName("회원의 본인정보 조회 실패시 제대로된 에러 메시지를 반환하는가 테스트")
-    void testRetrieveMember_ifNotExistMemberNo_thenThrownValidMemberNotFoundErrorMessage() throws Exception {
+    @DisplayName("이메일로 회원 로그인 정보 조회 성공 테스트")
+    void testRetrieveMemberByEmail() throws Exception {
         //given
-        given(memberService.retrieveMember(anyLong())).willThrow(new MemberNotFoundException(member.getMemberNo()));
+        given(memberService.retrieveMemberByEmail(any())).willReturn(
+            Optional.of(memberLoginResponse));
+
+        //when
+        ResultActions result = mockMvc.perform(get(URI_PREFIX + "/email/" + member.getEmail())
+            .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$['email']").value(memberLoginResponse.getEmail()))
+            .andExpect(jsonPath("$['userId']").value(memberLoginResponse.getUserId()));
+
+        then(memberService).should(times(1)).retrieveMemberByEmail(member.getEmail());
+    }
+
+    @Test
+    @DisplayName("이메일로 회원 로그인 정보 조회 성공 테스트")
+    void testRetrieveMemberInfoByEmail() throws Exception {
+        //given
+        given(memberService.retrieveMemberInfoByEmail(any())).willReturn(
+            Optional.of(memberRetrieveResponse));
+
+        //when
+        ResultActions result = mockMvc.perform(get(URI_PREFIX + "/memberinfo/" + member.getEmail())
+            .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$['memberId']").value(memberRetrieveResponse.getMemberId()))
+            .andExpect(jsonPath("$['nickname']").value(memberRetrieveResponse.getNickname()));
+
+        then(memberService).should(times(1)).retrieveMemberInfoByEmail(any());
+    }
+
+    @Disabled
+    @Test
+    @DisplayName("회원 등급 리스트 조회 성공 테스트")
+    void testRetrieveMemberGradeWithPageable() throws Exception {
+        //given
+        PageResponse<MemberGradeRetrieveResponse> page = new PageResponse<>(
+            0, 0, 0, List.of()
+        );
+
+        //when
+        when(memberService.retrieveMemberGrades(member.getMemberNo(),
+            Pageable.unpaged())).thenReturn(
+            (Page<MemberGradeRetrieveResponse>) page);
+
+        //then
+        mockMvc.perform(get(URI_PREFIX + "/grade/" + member.getMemberNo()))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andReturn();
+
+    }
+
+    @Test
+    @DisplayName("회원 권한 리스트 조회 성공 테스트")
+    void testRetrieveMemberAuthority() throws Exception {
+        //given
+        given(memberService.retrieveMemberAuthority(any())).willReturn(
+            List.of(memberAuthorityRetrieveResponse));
+
+        //when
+        ResultActions result =
+            mockMvc.perform(get(URI_PREFIX + "/authority/" + member.getMemberNo())
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$[*].['name']").value(memberAuthorityRetrieveResponse.getName()));
+
+        then(memberService).should(times(1)).retrieveMemberAuthority(any());
+    }
+
+    @Test
+    @DisplayName("회원의 본인정보 조회 실패 시 에러 메시지 반환 테스트")
+    void testRetrieveMember_ifNotExistMemberNo_thenThrownValidMemberNotFoundErrorMessage()
+        throws Exception {
+        //given
+        given(memberService.retrieveMember(anyLong())).willThrow(
+            new MemberNotFoundException(member.getMemberNo()));
 
         //when
         ResultActions result = mockMvc.perform(get(URI_PREFIX + "/" + member.getMemberNo())
-                .accept(MediaType.APPLICATION_JSON));
+            .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isNotFound())
@@ -197,29 +364,15 @@ class MemberControllerTest {
 
     }
 
-    @Disabled
     @Test
     @DisplayName("회원 삭제 성공 테스트")
     void testDeleteMember_successTest() throws Exception {
         mockMvc.perform(delete(URI_PREFIX + "/" + member.getMemberNo()))
-            .andExpect(status().isAccepted())
+            .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
 
-        verify(memberService, times(1)).deleteMember(member.getMemberNo());
-    }
-
-    @Disabled
-    @Test
-    @DisplayName("회원 삭제 실패 테스트")
-    void testDeleteMember_failedTest() throws Exception {
-        doThrow(MemberNotFoundException.class).when(memberService)
-            .deleteMember(member.getMemberNo());
-
-        mockMvc.perform(delete(URI_PREFIX + "/" + member.getMemberNo()))
-            .andExpect(status().isBadRequest())
-            .andDo(print())
-            .andReturn();
+        verify(memberService, times(1)).deleteMember(any());
     }
 
 

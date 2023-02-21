@@ -7,11 +7,13 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
+import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
@@ -74,6 +76,7 @@ public class Dummy {
             .receiverPhoneNo("010-1111-1111")
             .isDefaultDestination(true)
             .build();
+        ReflectionTestUtils.setField(deliveryDestination, "id", 1L);
         return deliveryDestination;
     }
 
@@ -415,6 +418,36 @@ public class Dummy {
         return MemberAuthorityRetrieveResponse.builder()
             .id(getDummyMemberAuthority().getAuthority().getId())
             .name(getDummyMemberAuthority().getAuthority().getName())
+            .build();
+    }
+
+    public static MemberMainRetrieveResponse getDummyMemberMainRetrieveResponse() {
+        return MemberMainRetrieveResponse.builder()
+            .memberNo(getDummyMember().getMemberNo())
+            .gender(getDummyMember().getGender().getName())
+            .memberId(getDummyMember().getMemberId())
+            .nickname(getDummyMember().getNickname())
+            .name(getDummyMember().getName())
+            .birthday(getDummyMember().getBirthday())
+            .phoneNo(getDummyMember().getPhoneNo())
+            .email(getDummyMember().getEmail())
+            .memberGrade("화이트")
+            .currentTotalPoint(1000)
+            .build();
+    }
+
+    public static DeliveryDestinationRetrieveResponse getDummyDeliveryDestinationRetrieveResponse() {
+        return DeliveryDestinationRetrieveResponse.builder()
+            .id(getDummyDeliveryDestination().getId())
+            .memberNo(getDummyDeliveryDestination().getMember().getMemberNo())
+            .name(getDummyDeliveryDestination().getName())
+            .zipCode(getDummyDeliveryDestination().getZipCode())
+            .address(getDummyDeliveryDestination().getAddress())
+            .addressDetail(getDummyDeliveryDestination().getAddressDetail())
+            .addressSubDetail(getDummyDeliveryDestination().getAddressSubDetail())
+            .receiver(getDummyDeliveryDestination().getReceiver())
+            .receiverPhoneNo(getDummyDeliveryDestination().getReceiverPhoneNo())
+            .isDefaultDestination(getDummyDeliveryDestination().getIsDefaultDestination())
             .build();
     }
 }

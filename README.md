@@ -60,9 +60,14 @@ CI CD 아키텍쳐를 그려주세요
 ### 회원
 - 담당자 : 양승아
 - 사용 기술 : 배치
-- - 주요기능
-- ㅁ
-- ㄴ
+- 주요기능
+  - 배송지 10개까지 저장
+  - 포인트
+    - 선물 가능
+    - 내역 조회 가능
+  - 매월 자동 회원 등급 산정
+  - 차단
+  - 탈퇴
 - 링크
   - https://github.com/Booklay/booklay-batch
 
@@ -70,18 +75,25 @@ CI CD 아키텍쳐를 그려주세요
 ### 쿠폰
 - 담당자 : 김승혜
 - 사용 기술 : 카프카
-- - 주요기능
-- ㅁ
-- ㄴ
+- 주요기능
+  - 쿠폰 관리
+    - 정액, 정률, 상품별, 카테고리별, 전채, 등급
+    - 쿠폰존에 쿠폰 등록 가능
+    - 회원 지정하여 쿠폰 발급
+  - 쿠폰존
+    - 원하는 쿠폰 등록해서
+    - 수량 제한 쿠폰 처리 위한 카프카 사용
+  
 - 링크
   - https://github.com/Booklay/booklay-coupon
 
 ### 결제
 - 담당자 : 오준후
-- - 주요기능
-- ㅁ
-- ㄴ
-
+- 사용 기술 : toss API
+- 주요기능
+  - 카트
+  - 결제
+  
 ## 기술
 
 <img src="https://img.shields.io/badge/SpringBoot-#6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">

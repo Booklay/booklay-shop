@@ -160,21 +160,21 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         productList.forEach(product -> {
             List<CouponRetrieveResponseFromProduct> retrieveResponseFromProductList = couponMap.get(product.getId());
             long price = product.getPrice() * cartDtoMap.get(product.getId()).getCount();
-            if (product.isPointMethod()){
-                pointAccumulateSum.updateAndGet(v -> v+ (int)(price * product.getPointRate() / 100));
-            }
             productTotalPrice.updateAndGet(v -> v + (int) price);
             if (retrieveResponseFromProductList == null){
                 productMap.put(product.getId(), (int) price);
                 productDiscountedTotalPrice.updateAndGet(v -> v+ (int) price);
-                return;
+            }else {
+                int discountPrice = retrieveResponseFromProductList.stream().map(couponRetrieveResponseFromProduct ->
+                                getDiscountAmount(couponRetrieveResponseFromProduct, (int) price))
+                        .reduce(Integer::sum).orElse(0);
+                Integer discountedPrice = discountPrice>price?0: (int) price -discountPrice;
+                productMap.put(product.getId(), discountedPrice);
+                productDiscountedTotalPrice.updateAndGet(v -> v + discountedPrice);
             }
-            int discountPrice = retrieveResponseFromProductList.stream().map(couponRetrieveResponseFromProduct ->
-                    getDiscountAmount(couponRetrieveResponseFromProduct, (int) price))
-                    .reduce(Integer::sum).orElse(0);
-            Integer discountedPrice = discountPrice>price?0: (int) price -discountPrice;
-            productMap.put(product.getId(), discountedPrice);
-            productDiscountedTotalPrice.updateAndGet(v -> v + discountedPrice);
+            if (product.isPointMethod()){
+                pointAccumulateSum.updateAndGet(v -> v+ (int)(productDiscountedTotalPrice.get() * product.getPointRate() / 100));
+            }
         });
     }
 

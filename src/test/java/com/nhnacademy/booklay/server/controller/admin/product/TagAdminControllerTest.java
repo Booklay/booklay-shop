@@ -70,7 +70,7 @@ class TagAdminControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("admin/product/tag/{methodName}",
+        .alwaysDo(document("admin/tag/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )

@@ -260,7 +260,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-        //TODO : 객체 만들어서 리턴하기
         return MemberGradeChartRetrieveResponse.builder().build();
     }
 
@@ -352,26 +351,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean checkMemberId(String memberId) {
-        if (memberRepository.existsByMemberId(memberId)) {
-            return true;
-        }
-        return false;
+        return memberRepository.existsByMemberId(memberId);
     }
 
     @Override
     public boolean checkNickName(String nickName) {
-        if(memberRepository.existsByNickname(nickName)) {
-            return true;
-        }
-        return false;
+        return memberRepository.existsByNickname(nickName);
     }
 
     @Override
     public boolean checkEMail(String eMail) {
-        if(memberRepository.existsByEmail(eMail)) {
-            return true;
-        }
-        return false;
+        return memberRepository.existsByEmail(eMail);
     }
 
 }

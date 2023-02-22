@@ -6,8 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.nhnacademy.booklay.server.dto.mypage.response.WishlistAndAlarmBooleanResponse;
-import com.nhnacademy.booklay.server.dto.product.request.WishlistAndAlarmRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
+import com.nhnacademy.booklay.server.dto.product.request.WishlistAndAlarmRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
@@ -19,8 +19,8 @@ import com.nhnacademy.booklay.server.entity.Wishlist.Pk;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.mypage.RestockingNotificationRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.mypage.WishlistRepository;
+import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +46,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class WishlistServiceImplTest {
-//TODO : 실패 태스트 작성할것
 
   @InjectMocks
   WishlistServiceImpl wishlistService;

@@ -61,7 +61,7 @@ class AuthorAdminControllerTest {
   Long authorNo;
   UpdateAuthorRequest updateAuthorRequest;
 
-  private final String URI_PRE_FIX = "/mypage/product";
+  private final String URI_PRE_FIX = "/admin/author";
 
   @BeforeEach
   void setUp(WebApplicationContext webApplicationContext,
@@ -91,7 +91,7 @@ class AuthorAdminControllerTest {
     when(authorService.retrieveAllAuthor(pageable)).thenReturn(page);
 
     //when
-    mockMvc.perform(get(URI_PRE_FIX).accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(get(URI_PRE_FIX))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
@@ -105,8 +105,7 @@ class AuthorAdminControllerTest {
     when(authorService.retrieveAuthorForUpdate(authorNo)).thenReturn(author);
 
     //when
-    mockMvc.perform(get(URI_PRE_FIX + "/"+authorNo)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(get(URI_PRE_FIX + "/"+authorNo))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();

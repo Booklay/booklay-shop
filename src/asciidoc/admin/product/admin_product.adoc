@@ -1,4 +1,4 @@
-== product
+== admin/product
 :admin/product: {snippets}/admin/product/product
 
 === 관리자 페이지 상품 목록 페이지 조회

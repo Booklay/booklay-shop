@@ -1,0 +1,74 @@
+== board
+:board: {snippets}/board/board
+
+=== 문의 답변 승인
+:adoc: {board}/confirmAnswer
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 게시글 생성
+:adoc: {board}/createPost
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 게시글 soft delete
+:adoc: {board}/deletePost
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 공지사항 페이지 조회
+:adoc: {board}/retrieveNotice
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 관리자 페이지에서 최근 공지사항 목록 호출
+:adoc: {board}/retrieveNoticeListForAdmin
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 상품 문의 게시글 페이지 호출
+:adoc: {board}/retrieveProductQNA
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 게시글 수정
+:adoc: {board}/updatePost
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 게시글 조회
+:adoc: {board}/viewPost
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]

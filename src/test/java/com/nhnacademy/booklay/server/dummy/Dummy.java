@@ -8,13 +8,26 @@ import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
+import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
+import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -449,5 +462,93 @@ public class Dummy {
             .receiverPhoneNo(getDummyDeliveryDestination().getReceiverPhoneNo())
             .isDefaultDestination(getDummyDeliveryDestination().getIsDefaultDestination())
             .build();
+    }
+
+    public static TotalPointRetrieveResponse getDummyTotalPointRetrieveResponse() {
+        return TotalPointRetrieveResponse.builder()
+            .member(getDummyMember().getMemberNo())
+            .totalPoint(10000)
+            .build();
+    }
+
+    public static PointPresentRequest getDummyPointPresentRequest() {
+        return PointPresentRequest.builder()
+            .targetMemberId(getDummyMember().getMemberId())
+            .targetPoint(1000)
+            .build();
+    }
+
+    public static MemberChartRetrieveResponse getDummyMemberChartRetrieveResponse() {
+        return MemberChartRetrieveResponse.builder()
+            .validMemberCount(1L)
+            .blockedMemberCount(1L)
+            .droppedMemberCount(1L)
+            .build();
+    }
+
+    public static MemberGradeChartRetrieveResponse getDummyMemberGradeChartRetrieveResponse() {
+        return MemberGradeChartRetrieveResponse.builder()
+            .whiteCount(1L)
+            .silverCount(1L)
+            .goldCount(1L)
+            .platinumCount(1L)
+            .build();
+    }
+
+    public static MemberBlockRequest getDummyMemberBlockRequest() {
+        return MemberBlockRequest.builder()
+            .reason("test")
+            .build();
+    }
+
+    public static MemberAuthorityUpdateRequest getDummyMemberAuthorityUpdateRequest() {
+        return new MemberAuthorityUpdateRequest("실버");
+    }
+
+    public static MemberGradeRetrieveResponse getDummyMemberGradeRetrieveResponse() {
+        return MemberGradeRetrieveResponse.builder()
+            .id(getDummyMemberGrade().getId())
+            .memberNo(getDummyMemberGrade().getMember().getMemberNo())
+            .name(getDummyMemberGrade().getName())
+            .date(getDummyMemberGrade().getDate())
+            .build();
+    }
+
+    public static BlockedMemberRetrieveResponse getDummyBlockedMemberRetrieveResponse() {
+        return BlockedMemberRetrieveResponse.builder()
+            .id(1L)
+            .memberNo(getDummyBlockedMemberDetail().getMember().getMemberNo())
+            .memberId(getDummyBlockedMemberDetail().getMember().getMemberId())
+            .name(getDummyBlockedMemberDetail().getMember().getName())
+            .reason(getDummyBlockedMemberDetail().getReason())
+            .blockedAt(getDummyBlockedMemberDetail().getBlockedAt())
+            .releasedAt(getDummyBlockedMemberDetail().getReleasedAt())
+            .build();
+    }
+
+    public static DroppedMemberRetrieveResponse getDummyDroppedMemberRetrieveResponse() {
+        return DroppedMemberRetrieveResponse.builder()
+            .memberId(getDummyMember().getMemberId())
+            .deletedAt(LocalDateTime.now())
+            .build();
+    }
+
+    public static PointHistoryRetrieveResponse getDummyPointHistoryRetrieveResponse() {
+        return PointHistoryRetrieveResponse.builder()
+            .id(getDummyPointHistory().getId())
+            .member(getDummyPointHistory().getMember().getMemberNo())
+            .point(getDummyPointHistory().getPoint())
+            .totalPoint(getDummyPointHistory().getTotalPoint())
+            .updatedAt(getDummyPointHistory().getUpdatedAt())
+            .updatedDetail(getDummyPointHistory().getUpdatedDetail())
+            .build();
+    }
+
+    public static OrderReceipt getDummyOrderReceipt() {
+        return new OrderReceipt(getDummyOrder());
+    }
+
+    public static OrderListRetrieveResponse getDummyOrderListRetrieveResponse() {
+        return new OrderListRetrieveResponse(getDummyOrder());
     }
 }

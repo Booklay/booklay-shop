@@ -8,6 +8,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,32 +17,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteProductRelationRequest;
+import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.DisAndConnectBookWithSubscribeRequest;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com")
@@ -67,6 +77,7 @@ class ProductAdminControllerTest {
   Pageable pageable;
   Long productId;
   Long subscribeId;
+  CreateUpdateProductBookRequest createUpdateProductBookRequest;
 
   DisAndConnectBookWithSubscribeRequest subscribeRequest;
   CreateDeleteProductRelationRequest relationRequest;
@@ -78,7 +89,7 @@ class ProductAdminControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("admin/author/{methodName}",
+        .alwaysDo(document("admin/product/product/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )
@@ -88,6 +99,9 @@ class ProductAdminControllerTest {
     objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     pageable = PageRequest.of(0, 20);
     productId = 1L;
+    subscribeId = 1L;
+
+    createUpdateProductBookRequest = DummyCart.getDummyProductBookDto();
 
     subscribeRequest = new DisAndConnectBookWithSubscribeRequest();
     ReflectionTestUtils.setField(subscribeRequest, "productId", 1L);
@@ -100,6 +114,7 @@ class ProductAdminControllerTest {
   }
 
   @Test
+  @DisplayName("관리자 페이지 상품 목록 호출")
   void adminProduct() throws Exception {
     Page<RetrieveProductResponse> page = new PageImpl<>(List.of(), pageable, 0);
     when(productService.retrieveAdminProductPage(pageable)).thenReturn(page);
@@ -111,21 +126,8 @@ class ProductAdminControllerTest {
 
   }
 
-//  @Test
-//  void postBookRegister() throws Exception {
-//    MockMultipartFile image = new MockMultipartFile("name", "stream".getBytes());
-//
-//    mockMvc.perform(multipart(URI_PRE_FIX)
-//            .file(image)
-//            .content(objectMapper.writeValueAsString(bookCreateRequest))
-//            .contentType(MediaType.MULTIPART_FORM_DATA))
-//        .andExpect(status().isCreated())
-//        .andDo(print())
-//        .andReturn();
-//
-//  }
-
   @Test
+  @DisplayName("책 상품 수정을 위한 조회 성공")
   void getBookData() throws Exception {
     mockMvc.perform(get(URI_PRE_FIX + "/books/" + productId)
             .accept(MediaType.APPLICATION_JSON))
@@ -134,27 +136,8 @@ class ProductAdminControllerTest {
         .andReturn();
   }
 
-//  @Test
-//  void postBookUpdater() throws Exception {
-//    mockMvc.perform(put(URI_PRE_FIX + "/books/" + productId)
-//            .content(objectMapper.writeValueAsString(updateAuthorRequest))
-//            .contentType(MediaType.APPLICATION_JSON))
-//        .andExpect(status().isAccepted())
-//        .andDo(print())
-//        .andReturn();
-//  }
-
-//  @Test
-//  void postSubscribeRegister() throws Exception {
-//    mockMvc.perform(post(URI_PRE_FIX)
-//            .content(objectMapper.writeValueAsString(createAuthorRequest))
-//            .contentType(MediaType.APPLICATION_JSON))
-//        .andExpect(status().isCreated())
-//        .andDo(print())
-//        .andReturn();
-//  }
-
   @Test
+  @DisplayName("구독 상품 수정을 위한 조회 성공")
   void getSubscribeData() throws Exception {
     mockMvc.perform(
             get(URI_PRE_FIX + "/subscribes/" + productId).accept(MediaType.APPLICATION_JSON))
@@ -163,21 +146,11 @@ class ProductAdminControllerTest {
         .andReturn();
   }
 
-//  @Test
-//  void postSubscribeUpdater() throws Exception {
-//    mockMvc.perform(put(URI_PRE_FIX)
-//            .content(objectMapper.writeValueAsString(updateAuthorRequest))
-//            .contentType(MediaType.APPLICATION_JSON))
-//        .andExpect(status().isAccepted())
-//        .andDo(print())
-//        .andReturn();
-//  }
-
   @Test
+  @DisplayName("상품-구독 테이블 연동을 위한 페이지 조회")
   void getBooksDataForSubscribe() throws Exception {
     Page<RetrieveBookForSubscribeResponse> page = new PageImpl<>(List.of(), pageable, 0);
     when(productService.retrieveBookDataForSubscribe(pageable, subscribeId)).thenReturn(page);
-    PageResponse<RetrieveBookForSubscribeResponse> body = new PageResponse<>(page);
 
     mockMvc.perform(get(URI_PRE_FIX + "/subscribes/connect/" + subscribeId))
         .andExpect(status().isOk())
@@ -186,6 +159,7 @@ class ProductAdminControllerTest {
   }
 
   @Test
+  @DisplayName("상품-구독 조인 테이블 등록")
   void booksAndSubscribeConnect() throws Exception {
     mockMvc.perform(post(URI_PRE_FIX + "/subscribes/connect/" + subscribeId)
             .content(objectMapper.writeValueAsString(subscribeRequest))
@@ -196,6 +170,7 @@ class ProductAdminControllerTest {
   }
 
   @Test
+  @DisplayName("상품-구독 조인 테이블 삭제")
   void booksAndSubscribeDisconnect() throws Exception {
     mockMvc.perform(delete(URI_PRE_FIX + "/subscribes/connect/" + subscribeId)
             .content(objectMapper.writeValueAsString(subscribeRequest))
@@ -206,6 +181,7 @@ class ProductAdminControllerTest {
   }
 
   @Test
+  @DisplayName("연관상품 등록 위한 상품 목록 호출")
   void retrieveRecommendConnector() throws Exception {
     Page<RetrieveProductResponse> page = new PageImpl<>(List.of(), pageable, 0);
 
@@ -218,6 +194,7 @@ class ProductAdminControllerTest {
   }
 
   @Test
+  @DisplayName("연관상품 등록")
   void createRecommend() throws Exception {
     mockMvc.perform(post(URI_PRE_FIX + "/recommend")
             .content(objectMapper.writeValueAsString(relationRequest))
@@ -228,6 +205,7 @@ class ProductAdminControllerTest {
   }
 
   @Test
+  @DisplayName("연관 상품 삭제")
   void deleteRecommend() throws Exception {
     mockMvc.perform(delete(URI_PRE_FIX + "/recommend")
             .content(objectMapper.writeValueAsString(relationRequest))
@@ -238,6 +216,7 @@ class ProductAdminControllerTest {
   }
 
   @Test
+  @DisplayName("상품 소프트 딜리트")
   void softDeleteProduct() throws Exception {
     mockMvc.perform(delete(URI_PRE_FIX + "/" + productId))
         .andExpect(status().isOk())

@@ -1,5 +1,8 @@
 package com.nhnacademy.booklay.server.controller.admin.product;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -67,7 +70,7 @@ class TagAdminControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("admin/tag/{methodName}",
+        .alwaysDo(document("admin/product/tag/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )
@@ -89,6 +92,8 @@ class TagAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(tagService).should(times(1)).retrieveAllTag(any());
   }
 
   @Test
@@ -101,6 +106,8 @@ class TagAdminControllerTest {
         .andExpect(status().isCreated())
         .andDo(print())
         .andReturn();
+
+    then(tagService).should(times(1)).createTag(any());
   }
 
   @Test
@@ -111,6 +118,8 @@ class TagAdminControllerTest {
         .andExpect(status().isAccepted())
         .andDo(print())
         .andReturn();
+
+    then(tagService).should(times(1)).updateTag(any());
   }
 
   @Test
@@ -123,6 +132,8 @@ class TagAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(tagService).should(times(1)).deleteTag(any());
   }
 
   @Test
@@ -136,6 +147,8 @@ class TagAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(tagService).should(times(1)).retrieveAllTagWithBoolean(any(),any());
   }
 
   @Test
@@ -148,6 +161,8 @@ class TagAdminControllerTest {
         .andExpect(status().isCreated())
         .andDo(print())
         .andReturn();
+
+    then(tagService).should(times(1)).createTagProduct(any());
   }
 
   @Test
@@ -161,6 +176,7 @@ class TagAdminControllerTest {
         .andDo(print())
         .andReturn();
 
+    then(tagService).should(times(1)).deleteTagProduct(any());
   }
 
 
@@ -176,5 +192,6 @@ class TagAdminControllerTest {
         .andDo(print())
         .andReturn();
 
+    then(tagService).should(times(1)).tagNameChecker(any());
   }
 }

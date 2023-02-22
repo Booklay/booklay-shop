@@ -146,6 +146,7 @@ CI CD 아키텍쳐를 그려주세요
 <a href="https://github.com/nhn"><img src="https://camo.githubusercontent.com/1fb5eae4a4360c5f08dd061260fc68839f26aecc2f3de6859bff0166548b4268/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2533432532462533452532307769746825323025453225393925413525323062792d4e484e5f436c6f75642d6666313431342e737667" alt="code with hearth by NHN Cloud" data-canonical-src="https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg" style="max-width: 100%;"></a>
 
 ![](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
 ### workspace
 

@@ -1,8 +1,6 @@
 package com.nhnacademy.booklay.server.controller.mypage;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -20,10 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.controller.delivery.DeliveryDestinationController;
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
-import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -116,14 +112,15 @@ class PointHistoryControllerTest {
 
     @Test
     @DisplayName("포인트 적립/사용 내역 조회 검색 성공")
-    void testRetrieveMemberGrades() throws Exception {
+    void testRetrievePointHistory() throws Exception {
         //given
-        PageRequest pageRequest = PageRequest.of(0,10);
+        PageRequest pageRequest = PageRequest.of(0, 10);
         PageImpl<PointHistoryRetrieveResponse>
             response = new PageImpl<>(List.of(pointHistoryRetrieveResponse), pageRequest, 1);
 
         //mocking
-        when(pointHistoryService.retrievePointHistorys(pointHistoryRetrieveResponse.getMember(), pageRequest)).thenReturn(response);
+        when(pointHistoryService.retrievePointHistorys(pointHistoryRetrieveResponse.getMember(),
+            pageRequest)).thenReturn(response);
 
         // then
         mockMvc.perform(get(URI_PREFIX + "/" + pointHistoryRetrieveResponse.getMember())

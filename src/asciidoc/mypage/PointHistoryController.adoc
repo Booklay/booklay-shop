@@ -1,0 +1,38 @@
+= point_history
+:member: {snippets}/PointHistoryControllerTest
+
+=== 포인트 적립/사용
+:adoc: {member}/testCreatePointHistory
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 포인트 선물
+:adoc: {member}/testPresentPoint
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 포인트 적립/사용 내역 조회
+:adoc: {member}/testRetrievePointHistory
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 누적 포인트 조회
+:adoc: {member}/testRetrieveTotalPoint
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+
+
+

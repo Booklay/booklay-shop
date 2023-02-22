@@ -11,7 +11,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dto.review.request.ReviewCreateRequest;
 import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Review;
@@ -39,6 +40,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -63,8 +65,11 @@ class ReviewControllerTest {
   ObjectMapper objectMapper;
 
   Long reviewId;
+  Long productId;
   ReviewCreateRequest reviewCreateRequest;
   RetrieveReviewResponse reviewResponse;
+  SearchPageResponse searchResponse;
+  MockMultipartFile file;
 
   private final String URI_PRE_FIX = "/reviews";
 
@@ -83,6 +88,7 @@ class ReviewControllerTest {
 
     objectMapper = new ObjectMapper();
     reviewId = 1L;
+    productId = 1L;
 
     reviewCreateRequest = new ReviewCreateRequest();
     ReflectionTestUtils.setField(reviewCreateRequest, "productId", 1L);
@@ -95,36 +101,59 @@ class ReviewControllerTest {
         new Review(1L, DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto()), 1L,
             Dummy.getDummyMember(), 1L, DummyCart.getDummyFile(), 1L, 1L,
             "dummy content", false, LocalDateTime.now(), LocalDateTime.now()));
+
+    searchResponse = SearchPageResponse.builder()
+        .searchKeywords("keyword")
+        .pageSize(1)
+        .totalHits(1L)
+        .totalPages(1)
+        .averageScore("0.1")
+        .pageNumber(1)
+        .data(List.of())
+        .build();
+
+    file = new MockMultipartFile(
+        "file",
+        "file.txt",
+        "test/txt",
+        "multipart".getBytes());
+
   }
 
-//  @Test
-//  void createReview() throws Exception {
-//    mockMvc.perform(post(URI_PRE_FIX)
-//            .content(objectMapper.writeValueAsString(reviewCreateRequest))
-//            .contentType(MediaType.APPLICATION_JSON))
-//        .andExpect(status().isCreated())
-//        .andDo(print())
-//        .andReturn();
-//
-//    then(reviewService).should(times(1)).createReview(any(), any());
-//  }
+  @Test
+  void createReview() throws Exception {
 
-//  @Test
-//  void retrieveReviewByProductId() throws Exception {
-//    Long productId = 1L;
-//
-//    Pageable pageable = PageRequest.of(0, 20);
-//    SearchPageResponse<RetrieveReviewResponse> page = new SearchPageResponse();
-//    when(reviewService.retrieveReviewListByProductId(productId, pageable)).thenReturn(page);
-//
-//    mockMvc.perform(get(URI_PRE_FIX + "/products/" + productId)
-//            .accept(MediaType.APPLICATION_JSON))
-//        .andExpect(status().isOk())
-//        .andDo(print())
-//        .andReturn();
-//
-//    then(reviewService).should(times(1)).retrieveReviewListByProductId(any(), any());
-//  }
+    MockMultipartFile request = new MockMultipartFile(
+        "request",
+        "file.txt",
+        String.valueOf(MediaType.APPLICATION_JSON),
+        objectMapper.writeValueAsString(reviewCreateRequest).getBytes());
+
+    mockMvc.perform(multipart(URI_PRE_FIX)
+            .file(file)
+            .file(request))
+        .andExpect(status().isCreated())
+        .andDo(print())
+        .andReturn();
+
+    then(reviewService).should(times(1)).createReview(any(), any());
+  }
+
+  @Test
+  void retrieveReviewByProductId_bodyNonNull() throws Exception {
+
+    Pageable pageable = PageRequest.of(0, 20);
+    when(reviewService.retrieveReviewListByProductId(productId, pageable)).thenReturn(
+        searchResponse);
+
+    mockMvc.perform(get(URI_PRE_FIX + "/products/" + productId)
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isAccepted())
+        .andDo(print())
+        .andReturn();
+
+    then(reviewService).should(times(1)).retrieveReviewListByProductId(any(), any());
+  }
 
   @Test
   void retrieveReviewByReviewId() throws Exception {
@@ -143,7 +172,7 @@ class ReviewControllerTest {
 
   @Test
   void deleteReviewByReviewId_success() throws Exception {
-   when( reviewService.deleteReviewById(reviewId)).thenReturn(true);
+    when(reviewService.deleteReviewById(reviewId)).thenReturn(true);
 
     mockMvc.perform(delete(URI_PRE_FIX + "/" + reviewId))
         .andExpect(status().isOk())
@@ -155,7 +184,7 @@ class ReviewControllerTest {
 
   @Test
   void deleteReviewByReviewId_failure() throws Exception {
-    when( reviewService.deleteReviewById(reviewId)).thenReturn(false);
+    when(reviewService.deleteReviewById(reviewId)).thenReturn(false);
 
     mockMvc.perform(delete(URI_PRE_FIX + "/" + reviewId))
         .andExpect(status().isNotAcceptable())

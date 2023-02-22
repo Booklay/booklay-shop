@@ -33,7 +33,6 @@ public class StorageController {
    * @return DB에 저장된 ID, 디렉토리를 포함한 주소, 파일 이름.
    * @throws IOException .
    */
-
   @PostMapping
   public ResponseEntity<ObjectFile> uploadFile(@RequestPart final MultipartFile file)
       throws IOException {
@@ -51,18 +50,11 @@ public class StorageController {
    * @return 저장된 파일 위치
    * @throws IOException .
    */
-
   @GetMapping("/{fileId}")
   public ResponseEntity<String> downloadUrl(@PathVariable("fileId") final Long fileId)
       throws IOException {
     return ResponseEntity.status(HttpStatus.OK)
         .body(fileService.downloadUrl(fileId));
-  }
-
-  //    @GetMapping("/ebook/{fileId}")
-  public ResponseEntity<byte[]> downloadEBook(@PathVariable("fileId") final Long fileId)
-      throws IOException {
-    return fileService.downloadFile(fileId);
   }
 
 }

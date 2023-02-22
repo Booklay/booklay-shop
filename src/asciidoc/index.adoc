@@ -10,9 +10,31 @@ endif::[]
 
 = admin api
 
-== category
-include::admin_categories.adoc[]
-include::comment.adoc[]
+== admin
+
+=== member
+include::admin/member/member.adoc[]
+
+=== product
+include::admin/product/admin_author.adoc[]
+include::admin/product/admin_product.adoc[]
+include::admin/product/admin_tag.adoc[]
+
+=== category
+include::admin/category/admin_categories.adoc[]
+
+
+== board
+include::board/board.adoc[]
+include::board/comment.adoc[]
+
+== delivery
+include::delivery/deliveryDestination.adoc[]
+
+include::product.adoc[]
+include::review.adoc[]
+include::search.adoc[]
+include::storage.adoc[]
 
 == 추가할 도메인
 

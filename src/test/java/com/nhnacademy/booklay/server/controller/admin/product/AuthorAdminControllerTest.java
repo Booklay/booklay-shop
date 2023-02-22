@@ -69,7 +69,7 @@ class AuthorAdminControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("admin/product/author/{methodName}",
+        .alwaysDo(document("admin/author/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )

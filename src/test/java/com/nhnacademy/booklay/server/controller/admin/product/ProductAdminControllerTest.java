@@ -11,20 +11,22 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteProductRelationRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.DisAndConnectBookWithSubscribeRequest;
+import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveBookForSubscribeResponse;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductDetail;
+import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
@@ -38,23 +40,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com")
@@ -77,12 +73,13 @@ class ProductAdminControllerTest {
 
   ObjectMapper objectMapper;
 
+  ProductAllInOneResponse bookAllInOne;
+  ProductAllInOneResponse subscribeAllInOne;
+  DisAndConnectBookWithSubscribeRequest subscribeRequest;
   Pageable pageable;
   Long productId;
   Long subscribeId;
   CreateUpdateProductBookRequest createUpdateProductBookRequest;
-
-  DisAndConnectBookWithSubscribeRequest subscribeRequest;
   CreateDeleteProductRelationRequest relationRequest;
   private final String URI_PRE_FIX = "/admin/product";
 
@@ -103,6 +100,15 @@ class ProductAdminControllerTest {
     pageable = PageRequest.of(0, 20);
     productId = 1L;
     subscribeId = 1L;
+
+    Product bookProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
+    ProductDetail productDetail = DummyCart.getDummyProductDetail(
+        DummyCart.getDummyProductBookDto());
+    bookAllInOne = new ProductAllInOneResponse(bookProduct, productDetail, null);
+
+    Product subscribeProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductSubscribeDto());
+    Subscribe subscribe = DummyCart.getDummySubscribe(DummyCart.getDummyProductSubscribeDto());
+    subscribeAllInOne = new ProductAllInOneResponse(subscribeProduct, null, subscribe);
 
     createUpdateProductBookRequest = DummyCart.getDummyProductBookDto();
 
@@ -134,6 +140,9 @@ class ProductAdminControllerTest {
   @Test
   @DisplayName("책 상품 수정을 위한 조회 성공")
   void getBookData() throws Exception {
+
+    when(productService.retrieveBookData(productId)).thenReturn(bookAllInOne);
+
     mockMvc.perform(get(URI_PRE_FIX + "/books/" + productId)
             .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -146,6 +155,8 @@ class ProductAdminControllerTest {
   @Test
   @DisplayName("구독 상품 수정을 위한 조회 성공")
   void getSubscribeData() throws Exception {
+
+    when(productService.retrieveBookData(productId)).thenReturn(subscribeAllInOne);
     mockMvc.perform(
             get(URI_PRE_FIX + "/subscribes/" + productId).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -185,6 +196,7 @@ class ProductAdminControllerTest {
   @Test
   @DisplayName("상품-구독 조인 테이블 삭제")
   void booksAndSubscribeDisconnect() throws Exception {
+
     mockMvc.perform(delete(URI_PRE_FIX + "/subscribes/connect/" + subscribeId)
             .content(objectMapper.writeValueAsString(subscribeRequest))
             .contentType(MediaType.APPLICATION_JSON))
@@ -213,6 +225,7 @@ class ProductAdminControllerTest {
   @Test
   @DisplayName("연관상품 등록")
   void createRecommend() throws Exception {
+
     mockMvc.perform(post(URI_PRE_FIX + "/recommend")
             .content(objectMapper.writeValueAsString(relationRequest))
             .contentType(MediaType.APPLICATION_JSON))
@@ -226,6 +239,7 @@ class ProductAdminControllerTest {
   @Test
   @DisplayName("연관 상품 삭제")
   void deleteRecommend() throws Exception {
+
     mockMvc.perform(delete(URI_PRE_FIX + "/recommend")
             .content(objectMapper.writeValueAsString(relationRequest))
             .contentType(MediaType.APPLICATION_JSON))

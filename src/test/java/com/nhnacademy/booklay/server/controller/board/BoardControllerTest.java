@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.controller.board;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -68,7 +70,7 @@ class BoardControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("board/{methodName}",
+        .alwaysDo(document("board/board/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )
@@ -107,7 +109,7 @@ class BoardControllerTest {
         .andDo(print())
         .andReturn();
 
-
+    then(postService).should(times(1)).updatePost(any());
   }
 
   @Test
@@ -123,6 +125,7 @@ class BoardControllerTest {
         .andDo(print())
         .andReturn();
 
+    then(postService).should(times(1)).retrieveProductQNA(any(),any());
   }
 
   @Test
@@ -138,6 +141,7 @@ class BoardControllerTest {
         .andDo(print())
         .andReturn();
 
+    then(postService).should(times(1)).retrieveNotice(any());
   }
 
   @Test
@@ -152,6 +156,8 @@ class BoardControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(postService).should(times(1)).retrieveNoticeList(any());
   }
 
   @Test
@@ -163,6 +169,8 @@ class BoardControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(postService).should(times(1)).retrievePostById(any());
   }
 
   @Test
@@ -175,6 +183,8 @@ class BoardControllerTest {
         .andExpect(status().isAccepted())
         .andDo(print())
         .andReturn();
+
+    then(postService).should(times(1)).updateConfirmAnswer(any());
   }
 
   @Test
@@ -186,5 +196,7 @@ class BoardControllerTest {
         .andExpect(status().isAccepted())
         .andDo(print())
         .andReturn();
+
+    then(postService).should(times(1)).deletePost(any(), any());
   }
 }

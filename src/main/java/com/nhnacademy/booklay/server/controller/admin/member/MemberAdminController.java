@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -94,7 +95,7 @@ public class MemberAdminController {
     }
 
     @GetMapping("/block")
-    public ResponseEntity<PageResponse<BlockedMemberRetrieveResponse>> retrieveBlockedMember(
+    public ResponseEntity<PageResponse<BlockedMemberRetrieveResponse>> retrieveBlockedMembers(
         Pageable pageable) {
         Page<BlockedMemberRetrieveResponse> responsePage =
             memberService.retrieveBlockedMember(pageable);
@@ -162,7 +163,7 @@ public class MemberAdminController {
             .build();
     }
 
-    @GetMapping("/block/cancel/{blockedMemberDetailId}")
+    @PostMapping("/block/cancel/{blockedMemberDetailId}")
     public ResponseEntity<Void> memberBlockCancel(@PathVariable Long blockedMemberDetailId) {
         memberService.blockMemberCancel(blockedMemberDetailId);
         return ResponseEntity.status(HttpStatus.OK)

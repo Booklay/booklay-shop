@@ -76,7 +76,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
                     return new OrderSheetCheckResponse("포인트보유량보다 많은 포인트 사용되었습니다.", 4, Boolean.FALSE);
                 }
             }
-            AtomicReference<Integer> pointAccumulateSum = new AtomicReference<>(0); // 적립 예상 포인트
+            AtomicReference<Long> pointAccumulateSum = new AtomicReference<>(0L); // 적립 예상 포인트
 
             //coupon 데이터 받아오기 및 쿠폰 데이터를 쿠폰사용전송데이터로 변환
             CouponUseRequest couponUseRequest = new CouponUseRequest();
@@ -93,21 +93,21 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
                 cartDtoMap.put(cartDto.getProductNo(), cartDto);
                 return cartDto.getProductNo();
             }).collect(Collectors.toList());
-            Map<Long, Integer> productMap = new HashMap<>();
+            Map<Long, Long> productMap = new HashMap<>();
             List<Product> productList =
                 productService.retrieveProductListByProductNoList(productNoList);
             if (productList.size() != productNoList.size()){
                 return new OrderSheetCheckResponse("확인할 수 없는 상품이 포함되어 있습니다.", 4, Boolean.FALSE);
             }
-            AtomicReference<Integer> productDiscountedTotalPrice =
-                new AtomicReference<>(0); // 상품쿠폰이 적용된 상품가격 합계
-            AtomicReference<Integer> productTotalPrice = new AtomicReference<>(0); // 상품 가격합계
+            AtomicReference<Long> productDiscountedTotalPrice =
+                new AtomicReference<>(0L); // 상품쿠폰이 적용된 상품가격 합계
+            AtomicReference<Long> productTotalPrice = new AtomicReference<>(0L); // 상품 가격합계
 
             //상품리스트를 맵형태로 조회하기 쉽게 변경 및 총 가격등 취합
             parseProductListData(cartDtoMap, pointAccumulateSum, couponMap, productMap, productList,
                 productDiscountedTotalPrice, productTotalPrice);
-            int paymentPrice = 0;
-            int discountedTotalPrice = 0;
+            long paymentPrice;
+            long discountedTotalPrice;
 
             MultiValueMap<String, Long> productCategoryMap = new LinkedMultiValueMap<>();
             MultiValueMap<Long, Long> categoryListMap =
@@ -128,21 +128,21 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
 
             List<CouponRetrieveResponseFromProduct> orderCouponList =
                 couponMap.get(null); // 사용된 상품쿠폰 목록
-            int orderCouponDiscountSum = getOrderCouponDiscountSum(productMap, productCategoryMap,
+            long orderCouponDiscountSum = getOrderCouponDiscountSum(productMap, productCategoryMap,
                 orderCouponList); // 상품쿠폰 할인액
             //할인된 최종금액
             discountedTotalPrice =
                 Math.max(productDiscountedTotalPrice.get() - orderCouponDiscountSum, 0);
             //할인된 최종금액 - 사용 포인트 + 배송비 + 포장비
-            paymentPrice = discountedTotalPrice - orderSheet.getUsingPoint().intValue() +
+            paymentPrice = discountedTotalPrice - orderSheet.getUsingPoint() +
                 (productTotalPrice.get() > 30000 ? 0 : 3000)
-                + orderSheet.getGiftWrappingPrice().intValue();
+                + orderSheet.getGiftWrappingPrice();
 
             if (paymentPrice == orderSheet.getPaymentAmount()) {//만약 넘어온 값과같다면 계산 결과가 유효하다고 판단
                 updateOrderSheet(orderSheet, cartDtoMap, productNoList, couponUseRequest,
                     productList);
                 orderSheet.setMemberNo(memberInfo.getMemberNo());
-                orderSheet.setPointAccumulate(pointAccumulateSum.get());
+                orderSheet.setPointAccumulate(pointAccumulateSum.get().intValue());
                 return orderSheet;
             }
             return new OrderSheetCheckResponse("주문 정보의 유효성 검사가 실패하였습니다.", 4, Boolean.FALSE);
@@ -152,38 +152,38 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
     }
 
     private void parseProductListData(Map<Long, CartDto> cartDtoMap,
-                           AtomicReference<Integer> pointAccumulateSum,
-                           MultiValueMap<Long, CouponRetrieveResponseFromProduct> couponMap,
-                           Map<Long, Integer> productMap, List<Product> productList,
-                           AtomicReference<Integer> productDiscountedTotalPrice,
-                           AtomicReference<Integer> productTotalPrice) {
+                                      AtomicReference<Long> pointAccumulateSum,
+                                      MultiValueMap<Long, CouponRetrieveResponseFromProduct> couponMap,
+                                      Map<Long, Long> productMap, List<Product> productList,
+                                      AtomicReference<Long> productDiscountedTotalPrice,
+                                      AtomicReference<Long> productTotalPrice) {
         productList.forEach(product -> {
             List<CouponRetrieveResponseFromProduct> retrieveResponseFromProductList = couponMap.get(product.getId());
             long price = product.getPrice() * cartDtoMap.get(product.getId()).getCount();
-            productTotalPrice.updateAndGet(v -> v + (int) price);
+            productTotalPrice.updateAndGet(v -> v + price);
             if (retrieveResponseFromProductList == null){
-                productMap.put(product.getId(), (int) price);
-                productDiscountedTotalPrice.updateAndGet(v -> v+ (int) price);
+                productMap.put(product.getId(), price);
+                productDiscountedTotalPrice.updateAndGet(v -> v+ price);
             }else {
-                int discountPrice = retrieveResponseFromProductList.stream().map(couponRetrieveResponseFromProduct ->
-                                getDiscountAmount(couponRetrieveResponseFromProduct, (int) price))
-                        .reduce(Integer::sum).orElse(0);
-                Integer discountedPrice = discountPrice>price?0: (int) price -discountPrice;
+                long discountPrice = retrieveResponseFromProductList.stream().map(couponRetrieveResponseFromProduct ->
+                                getDiscountAmount(couponRetrieveResponseFromProduct, price))
+                        .reduce(Long::sum).orElse(0L);
+                Long discountedPrice = discountPrice>price?0: price -discountPrice;
                 productMap.put(product.getId(), discountedPrice);
                 productDiscountedTotalPrice.updateAndGet(v -> v + discountedPrice);
             }
             if (product.isPointMethod()){
-                pointAccumulateSum.updateAndGet(v -> v+ (int)(productDiscountedTotalPrice.get() * product.getPointRate() / 100));
+                pointAccumulateSum.updateAndGet(v -> v+ (productDiscountedTotalPrice.get() * product.getPointRate() / 100));
             }
         });
     }
 
-    private Integer getDiscountAmount(CouponRetrieveResponseFromProduct coupon, Integer price){
+    private Long getDiscountAmount(CouponRetrieveResponseFromProduct coupon, Long price){
         if (coupon.getTypeName().equals("정률쿠폰")){
             return coupon.getAmount()* price / 100;
         }else if (coupon.getTypeName().equals("정액쿠폰")){
-            return coupon.getAmount();}
-        return 0;
+            return Integer.toUnsignedLong(coupon.getAmount());}
+        return 0L;
     }
     private void updateOrderSheet(OrderSheet orderSheet, Map<Long, CartDto> cartDtoMap, List<Long> productNoList, CouponUseRequest couponUseRequest, List<Product> productList) {
         //product Map 생성/주문상품 정보 생성
@@ -207,22 +207,22 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         orderSheet.setOrderProductDtoList(orderProductDtoList);
         orderSheet.setCouponUseRequest(couponUseRequest);
     }
-    private int getOrderCouponDiscountSum(Map<Long, Integer> productMap, MultiValueMap<String, Long> productCategoryMap, List<CouponRetrieveResponseFromProduct> orderCouponList) {
-        int orderCouponDiscountSum = 0;
+    private long getOrderCouponDiscountSum(Map<Long, Long> productMap, MultiValueMap<String, Long> productCategoryMap, List<CouponRetrieveResponseFromProduct> orderCouponList) {
+        long orderCouponDiscountSum = 0;
         String higherCategory = null;
         if (orderCouponList != null){
             if (orderCouponList.size()>1){
                 higherCategory = getHigherCategory(orderCouponList);
             }
             for(CouponRetrieveResponseFromProduct orderCoupon : orderCouponList){
-                Integer categoryPriceSum = Objects.requireNonNull(productCategoryMap.get(orderCoupon.getCategoryNo().toString())).
-                        stream().map(productMap::get).reduce(Integer::sum).orElse(0);
-                Integer categoryDiscountAmount = getDiscountAmount(orderCoupon, categoryPriceSum);
+                Long categoryPriceSum = Objects.requireNonNull(productCategoryMap.get(orderCoupon.getCategoryNo().toString())).
+                        stream().map(productMap::get).reduce(Long::sum).orElse(0L);
+                Long categoryDiscountAmount = getDiscountAmount(orderCoupon, categoryPriceSum);
                 orderCouponDiscountSum += categoryDiscountAmount>categoryPriceSum?categoryPriceSum:categoryDiscountAmount;
             }
             if(higherCategory != null){
-                int categoryPriceSum = Objects.requireNonNull(productCategoryMap.get(higherCategory)).
-                        stream().reduce(Long::sum).orElse(0L).intValue();
+                long categoryPriceSum = Objects.requireNonNull(productCategoryMap.get(higherCategory)).
+                        stream().reduce(Long::sum).orElse(0L);
                 if (orderCouponDiscountSum>categoryPriceSum){
                     orderCouponDiscountSum = categoryPriceSum;
                 }
@@ -281,7 +281,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
 
 
     @Override
-    public Order saveReceipt(OrderSheet orderSheet){
+    public Order saveReceipt(OrderSheet orderSheet, MemberInfo memberInfo){
         Order order = orderService.saveOrder(orderSheet);
         //주문 상품 저장
         if (!orderSheet.getOrderProductDtoList().isEmpty()){

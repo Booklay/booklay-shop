@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.dto.common;
 
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -46,6 +47,18 @@ public class MemberInfo {
         this.phoneNo = memberInfoPostGetter.getMember_info_phoneNo();
         this.email = memberInfoPostGetter.getMember_info_email();
     }
+
+    public MemberInfo (MemberRetrieveResponse memberRetrieveResponse) {
+        this.memberNo = memberRetrieveResponse.getMemberNo();
+        this.gender = memberRetrieveResponse.getGender();
+        this.memberId = memberRetrieveResponse.getMemberId();
+        this.nickname = memberRetrieveResponse.getNickname();
+        this.name = memberRetrieveResponse.getName();
+        this.birthday = memberRetrieveResponse.getBirthday();
+        this.phoneNo = memberRetrieveResponse.getPhoneNo();
+        this.email = memberRetrieveResponse.getEmail();
+    }
+
     private String readMap(String key, Map<String, String[]> map){
         if(map.containsKey(key)&&map.get(key).length>0&&!map.get(key)[0].equals("\u0000")){
             return map.get(key)[0];

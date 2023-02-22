@@ -17,6 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
+import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.dummy.DummyCart;
+import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
@@ -61,7 +65,10 @@ class ProductControllerTest {
 
   ObjectMapper objectMapper;
   Long productId;
-  SearchIdRequest request;
+  Long subscribeId;
+  ProductAllInOneResponse bookAllInOne;
+  SearchIdRequest searchRequest;
+  SearchPageResponse searchResponse;
   private static final String URI_PREFIX = "/product";
 
   @BeforeEach
@@ -81,10 +88,26 @@ class ProductControllerTest {
     objectMapper = new ObjectMapper();
 
     productId = 1L;
+    subscribeId = 1L;
 
-    request = new SearchIdRequest();
-    ReflectionTestUtils.setField(request, "classification", "keywords");
-    ReflectionTestUtils.setField(request, "id", 1L);
+    Product bookProduct = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
+    ProductDetail productDetail = DummyCart.getDummyProductDetail(
+        DummyCart.getDummyProductBookDto());
+    bookAllInOne = new ProductAllInOneResponse(bookProduct, productDetail, null);
+
+    searchRequest = new SearchIdRequest();
+    ReflectionTestUtils.setField(searchRequest, "classification", "keywords");
+    ReflectionTestUtils.setField(searchRequest, "id", 1L);
+
+    searchResponse = SearchPageResponse.builder()
+        .searchKeywords("keyword")
+        .pageSize(1)
+        .totalHits(1L)
+        .totalPages(1)
+        .averageScore("0.1")
+        .pageNumber(1)
+        .data(List.of())
+        .build();
   }
 
   @Test
@@ -106,55 +129,83 @@ class ProductControllerTest {
   @Test
   @DisplayName("상품 상세 보기")
   void retrieveDetailView() throws Exception {
+
+    when(productService.findProductById(productId)).thenReturn(bookAllInOne);
+
     mockMvc.perform(get(URI_PREFIX + "/view/" + productId))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).findProductById(any());
   }
 
   @Test
   @DisplayName("구독 하위 상품 목록 조회")
   void retrieveSubscribedBooks() throws Exception {
+
+    when(bookSubscribeService.retrieveBookSubscribe(subscribeId)).thenReturn(List.of());
     mockMvc.perform(get(URI_PREFIX + "/view/subscribe/" + productId))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(bookSubscribeService).should(times(1)).retrieveBookSubscribe(any());
   }
 
   @Test
   @DisplayName("연관 상품 목록 조회")
   void retrieveRecommendProducts() throws Exception {
+
+    when(productRelationService.retrieveRecommendProducts(productId)).thenReturn(List.of());
+
     mockMvc.perform(get(URI_PREFIX + "/recommend/" + productId))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productRelationService).should(times(1)).retrieveRecommendProducts(any());
   }
 
   @Test
   @DisplayName("상품 전체 목록")
   void searchAll() throws Exception {
+    Pageable pageable = PageRequest.of(0, 20);
+    when( productService.getAllProducts(pageable)).thenReturn(searchResponse);
     mockMvc.perform(get(URI_PREFIX + "/all"))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).getAllProducts(any());
   }
 
   @Test
   @DisplayName("최근 등록 상품 조회")
   void getLatestProduct() throws Exception {
+    when(productService.getLatestEights()).thenReturn(List.of());
+
     mockMvc.perform(get(URI_PREFIX + "/latest"))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).getLatestEights();
   }
 
   @Test
   @DisplayName("상품 검색")
   void searchByRequest() throws Exception {
-    mockMvc.perform(post(URI_PREFIX + "/request").content(objectMapper.writeValueAsString(request))
+    Pageable pageable = PageRequest.of(0, 20);
+
+    when(productService.retrieveProductByRequest(searchRequest, pageable)).thenReturn(searchResponse);
+    mockMvc.perform(post(URI_PREFIX + "/request").content(objectMapper.writeValueAsString(
+                searchRequest))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).retrieveProductByRequest(any(),any());
   }
 }

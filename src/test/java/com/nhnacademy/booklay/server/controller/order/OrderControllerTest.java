@@ -184,6 +184,7 @@ class OrderControllerTest {
             post(URI_PREFIX + "/storage/down").accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(storageRequest))
                 .contentType(MediaType.APPLICATION_JSON));
+
     }
 
     @Test

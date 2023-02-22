@@ -3,10 +3,12 @@ package com.nhnacademy.booklay.server.dto.product.request;
 import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
+@NoArgsConstructor
 public class DisAndConnectBookWithSubscribeRequest {
 
     @NotNull

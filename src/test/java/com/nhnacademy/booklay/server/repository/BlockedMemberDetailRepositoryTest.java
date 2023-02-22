@@ -9,7 +9,6 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 @DataJpaTest
 @ActiveProfiles("test")
-public class BlockedMemberDetailRepositoryTest {
+class BlockedMemberDetailRepositoryTest {
     @Autowired
     TestEntityManager entityManager;
 

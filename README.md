@@ -65,8 +65,8 @@ CI CD 아키텍쳐를 그려주세요
 - 담당자 : 조현진, 이성준
 - 사용 기술 : JWT
 - 주요기능
-    - ㅁ
-    - ㄴ
+    - 로그인
+    - github OAuth
 - 링크
     - https://github.com/Booklay/booklay-auth
 

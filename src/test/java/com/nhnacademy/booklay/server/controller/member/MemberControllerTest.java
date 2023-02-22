@@ -36,7 +36,6 @@ import com.nhnacademy.booklay.server.service.member.MemberService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -251,7 +250,6 @@ class MemberControllerTest {
         then(memberService).should(times(1)).retrieveMemberInfoByEmail(any());
     }
 
-    @Disabled
     @Test
     @DisplayName("회원 등급 리스트 조회 성공 테스트")
     void testRetrieveMemberGradeWithPageable() throws Exception {

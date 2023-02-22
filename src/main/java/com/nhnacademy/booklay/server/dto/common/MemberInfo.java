@@ -1,10 +1,10 @@
 package com.nhnacademy.booklay.server.dto.common;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import java.time.LocalDate;
 import java.util.Map;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
@@ -36,7 +36,7 @@ public class MemberInfo {
         this.email = readMap(memberInfoFieldName[arrayCount], paramMap);
     }
 
-    public MemberInfo(MemberInfoPostGetter memberInfoPostGetter){
+    public MemberInfo(MemberInfoPostGetter memberInfoPostGetter) {
         this.memberNo = memberInfoPostGetter.getMember_info_memberNo();
         this.gender = memberInfoPostGetter.getMember_info_gender();
         this.memberId = memberInfoPostGetter.getMember_info_memberId();
@@ -46,10 +46,22 @@ public class MemberInfo {
         this.phoneNo = memberInfoPostGetter.getMember_info_phoneNo();
         this.email = memberInfoPostGetter.getMember_info_email();
     }
-    private String readMap(String key, Map<String, String[]> map){
-        if(map.containsKey(key)&&map.get(key).length>0&&!map.get(key)[0].equals("\u0000")){
+
+    public MemberInfo(MemberRetrieveResponse memberRetrieveResponse) {
+        this.memberNo = memberRetrieveResponse.getMemberNo();
+        this.gender = memberRetrieveResponse.getGender();
+        this.memberId = memberRetrieveResponse.getMemberId();
+        this.nickname = memberRetrieveResponse.getNickname();
+        this.name = memberRetrieveResponse.getName();
+        this.birthday = memberRetrieveResponse.getBirthday();
+        this.phoneNo = memberRetrieveResponse.getPhoneNo();
+        this.email = memberRetrieveResponse.getEmail();
+    }
+
+    private String readMap(String key, Map<String, String[]> map) {
+        if (map.containsKey(key) && map.get(key).length > 0 && !map.get(key)[0].equals("\u0000")) {
             return map.get(key)[0];
-        }else {
+        } else {
             return null;
         }
     }

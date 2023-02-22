@@ -8,11 +8,10 @@ import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.repository.order.OrderRepository;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -60,13 +59,16 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Boolean confirmOrder(Long orderNo, Long memberNo) {
-        Optional<Order> optionalOrder = orderRepository.findByIdAndOrderStatusCodeNoEqualsAndMemberNo(orderNo, 3L , memberNo);
-        if (optionalOrder.isEmpty()){
+        Optional<Order> optionalOrder = orderRepository.findByIdAndMemberNo(orderNo, memberNo);
+        if (optionalOrder.isEmpty()) {
             return Boolean.FALSE;
         }
         Order order = optionalOrder.get();
-        pointHistoryService.createPointHistory(
-                new PointHistoryCreateRequest(order.getMemberNo(), order.getPointAccumulate(), "상품 구매 확정"));
+        if (order.getPointAccumulate() != 0) {
+            pointHistoryService.createPointHistory(
+                new PointHistoryCreateRequest(order.getMemberNo(), order.getPointAccumulate(),
+                    "상품 구매 확정"));
+        }
         order.setOrderStatusCodeNo(4L);
         orderRepository.save(order);
         return Boolean.TRUE;

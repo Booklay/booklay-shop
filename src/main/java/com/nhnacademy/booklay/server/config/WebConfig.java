@@ -4,6 +4,7 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 import com.nhnacademy.booklay.server.dto.secrets.DatasourceInfo;
 import com.nhnacademy.booklay.server.dto.secrets.SecretResponse;
+import com.nhnacademy.booklay.server.filter.ContentCachingRequestWrapperFilter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,8 +16,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Objects;
-
-import com.nhnacademy.booklay.server.filter.ContentCachingRequestWrapperFilter;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -93,6 +92,7 @@ public class WebConfig {
 
         return new RestTemplate(requestFactory);
     }
+
 
     /**
      * 애플리케이션이 구동되는 동시에 NHN Secure Manager로부터 접속 정보를 가져옵니다.

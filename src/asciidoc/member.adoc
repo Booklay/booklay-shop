@@ -1,6 +1,0 @@
-= Member Admin Api
-:snippets: ../../target/generated-snippets
-
-멤버 조회
-include::{snippets}/MemberControllerTest/testRetrieveMember/response-body.adoc[]
-include::{snippets}/MemberControllerTest/testRetrieveMember/http-request.adoc[]

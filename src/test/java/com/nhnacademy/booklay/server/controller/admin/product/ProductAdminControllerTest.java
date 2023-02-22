@@ -91,7 +91,7 @@ class ProductAdminControllerTest {
 
   @BeforeEach
   void setUp(WebApplicationContext webApplicationContext,
-      RestDocumentationContextProvider restDocumentation) throws JsonProcessingException {
+      RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
@@ -151,27 +151,13 @@ class ProductAdminControllerTest {
   }
 
   @Test
-  @DisplayName("책 상품 수정을 위한 조회 성공")
+  @DisplayName("상품 수정을 위한 조회 성공")
   void getBookData() throws Exception {
 
     when(productService.retrieveBookData(productId)).thenReturn(bookAllInOne);
 
-    mockMvc.perform(get(URI_PRE_FIX + "/books/" + productId)
+    mockMvc.perform(get(URI_PRE_FIX + "/edit/" + productId)
             .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andDo(print())
-        .andReturn();
-
-    then(productService).should(times(1)).retrieveBookData(any());
-  }
-
-  @Test
-  @DisplayName("구독 상품 수정을 위한 조회 성공")
-  void getSubscribeData() throws Exception {
-
-    when(productService.retrieveBookData(productId)).thenReturn(subscribeAllInOne);
-    mockMvc.perform(
-            get(URI_PRE_FIX + "/subscribes/" + productId).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();

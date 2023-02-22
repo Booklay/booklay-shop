@@ -7,7 +7,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 구독 상품 연동
@@ -17,7 +16,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 구독 상품 연동 취소
 :adoc: {adminProduct}/booksAndSubscribeDisconnect
@@ -26,7 +24,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 연관상품 등록
 :adoc: {adminProduct}/createRecommend
@@ -35,7 +32,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 연광상품 등록 취소
 :adoc: {adminProduct}/deleteRecommend
@@ -44,7 +40,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 책 수정 페이지 조회
 :adoc: {adminProduct}/getBookData
@@ -52,7 +47,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 구독 수정 페이지 조회
@@ -61,7 +55,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 구독상품 등록 조회 페이지
@@ -70,7 +63,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 연관상품 등록 조회 페이지
@@ -79,7 +71,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 상품 soft delete
@@ -88,6 +79,4 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 

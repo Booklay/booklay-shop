@@ -7,7 +7,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 테그 삭제
@@ -17,7 +16,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 테그 페이지 조회
 :adoc: {adminTag}/tagPage
@@ -25,7 +23,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 상품 태그 등록
@@ -35,7 +32,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 상품 태그 등록 취소
 :adoc: {adminTag}/tagProductDisconnect
@@ -44,7 +40,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 테그 등록
 :adoc: {adminTag}/tagRegister
@@ -53,7 +48,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 태그 수정
 :adoc: {adminTag}/tagUpdate
@@ -62,4 +56,3 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]

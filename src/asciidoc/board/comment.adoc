@@ -16,8 +16,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 댓글 페이지 호출
 :adoc: {comment}/retrieveCommentPage
@@ -25,10 +23,9 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 댓글 수회
+=== 댓글 수정
 :adoc: {comment}/updateComment
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]

@@ -7,7 +7,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 게시글 생성
@@ -25,8 +24,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 공지사항 페이지 조회
 :adoc: {board}/retrieveNotice
@@ -34,7 +31,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 관리자 페이지에서 최근 공지사항 목록 호출
@@ -43,7 +39,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 상품 문의 게시글 페이지 호출
@@ -52,7 +47,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 게시글 수정
@@ -70,5 +64,4 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]

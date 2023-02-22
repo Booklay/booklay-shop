@@ -1,4 +1,4 @@
-== mypage product
+== my page product
 :product: {snippets}/mypage/product
 
 === 재입고 알림
@@ -8,7 +8,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 위시리스트 등록
 :adoc: {product}/createWishlist
@@ -17,7 +16,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 재입고 알림 등록 취소
 :adoc: {product}/deleteAlarm
@@ -26,7 +24,7 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
+
 
 === 위시리스트 등록 취소
 :adoc: {product}/deleteWishlist
@@ -35,15 +33,13 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
-=== 마이페이지 인덱스 화면에서 위시르스트 조회
+=== 마이페이지 인덱스 화면에서 위시리스트 조회
 :adoc: {product}/retrieveIndexWishlist
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 상품 상세 조회시 등록 여부 확인
@@ -53,7 +49,6 @@ include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
-include::{adoc}/response-body.adoc[]
 
 === 재입고 알림 목록 호출
 :adoc: {product}/retrieveNotification
@@ -61,7 +56,6 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
 === 위시리스트 목록 호출
@@ -70,5 +64,4 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
-include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]

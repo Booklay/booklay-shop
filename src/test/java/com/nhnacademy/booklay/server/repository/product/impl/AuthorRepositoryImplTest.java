@@ -37,21 +37,7 @@ class AuthorRepositoryImplTest {
     em = entityManager.getEntityManager();
     author = DummyCart.getDummyAuthor();
   }
-  @Test
-  void findAllBy() {
-    Pageable pageable = Pageable.ofSize(10);
 
-    authorRepository.findAllByPageable(pageable);
-  }
-
-  @Test
-  void findAuthorById() {
-    Long authorNo = 1L;
-
-    authorRepository.findById(authorNo);
-  }
-
-  @Disabled
   @Test
   void findAllByPageable() {
     //given

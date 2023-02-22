@@ -24,13 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface ProductService {
 
-  Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception;
+  Long createBookProduct(CreateUpdateProductBookRequest request) throws IOException;
 
-  Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
+  Long createSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws IOException;
 
-  Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception;
+  Long updateBookProduct(CreateUpdateProductBookRequest request) throws IOException;
 
-  Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws Exception;
+  Long updateSubscribeProduct(CreateUpdateProductSubscribeRequest request) throws IOException;
 
   ProductAllInOneResponse retrieveBookData(Long id);
 

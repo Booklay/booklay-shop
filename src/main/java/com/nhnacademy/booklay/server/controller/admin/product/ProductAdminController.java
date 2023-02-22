@@ -75,7 +75,7 @@ public class ProductAdminController {
           MediaType.MULTIPART_FORM_DATA_VALUE})
   public ResponseEntity<Long> postBookRegister(
       @RequestPart CreateUpdateProductBookRequest request,
-      @RequestPart MultipartFile imgFile) throws Exception {
+      @RequestPart MultipartFile imgFile) throws IOException {
     request.setImage(imgFile);
     Long body = productService.createBookProduct(request);
 
@@ -107,7 +107,7 @@ public class ProductAdminController {
       consumes = {MediaType.APPLICATION_JSON_VALUE,
           MediaType.MULTIPART_FORM_DATA_VALUE})
   public ResponseEntity<Long> postBookUpdater(@RequestPart CreateUpdateProductBookRequest request,
-      @Nullable @RequestPart MultipartFile imgFile) throws Exception {
+      @Nullable @RequestPart MultipartFile imgFile) throws IOException {
     if (Objects.nonNull(imgFile)) {
       request.setImage(imgFile);
     }
@@ -127,7 +127,7 @@ public class ProductAdminController {
   @PostMapping(value = "/subscribes", consumes = {MediaType.APPLICATION_JSON_VALUE,
       MediaType.MULTIPART_FORM_DATA_VALUE})
   public ResponseEntity<Long> postSubscribeRegister(@RequestPart CreateUpdateProductSubscribeRequest request,
-      @RequestPart MultipartFile imgFile) throws Exception {
+      @RequestPart MultipartFile imgFile) throws IOException {
     request.setImage(imgFile);
     Long body =  productService.createSubscribeProduct(request);
 
@@ -146,7 +146,7 @@ public class ProductAdminController {
       consumes = {MediaType.APPLICATION_JSON_VALUE,
           MediaType.MULTIPART_FORM_DATA_VALUE})
   public ResponseEntity<Long> postSubscribeUpdater(@RequestPart CreateUpdateProductSubscribeRequest request,
-      @Nullable @RequestPart MultipartFile imgFile) throws Exception {
+      @Nullable @RequestPart MultipartFile imgFile) throws IOException {
     if (Objects.nonNull(imgFile)) {
       request.setImage(imgFile);
     }

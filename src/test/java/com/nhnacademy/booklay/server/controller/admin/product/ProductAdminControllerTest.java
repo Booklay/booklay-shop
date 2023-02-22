@@ -11,10 +11,12 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteProductRelationRequest;
@@ -32,6 +34,7 @@ import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,10 +49,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -72,6 +77,7 @@ class ProductAdminControllerTest {
   MockMvc mockMvc;
 
   ObjectMapper objectMapper;
+  MockMultipartFile imgFile;
 
   ProductAllInOneResponse bookAllInOne;
   ProductAllInOneResponse subscribeAllInOne;
@@ -85,11 +91,11 @@ class ProductAdminControllerTest {
 
   @BeforeEach
   void setUp(WebApplicationContext webApplicationContext,
-      RestDocumentationContextProvider restDocumentation) {
+      RestDocumentationContextProvider restDocumentation) throws JsonProcessingException {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("admin/product/product/{methodName}",
+        .alwaysDo(document("admin/product/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )
@@ -120,6 +126,13 @@ class ProductAdminControllerTest {
     relationRequest = new CreateDeleteProductRelationRequest();
     ReflectionTestUtils.setField(relationRequest, "baseId", 1L);
     ReflectionTestUtils.setField(relationRequest, "targetId", 2L);
+
+    //multipartfile
+    imgFile = new MockMultipartFile(
+        "imgFile",
+        "file.txt",
+        "test/txt",
+        "multipart".getBytes());
   }
 
   @Test
@@ -259,5 +272,91 @@ class ProductAdminControllerTest {
         .andReturn();
 
     then(productService).should(times(1)).softDelete(any());
+  }
+
+  @Test
+  void createBookRequest() throws Exception {
+
+    MockMultipartFile request = new MockMultipartFile(
+        "request",
+        "file.txt",
+        String.valueOf(MediaType.APPLICATION_JSON),
+        objectMapper.writeValueAsString(DummyCart.getDummyProductBookDto()).getBytes());
+
+    mockMvc.perform(multipart(URI_PRE_FIX + "/books")
+            .file(request)
+            .file(imgFile))
+        .andExpect(status().isCreated())
+        .andDo(print())
+        .andReturn();
+
+    then(productService).should(times(1)).createBookProduct(any());
+  }
+
+  @Test
+  void createSubscribeRequest() throws Exception {
+    MockMultipartFile request = new MockMultipartFile(
+        "request",
+        "file.txt",
+        String.valueOf(MediaType.APPLICATION_JSON),
+        objectMapper.writeValueAsString(DummyCart.getDummyProductSubscribeDto()).getBytes());
+
+    mockMvc.perform(multipart(URI_PRE_FIX + "/subscribes")
+            .file(imgFile)
+            .file(request))
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andReturn();
+
+    then(productService).should(times(1)).createSubscribeProduct(any());
+  }
+
+  @Test
+  void updateBookRequest() throws Exception {
+    MockMultipartFile request = new MockMultipartFile(
+        "request",
+        "file.txt",
+        String.valueOf(MediaType.APPLICATION_JSON),
+        objectMapper.writeValueAsString(DummyCart.getDummyProductBookDto()).getBytes());
+
+    val builder = MockMvcRequestBuilders.multipart(URI_PRE_FIX + "/books");
+    builder.with(request1 -> {
+      request1.setMethod("PUT");
+      return request1;
+    });
+
+    mockMvc.perform(builder
+            .file(request)
+            .file(imgFile))
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andReturn();
+
+    then(productService).should(times(1)).updateBookProduct(any());
+  }
+
+  @Test
+  void updateSubscribeRequest() throws Exception {
+
+    MockMultipartFile request = new MockMultipartFile(
+        "request",
+        "file.txt",
+        String.valueOf(MediaType.APPLICATION_JSON),
+        objectMapper.writeValueAsString(DummyCart.getDummyProductSubscribeDto()).getBytes());
+
+    val builder = MockMvcRequestBuilders.multipart(URI_PRE_FIX + "/subscribes");
+    builder.with(request1 -> {
+      request1.setMethod("PUT");
+      return request1;
+    });
+
+    mockMvc.perform(builder
+            .file(request)
+            .file(imgFile))
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andReturn();
+
+    then(productService).should(times(1)).updateSubscribeProduct(any());
   }
 }

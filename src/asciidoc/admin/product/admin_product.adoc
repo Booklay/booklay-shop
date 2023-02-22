@@ -1,5 +1,5 @@
 == admin/product
-:admin/product: {snippets}/admin/product/product
+:admin/product: {snippets}/admin/product
 
 === 관리자 페이지 상품 목록 페이지 조회
 :adoc: {adminProduct}/adminProduct
@@ -79,4 +79,37 @@ include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
+
+=== 책 상품 등록
+:adoc: {adminProduct}/createBookRequest
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 책 상품 수정
+:adoc: {adminProduct}/updateBookRequest
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 구독형 상품 등록
+:adoc: {adminProduct}/createSubscribeRequest
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 구독형 상품 수정
+:adoc: {adminProduct}/updateSubscribeRequest
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
 

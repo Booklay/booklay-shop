@@ -108,10 +108,13 @@ CI CD 아키텍쳐를 그려주세요
 ### 결제
 
 - 담당자 : 오준후
-- 사용 기술 : toss API
+- 사용 기술 : toss API, redis
 - 주요기능
     - 카트
+      - 비회원 주문 가능하도록 redis 사용
+      - RDB(MySql) 마이그래이션 지원
     - 결제
+      - 쿠폰 / 포인트 적용 가능
 
 ## 기술
 
@@ -139,6 +142,7 @@ CI CD 아키텍쳐를 그려주세요
 ![](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 ![](https://img.shields.io/badge/SonarLint-CB2029?style=for-the-badge&logo=sonarlint&logoColor=white)
 ![](https://img.shields.io/badge/SonarQube-4E9BCD?style=for-the-badge&amp;logo=SonarQube&amp;logoColor=white)
+![](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white)
 <a href="https://github.com/nhn"><img src="https://camo.githubusercontent.com/1fb5eae4a4360c5f08dd061260fc68839f26aecc2f3de6859bff0166548b4268/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2533432532462533452532307769746825323025453225393925413525323062792d4e484e5f436c6f75642d6666313431342e737667" alt="code with hearth by NHN Cloud" data-canonical-src="https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg" style="max-width: 100%;"></a>
 
 ![](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)

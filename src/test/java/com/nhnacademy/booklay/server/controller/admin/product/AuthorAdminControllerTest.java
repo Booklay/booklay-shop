@@ -61,7 +61,7 @@ class AuthorAdminControllerTest {
   Long authorNo;
   UpdateAuthorRequest updateAuthorRequest;
 
-  private final String URI_PRE_FIX = "/admin/author";
+  private final String URI_PRE_FIX = "/mypage/product";
 
   @BeforeEach
   void setUp(WebApplicationContext webApplicationContext,

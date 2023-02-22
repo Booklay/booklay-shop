@@ -1,0 +1,47 @@
+== author
+:adminAuthor: {snippets}/admin/product/author
+
+=== 작가 삭제
+:adoc: {adminAuthor}/authorDelete
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 작가 수정
+:adoc: {adminAuthor}/authorEdit
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 작가 페이지 조회
+:adoc: {adminAuthor}/authorPage
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 작가 등록
+:adoc: {adminAuthor}/authorRegister
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 작가 수정
+:adoc: {adminAuthor}/authorUpdate
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]

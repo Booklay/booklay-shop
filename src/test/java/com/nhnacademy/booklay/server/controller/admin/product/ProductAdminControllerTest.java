@@ -1,5 +1,8 @@
 package com.nhnacademy.booklay.server.controller.admin.product;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -124,6 +127,8 @@ class ProductAdminControllerTest {
         .andDo(print())
         .andReturn();
 
+    then(productService).should(times(1)).retrieveAdminProductPage(any());
+
   }
 
   @Test
@@ -134,6 +139,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).retrieveBookData(any());
   }
 
   @Test
@@ -144,6 +151,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).retrieveBookData(any());
   }
 
   @Test
@@ -156,6 +165,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).retrieveBookDataForSubscribe(any(), any());
   }
 
   @Test
@@ -167,6 +178,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(bookSubscribeService).should(times(1)).bookSubscribeConnection(any());
   }
 
   @Test
@@ -178,6 +191,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(bookSubscribeService).should(times(1)).bookSubscribeDisconnection(any());
   }
 
   @Test
@@ -191,6 +206,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productRelationService).should(times(1)).retrieveRecommendConnection(any(), any());
   }
 
   @Test
@@ -202,6 +219,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productRelationService).should(times(1)).createProductRelation(any());
   }
 
   @Test
@@ -213,6 +232,8 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productRelationService).should(times(1)).deleteProductRelation(any());
   }
 
   @Test
@@ -222,5 +243,7 @@ class ProductAdminControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(productService).should(times(1)).softDelete(any());
   }
 }

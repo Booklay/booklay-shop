@@ -83,14 +83,13 @@ public class ProductAdminController {
   }
 
   /**
-   * 책 수정 조회
+   * 상품 수정 조회
    *
    * @param productId
    * @return
    */
-  // 책 수정용 조회
-  @GetMapping("/books/{productId}")
-  public ResponseEntity<ProductAllInOneResponse> getBookData(@PathVariable Long productId) {
+  @GetMapping("/edit/{productId}")
+  public ResponseEntity<ProductAllInOneResponse> getProductData(@PathVariable Long productId) {
     ProductAllInOneResponse body = productService.retrieveBookData(productId);
 
     return ResponseEntity.status(HttpStatus.OK).body(body);
@@ -131,19 +130,6 @@ public class ProductAdminController {
       @RequestPart MultipartFile imgFile) throws Exception {
     request.setImage(imgFile);
     Long body =  productService.createSubscribeProduct(request);
-
-    return ResponseEntity.status(HttpStatus.OK).body(body);
-  }
-
-  /**
-   * 구독 상품 수정 조회
-   *
-   * @param productId
-   * @return
-   */
-  @GetMapping( "/subscribes/{productId}")
-  public ResponseEntity<ProductAllInOneResponse> getSubscribeData(@PathVariable Long productId) {
-    ProductAllInOneResponse body =  productService.retrieveBookData(productId);
 
     return ResponseEntity.status(HttpStatus.OK).body(body);
   }

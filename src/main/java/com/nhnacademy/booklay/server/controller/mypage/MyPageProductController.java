@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.common.recycler.Recycler.V;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -49,7 +48,7 @@ public class MyPageProductController {
       @PathVariable Long memberNo)
       throws IOException {
     Page<RetrieveProductResponse> responses = wishlistService.retrievePage(memberNo, pageable);
-    PageResponse page = new PageResponse<>(responses);
+    PageResponse<RetrieveProductResponse> page = new PageResponse<>(responses);
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(page);
@@ -71,7 +70,8 @@ public class MyPageProductController {
    * @param request
    */
   @PostMapping("/wishlist")
-  public ResponseEntity<Void> createWishlist(@RequestBody WishlistAndAlarmRequest request) {wishlistService.createWishlist(request);
+  public ResponseEntity<Void> createWishlist(@RequestBody WishlistAndAlarmRequest request) {
+    wishlistService.createWishlist(request);
     return ResponseEntity.status(HttpStatus.OK)
         .build();
   }
@@ -90,7 +90,7 @@ public class MyPageProductController {
       throws IOException {
     Page<RetrieveProductResponse> responses = restockingNotificationService.retrievePage(memberNo,
         pageable);
-    PageResponse page = new PageResponse<>(responses);
+    PageResponse<RetrieveProductResponse> page = new PageResponse<>(responses);
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(page);

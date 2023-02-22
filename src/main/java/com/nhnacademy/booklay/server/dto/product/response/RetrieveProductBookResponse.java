@@ -5,11 +5,9 @@ import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorR
 import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
-import com.nhnacademy.booklay.server.entity.Subscribe;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

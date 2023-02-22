@@ -108,12 +108,14 @@ public class Member {
     }
 
     public void deleteMember() {
+        String DELETED = "deleted";
+
         this.deletedAt = LocalDateTime.now();
-        this.password = "deleted" + this.memberNo;
-        this.email = "deleted" + this.memberNo;
-        this.name = "deleted" + this.memberNo;
-        this.nickname = "deleted" + this.memberNo;
-        this.phoneNo = "deleted" + this.memberNo;
+        this.password = DELETED + this.memberNo;
+        this.email = DELETED + this.memberNo;
+        this.name = DELETED + this.memberNo;
+        this.nickname = DELETED + this.memberNo;
+        this.phoneNo = DELETED + this.memberNo;
     }
 
     public MemberGrade addGrade(String gradeName) {

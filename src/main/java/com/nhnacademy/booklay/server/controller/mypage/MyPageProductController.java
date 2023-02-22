@@ -72,7 +72,7 @@ public class MyPageProductController {
   @PostMapping("/wishlist")
   public ResponseEntity<Void> createWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.createWishlist(request);
-    return ResponseEntity.status(HttpStatus.OK)
+    return ResponseEntity.status(HttpStatus.CREATED)
         .build();
   }
 
@@ -104,7 +104,7 @@ public class MyPageProductController {
   @DeleteMapping("/wishlist")
   public ResponseEntity<Void> deleteWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.deleteWishlist(request);
-    return ResponseEntity.status(HttpStatus.OK).build();
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }
 
   /**
@@ -132,14 +132,14 @@ public class MyPageProductController {
 
   /**
    * 상품 상세 정보 조회시 위시리스트, 재입고 알림 등록 여부 확인
-   *
    * @param request
    * @return
    */
   @PostMapping("/boolean")
   public ResponseEntity<WishlistAndAlarmBooleanResponse> retrieveMemberProduct(
       @RequestBody WishlistAndAlarmRequest request) {
+    WishlistAndAlarmBooleanResponse body = wishlistService.retrieveExists(request);
     return ResponseEntity.status(HttpStatus.OK)
-        .body(wishlistService.retrieveExists(request));
+        .body(body);
   }
 }

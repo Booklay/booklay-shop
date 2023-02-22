@@ -52,6 +52,11 @@ public class ProductController {
     return ResponseEntity.status(HttpStatus.OK).body(body);
   }
 
+  /**
+   * 상품 상세 페이지 조회
+   * @param productNo
+   * @return
+   */
   @GetMapping("/view/{productNo}")
   public ResponseEntity<ProductAllInOneResponse> retrieveDetailView(@PathVariable Long productNo) {
     ProductAllInOneResponse result = productService.findProductById(productNo);
@@ -59,6 +64,12 @@ public class ProductController {
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
+  /**
+   * 구독 하위 상품 목록 조회
+   * @param subscribeId
+   * @return
+   * @throws IOException
+   */
   @GetMapping("/view/subscribe/{subscribeId}")
   public ResponseEntity<List<RetrieveProductResponse>> retrieveSubscribedBooks(
       @PathVariable Long subscribeId)
@@ -67,6 +78,12 @@ public class ProductController {
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
+  /**
+   * 연관 상품 목록 조회
+   * @param productId
+   * @return
+   * @throws IOException
+   */
   @GetMapping("/recommend/{productId}")
   public ResponseEntity<List<RetrieveProductResponse>> retrieveRecommendProducts(
       @PathVariable Long productId)
@@ -76,6 +93,11 @@ public class ProductController {
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
+  /**
+   * 상품 전체 조회
+   * @param pageable
+   * @return
+   */
   @GetMapping("/all")
   public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchAll(Pageable pageable) {
 
@@ -86,6 +108,10 @@ public class ProductController {
         .body(pageResponse);
   }
 
+  /**
+   * 최근 등록 상품 조회
+   * @return
+   */
   @GetMapping("/latest")
   public ResponseEntity<List<SearchProductResponse>> getLatestProduct() {
 
@@ -95,6 +121,12 @@ public class ProductController {
         .body(pageResponse);
   }
 
+  /**
+   * 검색 조회
+   * @param request
+   * @param pageable
+   * @return
+   */
   @PostMapping("/request")
   public ResponseEntity<SearchPageResponse<SearchProductResponse>> searchByRequest(
       @RequestBody SearchIdRequest request, Pageable pageable) {

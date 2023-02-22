@@ -54,6 +54,12 @@ public class MyPageProductController {
         .body(page);
   }
 
+  /**
+   * 마이페이지 인덱스 화면에서 위시리스트 최대 5개 호출
+   * @param memberNo
+   * @return
+   * @throws IOException
+   */
   @GetMapping("/index/wishlist/{memberNo}")
   public ResponseEntity<List<RetrieveProductResponse>> retrieveIndexWishlist(
       @PathVariable Long memberNo)

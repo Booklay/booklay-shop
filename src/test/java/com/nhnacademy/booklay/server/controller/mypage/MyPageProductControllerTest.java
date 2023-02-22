@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.controller.admin.product;
+package com.nhnacademy.booklay.server.controller.mypage;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -12,18 +12,14 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.dto.product.DeleteIdRequest;
-import com.nhnacademy.booklay.server.dto.product.tag.request.CreateDeleteTagProductRequest;
-import com.nhnacademy.booklay.server.dto.product.tag.request.CreateTagRequest;
-import com.nhnacademy.booklay.server.dto.product.tag.request.UpdateTagRequest;
-import com.nhnacademy.booklay.server.dto.product.tag.response.RetrieveTagResponse;
-import com.nhnacademy.booklay.server.dto.product.tag.response.TagProductResponse;
-import com.nhnacademy.booklay.server.service.product.TagService;
+import com.nhnacademy.booklay.server.dto.product.request.WishlistAndAlarmRequest;
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.service.mypage.RestockingNotificationService;
+import com.nhnacademy.booklay.server.service.mypage.WishlistService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,29 +36,29 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com")
 @ExtendWith(RestDocumentationExtension.class)
+@WebMvcTest(MyPageProductController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest(TagAdminController.class)
-class TagAdminControllerTest {
+class MyPageProductControllerTest {
 
   @MockBean
-  TagService tagService;
-
+  WishlistService wishlistService;
+  @MockBean
+  RestockingNotificationService restockingNotificationService;
   @Autowired
-  TagAdminController tagAdminController;
+  MyPageProductController myPageProductController;
   @Autowired
   MockMvc mockMvc;
-
   ObjectMapper objectMapper;
-  UpdateTagRequest updateTagRequest;
-  Long tagNo;
-  Pageable pageable;
-  private final String URI_PRE_FIX = "/admin/tag";
+  Long memberNo;
+  WishlistAndAlarmRequest request;
+  private final String URI_PRE_FIX = "/mypage/product";
 
   @BeforeEach
   void setUp(WebApplicationContext webApplicationContext,
@@ -70,128 +66,120 @@ class TagAdminControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("admin/product/tag/{methodName}",
+        .alwaysDo(document("mypage/product/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )
         )
         .build();
+
     objectMapper = new ObjectMapper();
-    pageable = PageRequest.of(0, 20);
-    updateTagRequest = new UpdateTagRequest(1L, "#test_tag");
-    tagNo = 1L;
+
+    memberNo = 1L;
+    request = new WishlistAndAlarmRequest();
+    ReflectionTestUtils.setField(request, "memberNo", 1L);
+    ReflectionTestUtils.setField(request, "productId", 1L);
   }
 
   @Test
-  void tagPage() throws Exception {
+  void retrieveWishlist() throws Exception {
+    Pageable pageable = PageRequest.of(0, 20);
+    Page<RetrieveProductResponse> page = new PageImpl<>(List.of(), pageable, 0);
 
-    Page<RetrieveTagResponse> page = new PageImpl<>(List.of(), pageable, 0);
-    when(tagService.retrieveAllTag(pageable)).thenReturn(page);
+    when(wishlistService.retrievePage(memberNo, pageable)).thenReturn(page);
 
-    mockMvc.perform(get(URI_PRE_FIX))
+    mockMvc.perform(get(URI_PRE_FIX + "/wishlist/" + memberNo)
+            .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
 
-    then(tagService).should(times(1)).retrieveAllTag(any());
+    then(wishlistService).should(times(1)).retrievePage(any(), any());
   }
 
   @Test
-  void tagRegister() throws Exception {
-    CreateTagRequest createTagRequest = new CreateTagRequest("#test_tag_2");
+  void retrieveIndexWishlist() throws Exception {
+    mockMvc.perform(get(URI_PRE_FIX + "/index/wishlist/" + memberNo)
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andReturn();
 
-    mockMvc.perform(post(URI_PRE_FIX)
-            .content(objectMapper.writeValueAsString(createTagRequest))
+    then(wishlistService).should(times(1)).retrieveWishlist(any());
+  }
+
+  @Test
+  void createWishlist() throws Exception {
+    mockMvc.perform(post(URI_PRE_FIX + "/wishlist")
+            .content(objectMapper.writeValueAsString(request))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated())
         .andDo(print())
         .andReturn();
 
-    then(tagService).should(times(1)).createTag(any());
+    then(wishlistService).should(times(1)).createWishlist(any());
   }
 
   @Test
-  void tagUpdate() throws Exception {
-    mockMvc.perform(put(URI_PRE_FIX)
-            .content(objectMapper.writeValueAsString(updateTagRequest))
+  void retrieveNotification() throws Exception {
+    Pageable pageable = PageRequest.of(0, 20);
+    Page<RetrieveProductResponse> page = new PageImpl(List.of(), pageable, 0);
+    when(restockingNotificationService.retrievePage(memberNo, pageable)).thenReturn(page);
+
+    mockMvc.perform(get(URI_PRE_FIX + "/alarm/" + memberNo)
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andReturn();
+
+    then(restockingNotificationService).should(times(1)).retrievePage(any(), any());
+  }
+
+  @Test
+  void deleteWishlist() throws Exception {
+    mockMvc.perform(delete(URI_PRE_FIX + "/wishlist")
+            .content(objectMapper.writeValueAsString(request))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isAccepted())
         .andDo(print())
         .andReturn();
 
-    then(tagService).should(times(1)).updateTag(any());
+    then(wishlistService).should(times(1)).deleteWishlist(any());
   }
 
   @Test
-  void tagDelete() throws Exception {
-    DeleteIdRequest deleteIdRequest = new DeleteIdRequest(tagNo);
-
-    mockMvc.perform(delete(URI_PRE_FIX)
-            .content(objectMapper.writeValueAsString(deleteIdRequest))
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andDo(print())
-        .andReturn();
-
-    then(tagService).should(times(1)).deleteTag(any());
-  }
-
-  @Test
-  void tagProductPage() throws Exception {
-    Long productId = 1L;
-    Page<TagProductResponse> page = new PageImpl<>(List.of(), pageable, 0);
-
-    when(tagService.retrieveAllTagWithBoolean(pageable, productId)).thenReturn(page);
-
-    mockMvc.perform(get(URI_PRE_FIX + "/product/" + productId))
-        .andExpect(status().isOk())
-        .andDo(print())
-        .andReturn();
-
-    then(tagService).should(times(1)).retrieveAllTagWithBoolean(any(),any());
-  }
-
-  @Test
-  void tagProductConnect() throws Exception {
-    CreateDeleteTagProductRequest createRequest = new CreateDeleteTagProductRequest(1L, 1L);
-
-    mockMvc.perform(post(URI_PRE_FIX + "/product")
-            .content(objectMapper.writeValueAsString(createRequest))
+  void createAlarm() throws Exception {
+    mockMvc.perform(post(URI_PRE_FIX + "/alarm")
+            .content(objectMapper.writeValueAsString(request))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated())
         .andDo(print())
         .andReturn();
 
-    then(tagService).should(times(1)).createTagProduct(any());
+    then(restockingNotificationService).should(times(1)).createAlarm(any());
   }
 
   @Test
-  void tagProductDisconnect() throws Exception {
-    CreateDeleteTagProductRequest deleteRequest = new CreateDeleteTagProductRequest(1L, 1L);
-
-    mockMvc.perform(delete(URI_PRE_FIX + "/product")
-            .content(objectMapper.writeValueAsString(deleteRequest))
+  void deleteAlarm() throws Exception {
+    mockMvc.perform(delete(URI_PRE_FIX + "/alarm")
+            .content(objectMapper.writeValueAsString(request))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isAccepted())
         .andDo(print())
         .andReturn();
 
-    then(tagService).should(times(1)).deleteTagProduct(any());
+    then(restockingNotificationService).should(times(1)).deleteAlarm(any());
   }
 
-
   @Test
-  void retrieveAllTagList() throws Exception {
-    String name = "test_tag";
-
-    when(tagService.tagNameChecker(name)).thenReturn(true);
-
-    //when
-    mockMvc.perform(get(URI_PRE_FIX + "/exist/" + name))
+  void retrieveMemberProduct() throws Exception {
+    mockMvc.perform(post(URI_PRE_FIX + "/boolean")
+            .content(objectMapper.writeValueAsString(request))
+            .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
 
-    then(tagService).should(times(1)).tagNameChecker(any());
+    then(wishlistService).should(times(1)).retrieveExists(any());
   }
 }

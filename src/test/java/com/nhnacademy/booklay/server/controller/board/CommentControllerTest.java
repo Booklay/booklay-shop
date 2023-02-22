@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.controller.board;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -63,7 +65,7 @@ class CommentControllerTest {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(print())
-        .alwaysDo(document("{ClassName}/{methodName}",
+        .alwaysDo(document("board/comment/{methodName}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             )
@@ -87,6 +89,8 @@ class CommentControllerTest {
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
+
+    then(commentService).should(times(1)).retrieveCommentPage(any(), any());
   }
 
   @Test
@@ -111,6 +115,8 @@ class CommentControllerTest {
         .andExpect(status().isCreated())
         .andDo(print())
         .andReturn();
+
+    then(commentService).should(times(1)).updateComment(any());
   }
 
   @Test
@@ -121,5 +127,7 @@ class CommentControllerTest {
         .andExpect(status().isCreated())
         .andDo(print())
         .andReturn();
+
+    then(commentService).should(times(1)).deleteComment(any(), any());
   }
 }

@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
+import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
@@ -27,7 +28,7 @@ import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveRes
 import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
-import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.StorageRequest;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -47,6 +48,7 @@ import com.nhnacademy.booklay.server.entity.OrderStatusCode;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -550,5 +552,9 @@ public class Dummy {
 
     public static OrderListRetrieveResponse getDummyOrderListRetrieveResponse() {
         return new OrderListRetrieveResponse(getDummyOrder());
+    }
+
+    public static StorageRequest getDummyStorageRequest() {
+        return new StorageRequest(List.of(new CartDto(getDummyOrderProduct().getProductNo(), 1)));
     }
 }

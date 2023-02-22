@@ -42,7 +42,7 @@ public class WishlistServiceImpl implements WishlistService {
   private final MemberRepository memberRepository;
 
   private final ProductService productService;
-    private final Integer LIMIT = 5;
+  private static final Integer LIMIT = 5;
 
   @Override
   public void createWishlist(WishlistAndAlarmRequest request) {

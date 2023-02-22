@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Boolean confirmOrder(Long orderNo, Long memberNo) {
-        Optional<Order> optionalOrder = orderRepository.findByIdAndOrderStatusCodeNoEqualsAndMemberNo(orderNo, 3L , memberNo);
+        Optional<Order> optionalOrder = orderRepository.findByIdAndMemberNo(orderNo , memberNo);
         if (optionalOrder.isEmpty()){
             return Boolean.FALSE;
         }

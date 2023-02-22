@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.dto.ApiEntity;
 import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,17 +22,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class RestService {
 
     private final RestTemplate restTemplate;
+    @Qualifier("jwtRestTemplate")
+    private final RestTemplate jwtRestTemplate;
 
 
     public <T> ApiEntity<T> post(String url, Map<String, Object> requestBody,
-                                 Class<T> responseType) {
-
+                                 Class<T> responseType){
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody);
         ApiEntity<T> apiEntity = new ApiEntity<>();
         ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.POST, entity, responseType);
         apiEntity.setSuccessResponse(response);
         return apiEntity;
     }
+
     public <T> ApiEntity<T> post(String url, MultiValueMap<String, String> header,  Map<String, Object> requestBody,
                                  Class<T> responseType) {
         HttpHeaders headers = new HttpHeaders();

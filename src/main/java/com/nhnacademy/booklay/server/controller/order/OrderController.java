@@ -10,6 +10,7 @@ import com.nhnacademy.booklay.server.dto.order.payment.OrderSheetCheckResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheetSaveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.StorageRequest;
 import com.nhnacademy.booklay.server.entity.Order;
+import com.nhnacademy.booklay.server.exception.service.NotEnoughStockException;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
@@ -74,19 +75,31 @@ public class OrderController {
 
     @PostMapping("storage/down")
     public ResponseEntity<Boolean> productStorageDown(@RequestBody StorageRequest storageRequest){
-//todo 실제 감소시키기
-//        Boolean success = productService.
-        return ResponseEntity.ok(Boolean.TRUE);
+        try {
+            Boolean success = productService.storageSoldOutChecker(storageRequest.getCartDtoList());
+            return ResponseEntity.ok(success);
+        }catch (NotEnoughStockException ignored){
+            return ResponseEntity.ok(Boolean.FALSE);
+        }
+    }
+    @PostMapping("storage/up")
+    public ResponseEntity<Boolean> productStorageUp(@RequestBody StorageRequest storageRequest){
+        try {
+            Boolean success = productService.storageRefund(storageRequest.getCartDtoList());
+            return ResponseEntity.ok(success);
+        }catch (NotEnoughStockException ignored){
+            return ResponseEntity.ok(Boolean.FALSE);
+        }
     }
 
     /**
      * 주문기록에서 정보를 가져와 영수증으로 저장
      */
     @PostMapping("receipt/{orderId}")
-    public ResponseEntity<Long> saveOrderReceipt(@PathVariable String orderId){
+    public ResponseEntity<Long> saveOrderReceipt(@PathVariable String orderId, MemberInfo memberInfo){
         OrderSheet orderSheet = redisOrderService.retrieveOrderSheet(orderId);
         if (orderSheet.getOrderNo() == null){
-            Order order = complexOrderService.saveReceipt(orderSheet);
+            Order order = complexOrderService.saveReceipt(orderSheet, memberInfo);
             return ResponseEntity.status(HttpStatus.CREATED).body(order.getId());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(orderSheet.getOrderNo());

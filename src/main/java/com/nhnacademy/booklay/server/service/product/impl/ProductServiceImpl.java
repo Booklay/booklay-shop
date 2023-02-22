@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-import static com.nhnacademy.booklay.server.service.search.impl.SearchServiceImpl.convertHitsToResponse;
-
+import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
@@ -11,45 +10,32 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductRespons
 import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
-import com.nhnacademy.booklay.server.entity.Author;
-import com.nhnacademy.booklay.server.entity.BookSubscribe;
-import com.nhnacademy.booklay.server.entity.Category;
-import com.nhnacademy.booklay.server.entity.CategoryProduct;
+import com.nhnacademy.booklay.server.entity.*;
 import com.nhnacademy.booklay.server.entity.CategoryProduct.Pk;
-import com.nhnacademy.booklay.server.entity.ObjectFile;
-import com.nhnacademy.booklay.server.entity.Product;
-import com.nhnacademy.booklay.server.entity.ProductAuthor;
-import com.nhnacademy.booklay.server.entity.ProductDetail;
-import com.nhnacademy.booklay.server.entity.ProductTag;
-import com.nhnacademy.booklay.server.entity.Subscribe;
-import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
+import com.nhnacademy.booklay.server.exception.service.NotEnoughStockException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
-import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
-import com.nhnacademy.booklay.server.repository.product.BookSubscribeRepository;
-import com.nhnacademy.booklay.server.repository.product.CategoryProductRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductAuthorRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductRepository;
-import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
-import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
-import com.nhnacademy.booklay.server.repository.product.TagRepository;
+import com.nhnacademy.booklay.server.repository.product.*;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.storage.FileService;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static com.nhnacademy.booklay.server.service.search.impl.SearchServiceImpl.convertHitsToResponse;
 
 /**
  * @author 최규태
@@ -549,20 +535,27 @@ public class ProductServiceImpl implements ProductService {
   /**
    * 재고 처리용
    *
-   * @param productDetail
+   * @param
    */
-  public void storageSoldOutChecker(ProductDetail productDetail) {
-
-    productDetail.setStorage(productDetail.getStorage() - 1);
-
-    if (productDetail.getStorage() <= 0) {
-      Product product = productDetail.getProduct();
-      product.setSelling(false);
-      productRepository.save(product);
+  @Transactional(isolation = Isolation.SERIALIZABLE)
+  @Override
+  public Boolean storageSoldOutChecker(List<CartDto> cartDtoList) throws NotEnoughStockException {
+    for (CartDto cartDto:cartDtoList){
+      if (productDetailRepository.updateProductStock(cartDto.getProductNo(), (long) cartDto.getCount()) == 0){
+        throw new NotEnoughStockException(cartDto);
+      }
     }
-
-    productDetailRepository.save(productDetail);
-
+    return Boolean.TRUE;
+  }
+  @Transactional(isolation = Isolation.SERIALIZABLE)
+  @Override
+  public Boolean storageRefund(List<CartDto> cartDtoList) throws NotEnoughStockException {
+    for (CartDto cartDto:cartDtoList){
+      if (productDetailRepository.addProductStock(cartDto.getProductNo(), (long) cartDto.getCount()) == 0){
+        throw new NotEnoughStockException(cartDto);
+      }
+    }
+    return Boolean.TRUE;
   }
 
   @Override

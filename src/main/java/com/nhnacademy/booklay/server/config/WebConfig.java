@@ -1,21 +1,7 @@
 package com.nhnacademy.booklay.server.config;
 
-import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
-
 import com.nhnacademy.booklay.server.dto.secrets.DatasourceInfo;
 import com.nhnacademy.booklay.server.dto.secrets.SecretResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.util.Objects;
-
 import com.nhnacademy.booklay.server.filter.ContentCachingRequestWrapperFilter;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
@@ -28,6 +14,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.util.Objects;
+
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 /**
  * Web에 관한 전반적인 설정을 관리합니다.
@@ -93,6 +89,7 @@ public class WebConfig {
 
         return new RestTemplate(requestFactory);
     }
+
 
     /**
      * 애플리케이션이 구동되는 동시에 NHN Secure Manager로부터 접속 정보를 가져옵니다.

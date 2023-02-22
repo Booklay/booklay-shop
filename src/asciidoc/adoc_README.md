@@ -4,7 +4,7 @@
 [snippets](../../target/generated-snippets)
 
 ## 아래는 작성 예시
-[admin_categories.adoc](admin_categories.adoc) 
+[admin_categories.adoc](admin/category/admin_categories.adoc) 
 
 :categories: {snippets}/admin/categories <sup id="a1">[1](#footnote_1)</sup>  
 [categories](../../target/generated-snippets/admin/categories)

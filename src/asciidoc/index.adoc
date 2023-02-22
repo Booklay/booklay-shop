@@ -20,8 +20,9 @@ include::admin/product/admin_author.adoc[]
 include::admin/product/admin_product.adoc[]
 include::admin/product/admin_tag.adoc[]
 
-== category
-include::admin_categories.adoc[]
+=== category
+include::admin/category/admin_categories.adoc[]
+
 
 == board
 include::board/board.adoc[]
@@ -34,7 +35,6 @@ include::product.adoc[]
 include::review.adoc[]
 include::search.adoc[]
 include::storage.adoc[]
-
 
 == 추가할 도메인
 

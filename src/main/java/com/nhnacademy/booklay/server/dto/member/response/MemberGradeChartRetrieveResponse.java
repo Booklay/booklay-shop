@@ -13,5 +13,5 @@ public class MemberGradeChartRetrieveResponse {
     private Long whiteCount;
     private Long silverCount;
     private Long goldCount;
-    private Long PlatinumCount;
+    private Long platinumCount;
 }

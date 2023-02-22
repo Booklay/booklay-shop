@@ -1,0 +1,104 @@
+= member
+:member: {snippets}/admin/member
+
+=== 관리자의 회원 차단
+:adoc: {member}/testCreateMemberBlock
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 관리자의 회원 등급 생성
+:adoc: {member}/testCreateMemberGrade
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 관리자의 회원 권한 삭제
+:adoc: {member}/testDeleteMemberAuthoritySuccess
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 관리자의 회원 차단 취소
+:adoc: {member}/testMemberBlockCancel
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 관리자의 회원 한 명 차단 이력 조회
+:adoc: {member}/testRetrieveBlockedMemberDetail
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 관리자의 차단 회원 리스트 조회
+:adoc: {member}/testRetrieveBlockedMembers
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 관리자의 탈퇴 회원 리스트 조회
+:adoc: {member}/testRetrieveDroppedMembers
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 관리자의 회원 통계 데이터 조회
+:adoc: {member}/testRetrieveMemberChart
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 관리자의 회원 등급 통계 데이터 조회
+:adoc: {member}/testRetrieveMemberGradeChart
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 관리자의 특정 회원 등급 이력 조회
+:adoc: {member}/testRetrieveMemberGrades
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 관리자의 회원 리스트 조회
+:adoc: {member}/testRetrieveMembersSuccess
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 관리자의 회원 한 명 조회
+:adoc: {member}/testRetrieveMemberSuccess
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 관리자의 회원 권한 수정
+:adoc: {member}/testUpdateMemberAuthority
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+
+

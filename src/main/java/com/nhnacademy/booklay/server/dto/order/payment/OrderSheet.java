@@ -6,11 +6,14 @@ import java.util.List;
 
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
+@NoArgsConstructor
+@ToString
 public class OrderSheet {
-
     private List<String> couponCodeList;
     private List<CartDto> cartDtoList;
     @Setter

@@ -44,9 +44,15 @@ jobs:
           -Dsonar.host.url=${{ secrets.SONAR_HOST }}
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      #################
-      # Shop Server 1 #
-      #################
+  #################
+  # Shop Server 1 #
+  #################
+
+  deploy-server-01:
+    needs : build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
       - name: ready for deploy first server (execute shell script)
         uses: appleboy/ssh-action@master
@@ -58,11 +64,12 @@ jobs:
           script_stop: true
           script: "./unhealth.sh"
 
-#      - name: Sleep for 60 seconds
-#        uses: jakejarvis/wait-action@master
-#        with:
-#          time: '60s'
-      
+      - name: Download artifacts
+        uses: actions/download-artifact@v3.0.2
+        with:
+          name: "jar"
+          path: "${{ github.workspace }}/target/"
+
       - name : upload file
         uses: appleboy/scp-action@master
         with:
@@ -83,17 +90,39 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: "./startup.sh"
-#
-#      - name: Sleep for 30 seconds
-#        uses: jakejarvis/wait-action@master
-#        with:
-#          time: '30s'
 
-      #################
-      # Shop Server 2 #
-      #################
+      - name: URL Health Check
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: "./health_check.sh"
 
-      - name: ready for deploy second server (execute shell script) 2
+      - name: Deploy failed
+        if: ${{ failure() }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: "./recover.sh"
+
+  #################
+  # Shop Server 2 #
+  #################
+
+  deploy-server-02:
+    needs : deploy-server-01
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: ready for deploy second server (execute shell script)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_IP_2 }}
@@ -103,12 +132,13 @@ jobs:
           script_stop: true
           script: "./unhealth.sh"
 
-#      - name: Sleep for 60 seconds 2
-#        uses: jakejarvis/wait-action@master
-#        with:
-#          time: '60s'
+      - name: Download artifacts
+        uses: actions/download-artifact@v3.0.2
+        with:
+          name: "jar"
+          path: "${{ github.workspace }}/target/"
 
-      - name: upload file 2
+      - name: upload file
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_IP_2 }}
@@ -119,7 +149,7 @@ jobs:
           target: "~/"
           rm: false
 
-      - name: execute startup script 2
+      - name: execute startup script
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_IP_2 }}
@@ -128,8 +158,24 @@ jobs:
           port: ${{ secrets.SSH_PORT_2 }}
           script_stop: true
           script: "./startup.sh"
-#
-#      - name: Sleep for 30 seconds 2
-#        uses: jakejarvis/wait-action@master
-#        with:
-#          time: '30s'
+
+      - name: URL Health Check
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_IP_2 }}
+          username: ${{ secrets.SSH_ID_2 }}
+          key: ${{ secrets.SSH_KEY_2 }}
+          port: ${{ secrets.SSH_PORT_2 }}
+          script_stop: true
+          script: "./health_check.sh"
+
+      - name: Deploy failed
+        if: ${{ failure() }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: "./unhealth.sh"

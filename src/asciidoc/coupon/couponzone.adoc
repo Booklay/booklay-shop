@@ -1,0 +1,17 @@
+== Coupon
+:board: {snippets}/coupon/couponzone
+
+=== 쿠폰존에서 쿠폰 발급
+:adoc: {board}/issueCouponAtCouponZone
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 쿠폰 발급에 대한 응답을 요청
+:adoc: {board}/responseIssueCoupon
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]

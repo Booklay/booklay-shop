@@ -1,7 +1,6 @@
 package com.nhnacademy.booklay.server.controller.admin.member;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -10,22 +9,13 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.controller.admin.member.MemberAdminController;
-import com.nhnacademy.booklay.server.dto.PageResponse;
-import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
@@ -34,12 +24,10 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResp
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -51,17 +39,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -101,7 +85,7 @@ class MemberAdminControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .apply(documentationConfiguration(restDocumentation))
             .alwaysDo(print())
-            .alwaysDo(document("{ClassName}/{methodName}",
+            .alwaysDo(document("admin/member/{methodName}",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint())
                 )
@@ -127,7 +111,7 @@ class MemberAdminControllerTest {
 
     @Test
     @DisplayName("관리자의 회원리스트 검색 테스트")
-    void retrieveMembersSuccessTest() throws Exception {
+    void testRetrieveMembersSuccess() throws Exception {
         //given
         PageImpl<MemberRetrieveResponse> page = new PageImpl<>(List.of());
 
@@ -135,13 +119,14 @@ class MemberAdminControllerTest {
         when(memberService.retrieveMembers(any())).thenReturn(page);
 
         //then
-        mockMvc.perform(get("/admin/members")).andExpect(status().isOk()).andDo(print())
+        mockMvc.perform(get(URI_PREFIX))
+            .andExpect(status().isOk()).andDo(print())
             .andReturn();
     }
 
     @Test
     @DisplayName("관리자의 단일회원 조회 성공 테스트")
-    void retrieveMemberSuccessTest() throws Exception {
+    void testRetrieveMemberSuccess() throws Exception {
         //mocking
         when(memberService.retrieveMember(member.getMemberNo())).thenReturn(memberRetrieveResponse);
 
@@ -155,7 +140,7 @@ class MemberAdminControllerTest {
     @Disabled
     @Test
     @DisplayName("관리자의 단일회원 조회 실패 테스트")
-    void retrieveMemberTest_ifNotExistMemberId() throws Exception {
+    void testRetrieveMemberTest_ifNotExistMemberId() throws Exception {
         //mocking
         when(memberService.retrieveMember(member.getMemberNo())).thenThrow(
             MemberNotFoundException.class);
@@ -179,11 +164,12 @@ class MemberAdminControllerTest {
             .andReturn();
 
         //then
-        then(memberService).should(times(1)).createMemberAuthority(any(),any());
+        then(memberService).should(times(1)).createMemberAuthority(any(), any());
     }
+
     @Test
     @DisplayName("회원 권한 삭제 성공 테스트")
-    void deleteMemberAuthoritySuccessTest() throws Exception {
+    void testDeleteMemberAuthoritySuccess() throws Exception {
         //given
 
         //when
@@ -198,7 +184,7 @@ class MemberAdminControllerTest {
     }
 
     @Test
-    @DisplayName("회원등급 조회 검색 성공")
+    @DisplayName("회원 한 명의 등급 이력 조회 검색 성공")
     void testRetrieveMemberGrades() throws Exception {
         //given
         PageRequest pageRequest = PageRequest.of(0,10);
@@ -243,10 +229,11 @@ class MemberAdminControllerTest {
 
     @Test
     @DisplayName("탈퇴 회원 리스트 조회 검색 성공")
-    void testRetrieveBlockedMemberDetail() throws Exception {
+    void testRetrieveDroppedMembers() throws Exception {
         //given
-        PageRequest pageRequest = PageRequest.of(0,10);
-        PageImpl<DroppedMemberRetrieveResponse> response = new PageImpl<>(List.of(droppedMemberRetrieveResponse), pageRequest, 1);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        PageImpl<DroppedMemberRetrieveResponse> response =
+            new PageImpl<>(List.of(droppedMemberRetrieveResponse), pageRequest, 1);
 
         //mocking
         when(memberService.retrieveDroppedMembers(pageRequest)).thenReturn(response);
@@ -262,19 +249,23 @@ class MemberAdminControllerTest {
 
         Mockito.verify(memberService).retrieveDroppedMembers(any());
     }
+
     @Test
-    @DisplayName("회원 차단 history 조회 검색 성공")
-    void testRetrieveDroppedMember() throws Exception {
+    @DisplayName("특정 회원 차단 이력 조회 검색 성공")
+    void testRetrieveBlockedMemberDetail() throws Exception {
         //given
-        PageRequest pageRequest = PageRequest.of(0,10);
-        PageImpl<BlockedMemberRetrieveResponse> response = new PageImpl<>(List.of(blockedMemberRetrieveResponse), pageRequest, 1);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        PageImpl<BlockedMemberRetrieveResponse> response =
+            new PageImpl<>(List.of(blockedMemberRetrieveResponse), pageRequest, 1);
 
         //mocking
-        when(memberService.retrieveBlockedMemberDetail(blockedMemberRetrieveResponse.getMemberNo(), pageRequest)).thenReturn(response);
+        when(memberService.retrieveBlockedMemberDetail(blockedMemberRetrieveResponse.getMemberNo(),
+            pageRequest)).thenReturn(response);
 
         // then
-        mockMvc.perform(get(URI_PREFIX + "/block/detail/" + blockedMemberRetrieveResponse.getMemberNo())
-                .queryParam("page", "0")
+        mockMvc.perform(
+                get(URI_PREFIX + "/block/detail/" + blockedMemberRetrieveResponse.getMemberNo())
+                    .queryParam("page", "0")
                 .queryParam("size", "10")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

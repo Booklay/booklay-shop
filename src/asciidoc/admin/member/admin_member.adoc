@@ -1,4 +1,4 @@
-= member
+= member admin
 :member: {snippets}/admin/member
 
 === 관리자의 회원 차단

@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
@@ -41,12 +40,13 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -64,18 +64,13 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(RestDocumentationExtension.class)
 @MockBean(JpaMetamodelMappingContext.class)
 class MemberControllerTest {
-
     @MockBean
     MemberService memberService;
-
     @Autowired
     MemberController memberController;
-
     @Autowired
     MockMvc mockMvc;
-
     ObjectMapper objectMapper;
-
     Member member;
     MemberRetrieveResponse responseDto;
     MemberCreateRequest createDto;
@@ -84,6 +79,7 @@ class MemberControllerTest {
     MemberLoginResponse memberLoginResponse;
     MemberRetrieveResponse memberRetrieveResponse;
     MemberAuthorityRetrieveResponse memberAuthorityRetrieveResponse;
+    MemberGradeRetrieveResponse memberGradeRetrieveResponse;
     private static final String IDENTIFIER = "members";
 
     private static final String URI_PREFIX = "/" + IDENTIFIER;
@@ -125,6 +121,7 @@ class MemberControllerTest {
         memberLoginResponse = Dummy.getDummyMemberLoginResponse();
         memberRetrieveResponse = Dummy.getDummyMemberRetrieveResponse();
         memberAuthorityRetrieveResponse = Dummy.getDummyMemberAuthorityRetrieveResponse();
+        memberGradeRetrieveResponse = Dummy.getDummyMemberGradeRetrieveResponse();
     }
 
     @Test
@@ -259,20 +256,24 @@ class MemberControllerTest {
     @DisplayName("회원 등급 리스트 조회 성공 테스트")
     void testRetrieveMemberGradeWithPageable() throws Exception {
         //given
-        PageResponse<MemberGradeRetrieveResponse> page = new PageResponse<>(
-            0, 0, 0, List.of()
-        );
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        PageImpl<MemberGradeRetrieveResponse>
+            response = new PageImpl<>(List.of(memberGradeRetrieveResponse), pageRequest, 1);
 
-        //when
-        when(memberService.retrieveMemberGrades(member.getMemberNo(),
-            Pageable.unpaged())).thenReturn(
-            (Page<MemberGradeRetrieveResponse>) page);
+        //mocking
+        when(memberService.retrieveMemberGrades(member.getMemberNo(), pageRequest)).thenReturn(
+            response);
 
-        //then
-        mockMvc.perform(get(URI_PREFIX + "/grade/" + member.getMemberNo()))
+        // then회정
+        mockMvc.perform(get(URI_PREFIX + "/grade/" + member.getMemberNo())
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
+
+        Mockito.verify(memberService).retrieveMemberGrades(any(), any());
 
     }
 
@@ -348,7 +349,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원 수정 실패 테스트")
-    void testUpdateMember_invalidFieldTest() throws Exception {
+    void testUpdateMember_invalidField() throws Exception {
         //given
         MemberUpdateRequest blankDto = new MemberUpdateRequest();
 
@@ -366,7 +367,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원 삭제 성공 테스트")
-    void testDeleteMember_successTest() throws Exception {
+    void testDeleteMember() throws Exception {
         mockMvc.perform(delete(URI_PREFIX + "/" + member.getMemberNo()))
             .andExpect(status().isOk())
             .andDo(print())
@@ -374,6 +375,4 @@ class MemberControllerTest {
 
         verify(memberService, times(1)).deleteMember(any());
     }
-
-
 }

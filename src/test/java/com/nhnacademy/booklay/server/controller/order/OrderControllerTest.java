@@ -1,8 +1,6 @@
 package com.nhnacademy.booklay.server.controller.order;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -18,10 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.booklay.server.controller.admin.member.MemberAdminController;
 import com.nhnacademy.booklay.server.dto.PageResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
@@ -34,7 +29,6 @@ import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
 import com.nhnacademy.booklay.server.service.order.OrderService;
 import com.nhnacademy.booklay.server.service.order.RedisOrderService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import java.util.HashMap;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.test.TestUtils;
@@ -55,8 +49,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.MultiValueMapAdapter;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -170,7 +162,7 @@ class OrderControllerTest {
         //given
         TestUtils.setFieldValue(orderSheet, "orderNo", null);
         given(redisOrderService.retrieveOrderSheet(any())).willReturn(orderSheet);
-        given(complexOrderService.saveReceipt(any())).willReturn(order);
+        given(complexOrderService.saveReceipt(any(), any())).willReturn(order);
 
         //when
         mockMvc.perform(post(URI_PREFIX + "/receipt/" + orderSheet.getOrderId())
@@ -180,7 +172,7 @@ class OrderControllerTest {
 
         //then
         then(redisOrderService).should(times(1)).retrieveOrderSheet(any());
-        then(complexOrderService).should(times(1)).saveReceipt(any());
+        then(complexOrderService).should(times(1)).saveReceipt(any(), any());
     }
     @Test
     @DisplayName("영수증 번호로 영수증 조회 성공 테스트")

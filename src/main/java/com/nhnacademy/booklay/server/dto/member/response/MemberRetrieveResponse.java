@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.dto.member.response;
 
-import com.nhnacademy.booklay.server.constant.Roles;
 import com.nhnacademy.booklay.server.entity.Member;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -2,28 +2,22 @@ package com.nhnacademy.booklay.server.service;
 
 
 import com.nhnacademy.booklay.server.dto.ApiEntity;
-import java.util.Collections;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Collections;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class RestService {
 
     private final RestTemplate restTemplate;
-    @Qualifier("jwtRestTemplate")
-    private final RestTemplate jwtRestTemplate;
 
 
     public <T> ApiEntity<T> post(String url, Map<String, Object> requestBody,

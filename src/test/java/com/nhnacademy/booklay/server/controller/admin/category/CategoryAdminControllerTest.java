@@ -26,7 +26,7 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
-import java.util.List;
+import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -184,7 +184,7 @@ class CategoryAdminControllerTest {
     void testRetrieveCategoryListWithPageable() throws Exception {
         //given
         PageResponse<CategoryResponse> page = new PageResponse<CategoryResponse>(
-            0, 0, 0, List.of()
+            0, 0, 0, new ArrayList<>()
         );
 
         //mocking

@@ -13,6 +13,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,15 +21,18 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.StorageRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.Order;
+import com.nhnacademy.booklay.server.exception.service.NotEnoughStockException;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import com.nhnacademy.booklay.server.service.order.ComplexOrderService;
 import com.nhnacademy.booklay.server.service.order.OrderService;
 import com.nhnacademy.booklay.server.service.order.RedisOrderService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import java.util.HashMap;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.test.TestUtils;
@@ -48,7 +52,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MultiValueMapAdapter;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -83,6 +89,8 @@ class OrderControllerTest {
     OrderListRetrieveResponse orderListRetrieveResponse;
     OrderSheet orderSheet;
     Order order;
+    StorageRequest storageRequest;
+
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext,
                RestDocumentationContextProvider restDocumentation) throws Exception {
@@ -104,6 +112,31 @@ class OrderControllerTest {
         TestUtils.setFieldValue(orderSheet, "orderNo", 1L);
         TestUtils.setFieldValue(orderSheet, "orderId", "test");
         order = Dummy.getDummyOrder();
+        storageRequest = Dummy.getDummyStorageRequest();
+    }
+
+    @Test
+    @DisplayName("Product Data 조회 성공 테스트")
+    void testGetProductDataByProductList() throws Exception {
+        //given
+        given(categoryProductService.retrieveCategoryIdListMultiValueMapByProductIdList(
+            any())).willReturn(
+            new MultiValueMapAdapter<>(new HashMap<>()));
+        given(productService.retrieveProductListByProductNoList(any())).willReturn(List.of());
+        List<Long> productNoList = List.of(1L);
+
+        //when
+        ResultActions result = mockMvc.perform(get(URI_PREFIX + "/products/")
+            .param("productNoList", "1,2,3")
+            .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        then(categoryProductService).should(times(1))
+            .retrieveCategoryIdListMultiValueMapByProductIdList(any());
+        then(productService).should(times(1)).retrieveProductListByProductNoList(any());
     }
 
     @Test
@@ -141,6 +174,32 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("테스트")
+    void testProductStorageDown() throws Exception {
+        //mocking
+        when(productService.storageSoldOutChecker(any())).thenThrow(NotEnoughStockException.class);
+
+        //then
+        mockMvc.perform(
+            post(URI_PREFIX + "/storage/down").accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(storageRequest))
+                .contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @DisplayName("테스트")
+    void testProductStorageUp() throws Exception {
+        //mocking
+        when(productService.storageRefund(any())).thenThrow(NotEnoughStockException.class);
+
+        //then
+        mockMvc.perform(
+            post(URI_PREFIX + "/storage/up").accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(storageRequest))
+                .contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
     @DisplayName("주문정보 가져와서 영수증 저장 성공 테스트")
     void testSaveOrderReceipt() throws Exception {
         //given
@@ -174,11 +233,13 @@ class OrderControllerTest {
         then(redisOrderService).should(times(1)).retrieveOrderSheet(any());
         then(complexOrderService).should(times(1)).saveReceipt(any(), any());
     }
+
     @Test
     @DisplayName("영수증 번호로 영수증 조회 성공 테스트")
     void testRetrieveOrderReceipt() throws Exception {
         //mocking
-        when(complexOrderService.retrieveOrderReceipt(orderReceipt.getOrderNo(), member.getMemberNo())).thenReturn(orderReceipt);
+        when(complexOrderService.retrieveOrderReceipt(orderReceipt.getOrderNo(),
+            member.getMemberNo())).thenReturn(orderReceipt);
 
         //then
         mockMvc.perform(
@@ -186,21 +247,22 @@ class OrderControllerTest {
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk()).andDo(print()).andReturn();
 
-        Mockito.verify(complexOrderService).retrieveOrderReceipt(any(),any());
+        Mockito.verify(complexOrderService).retrieveOrderReceipt(any(), any());
 
     }
 
     @Test
     @DisplayName("영수증 리스트 조회 성공")
-    void testRetrieveMemberGrades() throws Exception {
+    void testRetrieveOrderReceiptPage() throws Exception {
         //given
-        PageRequest pageRequest = PageRequest.of(0,10);
+        PageRequest pageRequest = PageRequest.of(0, 10);
         PageImpl<OrderListRetrieveResponse>
             response = new PageImpl<>(List.of(orderListRetrieveResponse), pageRequest, 1);
         PageResponse<OrderListRetrieveResponse> page = new PageResponse<>(response);
 
         //mocking
-        when(orderService.retrieveOrderListRetrieveResponsePageByMemberNoAndBlind(member.getMemberNo(), Boolean.FALSE, pageRequest)).thenReturn(page);
+        when(orderService.retrieveOrderListRetrieveResponsePageByMemberNoAndBlind(
+            member.getMemberNo(), Boolean.FALSE, pageRequest)).thenReturn(page);
 
         // then
         mockMvc.perform(get(URI_PREFIX + "/receipt/list")
@@ -211,14 +273,16 @@ class OrderControllerTest {
             .andDo(print())
             .andReturn();
 
-        Mockito.verify(orderService).retrieveOrderListRetrieveResponsePageByMemberNoAndBlind(any(),any(), any());
+        Mockito.verify(orderService)
+            .retrieveOrderListRetrieveResponsePageByMemberNoAndBlind(any(), any(), any());
     }
 
     @Test
     @DisplayName("주문 확인 성공 테스트")
     void testConfirmOrder() throws Exception {
         //mocking
-        when(orderService.confirmOrder(orderReceipt.getOrderNo(), member.getMemberNo())).thenReturn(true);
+        when(orderService.confirmOrder(orderReceipt.getOrderNo(), member.getMemberNo())).thenReturn(
+            true);
 
         //then
         mockMvc.perform(
@@ -226,6 +290,6 @@ class OrderControllerTest {
                     .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk()).andDo(print()).andReturn();
 
-        Mockito.verify(orderService).confirmOrder(any(),any());
+        Mockito.verify(orderService).confirmOrder(any(), any());
     }
 }

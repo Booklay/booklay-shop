@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
@@ -246,7 +247,7 @@ class PostServiceImplTest {
     Long result  = postService.updatePost(updateRequest);
 
     //then
-
+    then(postRepository).should().save(post);
   }
 
   @Test

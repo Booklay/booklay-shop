@@ -49,14 +49,6 @@ include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 구독 수정 페이지 조회
-:adoc: {adminProduct}/getBooksDataForSubscribe
-include::{adoc}/curl-request.adoc[]
-include::{adoc}/http-request.adoc[]
-include::{adoc}/http-response.adoc[]
-include::{adoc}/httpie-request.adoc[]
-include::{adoc}/response-body.adoc[]
-
 === 구독상품 등록 조회 페이지
 :adoc: {adminProduct}/getSubscribeData
 include::{adoc}/curl-request.adoc[]

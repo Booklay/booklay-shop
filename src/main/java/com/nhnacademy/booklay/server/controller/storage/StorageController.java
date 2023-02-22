@@ -59,10 +59,4 @@ public class StorageController {
         .body(fileService.downloadUrl(fileId));
   }
 
-  //    @GetMapping("/ebook/{fileId}")
-  public ResponseEntity<byte[]> downloadEBook(@PathVariable("fileId") final Long fileId)
-      throws IOException {
-    return fileService.downloadFile(fileId);
-  }
-
 }

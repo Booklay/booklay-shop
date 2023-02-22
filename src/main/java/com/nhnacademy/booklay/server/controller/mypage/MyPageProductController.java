@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.common.recycler.Recycler.V;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -49,12 +48,18 @@ public class MyPageProductController {
       @PathVariable Long memberNo)
       throws IOException {
     Page<RetrieveProductResponse> responses = wishlistService.retrievePage(memberNo, pageable);
-    PageResponse page = new PageResponse<>(responses);
+    PageResponse<RetrieveProductResponse> page = new PageResponse<>(responses);
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(page);
   }
 
+  /**
+   * 마이페이지 인덱스 화면에서 위시리스트 최대 5개 호출
+   * @param memberNo
+   * @return
+   * @throws IOException
+   */
   @GetMapping("/index/wishlist/{memberNo}")
   public ResponseEntity<List<RetrieveProductResponse>> retrieveIndexWishlist(
       @PathVariable Long memberNo)
@@ -71,8 +76,9 @@ public class MyPageProductController {
    * @param request
    */
   @PostMapping("/wishlist")
-  public ResponseEntity<Void> createWishlist(@RequestBody WishlistAndAlarmRequest request) {wishlistService.createWishlist(request);
-    return ResponseEntity.status(HttpStatus.OK)
+  public ResponseEntity<Void> createWishlist(@RequestBody WishlistAndAlarmRequest request) {
+    wishlistService.createWishlist(request);
+    return ResponseEntity.status(HttpStatus.CREATED)
         .build();
   }
 
@@ -90,7 +96,7 @@ public class MyPageProductController {
       throws IOException {
     Page<RetrieveProductResponse> responses = restockingNotificationService.retrievePage(memberNo,
         pageable);
-    PageResponse page = new PageResponse<>(responses);
+    PageResponse<RetrieveProductResponse> page = new PageResponse<>(responses);
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(page);
@@ -104,7 +110,7 @@ public class MyPageProductController {
   @DeleteMapping("/wishlist")
   public ResponseEntity<Void> deleteWishlist(@RequestBody WishlistAndAlarmRequest request) {
     wishlistService.deleteWishlist(request);
-    return ResponseEntity.status(HttpStatus.OK).build();
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }
 
   /**
@@ -132,14 +138,14 @@ public class MyPageProductController {
 
   /**
    * 상품 상세 정보 조회시 위시리스트, 재입고 알림 등록 여부 확인
-   *
    * @param request
    * @return
    */
   @PostMapping("/boolean")
   public ResponseEntity<WishlistAndAlarmBooleanResponse> retrieveMemberProduct(
       @RequestBody WishlistAndAlarmRequest request) {
+    WishlistAndAlarmBooleanResponse body = wishlistService.retrieveExists(request);
     return ResponseEntity.status(HttpStatus.OK)
-        .body(wishlistService.retrieveExists(request));
+        .body(body);
   }
 }

@@ -75,7 +75,7 @@ class CategoryAdminControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .apply(documentationConfiguration(restDocumentation))
             .alwaysDo(print())
-            .alwaysDo(document("{ClassName}/{methodName}",
+            .alwaysDo(document("admin/categories/{methodName}",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint())
                 )

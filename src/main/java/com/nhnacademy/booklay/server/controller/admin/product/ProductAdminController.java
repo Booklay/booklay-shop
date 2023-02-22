@@ -54,7 +54,7 @@ public class ProductAdminController {
    * @throws IOException
    */
   @GetMapping
-  public ResponseEntity<PageResponse<RetrieveProductResponse>> postAdminProduct(Pageable pageable)
+  public ResponseEntity<PageResponse<RetrieveProductResponse>> adminProduct(Pageable pageable)
       throws IOException {
     Page<RetrieveProductResponse> response = productService.retrieveAdminProductPage(pageable);
     PageResponse<RetrieveProductResponse> body = new PageResponse<>(response);
@@ -141,7 +141,7 @@ public class ProductAdminController {
    * @param productId
    * @return
    */
-  @GetMapping("/subscribes/{productId}")
+  @GetMapping( "/subscribes/{productId}")
   public ResponseEntity<ProductAllInOneResponse> getSubscribeData(@PathVariable Long productId) {
     ProductAllInOneResponse body =  productService.retrieveBookData(productId);
 
@@ -178,8 +178,7 @@ public class ProductAdminController {
    */
   @GetMapping("/subscribes/connect/{subscribeId}")
   public ResponseEntity<PageResponse<RetrieveBookForSubscribeResponse>> getBooksDataForSubscribe(
-      Pageable pageable,
-      @PathVariable Long subscribeId) {
+      Pageable pageable, @PathVariable Long subscribeId) {
     Page<RetrieveBookForSubscribeResponse> response = productService.retrieveBookDataForSubscribe(pageable, subscribeId);
     PageResponse<RetrieveBookForSubscribeResponse> body = new PageResponse<>(response);
 
@@ -215,16 +214,17 @@ public class ProductAdminController {
   /**
    * 연관 상품 등록창 조회
    *
-   * @param productNo
+   * @param productId
    * @param pageable
    * @return
    * @throws IOException
    */
-  @GetMapping("/recommend/{productNo}")
+  @GetMapping("/recommend/{productId}")
   public ResponseEntity<PageResponse<RetrieveProductResponse>> retrieveRecommendConnector(
-      @PathVariable Long productNo, Pageable pageable) throws IOException {
+      @PathVariable Long productId, Pageable pageable) throws IOException {
+
     Page<RetrieveProductResponse> response = productRelationService.retrieveRecommendConnection(
-        productNo, pageable);
+        productId, pageable);
 
     PageResponse<RetrieveProductResponse> body = new PageResponse<>(response);
 

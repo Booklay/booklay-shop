@@ -14,7 +14,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 public class PostRepositoryImpl extends QuerydslRepositorySupport implements PostRepositoryCustom {
 
   private static final Integer POST_TYPE_NOTICE = 5;
-  private static final Integer POST_TYPE_PRODUCT = 2;
 
   public PostRepositoryImpl() {
     super(Post.class);

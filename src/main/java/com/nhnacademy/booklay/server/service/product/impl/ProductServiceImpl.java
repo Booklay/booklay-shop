@@ -75,8 +75,6 @@ public class ProductServiceImpl implements ProductService {
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
   private final ProductTagRepository productTagRepository;
-  private static final Long NOT_FOUND_PRODUCT_ID = 33L;
-  private static final Integer RECENT_DAY = 7;
 
   private static final String PRODUCT_NOT_FOUND = "product not found";
   private static final String UNKNOWN_SEARCH = "알 수 없는 검색 정보";
@@ -88,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
    * @throws Exception
    */
   @Override
-  public Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception {
+  public Long createBookProduct(CreateUpdateProductBookRequest request) throws IOException {
 
     // product
     Product product = splitProduct(request);
@@ -155,7 +153,7 @@ public class ProductServiceImpl implements ProductService {
    * @throws Exception
    */
   @Override
-  public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
+  public Long updateBookProduct(CreateUpdateProductBookRequest request) throws IOException {
     if (!productRepository.existsById(request.getProductId())) {
       throw new NotFoundException(Product.class, PRODUCT_NOT_FOUND);
     }

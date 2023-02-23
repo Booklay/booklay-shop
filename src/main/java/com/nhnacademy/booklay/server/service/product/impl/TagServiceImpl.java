@@ -92,8 +92,8 @@ public class TagServiceImpl implements TagService {
         Long id = request.getId();
         tagExistValidator(id);
 
-        if (productTagRepository.existsByPk_TagId(id)) {
-            productTagRepository.deleteByPk_TagId(id);
+        if (productTagRepository.existsByPkTagId(id)) {
+            productTagRepository.deleteByPkTagId(id);
         }
         tagRepository.deleteById(id);
     }

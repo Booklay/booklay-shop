@@ -153,7 +153,7 @@ class TagServiceImplTest {
     DeleteIdRequest deleteIdRequest = new DeleteIdRequest(tag.getId());
 
     given(tagRepository.existsById(tag.getId())).willReturn(true);
-    given(productTagRepository.existsByPk_TagId(tagId)).willReturn(true);
+    given(productTagRepository.existsByPkTagId(tagId)).willReturn(true);
 
     //when
     tagService.deleteTag(deleteIdRequest);

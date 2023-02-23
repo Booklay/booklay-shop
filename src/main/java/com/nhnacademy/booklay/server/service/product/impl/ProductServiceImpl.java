@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.product.impl;
 
 import static com.nhnacademy.booklay.server.service.search.impl.SearchServiceImpl.convertHitsToResponse;
 
+import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
@@ -24,6 +25,7 @@ import com.nhnacademy.booklay.server.entity.ProductTag;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.entity.Tag;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
+import com.nhnacademy.booklay.server.exception.service.NotEnoughStockException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
@@ -48,6 +50,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,8 +75,6 @@ public class ProductServiceImpl implements ProductService {
   private final FileService fileService;
   private final BookSubscribeRepository bookSubscribeRepository;
   private final ProductTagRepository productTagRepository;
-  private static final Long NOT_FOUND_PRODUCT_ID = 33L;
-  private static final Integer RECENT_DAY = 7;
 
   private static final String PRODUCT_NOT_FOUND = "product not found";
   private static final String UNKNOWN_SEARCH = "알 수 없는 검색 정보";
@@ -85,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
    * @throws Exception
    */
   @Override
-  public Long createBookProduct(CreateUpdateProductBookRequest request) throws Exception {
+  public Long createBookProduct(CreateUpdateProductBookRequest request) throws IOException {
 
     // product
     Product product = splitProduct(request);
@@ -152,7 +153,7 @@ public class ProductServiceImpl implements ProductService {
    * @throws Exception
    */
   @Override
-  public Long updateBookProduct(CreateUpdateProductBookRequest request) throws Exception {
+  public Long updateBookProduct(CreateUpdateProductBookRequest request) throws IOException {
     if (!productRepository.existsById(request.getProductId())) {
       throw new NotFoundException(Product.class, PRODUCT_NOT_FOUND);
     }
@@ -532,49 +533,60 @@ public class ProductServiceImpl implements ProductService {
     return productRepository.findAllById(productNoList);
   }
 
-  /**
-   * 상품 아이디 리스트를 받아서 페이지네이션.
-   */
-  @Override
-  @Transactional(readOnly = true)
-  public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
-    return productRepository.retrieveProductsInPage(pageable);
-  }
-
-  @Override
-  public ProductAllInOneResponse findProductById(Long productId) {
-    return productRepository.retrieveProductById(productId);
-  }
-
-  /**
-   * 재고 처리용
-   *
-   * @param productDetail
-   */
-  public void storageSoldOutChecker(ProductDetail productDetail) {
-
-    productDetail.setStorage(productDetail.getStorage() - 1);
-
-    if (productDetail.getStorage() <= 0) {
-      Product product = productDetail.getProduct();
-      product.setSelling(false);
-      productRepository.save(product);
+    /**
+     * 상품 아이디 리스트를 받아서 페이지네이션.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductAllInOneResponse> getProductsPage(Pageable pageable) {
+        return productRepository.retrieveProductsInPage(pageable);
     }
 
-    productDetailRepository.save(productDetail);
+    @Override
+    public ProductAllInOneResponse findProductById(Long productId) {
+        return productRepository.retrieveProductById(productId);
+    }
 
-  }
+    /**
+     * 재고 처리용
+     *
+     * @param
+     */
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Override
+    public Boolean storageSoldOutChecker(List<CartDto> cartDtoList) throws NotEnoughStockException {
+        for (CartDto cartDto : cartDtoList) {
+            if (productDetailRepository.updateProductStock(cartDto.getProductNo(),
+                (long) cartDto.getCount()) == 0) {
+                throw new NotEnoughStockException(cartDto);
+            }
+        }
+        return Boolean.TRUE;
+    }
 
-  @Override
-  public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Override
+    public Boolean storageRefund(List<CartDto> cartDtoList) throws NotEnoughStockException {
+        for (CartDto cartDto : cartDtoList) {
+            if (productDetailRepository.addProductStock(cartDto.getProductNo(),
+                (long) cartDto.getCount()) == 0) {
+                throw new NotEnoughStockException(cartDto);
+            }
+        }
+        return Boolean.TRUE;
+    }
 
-    Page<Product> page = productRepository.findAllByIsDeletedOrderByCreatedAtDesc(false, pageable);
+    @Override
+    public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
 
-    List<ProductAllInOneResponse> all = getProducts(page.getContent());
+        Page<Product> page =
+            productRepository.findAllByIsDeletedOrderByCreatedAtDesc(false, pageable);
 
-    return getSearchPageResponse("전체 상품", page, all);
+        List<ProductAllInOneResponse> all = getProducts(page.getContent());
 
-  }
+        return getSearchPageResponse("전체 상품", page, all);
+
+    }
 
   @Override
   public List<SearchProductResponse> getLatestEights(){
@@ -659,4 +671,3 @@ public class ProductServiceImpl implements ProductService {
   }
 
 }
-

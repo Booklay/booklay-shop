@@ -1,0 +1,43 @@
+= delivery_destination
+:address: {snippets}/DeliveryDestinationControllerTest
+
+
+=== 배송지 생성
+:adoc: {address}/testCreateDeliveryDestination
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 배송지 삭제
+:adoc: {address}/testDeleteDeliveryDestination
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 배송지 단건 조회
+:adoc: {address}/testRetrieveDeliveryDestination
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 회원 배송지 리스트 조회
+:adoc: {address}/testRetrieveDeliveryDestinations
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 배송지 수정
+:adoc: {address}/testUpdateDeliveryDestination
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]

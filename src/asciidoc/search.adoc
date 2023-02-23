@@ -1,0 +1,40 @@
+== search
+:search: {snippets}/search
+
+=== 엘라스틱 전부 저장
+:adoc: {search}/saveAll
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 전체 조회
+:adoc: {search}/searchAll
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 카테고리별 조회
+:adoc: {search}/searchProductsByCategory
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 키워드 검색
+:adoc: {search}/searchProductsByKeywords
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 최근 상품 조회
+:adoc: {search}/searchRecently
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]

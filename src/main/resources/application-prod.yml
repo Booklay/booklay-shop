@@ -2,6 +2,9 @@ server:
   port: 9090
 
 spring:
+  application:
+    name: booklay-shop
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -37,7 +40,8 @@ booklay:
     db_password: 314a5e5a46004ab593c84049d362f835
     url: https://api-keymanager.nhncloudservice.com/keymanager/v1.0/appkey/500rMJPT021TnyNl/secrets/
     p12_password: 1234
-
+  jwt:
+    secret: cQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2r5u8x/A?D(G+KbPeShVmYq3t6v9y$B&E)
   pool_size: 20
 
   redis:
@@ -54,3 +58,16 @@ message:
     coupon:
       request: coupon-zone-request
       response: coupon-zone-response
+
+logging:
+  config: classpath:logback/logback-spring.xml
+
+log:
+  level:
+    root: error
+    kafka: error
+    redis: error
+    hibernate-sql: error
+    spring-data: error
+    beans-factory: error
+    context: error

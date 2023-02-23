@@ -191,7 +191,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
                 memberGrade.name,
                 authority.name))
             .fetchFirst();
-        //TODO : 원래 fetchOne() 인데 2개 나옴(booklay2 계정문제 추측)
 
         return Optional.ofNullable(memberRetrieveResponse);
     }
@@ -245,7 +244,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .fetchFirst();
     }
 
-    //TODO : return null 바꿔야 함
     @Override
     public Long retrieveWhiteGradeMemberCount() {
         QMember member = QMember.member;

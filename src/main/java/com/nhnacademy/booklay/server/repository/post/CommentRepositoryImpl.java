@@ -39,6 +39,7 @@ public class CommentRepositoryImpl extends QuerydslRepositorySupport implements
     QComment comment = QComment.comment;
 
     List<CommentResponse> commentList = from(comment).where(comment.postId.postId.eq(postId))
+        .orderBy(comment.realGroupNo.desc(), comment.groupOrder.asc())
         .select(Projections.constructor(CommentResponse.class,
             comment))
         .limit(pageable.getPageSize())

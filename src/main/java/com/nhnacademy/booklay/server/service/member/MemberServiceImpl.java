@@ -154,7 +154,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 탈퇴 시 처리하는 메소드
      *
-     * @param memberNo
+     * @param memberNo 탈퇴할 회원
      * @param request
      */
     @Override
@@ -260,7 +260,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-        return MemberGradeChartRetrieveResponse.builder().build();
+        return memberGradeRepository.retrieveMemberGradeChart()
+            .orElseThrow(() -> new IllegalArgumentException());
     }
 
     /**

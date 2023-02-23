@@ -9,6 +9,6 @@ public interface ReviewResponsePageCacheWrapService {
 
     SearchPageResponse<RetrieveReviewResponse> cacheRetrievePostResponsePage(Long productId, Pageable pageable);
 
-    @Scheduled(cron = "0/1 * * * * *")
+    @Scheduled(fixedRate = 100)
     void updateCheck();
 }

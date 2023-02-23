@@ -10,6 +10,6 @@ public interface ProductResponseCacheWrapService {
     List<RetrieveProductResponse> cacheRetrieveProductResponseList(List<Long> productIdList)
         throws IOException;
 
-    @Scheduled(cron = "0/1 * * * * *")
+    @Scheduled(fixedRate = 100)
     void updateCheck();
 }

@@ -4,28 +4,23 @@ import com.nhnacademy.booklay.server.dto.product.cache.ProductAllInOneWrapDto;
 import com.nhnacademy.booklay.server.dto.product.response.ProductAllInOneResponse;
 import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+import com.nhnacademy.booklay.server.utils.CacheKeyName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ProductCacheWrapServiceImpl implements ProductCacheWrapService {
-    @Qualifier("StringTypeRedisTemplate")
-    private final RedisTemplate<String, String> redisTemplate;
+public class ProductAllInOneCacheWrapServiceImpl implements ProductAllInOneCacheWrapService {
 
     private final RedisCacheService redisCacheService;
     private final ProductService productService;
@@ -34,8 +29,6 @@ public class ProductCacheWrapServiceImpl implements ProductCacheWrapService {
     private final Map<Long, ProductAllInOneWrapDto> allInOneWrapDtoMap = new HashMap<>();
     //맵에 넣기 위한 대기열
     private final List<ProductAllInOneResponse> tempList = Collections.synchronizedList(new LinkedList<>());
-    @Qualifier("serverIp")
-    private final String serverIp;
     private static final int MAX_CACHE_NUM = 200;
 
     @Override
@@ -46,12 +39,10 @@ public class ProductCacheWrapServiceImpl implements ProductCacheWrapService {
         return response;
     }
 
-
-    private static final String KEY_NAME = "productCache";
     @Override
-    @Scheduled(cron = "0/1 * * * * *")
+    @Scheduled(fixedRate = 100)
     public void updateCheck(){
-        List<Long> mapDeleteList = redisCacheService.updateCheck(KEY_NAME, allInOneWrapDtoMap);
+        List<Long> mapDeleteList = redisCacheService.updateCheck(CacheKeyName.PRODUCT_ALL_IN_ONE_KEY_NAME, allInOneWrapDtoMap);
         for (Long productNo : mapDeleteList){
             deleteFromMap(productNo);
         }

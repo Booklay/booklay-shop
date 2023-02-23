@@ -7,7 +7,7 @@ import com.nhnacademy.booklay.server.dto.search.request.SearchIdRequest;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
-import com.nhnacademy.booklay.server.service.product.cache.ProductCacheWrapService;
+import com.nhnacademy.booklay.server.service.product.cache.ProductAllInOneCacheWrapService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class ProductController {
   private final ProductService productService;
   private final BookSubscribeService bookSubscribeService;
   private final ProductRelationService productRelationService;
-  private final ProductCacheWrapService productCacheWrapService;
+  private final ProductAllInOneCacheWrapService productAllInOneCacheWrapService;
 
   /**
    * 조건 없이 전체 상품 리스트 페이지를 리턴
@@ -61,7 +61,7 @@ public class ProductController {
    */
   @GetMapping("/view/{productNo}")
   public ResponseEntity<ProductAllInOneResponse> retrieveDetailView(@PathVariable Long productNo) {
-    ProductAllInOneResponse result = productCacheWrapService.cacheRetrieveProductAllInOne(productNo);
+    ProductAllInOneResponse result = productAllInOneCacheWrapService.cacheRetrieveProductAllInOne(productNo);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

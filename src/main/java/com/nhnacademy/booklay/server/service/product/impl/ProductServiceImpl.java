@@ -1,6 +1,8 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import static com.nhnacademy.booklay.server.service.search.impl.SearchServiceImpl.convertHitsToResponse;
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.PRODUCT_ALL_IN_ONE_KEY_NAME;
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.PRODUCT_RESPONSE_KEY_NAME;
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -37,6 +39,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
 import com.nhnacademy.booklay.server.repository.product.TagRepository;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.storage.FileService;
 import java.io.IOException;
@@ -64,6 +67,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
+  private final RedisCacheService redisCacheService;
   private final ProductRepository productRepository;
   private final TagRepository tagRepository;
   private final CategoryRepository categoryRepository;
@@ -107,7 +111,6 @@ public class ProductServiceImpl implements ProductService {
 
     // product_author
     productAuthorRegister(request.getAuthorIds(), savedDetail);
-
     return savedProduct.getId();
   }
 
@@ -183,6 +186,8 @@ public class ProductServiceImpl implements ProductService {
 
     productAuthorRepository.deleteAllByProductDetailId(updatedDetail.getId());
     productAuthorRegister(request.getAuthorIds(), updatedDetail);
+    redisCacheService.deleteCache(PRODUCT_RESPONSE_KEY_NAME, request.getProductId());
+    redisCacheService.deleteCache(PRODUCT_ALL_IN_ONE_KEY_NAME, request.getProductId());
     return null;
   }
 
@@ -199,6 +204,8 @@ public class ProductServiceImpl implements ProductService {
     targetProduct.setDeleted(true);
 
     productRepository.save(targetProduct);
+    redisCacheService.deleteCache(PRODUCT_RESPONSE_KEY_NAME, productId);
+    redisCacheService.deleteCache(PRODUCT_ALL_IN_ONE_KEY_NAME, productId);
   }
 
   /**
@@ -236,6 +243,8 @@ public class ProductServiceImpl implements ProductService {
     }
     subscribeRepository.save(subscribe);
 
+    redisCacheService.deleteCache(PRODUCT_RESPONSE_KEY_NAME, request.getProductId());
+    redisCacheService.deleteCache(PRODUCT_ALL_IN_ONE_KEY_NAME, request.getProductId());
     return savedProduct.getId();
   }
 
@@ -262,6 +271,9 @@ public class ProductServiceImpl implements ProductService {
           .build();
 
       categoryProductRepository.save(categoryProduct);
+
+      redisCacheService.deleteCache(PRODUCT_RESPONSE_KEY_NAME, product.getId());
+      redisCacheService.deleteCache(PRODUCT_ALL_IN_ONE_KEY_NAME, product.getId());
     }
   }
 
@@ -552,7 +564,7 @@ public class ProductServiceImpl implements ProductService {
      *
      * @param
      */
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+//    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public Boolean storageSoldOutChecker(List<CartDto> cartDtoList) throws NotEnoughStockException {
         for (CartDto cartDto : cartDtoList) {
@@ -564,7 +576,7 @@ public class ProductServiceImpl implements ProductService {
         return Boolean.TRUE;
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+//    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public Boolean storageRefund(List<CartDto> cartDtoList) throws NotEnoughStockException {
         for (CartDto cartDto : cartDtoList) {

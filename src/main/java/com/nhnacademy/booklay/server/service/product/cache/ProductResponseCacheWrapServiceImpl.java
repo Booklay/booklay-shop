@@ -4,29 +4,18 @@ import com.nhnacademy.booklay.server.dto.product.cache.ProductResponseWrapDto;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.*;
 
 import static com.nhnacademy.booklay.server.utils.CacheKeyName.PRODUCT_RESPONSE_KEY_NAME;
 
 @Service
 @RequiredArgsConstructor
 public class ProductResponseCacheWrapServiceImpl implements ProductResponseCacheWrapService {
-    @Qualifier("StringTypeRedisTemplate")
-    private final RedisTemplate<String, String> redisTemplate;
     private final RedisCacheService redisCacheService;
     private final ProductService productService;
     private ProductResponseWrapDto first;
@@ -34,8 +23,6 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
     private final Map<Long, ProductResponseWrapDto> productResponseWrapDtoMap = new HashMap<>();
     //맵에 넣기 위한 대기열
     private final List<RetrieveProductResponse> tempList = Collections.synchronizedList(new LinkedList<>());
-    @Qualifier("serverIp")
-    private final String serverIp;
     private static final int MAX_CACHE_NUM = 200;
 
 

@@ -9,6 +9,6 @@ public interface PostResponsePageCacheWrapService {
 
     Page<PostResponse> cacheRetrievePostResponsePage(Long productId, Pageable pageable);
 
-    @Scheduled(cron = "0/1 * * * * *")
+    @Scheduled(fixedRate = 100)
     void updateCheck();
 }

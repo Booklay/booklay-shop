@@ -11,12 +11,11 @@ import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchProductResponse;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.exception.service.NotEnoughStockException;
-import java.io.IOException;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author 최규태
@@ -55,10 +54,10 @@ public interface ProductService {
 
     Page<ProductAllInOneResponse> getProductsPage(Pageable pageable);
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+//    @Transactional(isolation = Isolation.SERIALIZABLE)
     Boolean storageSoldOutChecker(List<CartDto> cartDtoList) throws NotEnoughStockException;
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+//    @Transactional(isolation = Isolation.SERIALIZABLE)
     Boolean storageRefund(List<CartDto> cartDtoList) throws NotEnoughStockException;
 
     SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable);

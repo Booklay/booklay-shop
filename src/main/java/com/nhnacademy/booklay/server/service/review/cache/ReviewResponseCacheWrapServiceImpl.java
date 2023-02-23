@@ -5,19 +5,13 @@ import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.review.ReviewService;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 import static com.nhnacademy.booklay.server.utils.CacheKeyName.REVIEW_PAGE_KEY_NAME;
 
@@ -54,7 +48,7 @@ public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCac
     }
 
     @Override
-    @Scheduled(cron = "0/1 * * * * *")
+    @Scheduled(fixedRate = 100)
     public void updateCheck(){
         List<Long> mapDeleteList = redisCacheService.updateCheck(REVIEW_PAGE_KEY_NAME, reviewResponseWrapDtoHashMap);
         for (Long productNo:mapDeleteList){

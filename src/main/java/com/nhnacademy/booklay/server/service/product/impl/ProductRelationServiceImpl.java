@@ -9,6 +9,8 @@ import com.nhnacademy.booklay.server.repository.product.ProductRelationRepositor
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import com.nhnacademy.booklay.server.service.product.cache.ProductRecommendIdListCacheWrapService;
+import com.nhnacademy.booklay.server.service.product.cache.ProductRecommendIdListCacheWrapServiceImpl;
 import com.nhnacademy.booklay.server.service.product.cache.ProductResponseCacheWrapService;
 import java.io.IOException;
 import java.util.List;
@@ -33,14 +35,18 @@ public class ProductRelationServiceImpl implements ProductRelationService {
   private final ProductRepository productRepository;
   private static final String PRODUCT_NOT_FOUND = "product not found";
   private final ProductResponseCacheWrapService productResponseCacheWrapService;
+  private final ProductRecommendIdListCacheWrapService productRecommendIdListCacheWrapService;
   //productId를 통해서 연관 상품 목록 호출
   @Override
   public List<RetrieveProductResponse> retrieveRecommendProducts(Long productId)
       throws IOException {
+    List<Long> recommendProductIds = productRecommendIdListCacheWrapService.cacheRetrieveRecommendProductIds(productId);
+    return productResponseCacheWrapService.cacheRetrieveProductResponseList(recommendProductIds);
+  }
 
-      List<Long> recommendProductIds = productRelationRepository.findRecommendIdsByBaseProductId(
-          productId);
-      return productResponseCacheWrapService.cacheRetrieveProductResponseList(recommendProductIds);
+  @Override
+  public List<Long> retrieveRecommendProductIds(Long productId) {
+    return productRelationRepository.findRecommendIdsByBaseProductId(productId);
   }
 
   @Override

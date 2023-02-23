@@ -4,7 +4,7 @@ import com.nhnacademy.booklay.server.dto.review.request.ReviewCreateRequest;
 import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
-import com.nhnacademy.booklay.server.service.review.ReviewService;
+import com.nhnacademy.booklay.server.service.review.ReviewServiceImpl;
 import java.util.Objects;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,9 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReviewController {
 
 
-    private final ReviewService reviewService;
+    private final ReviewServiceImpl reviewService;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewServiceImpl reviewService) {
         this.reviewService = reviewService;
     }
 

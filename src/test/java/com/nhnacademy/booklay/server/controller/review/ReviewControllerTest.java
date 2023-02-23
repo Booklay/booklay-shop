@@ -24,7 +24,7 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Review;
 import com.nhnacademy.booklay.server.service.mypage.RestockingNotificationService;
-import com.nhnacademy.booklay.server.service.review.ReviewService;
+import com.nhnacademy.booklay.server.service.review.ReviewServiceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +55,7 @@ import org.springframework.web.context.WebApplicationContext;
 class ReviewControllerTest {
 
   @MockBean
-  ReviewService reviewService;
+  ReviewServiceImpl reviewService;
   @MockBean
   RestockingNotificationService restockingNotificationService;
   @Autowired

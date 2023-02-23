@@ -38,14 +38,14 @@ include::cart/cart.adoc[]
 include::coupon/couponzone.adoc[]
 
 == delivery
-include::delivery/deliveryDestination.adoc[]
+include::delivery/delivery_destination.adoc[]
 
 == member
 include::member/member.adoc[]
 
 == my page
 include::mypage/product.adoc[]
-include::mypage/PointHistoryController.adoc[]
+include::mypage/Point_history.adoc[]
 
 == order
 include::order/order.adoc[]

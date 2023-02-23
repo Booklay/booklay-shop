@@ -9,11 +9,13 @@ import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.repository.ReviewRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import com.nhnacademy.booklay.server.service.storage.FileService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +25,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.REVIEW_PAGE_KEY_NAME;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ReviewService {
 
+    private final RedisCacheService redisCacheService;
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
@@ -70,6 +75,7 @@ public class ReviewService {
                 );
 
                 pointHistoryService.createPointHistory(pointRequest);
+                redisCacheService.deleteCache(REVIEW_PAGE_KEY_NAME, request.getProductId());
             } else {
                 throw new CreateFailedException("사용자 혹은 상품이 리뷰를 작성할 수 없는 상태");
             }
@@ -126,7 +132,12 @@ public class ReviewService {
     public boolean deleteReviewById(Long reviewId) {
 
         try {
+            Optional<Review> review = reviewRepository.findById(reviewId);
+            if (review.isEmpty()){
+                return false;
+            }
             reviewRepository.softDeleteReview(reviewId);
+            redisCacheService.deleteCache(REVIEW_PAGE_KEY_NAME, review.get().getProductNo());
             return true;
         } catch (Exception e) {
             return false;

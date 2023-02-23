@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.product.cache;
 
 import com.nhnacademy.booklay.server.dto.product.cache.ProductResponseWrapDto;
 import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -19,11 +20,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.PRODUCT_RESPONSE_KEY_NAME;
+
 @Service
 @RequiredArgsConstructor
 public class ProductResponseCacheWrapServiceImpl implements ProductResponseCacheWrapService {
     @Qualifier("StringTypeRedisTemplate")
     private final RedisTemplate<String, String> redisTemplate;
+    private final RedisCacheService redisCacheService;
     private final ProductService productService;
     private ProductResponseWrapDto first;
     private ProductResponseWrapDto last;
@@ -61,32 +65,15 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
 
 
 
-    private static final String KEY_NAME = "productResponseCache";
-    private static final String KEY_NAME_SERVER_COUNT = "productResponseCacheServerCheck";
+
     @Override
-    @Scheduled(cron = "0/1 * * * * *")
+    @Scheduled(fixedRate = 100)
     public void updateCheck(){
-        HashOperations<String, Long, List<String>> updateHash = redisTemplate.opsForHash();
-        redisTemplate.<String, String>opsForHash().put(KEY_NAME_SERVER_COUNT, serverIp, LocalDateTime.now().toString());
-        long serverCount = updateHash.size(KEY_NAME_SERVER_COUNT);
-        Set<Long> changedProductSet = updateHash.keys(KEY_NAME);
-        changedProductSet.stream().filter(productResponseWrapDtoMap::containsKey).forEach(this::deleteFromMap);
-        List<Long> deleteList = new ArrayList<>();
-        for (Long productId : changedProductSet) {
-            Set<String> productUpdatedConfirmSet =
-                redisTemplate.<String, String>opsForHash().keys(KEY_NAME + productId);
-            if (!productUpdatedConfirmSet.contains(serverIp)){
-                deleteFromMap(productId);
-            }
-            if (productUpdatedConfirmSet.size() >= serverCount - 1) {
-                deleteList.add(productId);
-            } else {
-                redisTemplate.<String, String>opsForHash().put(KEY_NAME + productId, serverIp, "");
-            }
+        List<Long> mapDeleteList = redisCacheService.updateCheck(PRODUCT_RESPONSE_KEY_NAME, productResponseWrapDtoMap);
+        for (Long productNo:mapDeleteList){
+            deleteFromMap(productNo);
         }
-        if (!deleteList.isEmpty()){
-            updateHash.delete(KEY_NAME, deleteList);
-        }
+
     }
 
     private void deleteFromMap(Long productId){
@@ -141,7 +128,7 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
         }
     }
 
-    private static void setExistDtoToLast(ProductResponseWrapDto wrapDto) {
+    private void setExistDtoToLast(ProductResponseWrapDto wrapDto) {
         if (wrapDto.getNext() != null){
             if(wrapDto.getPrevious() != null){
                 wrapDto.getPrevious().setNext(wrapDto.getNext());

@@ -3,28 +3,28 @@ package com.nhnacademy.booklay.server.service.review.cache;
 import com.nhnacademy.booklay.server.dto.review.cache.ReviewResponseWrapDto;
 import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.review.ReviewService;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.REVIEW_PAGE_KEY_NAME;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCacheWrapService {
-    @Qualifier("StringTypeRedisTemplate")
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisCacheService redisCacheService;
     private final ReviewService reviewService;
     private ReviewResponseWrapDto first;
     private ReviewResponseWrapDto last;
@@ -53,33 +53,14 @@ public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCac
         }
     }
 
-
-    private static final String KEY_NAME = "postResponsePageCache";
-    private static final String KEY_NAME_SERVER_COUNT = "postResponsePageCacheServerCheck";
     @Override
     @Scheduled(cron = "0/1 * * * * *")
     public void updateCheck(){
-        HashOperations<String, Long, List<String>> updateHash = redisTemplate.opsForHash();
-        redisTemplate.<String, String>opsForHash().put(KEY_NAME_SERVER_COUNT, serverIp, LocalDateTime.now().toString());
-        long serverCount = updateHash.size(KEY_NAME_SERVER_COUNT);
-        Set<Long> changedProductSet = updateHash.keys(KEY_NAME);
-        changedProductSet.stream().filter(reviewResponseWrapDtoHashMap::containsKey).forEach(this::deleteFromMap);
-        List<Long> deleteList = new ArrayList<>();
-        for (Long productId : changedProductSet) {
-            Set<String> productUpdatedConfirmSet =
-                redisTemplate.<String, String>opsForHash().keys(KEY_NAME + productId);
-            if (!productUpdatedConfirmSet.contains(serverIp)){
-                deleteFromMap(productId);
-            }
-            if (productUpdatedConfirmSet.size() >= serverCount - 1) {
-                deleteList.add(productId);
-            } else {
-                redisTemplate.<String, String>opsForHash().put(KEY_NAME + productId, serverIp, "");
-            }
+        List<Long> mapDeleteList = redisCacheService.updateCheck(REVIEW_PAGE_KEY_NAME, reviewResponseWrapDtoHashMap);
+        for (Long productNo:mapDeleteList){
+            deleteFromMap(productNo);
         }
-        if (!deleteList.isEmpty()){
-            updateHash.delete(KEY_NAME, deleteList);
-        }
+
     }
 
     private void deleteFromMap(Long productId){

@@ -60,11 +60,8 @@ public class ProductController {
    * @return
    */
   @GetMapping("/view/{productNo}")
-  public ProductAllInOneResponse retrieveDetailView(@PathVariable Long productNo) {
-    return productCacheWrapService.cacheRetrieveProductAllInOne(productNo);
-  }
-  public ResponseEntity<ProductAllInOneResponse> retrieveDetailViewN(@PathVariable Long productNo) {
-    ProductAllInOneResponse result = productService.findProductById(productNo);
+  public ResponseEntity<ProductAllInOneResponse> retrieveDetailView(@PathVariable Long productNo) {
+    ProductAllInOneResponse result = productCacheWrapService.cacheRetrieveProductAllInOne(productNo);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

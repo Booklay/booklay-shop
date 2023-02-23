@@ -14,11 +14,16 @@ import com.nhnacademy.booklay.server.repository.post.PostTypeRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Objects;
+
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.POST_RESPONSE_PAGE_CACHE;
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.POST_RESPONSE_PAGE_CACHE;
 
 /**
  * @Author:최규태
@@ -28,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PostServiceImpl implements PostService {
 
+  private final RedisCacheService redisCacheService;
   private final PostRepository postRepository;
   private final ProductRepository productRepository;
   private final PostTypeRepository postTypeRepository;
@@ -101,6 +107,7 @@ public class PostServiceImpl implements PostService {
 
     Post savedPost = postRepository.save(post);
 
+    redisCacheService.deleteCache(POST_RESPONSE_PAGE_CACHE, request.getProductNo());
     return savedPost.getPostId();
   }
 
@@ -119,7 +126,7 @@ public class PostServiceImpl implements PostService {
     post.setViewPublic(request.getViewPublic());
 
     postRepository.save(post);
-
+    redisCacheService.deleteCache(POST_RESPONSE_PAGE_CACHE, post.getProductNo());
     return post.getPostId();
   }
 
@@ -198,6 +205,11 @@ public class PostServiceImpl implements PostService {
    */
   @Override
   public void deletePost(Long memberId, Long postId) {
+    Post post = postRepository.findPostByPostIdAndMemberId(postId, memberId);
+    if (post == null){
+      return;
+    }
     postRepository.deleteByPostIdAndMemberNo(postId, memberId);
+    redisCacheService.deleteCache(POST_RESPONSE_PAGE_CACHE, post.getProductNo());
   }
 }

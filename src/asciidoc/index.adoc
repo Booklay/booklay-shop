@@ -13,7 +13,7 @@ endif::[]
 == admin
 
 === member
-include::admin/member/member.adoc[]
+include::admin/member/admin_member.adoc[]
 
 === product
 include::admin/product/admin_author.adoc[]

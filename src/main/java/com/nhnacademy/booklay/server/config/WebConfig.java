@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -17,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Objects;
+import java.util.Set;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -71,9 +75,9 @@ public class WebConfig {
         try (InputStream inputStream = getClass().getClassLoader()
                                                  .getResourceAsStream("booklay.p12")) {
 
-            /**/
+            FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------"));
 
-            Path tempFile = Files.createTempFile(String.valueOf(inputStream.hashCode()), ".tmp"); // Compliant, created with explicit attributes.
+            Path tempFile = Files.createTempFile(String.valueOf(inputStream.hashCode()), ".tmp", attr); // Compliant, created with explicit attributes.
 
             tempFile.toFile().deleteOnExit();
 

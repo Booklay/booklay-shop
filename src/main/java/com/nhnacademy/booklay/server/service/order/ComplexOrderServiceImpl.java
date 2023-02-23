@@ -182,7 +182,8 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
 
     private Long getDiscountAmount(CouponRetrieveResponseFromProduct coupon, Long price) {
         if (coupon.getTypeName().equals("정률쿠폰")) {
-            return coupon.getAmount() * price / 100;
+            Long amount = coupon.getAmount() * price / 100;
+            return amount > coupon.getMaximumDiscountAmount()?coupon.getMaximumDiscountAmount():amount;
         } else if (coupon.getTypeName().equals("정액쿠폰")) {
             return Integer.toUnsignedLong(coupon.getAmount());
         }

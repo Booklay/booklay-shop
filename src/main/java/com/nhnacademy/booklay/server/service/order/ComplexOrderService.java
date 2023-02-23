@@ -8,7 +8,7 @@ import com.nhnacademy.booklay.server.entity.Order;
 public interface ComplexOrderService {
     OrderSheet checkOrder(OrderSheet orderSheet, MemberInfo memberInfo);
 
-    Order saveReceipt(OrderSheet orderSheet);
+    Order saveReceipt(OrderSheet orderSheet, MemberInfo memberInfo);
 
     OrderReceipt retrieveOrderReceipt(Long orderNo, Long memberNo);
 }

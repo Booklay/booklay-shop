@@ -25,13 +25,14 @@ public class RestService {
 
     public <T> ApiEntity<T> post(String url, Map<String, Object> requestBody,
                                  Class<T> responseType) {
-
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody);
         ApiEntity<T> apiEntity = new ApiEntity<>();
-        ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.POST, entity, responseType);
+        ResponseEntity<T> response =
+            restTemplate.exchange(url, HttpMethod.POST, entity, responseType);
         apiEntity.setSuccessResponse(response);
         return apiEntity;
     }
+
     public <T> ApiEntity<T> post(String url, MultiValueMap<String, String> header,  Map<String, Object> requestBody,
                                  Class<T> responseType) {
         HttpHeaders headers = new HttpHeaders();

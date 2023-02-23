@@ -92,8 +92,8 @@ public class TagServiceImpl implements TagService {
         Long id = request.getId();
         tagExistValidator(id);
 
-        if (productTagRepository.existsByPk_TagId(id)) {
-            productTagRepository.deleteByPk_TagId(id);
+        if (productTagRepository.existsByPkTagId(id)) {
+            productTagRepository.deleteByPkTagId(id);
         }
         tagRepository.deleteById(id);
     }
@@ -126,9 +126,8 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public Page<TagProductResponse> retrieveAllTagWithBoolean(Pageable pageable, Long productNo) {
-        if (!productRepository.existsById(productNo)) {
-            throw new NotFoundException(Product.class, NOT_FOUNT);
-        }
+        Product product = productRepository.findById(productNo).orElseThrow(()-> new NotFoundException(Product.class, NOT_FOUNT));
+
         Page<RetrieveTagResponse> basicPageDto = tagRepository.findAllBy(pageable,
                                                                          RetrieveTagResponse.class);
 
@@ -136,7 +135,7 @@ public class TagServiceImpl implements TagService {
         List<TagProductResponse> convertedContent = new ArrayList<>();
 
         for (RetrieveTagResponse response : basicContent) {
-            ProductTag.Pk ptPk = new Pk(productNo, response.getId());
+            ProductTag.Pk ptPk = new Pk(product.getId(), response.getId());
 
             Boolean isRegistered = productTagRepository.existsById(ptPk);
 

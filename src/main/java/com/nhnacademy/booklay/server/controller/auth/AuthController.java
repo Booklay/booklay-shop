@@ -3,7 +3,6 @@ package com.nhnacademy.booklay.server.controller.auth;
 import com.nhnacademy.booklay.server.dto.ErrorResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
-import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

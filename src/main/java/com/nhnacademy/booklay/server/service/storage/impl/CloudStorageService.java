@@ -15,13 +15,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class CloudStorageService implements StorageService {
 
+    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private AccessResponse accessResponse;
@@ -137,9 +137,5 @@ public class CloudStorageService implements StorageService {
         String url = fileResponse.getFileAddress() + fileName;
 
         return this.restTemplate.exchange(url, HttpMethod.GET, requestHttpEntity, byte[].class);
-    }
-
-    private Path getDownloadDir() {
-        return Paths.get(LOCAL_DIR, "/Downloads");
     }
 }

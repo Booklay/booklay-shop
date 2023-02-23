@@ -1,0 +1,51 @@
+= member admin
+:category: {snippets}/admin/categories
+
+=== 카테고리 조회
+:adoc: {category}/test_RetrieveCategoryStep
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 카테고리 삭제
+:adoc: {category}/testDeleteCategory
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 카테고리 등록
+:adoc: {category}/testRegisterCategory
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+
+=== 단일 카테고리 검색
+:adoc: {category}/testRetrieveCategory
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 카테고리 리스트 조회
+:adoc: {category}/testRetrieveCategoryListWithPageable
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 카테고리 수정
+:adoc: {category}/testUpdateCategory
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+

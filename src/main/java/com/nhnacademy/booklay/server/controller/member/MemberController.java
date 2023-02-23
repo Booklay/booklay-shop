@@ -80,12 +80,18 @@ public class MemberController {
      * @return
      */
     @GetMapping("/exist/eMail/{eMail}")
-    public ResponseEntity<Boolean> existEMail(@PathVariable String eMail){
+    public ResponseEntity<Boolean> existEMail(@PathVariable String eMail) {
         boolean result = memberService.checkEMail(eMail);
         return ResponseEntity.status(HttpStatus.OK)
             .body(result);
     }
 
+    /**
+     * 회원 개인정보 조회 메소드
+     *
+     * @param memberNo 조회할 회원번호
+     * @return MemberRetrieveResponse (회원 정보 반환 DTO)
+     */
     @GetMapping("/{memberNo}")
     public ResponseEntity<MemberRetrieveResponse> retrieveMember(@PathVariable Long memberNo) {
 
@@ -96,10 +102,10 @@ public class MemberController {
     }
 
     /**
-     * Mypage의 main 부분 보여주는 데이터 리턴
+     * MyPage 의 main 부분 조회하는 메소드
      *
-     * @param memberNo 해당 회원의 번호
-     * @return
+     * @param memberNo 조회할 회원의 번호
+     * @return MemberMainRetrieveResponse (회원 정보 반환 DTO)
      */
     @GetMapping("/main/{memberNo}")
     public ResponseEntity<MemberMainRetrieveResponse> retrieveMemberMain(
@@ -111,36 +117,53 @@ public class MemberController {
             .body(memberMainResponse);
     }
 
+    /**
+     * 이메일로 회원 로그인 정보 조회 메소드
+     *
+     * @param email 조회할 회원 이메일
+     * @return MemberLoginResponse
+     */
     @GetMapping("/email/{email}")
     public ResponseEntity<MemberLoginResponse> retrieveMemberByEmail(
         @PathVariable String email) {
 
-        MemberLoginResponse memberResponse =
-            memberService.retrieveMemberByEmail(email)
-                .orElseThrow(() -> new NotFoundException(
-                    MemberNotFoundException.class,
+        MemberLoginResponse memberResponse = memberService.retrieveMemberByEmail(email)
+            .orElseThrow(() -> new NotFoundException(
+                MemberNotFoundException.class, MEMBER_NOT_FOUND_ERROR_CODE));
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberResponse);
+
+    }
+
+    /**
+     * 이메일로 회원 정보 반환 메소드
+     *
+     * @param email 조회할 회원 이메일
+     * @return MemberRetrieveResponse
+     */
+    @GetMapping("/memberinfo/{email}")
+    public ResponseEntity<MemberRetrieveResponse> retrieveMemberInfoByEmail(
+        @PathVariable String email) {
+
+        MemberRetrieveResponse memberRetrieveResponse =
+            memberService.retrieveMemberInfoByEmail(email)
+                .orElseThrow(() -> new NotFoundException(MemberNotFoundException.class,
                     MEMBER_NOT_FOUND_ERROR_CODE));
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberResponse);
-
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberRetrieveResponse);
     }
 
-    @GetMapping("/memberinfo/{email}")
-    public ResponseEntity<MemberRetrieveResponse> retrieveMemberInfoByEmail(@PathVariable String email) {
-
-        MemberRetrieveResponse memberRetrieveResponse = memberService.retrieveMemberInfoByEmail(email)
-                                                                     .orElseThrow(
-                                                                         () -> new NotFoundException(
-                                                                             MemberNotFoundException.class,
-                                                                             MEMBER_NOT_FOUND_ERROR_CODE));
-
-        return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberRetrieveResponse);
-    }
-
+    /**
+     * 회원 등급 리스트 조회 메소드
+     *
+     * @param memberNo 조회할 등급을 가진 회원의 번호
+     * @param pageable
+     * @return PageResponse<MemberGradeRetrieveResponse>
+     */
     @GetMapping("/grade/{memberNo}")
     public ResponseEntity<PageResponse<MemberGradeRetrieveResponse>> retrieveMemberGrade(
         @PathVariable Long memberNo,
@@ -152,10 +175,16 @@ public class MemberController {
             = new PageResponse<>(responsePage);
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberPageResponse);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberPageResponse);
     }
 
+    /**
+     * 회원 권한 리스트 조회 메소드
+     *
+     * @param memberNo 조회할 회원 번호
+     * @return List<MemberAuthorityRetrieveResponse>
+     */
     @GetMapping("/authority/{memberNo}")
     public ResponseEntity<List<MemberAuthorityRetrieveResponse>> retrieveMemberAuthority(
         @PathVariable Long memberNo) {
@@ -163,10 +192,16 @@ public class MemberController {
         List<MemberAuthorityRetrieveResponse> memberResponse =
             memberService.retrieveMemberAuthority(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(memberResponse);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(memberResponse);
     }
 
+    /**
+     * 회원 생성하는 메소드
+     *
+     * @param memberCreateRequest 회원 생성 정보 dto
+     * @return Map<String, Long>
+     */
     @PostMapping
     public ResponseEntity<Map<String, Long>> createMember(
         @Valid @RequestBody MemberCreateRequest memberCreateRequest) {
@@ -174,9 +209,16 @@ public class MemberController {
         Long memberNo = memberService.createMember(memberCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .body(Collections.singletonMap("memberNo", memberNo));
+            .body(Collections.singletonMap("memberNo", memberNo));
     }
 
+    /**
+     * 회원 정보 수정 메소드
+     *
+     * @param memberNo            수정 대상 회원 번호
+     * @param memberUpdateRequest 수정 정보 dto
+     * @return void
+     */
     @PutMapping("/{memberNo}")
     public ResponseEntity<Void> updateMember(@PathVariable Long memberNo,
                                              @Valid @RequestBody
@@ -184,48 +226,70 @@ public class MemberController {
 
         memberService.updateMember(memberNo, memberUpdateRequest);
         return ResponseEntity.status(HttpStatus.OK)
-                             .build();
+            .build();
     }
 
+    /**
+     * 회원 삭제 메소드 (soft delete)
+     *
+     * @param memberNo 삭제 대상 회원
+     * @return void
+     */
     @DeleteMapping("/{memberNo}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long memberNo) {
         memberService.deleteMember(memberNo);
         return ResponseEntity.status(HttpStatus.OK)
-                             .build();
+            .build();
     }
 
+    /**
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(MemberNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                             .body(ErrorResponse.builder().code(MEMBER_NOT_FOUND_ERROR_CODE)
-                                                .message(ex.getMessage())
-                                                .build());
+            .body(ErrorResponse.builder().code(MEMBER_NOT_FOUND_ERROR_CODE)
+                .message(ex.getMessage())
+                .build());
     }
 
+    /**
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(AuthorityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleAuthorityNotFoundException(
         AuthorityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                             .body(ErrorResponse.builder().code(AUTHORITY_NOT_FOUND_ERROR_CODE)
-                                                .message(ex.getMessage()).build());
+            .body(ErrorResponse.builder().code(AUTHORITY_NOT_FOUND_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 
+    /**
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(AdminAndAuthorAuthorityCannotExistTogetherException.class)
     public ResponseEntity<ErrorResponse> handleAdminAndAuthorAuthorityCannotExistTogetherException(
         AdminAndAuthorAuthorityCannotExistTogetherException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body(ErrorResponse.builder()
-                                                .code(
-                                                    ADMIN_AND_AUTHOR_AUTHORITY_CANNOT_EXIST_TOGETHER_ERROR_CODE)
-                                                .message(ex.getMessage()).build());
+            .body(ErrorResponse.builder()
+                .code(
+                    ADMIN_AND_AUTHOR_AUTHORITY_CANNOT_EXIST_TOGETHER_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 
+    /**
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(AlreadyExistAuthorityException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyExistAuthorityException(
         AlreadyExistAuthorityException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body(ErrorResponse.builder().code(ALREADY_EXIST_AUTHORITY_ERROR_CODE)
-                                                .message(ex.getMessage()).build());
+            .body(ErrorResponse.builder().code(ALREADY_EXIST_AUTHORITY_ERROR_CODE)
+                .message(ex.getMessage()).build());
     }
 }
 

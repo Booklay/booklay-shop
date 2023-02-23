@@ -1,6 +1,7 @@
 package com.nhnacademy.booklay.server.repository.post;
 
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -19,5 +20,7 @@ public interface PostRepositoryCustom {
   void deleteByPostIdAndMemberNo(Long postId, Long memberNo);
 
   Long confirmAnswerByPostId(Long postId);
+
+  List<PostResponse> findNoticeList(Integer pageLimit);
 
 }

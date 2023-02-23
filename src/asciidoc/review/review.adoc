@@ -1,0 +1,41 @@
+== review
+:review: {snippets}/review
+
+=== 리뷰 등록
+:adoc: {review}/createReview
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 리뷰 삭제 실패
+:adoc: {review}/deleteReviewByReviewId_failure
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 리뷰 삭제 성공
+:adoc: {review}/deleteReviewByReviewId_success
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 상품 ID로 리뷰 호출할때 바디가 빈 경우
+:adoc: {review}/retrieveReviewByProductId_bodyNonNull
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+
+=== 리뷰 Id로 리뷰 조회
+:adoc: {review}/retrieveReviewByReviewId
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]

@@ -95,7 +95,7 @@ public class Member {
         this.isBlocked = isBlocked;
     }
 
-    public void updateMember(MemberUpdateRequest request, Gender gender) {
+    public Member updateMember(MemberUpdateRequest request, Gender gender) {
         this.gender = gender;
         this.password = request.getPassword();
         this.nickname = request.getNickname();
@@ -103,15 +103,19 @@ public class Member {
         this.birthday = request.getBirthday();
         this.phoneNo = request.getPhoneNo();
         this.email = request.getEmail();
+
+        return this;
     }
 
     public void deleteMember() {
+        String DELETED = "deleted";
+
         this.deletedAt = LocalDateTime.now();
-        this.password = "deleted" + this.memberNo;
-        this.email = "deleted" + this.memberNo;
-        this.name = "deleted" + this.memberNo;
-        this.nickname = "deleted" + this.memberNo;
-        this.phoneNo = "deleted" + this.memberNo;
+        this.password = DELETED + this.memberNo;
+        this.email = DELETED + this.memberNo;
+        this.name = DELETED + this.memberNo;
+        this.nickname = DELETED + this.memberNo;
+        this.phoneNo = DELETED + this.memberNo;
     }
 
     public MemberGrade addGrade(String gradeName) {

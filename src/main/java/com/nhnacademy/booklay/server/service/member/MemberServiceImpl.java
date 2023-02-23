@@ -28,7 +28,6 @@ import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException
 import com.nhnacademy.booklay.server.exception.member.BlockedMemberDetailNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.GenderNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberAlreadyExistedException;
-import com.nhnacademy.booklay.server.exception.member.MemberAuthorityCannotBeDeletedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
 import com.nhnacademy.booklay.server.repository.delivery.DeliveryDestinationRepository;
@@ -261,7 +260,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-        //TODO : 객체 만들어서 리턴하기
         return MemberGradeChartRetrieveResponse.builder().build();
     }
 
@@ -324,7 +322,7 @@ public class MemberServiceImpl implements MemberService {
         Gender gender = genderRepository.findByName(updateDto.getGender()).orElseThrow(
             () -> new GenderNotFoundException(updateDto.getGender()));
 
-        member.updateMember(updateDto, gender);
+        memberRepository.save(member.updateMember(updateDto, gender));
 
     }
 
@@ -341,12 +339,8 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMemberAuthority(Long memberNo, String authorityName) {
         getMemberService.getMemberNo(memberNo);
 
-        if (authorityName.equals("member")) {
-            throw new MemberAuthorityCannotBeDeletedException();
-        }
-
-        Authority authority = authorityRepository.findByName(authorityName).orElseThrow(
-            () -> new AuthorityNotFoundException(authorityName));
+        Authority authority = authorityRepository.findByName(authorityName)
+            .orElseThrow(() -> new AuthorityNotFoundException(authorityName));
 
         MemberAuthority.Pk pk = new MemberAuthority.Pk(memberNo, authority.getId());
         MemberAuthority memberAuthority = memberAuthorityRepository.findById(pk).orElseThrow(
@@ -354,28 +348,20 @@ public class MemberServiceImpl implements MemberService {
 
         memberAuthorityRepository.delete(memberAuthority);
     }
+
     @Override
     public boolean checkMemberId(String memberId) {
-        if (memberRepository.existsByMemberId(memberId)) {
-            return true;
-        }
-        return false;
+        return memberRepository.existsByMemberId(memberId);
     }
 
     @Override
     public boolean checkNickName(String nickName) {
-        if(memberRepository.existsByNickname(nickName)) {
-            return true;
-        }
-        return false;
+        return memberRepository.existsByNickname(nickName);
     }
 
     @Override
     public boolean checkEMail(String eMail) {
-        if(memberRepository.existsByEmail(eMail)) {
-            return true;
-        }
-        return false;
+        return memberRepository.existsByEmail(eMail);
     }
 
 }

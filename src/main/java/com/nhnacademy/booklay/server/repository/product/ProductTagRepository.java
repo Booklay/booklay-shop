@@ -7,13 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProductTagRepository
     extends JpaRepository<ProductTag, ProductTag.Pk>, ProductTagRepositoryCustom {
 
-    void deleteByPk_TagId(Long id);
-
-    boolean existsByPk_TagId(Long id);
-
-    List<ProductTag> findAllByPk_ProductId(Long id);
-
+    void deleteByPkTagId(Long id);
+    boolean existsByPkTagId(Long id);
     List<ProductTag> findAllByTagId(Long tagId);
-
 
 }

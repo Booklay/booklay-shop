@@ -1,0 +1,16 @@
+== storage
+:storage: {snippets}/storage
+
+=== 오브젝트 스토리지 업로드
+:adoc: {storage}/uploadFile
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+
+=== 오브젝트 스토리지 다운로드
+:adoc: {storage}/downloadUrl
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]

@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.service.board.PostService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -55,7 +56,7 @@ public class BoardController {
   public ResponseEntity<Long> updatePost(@RequestBody BoardPostUpdateRequest request) {
     Long result = postService.updatePost(request);
 
-    return ResponseEntity.status(HttpStatus.CREATED)
+    return ResponseEntity.status(HttpStatus.ACCEPTED)
         .body(result);
   }
 
@@ -77,6 +78,11 @@ public class BoardController {
         .body(response);
   }
 
+  /**
+   * 공지사항 페이지 조회
+   * @param pageable
+   * @return
+   */
   @GetMapping("/notice")
   public ResponseEntity<PageResponse<PostResponse>> retrieveNotice(Pageable pageable){
     Page<PostResponse> content = postService.retrieveNotice(pageable);
@@ -85,6 +91,14 @@ public class BoardController {
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(response);
+  }
+
+  @GetMapping("/notice/{pageLimit}")
+  public ResponseEntity<List<PostResponse>> retrieveNoticeListForAdmin(
+      @PathVariable Integer pageLimit){
+    List<PostResponse> response = postService.retrieveNoticeList(pageLimit);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   /**

@@ -1,0 +1,18 @@
+= Member
+:auth: {snippets}/AuthControllerTest
+
+=== 로그인
+:adoc: {auth}/testDoLogin
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 이메일 로그인
+:adoc: {auth}/testRetrieveMemberByEmail
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/response-body.adoc[]

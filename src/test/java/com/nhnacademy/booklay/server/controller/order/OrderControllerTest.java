@@ -174,7 +174,7 @@ class OrderControllerTest {
     }
 
     @Test
-    @DisplayName("테스트")
+    @DisplayName("재고 감소 테스트")
     void testProductStorageDown() throws Exception {
         //mocking
         when(productService.storageSoldOutChecker(any())).thenThrow(NotEnoughStockException.class);
@@ -188,7 +188,7 @@ class OrderControllerTest {
     }
 
     @Test
-    @DisplayName("테스트")
+    @DisplayName("재고 증가 테스트")
     void testProductStorageUp() throws Exception {
         //mocking
         when(productService.storageRefund(any())).thenThrow(NotEnoughStockException.class);

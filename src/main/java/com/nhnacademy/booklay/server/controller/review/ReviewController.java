@@ -40,8 +40,7 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
         } catch (CreateFailedException e) {
-            return ResponseEntity.status(HttpStatus.OK)
-                .build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
 
     }

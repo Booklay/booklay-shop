@@ -1,0 +1,19 @@
+:categories: {snippets}/admin/categories
+
+=== 메뉴에 사용할 카테고리 계층 조회
+:adoc: {categories}/test_RetrieveCategoryStep
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]
+
+=== 카테고리 생성
+:adoc: {categories}/testCreateCategory_ifCreateRequestIncludeNullOrBlank_throwsValidationFailedException
+include::{adoc}/curl-request.adoc[]
+include::{adoc}/http-request.adoc[]
+include::{adoc}/http-response.adoc[]
+include::{adoc}/httpie-request.adoc[]
+include::{adoc}/request-body.adoc[]
+include::{adoc}/response-body.adoc[]

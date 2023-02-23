@@ -23,7 +23,6 @@ class RestockingNotificationRepositoryTest {
 
     @Autowired
     RestockingNotificationRepository restockingNotificationRepository;
-
     @Disabled
     @Test
     @DisplayName("RestockingNotificationRepository save test ")

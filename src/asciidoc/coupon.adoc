@@ -1,0 +1,5 @@
+= RESTful Notes API Guide
+:snippets: ../../target/generated-snippets
+
+카테고리 조회 응답.
+include::{snippets}/CategoryAdminControllerTest/test_RetrieveCategoryStep/http-response.adoc[]

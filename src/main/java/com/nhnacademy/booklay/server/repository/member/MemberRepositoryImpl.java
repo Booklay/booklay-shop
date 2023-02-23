@@ -243,26 +243,4 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .select(member.count())
             .fetchFirst();
     }
-
-    @Override
-    public Long retrieveWhiteGradeMemberCount() {
-        QMember member = QMember.member;
-
-        return null;
-    }
-
-    @Override
-    public Long retrieveSilverGradeMemberCount() {
-        return null;
-    }
-
-    @Override
-    public Long retrieveGoldGradeMemberCount() {
-        return null;
-    }
-
-    @Override
-    public Long retrievePlatinumGradeMemberCount() {
-        return null;
-    }
 }

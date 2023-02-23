@@ -1,7 +1,7 @@
 = Order
 :order: {snippets}/OrderControllerTest
 
-=== 회원가입
+=== 구매 확정
 :adoc: {order}/testConfirmOrder
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
@@ -9,7 +9,7 @@ include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 회원가입
+=== 상품목록리스트로 상품 정보 조회
 :adoc: {order}/testGetProductDataByProductList
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
@@ -17,7 +17,7 @@ include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 회원가입
+=== 구매시 재고 감소
 :adoc: {order}/testProductStorageDown
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
@@ -26,7 +26,7 @@ include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 회원가입
+=== 재고가 감소된 후 결제 인증 실패 등에 의해 결제가 실패한경우 재고를 복구
 :adoc: {order}/testProductStorageUp
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
@@ -35,21 +35,21 @@ include::{adoc}/httpie-request.adoc[]
 include::{adoc}/request-body.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 회원가입
+=== 영수증 조회
 :adoc: {order}/testRetrieveOrderReceipt
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 
-=== 회원가입
+=== 구매목록 조회
 :adoc: {order}/testRetrieveOrderReceiptPage
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
 include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 
-=== 회원가입
+=== 주문서(구매 과정에서 임시로 저장됨) 조회
 :adoc: {order}/testRetrieveOrderSheet
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
@@ -57,7 +57,7 @@ include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 회원가입
+=== 영수증 저장
 :adoc: {order}/testSaveOrderReceipt
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
@@ -65,7 +65,7 @@ include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 회원가입
+=== 영수증 저장 실패
 :adoc: {order}/testSaveOrderReceiptFail
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]
@@ -73,7 +73,7 @@ include::{adoc}/http-response.adoc[]
 include::{adoc}/httpie-request.adoc[]
 include::{adoc}/response-body.adoc[]
 
-=== 회원가입
+=== 주문서 저장
 :adoc: {order}/testSaveOrderSheet
 include::{adoc}/curl-request.adoc[]
 include::{adoc}/http-request.adoc[]

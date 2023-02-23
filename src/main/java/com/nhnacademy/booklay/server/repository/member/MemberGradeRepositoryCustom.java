@@ -10,4 +10,6 @@ public interface MemberGradeRepositoryCustom {
     Page<MemberGradeRetrieveResponse> findByMember_MemberNo(Pageable pageable, Long memberNo);
 
     Optional<MemberGrade> retrieveCurrentMemberGrade(Long memberNo);
+
+
 }

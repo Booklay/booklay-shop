@@ -1,5 +1,7 @@
 package com.nhnacademy.booklay.server.repository.coupon;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
@@ -16,8 +18,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -92,7 +92,7 @@ class CouponRepositoryTest {
         List<Coupon> dtoList = couponRepository.findAll();
 
         //then
-        assertThat(dtoList.size()).isEqualTo(1);
+        assertThat(dtoList).hasSize(1);
         assertThat(dtoList.get(0).getName()).isEqualTo(coupon.getName());
     }
 
@@ -108,7 +108,7 @@ class CouponRepositoryTest {
         couponRepository.deleteById(coupon.getId());
 
         //then
-        assertThat(couponRepository.findAll().size()).isEqualTo(0);
+        assertThat(couponRepository.findAll()).isEmpty();
     }
 
     @Test

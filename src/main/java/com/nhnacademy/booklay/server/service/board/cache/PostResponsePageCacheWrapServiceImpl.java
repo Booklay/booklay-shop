@@ -4,20 +4,13 @@ import com.nhnacademy.booklay.server.dto.board.cache.PostResponseWrapDto;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.board.PostService;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 import static com.nhnacademy.booklay.server.utils.CacheKeyName.POST_RESPONSE_PAGE_CACHE;
 
@@ -32,8 +25,6 @@ public class PostResponsePageCacheWrapServiceImpl implements PostResponsePageCac
             postResponseWrapDtoHashMap = new HashMap<>();
     //맵에 넣기 위한 대기열
     private final List<PostResponseWrapDto> tempList = Collections.synchronizedList(new LinkedList<>());
-    @Qualifier("serverIp")
-    private final String serverIp;
     private static final int MAX_CACHE_NUM = 200;
 
     @Override
@@ -86,12 +77,12 @@ public class PostResponsePageCacheWrapServiceImpl implements PostResponsePageCac
                     tempList.remove(0);
                     setWrapDtoToLast(productAllInOneResponse);
                 }
-                while(postResponseWrapDtoHashMap.size() > MAX_CACHE_NUM){
-                    PostResponseWrapDto removeTarget = first;
-                    postResponseWrapDtoHashMap.remove(removeTarget.getProductId());
-                    first.getNext().setPrevious(null);
-                    first = first.getNext();
-                }
+            }
+            while(postResponseWrapDtoHashMap.size() > MAX_CACHE_NUM){
+                PostResponseWrapDto removeTarget = first;
+                postResponseWrapDtoHashMap.remove(removeTarget.getProductId());
+                first.getNext().setPrevious(null);
+                first = first.getNext();
             }
         }
     }

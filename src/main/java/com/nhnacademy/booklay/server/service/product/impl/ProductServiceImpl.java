@@ -566,7 +566,7 @@ public class ProductServiceImpl implements ProductService {
      *
      * @param
      */
-//    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public Boolean storageSoldOutChecker(List<CartDto> cartDtoList) throws NotEnoughStockException {
         for (CartDto cartDto : cartDtoList) {
@@ -578,7 +578,13 @@ public class ProductServiceImpl implements ProductService {
         return Boolean.TRUE;
     }
 
-//    @Transactional(isolation = Isolation.SERIALIZABLE)
+  /**
+   * 결제 취소시 재고 반환
+   * @param cartDtoList
+   * @return
+   * @throws NotEnoughStockException
+   */
+  @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public Boolean storageRefund(List<CartDto> cartDtoList) throws NotEnoughStockException {
         for (CartDto cartDto : cartDtoList) {

@@ -6,10 +6,6 @@ https://www.booklay.shop/
 
 북레이에 대한 설명을 적어주세요
 
-### WBS
-
-![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
-
 
 ## 서비스 플로우
 
@@ -19,6 +15,15 @@ CI CD 아키텍쳐를 그려주세요
 
 ### 쇼핑몰
 <img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/96007926/221072111-58cc4238-99fc-4a42-9340-920e95b05271.png">
+
+
+### WBS
+
+![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
+
+
+### 두레이 칸반 보드
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/38172794/221079684-bd162567-c1b3-43cb-a49c-291a888e7373.png">
 
 
 ### 태스트 커버리지

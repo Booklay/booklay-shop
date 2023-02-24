@@ -2,10 +2,6 @@ package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
-import com.nhnacademy.booklay.server.dto.coupon.CouponCreateRequest;
-import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.coupon.CouponTypeCURequest;
-import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
@@ -42,14 +38,12 @@ import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.entity.Order;
-import com.nhnacademy.booklay.server.entity.OrderCoupon;
 import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.OrderStatusCode;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class Dummy {
@@ -255,49 +249,6 @@ public class Dummy {
             .build();
     }
 
-    public static CouponCreateRequest getDummyCouponCreateRequest() {
-        CouponCreateRequest couponRequest = new CouponCreateRequest();
-
-        ReflectionTestUtils.setField(couponRequest, "name", "이달의 쿠폰");
-        ReflectionTestUtils.setField(couponRequest, "imageId", 1L);
-        ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
-        ReflectionTestUtils.setField(couponRequest, "amount", 5);
-        ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", true);
-        ReflectionTestUtils.setField(couponRequest, "applyItemId",
-            Dummy.getDummyCategory().getId());
-        ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
-        ReflectionTestUtils.setField(couponRequest, "maximumDiscountAmount", 5000);
-        ReflectionTestUtils.setField(couponRequest, "issuanceDeadlineAt", LocalDateTime.now());
-        ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
-        ReflectionTestUtils.setField(couponRequest, "quantity", null);
-
-        return couponRequest;
-    }
-
-    public static CouponTypeCURequest getDummyCouponTypeCURequest() {
-        CouponTypeCURequest couponTypeRequest = new CouponTypeCURequest();
-        ReflectionTestUtils.setField(couponTypeRequest, "id", 1L);
-        ReflectionTestUtils.setField(couponTypeRequest, "name", "정율");
-
-        return couponTypeRequest;
-    }
-
-    public static CouponUpdateRequest getDummyCouponUpdateRequest() {
-        CouponUpdateRequest couponRequest = new CouponUpdateRequest();
-
-        ReflectionTestUtils.setField(couponRequest, "name", "이달의 쿠폰");
-        ReflectionTestUtils.setField(couponRequest, "typeCode", 1L);
-        ReflectionTestUtils.setField(couponRequest, "amount", 5);
-        ReflectionTestUtils.setField(couponRequest, "isOrderCoupon", false);
-        ReflectionTestUtils.setField(couponRequest, "applyItemId", 1L);
-        ReflectionTestUtils.setField(couponRequest, "minimumUseAmount", 1000);
-        ReflectionTestUtils.setField(couponRequest, "maximumDiscountAmount", 5000);
-        ReflectionTestUtils.setField(couponRequest, "issuanceDeadlineAt", LocalDateTime.now());
-        ReflectionTestUtils.setField(couponRequest, "isDuplicatable", true);
-
-        return couponRequest;
-    }
-
     public static MemberCreateRequest getDummyMemberCreateRequest() {
         MemberCreateRequest memberRequest = new MemberCreateRequest();
         ReflectionTestUtils.setField(memberRequest, "gender", "M");
@@ -330,21 +281,6 @@ public class Dummy {
     public static DeliveryDestinationCURequest getDummyDeliveryDestinationCreateRequest() {
         return new DeliveryDestinationCURequest("집", "12345", "서울특별시 송파구 올림픽로 240", "호수공원",
             "(올림픽로)", "심청이", "010-2222-2222", true);
-    }
-
-    public static CouponRetrieveResponse getDummyCouponRetrieveResponse() {
-        return CouponRetrieveResponse.fromEntity(Dummy.getDummyCoupon());
-    }
-
-    public static OrderCoupon getDummyOrderCoupon() {
-        OrderCoupon orderCoupon = OrderCoupon.builder()
-            .coupon(getDummyCoupon())
-            .code(UUID.randomUUID().toString().substring(0, 30))
-            .build();
-
-        ReflectionTestUtils.setField(orderCoupon, "id", 1L);
-
-        return orderCoupon;
     }
 
     public static PointHistory getDummyPointHistory() {

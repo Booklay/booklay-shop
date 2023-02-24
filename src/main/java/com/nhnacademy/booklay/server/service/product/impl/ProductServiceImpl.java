@@ -1,8 +1,7 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
 import static com.nhnacademy.booklay.server.service.search.impl.SearchServiceImpl.convertHitsToResponse;
-import static com.nhnacademy.booklay.server.utils.CacheKeyName.PRODUCT_ALL_IN_ONE_KEY_NAME;
-import static com.nhnacademy.booklay.server.utils.CacheKeyName.PRODUCT_RESPONSE_KEY_NAME;
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.*;
 
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
@@ -47,13 +46,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,6 +111,7 @@ public class ProductServiceImpl implements ProductService {
 
     // product_author
     productAuthorRegister(request.getAuthorIds(), savedDetail);
+    redisCacheService.deleteCache(PRODUCT_RECOMMEND_LIST, request.getProductId());
     return savedProduct.getId();
   }
 
@@ -133,6 +134,7 @@ public class ProductServiceImpl implements ProductService {
 
     subscribe.setPublisher(request.getPublisher());
     subscribeRepository.save(subscribe);
+    redisCacheService.deleteCache(PRODUCT_RECOMMEND_LIST, request.getProductId());
     return savedProduct.getId();
   }
 
@@ -600,6 +602,11 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Override
+    public List<Long> retrieveLatestEightsIds(){
+      return productRepository.findTop8ByIsDeletedIsFalseOrderByCreatedAtDesc()
+              .stream().map(Product::getId).collect(Collectors.toList());
+    }
   @Override
   public List<SearchProductResponse> getLatestEights(){
     List<Product> list = productRepository.findTop8ByIsDeletedOrderByCreatedAtDesc(false);

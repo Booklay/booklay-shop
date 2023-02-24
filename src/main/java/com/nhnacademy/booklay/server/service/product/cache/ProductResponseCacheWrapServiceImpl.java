@@ -5,14 +5,17 @@ import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductRespons
 import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.nhnacademy.booklay.server.utils.CacheKeyName.PRODUCT_RESPONSE_KEY_NAME;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductResponseCacheWrapServiceImpl implements ProductResponseCacheWrapService {
@@ -32,6 +35,7 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
         List<Long> listForFind = new ArrayList<>();
         List<Integer> pointCheck = new ArrayList<>();
         List<RetrieveProductResponse> response = new ArrayList<>();
+        log.info("상품 정보 조회 시작{}", LocalDateTime.now());
         for (int i = 0; i<productIdList.size(); i++){
             ProductResponseWrapDto wrapDto = productResponseWrapDtoMap.get(productIdList.get(i));
             if (wrapDto == null){
@@ -42,11 +46,13 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
                 response.add(wrapDto.getData());
             }
         }
-        List<RetrieveProductResponse> searchList = productService.retrieveProductResponses(listForFind);
-        for (int i = 0; i<searchList.size(); i++){
-            response.set(pointCheck.get(i),searchList.get(i));
+        if (!listForFind.isEmpty()){
+            List<RetrieveProductResponse> searchList = productService.retrieveProductResponses(listForFind);
+            for (int i = 0; i<searchList.size(); i++){
+                response.set(pointCheck.get(i),searchList.get(i));
+            }
         }
-        tempList.addAll(searchList);
+        tempList.addAll(response);
         return response;
     }
 
@@ -99,11 +105,14 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
         ProductResponseWrapDto wrapDto;
         if (productResponseWrapDtoMap.containsKey(productAllInOneResponse.getProductId())){
             wrapDto = productResponseWrapDtoMap.get(productAllInOneResponse.getProductId());
-            setExistDtoToLast(wrapDto);
+            unlinkExistDto(wrapDto);
         }else {
             wrapDto = new ProductResponseWrapDto();
             wrapDto.setData(productAllInOneResponse);
             productResponseWrapDtoMap.put(wrapDto.getData().getProductId(),wrapDto);
+        }
+        if (last == null){
+            last = wrapDto;
         }
         if (wrapDto != last){
             wrapDto.setPrevious(last);
@@ -115,7 +124,7 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
         }
     }
 
-    private void setExistDtoToLast(ProductResponseWrapDto wrapDto) {
+    private void unlinkExistDto(ProductResponseWrapDto wrapDto) {
         if (wrapDto.getNext() != null){
             if(wrapDto.getPrevious() != null){
                 wrapDto.getPrevious().setNext(wrapDto.getNext());

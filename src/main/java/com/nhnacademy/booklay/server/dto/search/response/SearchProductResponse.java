@@ -1,9 +1,12 @@
 package com.nhnacademy.booklay.server.dto.search.response;
 
 
+import com.nhnacademy.booklay.server.dto.product.response.RetrieveProductResponse;
 import com.nhnacademy.booklay.server.entity.document.AuthorInfo;
 import com.nhnacademy.booklay.server.entity.document.ProductDocument;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.Getter;
 
 @Getter
@@ -26,4 +29,19 @@ public class SearchProductResponse {
         this.authors = document.getAuthors();
     }
 
+    public SearchProductResponse(RetrieveProductResponse retrieveProductResponse) {
+        this.id = retrieveProductResponse.getProductId();
+        this.thumbnail = retrieveProductResponse.getObjectFileId();
+        this.title = retrieveProductResponse.getTitle();
+        this.publisher = retrieveProductResponse.getPublisher();
+        this.price = retrieveProductResponse.getPrice();
+        this.selling = retrieveProductResponse.getSelling();
+        if (retrieveProductResponse.getAuthors()==null){
+            this.authors = null;
+            return;
+        }
+        this.authors = retrieveProductResponse.getAuthors().stream()
+                .map(author -> new AuthorInfo(author.getAuthorNo(), author.getName()))
+                .collect(Collectors.toList());
+    }
 }

@@ -13,8 +13,6 @@ import java.util.Map;
 
 import com.nhnacademy.booklay.server.utils.CacheKeyName;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -85,11 +83,14 @@ public class ProductAllInOneCacheWrapServiceImpl implements ProductAllInOneCache
         ProductAllInOneWrapDto wrapDto;
         if (allInOneWrapDtoMap.containsKey(productAllInOneResponse.getInfo().getId())){
             wrapDto = allInOneWrapDtoMap.get(productAllInOneResponse.getInfo().getId());
-            setExistDtoToLast(wrapDto);
+            unlinkExistDto(wrapDto);
         }else {
             wrapDto = new ProductAllInOneWrapDto();
             wrapDto.setData(productAllInOneResponse);
             allInOneWrapDtoMap.put(wrapDto.getData().getInfo().getId(),wrapDto);
+        }
+        if (last == null){
+            last = wrapDto;
         }
         if (wrapDto != last){
             wrapDto.setPrevious(last);
@@ -101,7 +102,7 @@ public class ProductAllInOneCacheWrapServiceImpl implements ProductAllInOneCache
         }
     }
 
-    private static void setExistDtoToLast(ProductAllInOneWrapDto wrapDto) {
+    private static void unlinkExistDto(ProductAllInOneWrapDto wrapDto) {
         if (wrapDto.getNext() != null){
             if(wrapDto.getPrevious() != null){
                 wrapDto.getPrevious().setNext(wrapDto.getNext());

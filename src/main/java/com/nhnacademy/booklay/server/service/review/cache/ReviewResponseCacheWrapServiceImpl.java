@@ -93,10 +93,13 @@ public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCac
         ReviewResponseWrapDto wrapDto;
         if (reviewResponseWrapDtoHashMap.containsKey(productAllInOneResponse.getProductId())){
             wrapDto = reviewResponseWrapDtoHashMap.get(productAllInOneResponse.getProductId());
-            setExistDtoToLast(wrapDto);
+            unlinkExistDto(wrapDto);
         }else {
             wrapDto = productAllInOneResponse;
             reviewResponseWrapDtoHashMap.put(wrapDto.getProductId(),wrapDto);
+        }
+        if (last == null){
+            last = wrapDto;
         }
         if (wrapDto != last){
             wrapDto.setPrevious(last);
@@ -108,7 +111,7 @@ public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCac
         }
     }
 
-    private static void setExistDtoToLast(ReviewResponseWrapDto wrapDto) {
+    private static void unlinkExistDto(ReviewResponseWrapDto wrapDto) {
         if (wrapDto.getNext() != null){
             if(wrapDto.getPrevious() != null){
                 wrapDto.getPrevious().setNext(wrapDto.getNext());

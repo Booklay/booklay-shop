@@ -62,6 +62,8 @@ public interface ProductService {
 
     SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable);
 
+    List<Long> retrieveLatestEightsIds();
+
     List<SearchProductResponse> getLatestEights();
 
     SearchPageResponse<SearchProductResponse> retrieveProductByRequest(SearchIdRequest request,

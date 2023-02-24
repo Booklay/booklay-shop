@@ -91,10 +91,13 @@ public class PostResponsePageCacheWrapServiceImpl implements PostResponsePageCac
         PostResponseWrapDto wrapDto;
         if (postResponseWrapDtoHashMap.containsKey(productAllInOneResponse.getProductId())){
             wrapDto = postResponseWrapDtoHashMap.get(productAllInOneResponse.getProductId());
-            setExistDtoToLast(wrapDto);
+            unlinkExistDto(wrapDto);
         }else {
             wrapDto = productAllInOneResponse;
             postResponseWrapDtoHashMap.put(wrapDto.getProductId(),wrapDto);
+        }
+        if (last == null){
+            last = wrapDto;
         }
         if (wrapDto != last){
             wrapDto.setPrevious(last);
@@ -106,7 +109,7 @@ public class PostResponsePageCacheWrapServiceImpl implements PostResponsePageCac
         }
     }
 
-    private static void setExistDtoToLast(PostResponseWrapDto wrapDto) {
+    private static void unlinkExistDto(PostResponseWrapDto wrapDto) {
         if (wrapDto.getNext() != null){
             if(wrapDto.getPrevious() != null){
                 wrapDto.getPrevious().setNext(wrapDto.getNext());

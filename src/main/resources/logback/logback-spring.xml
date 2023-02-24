@@ -141,7 +141,10 @@
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </logger>
-
+    <logger name="io.lettuce.core" level="${REDIS_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
     <!-- 로그백 관련 리소스 해제 -->
     <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
 </configuration>

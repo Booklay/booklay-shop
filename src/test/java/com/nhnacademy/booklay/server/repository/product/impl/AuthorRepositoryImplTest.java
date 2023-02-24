@@ -8,7 +8,6 @@ import com.nhnacademy.booklay.server.entity.Author;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @Transactional
 class AuthorRepositoryImplTest {
+
   @Autowired
   AuthorRepository authorRepository;
 
@@ -37,7 +37,7 @@ class AuthorRepositoryImplTest {
     jpaRepository.deleteAll();
 
     String query =
-        String.format("ALTER TABLE `%s` ALTER COLUMN book_no RESTART WITH 1", entityName,
+        String.format("ALTER TABLE `%s` ALTER COLUMN `%s_no` RESTART WITH 1", entityName,
             entityName);
 
     this.entityManager
@@ -47,7 +47,7 @@ class AuthorRepositoryImplTest {
   }
 
   @BeforeEach
-  void setUp(){
+  void setUp() {
     clearRepo("author", authorRepository);
     author = DummyCart.getDummyAuthor();
   }
@@ -55,10 +55,9 @@ class AuthorRepositoryImplTest {
   @Test
   void findAllByPageable() {
     //given
-    em.clear();
 
     authorRepository.save(author);
-    Pageable pageable = PageRequest.of(0,20);
+    Pageable pageable = PageRequest.of(0, 20);
 
     //when
     Page<RetrieveAuthorResponse> authorPage = authorRepository.findAllByPageable(pageable);

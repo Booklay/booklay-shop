@@ -14,6 +14,8 @@ https://www.booklay.shop/
 
 ![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
 
+### ER Diagram
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/38172794/221082399-ebb131d3-4f83-4336-88d9-9fd2941cbc16.png">
 
 ### 두레이 칸반 보드
 <img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/38172794/221079684-bd162567-c1b3-43cb-a49c-291a888e7373.png">

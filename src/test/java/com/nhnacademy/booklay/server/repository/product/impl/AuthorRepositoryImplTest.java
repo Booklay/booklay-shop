@@ -38,8 +38,9 @@ class AuthorRepositoryImplTest {
     author = DummyCart.getDummyAuthor();
   }
 
-  @Test
-  @Disabled
+
+    @Test
+    @Disabled
   void findAllByPageable() {
     //given
     em.clear();

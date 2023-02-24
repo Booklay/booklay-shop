@@ -79,12 +79,12 @@ public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCac
                     tempList.remove(0);
                     setWrapDtoToLast(productAllInOneResponse);
                 }
-                while(reviewResponseWrapDtoHashMap.size() > MAX_CACHE_NUM){
-                    ReviewResponseWrapDto removeTarget = first;
-                    reviewResponseWrapDtoHashMap.remove(removeTarget.getProductId());
-                    first.getNext().setPrevious(null);
-                    first = first.getNext();
-                }
+            }
+            while(reviewResponseWrapDtoHashMap.size() > MAX_CACHE_NUM){
+                ReviewResponseWrapDto removeTarget = first;
+                reviewResponseWrapDtoHashMap.remove(removeTarget.getProductId());
+                first.getNext().setPrevious(null);
+                first = first.getNext();
             }
         }
     }

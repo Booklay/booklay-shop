@@ -71,12 +71,12 @@ public class ProductAllInOneCacheWrapServiceImpl implements ProductAllInOneCache
                     tempList.remove(0);
                     setWrapDtoToLast(productAllInOneResponse);
                 }
-                while(allInOneWrapDtoMap.size() > MAX_CACHE_NUM){
-                    ProductAllInOneResponse removeTarget = first.getData();
-                    allInOneWrapDtoMap.remove(removeTarget.getInfo().getId());
-                    first.getNext().setPrevious(null);
-                    first = first.getNext();
-                }
+            }
+            while(allInOneWrapDtoMap.size() > MAX_CACHE_NUM){
+                ProductAllInOneResponse removeTarget = first.getData();
+                allInOneWrapDtoMap.remove(removeTarget.getInfo().getId());
+                first.getNext().setPrevious(null);
+                first = first.getNext();
             }
         }
     }

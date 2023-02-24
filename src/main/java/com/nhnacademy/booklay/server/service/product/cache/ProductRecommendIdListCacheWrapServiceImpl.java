@@ -71,12 +71,12 @@ public class ProductRecommendIdListCacheWrapServiceImpl implements ProductRecomm
                     tempList.remove(0);
                     setWrapDtoToLast(wrapDto);
                 }
-                while(recommendProductIdListWrapDtoMap.size() > MAX_CACHE_NUM){
-                    ObjectWrapDto<List<Long>> removeTarget = first;
-                    recommendProductIdListWrapDtoMap.remove(removeTarget.getKey());
-                    first.getNext().setPrevious(null);
-                    first = first.getNext();
-                }
+            }
+            while(recommendProductIdListWrapDtoMap.size() > MAX_CACHE_NUM){
+                ObjectWrapDto<List<Long>> removeTarget = first;
+                recommendProductIdListWrapDtoMap.remove(removeTarget.getKey());
+                first.getNext().setPrevious(null);
+                first = first.getNext();
             }
         }
     }

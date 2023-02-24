@@ -9,6 +9,8 @@ https://www.booklay.shop/
 ### 쇼핑몰
 <img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/96007926/221072111-58cc4238-99fc-4a42-9340-920e95b05271.png">
 
+### CI/CD
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/38172794/221101311-76d888ea-b502-42e6-a63c-8af75ab7b9b4.png">
 
 ### WBS
 

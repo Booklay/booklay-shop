@@ -6,6 +6,10 @@ https://www.booklay.shop/
 
 북레이에 대한 설명을 적어주세요
 
+### WBS
+
+![image](https://user-images.githubusercontent.com/96007926/221075876-269fdb21-e4c2-4291-884e-22fcbe8bfdd8.png)
+
 ## 서비스 플로우
 
 ### CI/CD

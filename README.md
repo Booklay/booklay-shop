@@ -8,7 +8,8 @@ https://www.booklay.shop/
 
 ### WBS
 
-![image](https://user-images.githubusercontent.com/96007926/221075876-269fdb21-e4c2-4291-884e-22fcbe8bfdd8.png)
+![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
+
 
 ## 서비스 플로우
 

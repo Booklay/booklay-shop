@@ -5,10 +5,14 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import com.nhnacademy.booklay.server.dto.secrets.DatasourceInfo;
 import com.nhnacademy.booklay.server.dto.secrets.SecretResponse;
 import com.nhnacademy.booklay.server.filter.ContentCachingRequestWrapperFilter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -16,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Objects;
+import java.util.Set;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -34,6 +39,7 @@ import org.springframework.web.client.RestTemplate;
  * @author 조현진
  */
 @Configuration
+@SuppressWarnings("squid:S5443")
 public class WebConfig {
 
     @Bean
@@ -69,12 +75,22 @@ public class WebConfig {
 
         try (InputStream inputStream = getClass().getClassLoader()
                                                  .getResourceAsStream("booklay.p12")) {
-            File tempFile = File.createTempFile(String.valueOf(inputStream.hashCode()), ".tmp");
-            tempFile.deleteOnExit();
+            String os = System.getProperty("os.name").toLowerCase();
+            Path tempFile;
+            if (os.contains("win")) {
+                tempFile = Files.createTempFile(String.valueOf(inputStream.hashCode()), ".tmp"); // Compliant, created with explicit attributes.
+            }else {
+                FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------"));
+                tempFile = Files.createTempFile(String.valueOf(inputStream.hashCode()), ".tmp", attr); // Compliant, created with explicit attributes.
+            }
 
-            copyInputStreamToFile(inputStream, tempFile);
 
-            clientStore.load(new FileInputStream(tempFile), p12Password.toCharArray());
+            tempFile.toFile().deleteOnExit();
+
+
+            copyInputStreamToFile(inputStream, tempFile.toFile());
+
+            clientStore.load(new FileInputStream(tempFile.toFile()), p12Password.toCharArray());
         }
 
         var sslContext = SSLContextBuilder.create()

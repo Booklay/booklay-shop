@@ -13,12 +13,12 @@ https://www.booklay.shop/
 CI CD 아키텍쳐를 그려주세요
 
 ### 쇼핑몰
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/96007926/221072111-58cc4238-99fc-4a42-9340-920e95b05271.png">
 
-쇼핑몰 아키텍쳐를 그려주세요
 
 ### 태스트 커버리지
 
-소나큐브 테스트 커버리지 스크린샷을 올려주세요
+<img width="938" alt="image" src="https://user-images.githubusercontent.com/96007926/221072531-90fc3c61-85e7-4b80-a5d9-86e6091e1927.png">
 
 ## 기능
 

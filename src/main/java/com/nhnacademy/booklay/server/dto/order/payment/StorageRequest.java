@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StorageRequest {
     private List<CartDto> cartDtoList;
-
 }

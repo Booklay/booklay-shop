@@ -28,12 +28,14 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Object> handleCustomException(ApiException e) {
+        printLoggingError(e);
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
+        printLoggingError(e);
         log.warn("handleIllegalArgument", e);
         ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
         return handleExceptionInternal(errorCode, e.getMessage());
@@ -41,7 +43,6 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(
-
         MethodArgumentNotValidException e,
         HttpHeaders headers,
         HttpStatus status,
@@ -59,6 +60,7 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleAllException(Exception ex) {
+        printLoggingError(ex);
         log.warn("handleAllException", ex);
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
         return handleExceptionInternal(errorCode);
@@ -101,5 +103,12 @@ public class WebControllerAdvice extends ResponseEntityExceptionHandler {
                             .message(errorCode.getMessage())
                             .errors(validationErrorList)
                             .build();
+    }
+
+    private void printLoggingError(Exception exception) {
+        log.error("\nError Occurred"
+                + "\nException  : {}"
+                + "\nMessage : {} ",
+            exception.getClass(), exception.getMessage());
     }
 }

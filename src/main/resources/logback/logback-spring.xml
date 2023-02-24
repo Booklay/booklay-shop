@@ -58,7 +58,7 @@
             <param name="version" value="1.0.0"/>
             <param name="logType" value="log"/>
             <param name="debug" value="false"/>
-            <param name="category" value="booklay_shop_log"/>
+            <param name="category" value="${PROJECT_NAME}"/>
             <param name="errorCodeType" value="action"/>
         </appender>
     </appender>

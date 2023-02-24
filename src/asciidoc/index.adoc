@@ -13,7 +13,7 @@ endif::[]
 == admin
 
 === member
-include::admin/member/member.adoc[]
+include::admin/member/admin_member.adoc[]
 
 === product
 include::admin/product/admin_author.adoc[]
@@ -22,19 +22,38 @@ include::admin/product/admin_tag.adoc[]
 
 === category
 include::admin/category/admin_categories.adoc[]
+include::admin/category/admin_category.adoc[]
 
+== auth
+include::auth/member.adoc[]
 
 == board
 include::board/board.adoc[]
 include::board/comment.adoc[]
 
-== delivery
-include::delivery/deliveryDestination.adoc[]
+== cart
+include::cart/cart.adoc[]
 
-include::product.adoc[]
-include::review.adoc[]
-include::search.adoc[]
-include::storage.adoc[]
+== coupon
+include::coupon/couponzone.adoc[]
+
+== delivery
+include::delivery/delivery_destination.adoc[]
+
+== member
+include::member/member.adoc[]
+
+== my page
+include::mypage/product.adoc[]
+include::mypage/Point_history.adoc[]
+
+== order
+include::order/order.adoc[]
+
+include::product/product.adoc[]
+include::review/review.adoc[]
+include::search/search.adoc[]
+include::storage/storage.adoc[]
 
 == 추가할 도메인
 

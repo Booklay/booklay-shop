@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +33,22 @@ class AuthorRepositoryImplTest {
   EntityManager em;
   Author author;
 
+  void clearRepo(String entityName, JpaRepository jpaRepository) {
+    jpaRepository.deleteAll();
+
+    String query =
+        String.format("ALTER TABLE `%s` ALTER COLUMN book_no RESTART WITH 1", entityName,
+            entityName);
+
+    this.entityManager
+        .getEntityManager()
+        .createNativeQuery(query)
+        .executeUpdate();
+  }
+
   @BeforeEach
   void setUp(){
-    em = entityManager.getEntityManager();
+    clearRepo("author", authorRepository);
     author = DummyCart.getDummyAuthor();
   }
 

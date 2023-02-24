@@ -4,17 +4,22 @@ https://www.booklay.shop/
 
 ## 서비스 소개
 
-스프링 클라우드를 이용한 온라인 서점 어플리케이 
-
-### WBS
-
-![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
+스프링 클라우드를 이용한 온라인 서점 어플리케이션
 
 ### 쇼핑몰
 <img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/96007926/221072111-58cc4238-99fc-4a42-9340-920e95b05271.png">
 
 
-### 태스트 커버리지
+### WBS
+
+![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
+
+
+### 두레이 칸반 보드
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/38172794/221079684-bd162567-c1b3-43cb-a49c-291a888e7373.png">
+
+
+### 테스트 커버리지
 - 목표 80%, 달성률 57.8% (2월 24일) 
 <img width="938" alt="image" src="https://user-images.githubusercontent.com/96007926/221072531-90fc3c61-85e7-4b80-a5d9-86e6091e1927.png">
 
@@ -97,12 +102,15 @@ https://www.booklay.shop/
 - 사용 기술 : 카프카
 - 주요기능
     - 쿠폰 관리
-        - 정액, 정률, 포인트, 상품, 카테고리, 전체, 등급
-        - 쿠폰존에 쿠폰 등록 가능
-        - 회원 지정하여 쿠폰 발급
+        - 정액, 정률, 포인트 충전 쿠폰
+        - 상품/카테고리/장바구니 쿠폰
+        - 등급별 쿠폰, 수량 제한 있는 쿠폰
+        - 쿠폰존에 쿠폰 등록
+        - 회원 지정 쿠폰 발급
     - 쿠폰존
-        - 원하는 쿠폰 등록해서
-        - 수량 제한 쿠폰 처리 위한 카프카 사용
+        - 사용자가 쿠폰을 발급 받을 수 있음.
+        - 이달의 쿠폰, 등급별 쿠폰/무제한 쿠폰 등록/
+        - 트래픽이 몰릴 수 있는 수량 제한 쿠폰은 카프카를 사용하여 처리.
 - 링크
     - https://github.com/Booklay/booklay-coupon
 

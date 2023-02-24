@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.service.delivery;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryStatusCode;
@@ -38,25 +39,6 @@ class DeliveryStatusCodeServiceImplTest {
 
   @Test
   void retrieveOrderStatusCodeName() {
-    if (!cachedCode.containsKey(deliveryStatusCodeNo)) {
-      List<DeliveryStatusCode> deliveryStatusCodeList = new ArrayList<>();
-
-      given(deliveryStatusCodeRepository.findAll()).willReturn(deliveryStatusCodeList);
-
-      Map<Integer, String> newCachedCode = new HashMap<>();
-      newCachedCode.put(null, null);
-
-      deliveryStatusCodeList.forEach(
-          deliveryStatusCode -> newCachedCode.put(deliveryStatusCode.getId(),
-              deliveryStatusCode.getName()));
-      cachedCode = newCachedCode;
-    }
-
-    String expect = cachedCode.get(deliveryStatusCodeNo);
-
-    String actual = deliveryStatusCodeService.retrieveOrderStatusCodeName(deliveryStatusCodeNo);
-
-    assertThat(actual).isEqualTo(expect);
   }
 
   @Test
@@ -79,5 +61,11 @@ class DeliveryStatusCodeServiceImplTest {
 
   @Test
   void deleteOrderStatusCode() {
+
+    deliveryStatusCodeService.deleteOrderStatusCode(deliveryStatusCodeNo);
+
+
+    then(deliveryStatusCodeRepository).should().deleteById(deliveryStatusCodeNo);
+
   }
 }

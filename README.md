@@ -4,21 +4,26 @@ https://www.booklay.shop/
 
 ## 서비스 소개
 
-북레이에 대한 설명을 적어주세요
-
-## 서비스 플로우
-
-### CI/CD
-
-CI CD 아키텍쳐를 그려주세요
+스프링 클라우드를 이용한 온라인 서점 어플리케이션
 
 ### 쇼핑몰
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/96007926/221072111-58cc4238-99fc-4a42-9340-920e95b05271.png">
 
-쇼핑몰 아키텍쳐를 그려주세요
 
-### 태스트 커버리지
+### WBS
 
-소나큐브 테스트 커버리지 스크린샷을 올려주세요
+![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
+
+### ER Diagram
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/38172794/221082399-ebb131d3-4f83-4336-88d9-9fd2941cbc16.png">
+
+### 두레이 칸반 보드
+<img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/38172794/221079684-bd162567-c1b3-43cb-a49c-291a888e7373.png">
+
+
+### 테스트 커버리지
+- 목표 80%, 달성률 57.8% (2월 24일) 
+<img width="938" alt="image" src="https://user-images.githubusercontent.com/96007926/221072531-90fc3c61-85e7-4b80-a5d9-86e6091e1927.png">
 
 ## 기능
 
@@ -49,16 +54,17 @@ CI CD 아키텍쳐를 그려주세요
       - 댓글 작성 불가
   - 계층형 게시판
 
-### 검색, 카테고리
+### 검색
 
 - 담당자 : 이성준
 - 사용 기술 : 엘라스틱 서치
 - 주요기능
-    - 키워드
-    - 제목
-    - 작가명
-    - 카테고리
--
+    - 키워드, 제목, 작가명, 카테고리 단어 검색
+
+### 카테고리
+- 담당자 : 이성준
+- 카테고리 생성, 수정, 조회
+  부모 카테고리, 자식 카테고리로 이뤄진 2단계 Depth 구조
 
 ### 인증
 
@@ -98,12 +104,15 @@ CI CD 아키텍쳐를 그려주세요
 - 사용 기술 : 카프카
 - 주요기능
     - 쿠폰 관리
-        - 정액, 정률, 포인트, 상품, 카테고리, 전체, 등급
-        - 쿠폰존에 쿠폰 등록 가능
-        - 회원 지정하여 쿠폰 발급
+        - 정액, 정률, 포인트 충전 쿠폰
+        - 상품/카테고리/장바구니 쿠폰
+        - 등급별 쿠폰, 수량 제한 있는 쿠폰
+        - 쿠폰존에 쿠폰 등록
+        - 회원 지정 쿠폰 발급
     - 쿠폰존
-        - 원하는 쿠폰 등록해서
-        - 수량 제한 쿠폰 처리 위한 카프카 사용
+        - 사용자가 쿠폰을 발급 받을 수 있음.
+        - 이달의 쿠폰, 등급별 쿠폰/무제한 쿠폰 등록/
+        - 트래픽이 몰릴 수 있는 수량 제한 쿠폰은 카프카를 사용하여 처리.
 - 링크
     - https://github.com/Booklay/booklay-coupon
 
@@ -119,8 +128,6 @@ CI CD 아키텍쳐를 그려주세요
       - 쿠폰 / 포인트 적용 가능
 
 ## 기술
-
-임시구분
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 ![](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)

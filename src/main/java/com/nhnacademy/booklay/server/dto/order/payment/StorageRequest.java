@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class StorageRequest {
     private List<CartDto> cartDtoList;
-
 }

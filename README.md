@@ -4,25 +4,18 @@ https://www.booklay.shop/
 
 ## 서비스 소개
 
-북레이에 대한 설명을 적어주세요
+스프링 클라우드를 이용한 온라인 서점 어플리케이 
 
 ### WBS
 
 ![image](https://user-images.githubusercontent.com/96007926/221077197-8ce10da9-6136-4773-8692-2b4d7390638a.png)
-
-
-## 서비스 플로우
-
-### CI/CD
-
-CI CD 아키텍쳐를 그려주세요
 
 ### 쇼핑몰
 <img width="3660" alt="Frame 1@2x" src="https://user-images.githubusercontent.com/96007926/221072111-58cc4238-99fc-4a42-9340-920e95b05271.png">
 
 
 ### 태스트 커버리지
-
+- 목표 80%, 달성률 57.8% (2월 24일) 
 <img width="938" alt="image" src="https://user-images.githubusercontent.com/96007926/221072531-90fc3c61-85e7-4b80-a5d9-86e6091e1927.png">
 
 ## 기능

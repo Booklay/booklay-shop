@@ -86,8 +86,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
     @Transactional(readOnly = true)
     public DeliveryDestinationRetrieveResponse retrieveDeliveryDestination(Long addressNo) {
         DeliveryDestination deliveryDestination = deliveryDestinationRepository.findById(addressNo)
-            .orElseThrow(
-                () -> new DeliveryDestinationNotFoundException(addressNo));
+            .orElseThrow(() -> new DeliveryDestinationNotFoundException(addressNo));
 
         return DeliveryDestinationRetrieveResponse.fromEntity(deliveryDestination);
     }

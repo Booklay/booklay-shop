@@ -49,7 +49,7 @@ public class PostResponsePageCacheWrapServiceImpl implements PostResponsePageCac
     @Override
     @Scheduled(fixedRate = 100)
     public void updateCheck(){
-        List<Long> mapDeleteList = redisCacheService.updateCheck(POST_RESPONSE_PAGE_CACHE, postResponseWrapDtoHashMap);
+        List<Long> mapDeleteList = redisCacheService.updateCheck(POST_RESPONSE_PAGE_CACHE);
         for (Long productNo : mapDeleteList){
             deleteFromMap(productNo);
         }

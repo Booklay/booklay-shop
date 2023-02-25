@@ -62,7 +62,7 @@ public class ProductResponseCacheWrapServiceImpl implements ProductResponseCache
     @Override
     @Scheduled(fixedRate = 100)
     public void updateCheck(){
-        List<Long> mapDeleteList = redisCacheService.updateCheck(PRODUCT_RESPONSE_KEY_NAME, productResponseWrapDtoMap);
+        List<Long> mapDeleteList = redisCacheService.updateCheck(PRODUCT_RESPONSE_KEY_NAME);
         for (Long productNo:mapDeleteList){
             deleteFromMap(productNo);
         }

@@ -40,7 +40,7 @@ public class ProductAllInOneCacheWrapServiceImpl implements ProductAllInOneCache
     @Override
     @Scheduled(fixedRate = 100)
     public void updateCheck(){
-        List<Long> mapDeleteList = redisCacheService.updateCheck(CacheKeyName.PRODUCT_ALL_IN_ONE_KEY_NAME, allInOneWrapDtoMap);
+        List<Long> mapDeleteList = redisCacheService.updateCheck(CacheKeyName.PRODUCT_ALL_IN_ONE_KEY_NAME);
         for (Long productNo : mapDeleteList){
             deleteFromMap(productNo);
         }

@@ -208,7 +208,7 @@ public class PostServiceImpl implements PostService {
   @Override
   public void deletePost(Long memberId, Long postId) {
     postRepository.deleteByPostIdAndMemberNo(postId, memberId);
-    Post post = postRepository.findPostByPostIdAndMemberId(postId, memberId);
+    Post post = postRepository.findPostByPostIdAndMemberNo(postId, memberId);
     if (post == null){
       return;
     }

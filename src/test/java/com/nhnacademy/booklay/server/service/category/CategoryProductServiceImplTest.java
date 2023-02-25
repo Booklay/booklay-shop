@@ -18,6 +18,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+/**
+ * @Author: 최규태
+ */
+
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class CategoryProductServiceImplTest {

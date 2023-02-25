@@ -130,7 +130,6 @@ public class BoardController {
    */
   @DeleteMapping("/{postId}")
   public ResponseEntity<Void> deletePost(MemberInfo memberInfo, @PathVariable Long postId) {
-    log.info("출력" + memberInfo.getMemberNo());
     postService.deletePost(memberInfo.getMemberNo(), postId);
     return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }

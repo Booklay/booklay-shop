@@ -12,7 +12,7 @@ public interface MemberGradeRepositoryCustom {
 
     Optional<MemberGrade> retrieveCurrentMemberGrade(Long memberNo);
 
-    Optional<MemberGradeChartRetrieveResponse> retrieveMemberGradeChart();
+//    Optional<MemberGradeChartRetrieveResponse> retrieveMemberGradeChart();
 
 
 }

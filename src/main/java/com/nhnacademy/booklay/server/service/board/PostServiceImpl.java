@@ -207,11 +207,11 @@ public class PostServiceImpl implements PostService {
    */
   @Override
   public void deletePost(Long memberId, Long postId) {
+    postRepository.deleteByPostIdAndMemberNo(postId, memberId);
     Post post = postRepository.findPostByPostIdAndMemberId(postId, memberId);
     if (post == null){
       return;
     }
-    postRepository.deleteByPostIdAndMemberNo(postId, memberId);
     redisCacheService.deleteCache(POST_RESPONSE_PAGE_CACHE, post.getProductNo());
   }
 }

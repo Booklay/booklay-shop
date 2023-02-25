@@ -24,6 +24,8 @@ import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.service.product.BookSubscribeService;
 import com.nhnacademy.booklay.server.service.product.ProductRelationService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
+import com.nhnacademy.booklay.server.service.product.cache.ComplexProductCacheService;
+import com.nhnacademy.booklay.server.service.product.cache.ProductAllInOneCacheWrapService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,6 +58,10 @@ class ProductControllerTest {
   ProductController productController;
   @MockBean
   ProductService productService;
+  @MockBean
+  ProductAllInOneCacheWrapService productAllInOneCacheWrapService;
+  @MockBean
+  ComplexProductCacheService complexProductCacheService;
   @MockBean
   BookSubscribeService bookSubscribeService;
   @MockBean
@@ -130,14 +136,15 @@ class ProductControllerTest {
   @DisplayName("상품 상세 보기")
   void retrieveDetailView() throws Exception {
 
-    when(productService.findProductById(productId)).thenReturn(bookAllInOne);
-
+//    when(productService.findProductById(productId)).thenReturn(bookAllInOne);
+    when(productAllInOneCacheWrapService.cacheRetrieveProductAllInOne(productId)).thenReturn(bookAllInOne);
     mockMvc.perform(get(URI_PREFIX + "/view/" + productId))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
 
-    then(productService).should(times(1)).findProductById(any());
+//    then(productService).should(times(1)).findProductById(any());
+    then(productAllInOneCacheWrapService).should(times(1)).cacheRetrieveProductAllInOne(any());
   }
 
   @Test
@@ -157,14 +164,16 @@ class ProductControllerTest {
   @DisplayName("연관 상품 목록 조회")
   void retrieveRecommendProducts() throws Exception {
 
-    when(productRelationService.retrieveRecommendProducts(productId)).thenReturn(List.of());
+//    when(productRelationService.retrieveRecommendProducts(productId)).thenReturn(List.of());
 
+    when(complexProductCacheService.cacheRetrieveRecommendProducts(productId)).thenReturn(List.of());
     mockMvc.perform(get(URI_PREFIX + "/recommend/" + productId))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
 
-    then(productRelationService).should(times(1)).retrieveRecommendProducts(any());
+//    then(productRelationService).should(times(1)).retrieveRecommendProducts(any());
+    then(complexProductCacheService).should(times(1)).cacheRetrieveRecommendProducts(any());
   }
 
   @Test
@@ -183,14 +192,15 @@ class ProductControllerTest {
   @Test
   @DisplayName("최근 등록 상품 조회")
   void getLatestProduct() throws Exception {
-    when(productService.getLatestEights()).thenReturn(List.of());
-
+//    when(productService.getLatestEights()).thenReturn(List.of());
+    when(complexProductCacheService.cacheRetrieveLatestProduct()).thenReturn(List.of());
     mockMvc.perform(get(URI_PREFIX + "/latest"))
         .andExpect(status().isOk())
         .andDo(print())
         .andReturn();
 
-    then(productService).should(times(1)).getLatestEights();
+//    then(productService).should(times(1)).getLatestEights();
+    then(complexProductCacheService).should(times(1)).cacheRetrieveLatestProduct();
   }
 
   @Test

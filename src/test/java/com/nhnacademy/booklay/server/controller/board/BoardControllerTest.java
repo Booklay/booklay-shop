@@ -23,6 +23,7 @@ import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.service.board.PostService;
+import com.nhnacademy.booklay.server.service.board.cache.PostResponsePageCacheWrapService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,8 @@ class BoardControllerTest {
   BoardController boardController;
   @MockBean
   PostService postService;
+  @MockBean
+  PostResponsePageCacheWrapService postResponsePageCacheWrapService;
   @Autowired
   MockMvc mockMvc;
 

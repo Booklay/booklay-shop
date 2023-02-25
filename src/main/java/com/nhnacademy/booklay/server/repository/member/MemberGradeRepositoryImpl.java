@@ -67,14 +67,14 @@ public class MemberGradeRepositoryImpl extends QuerydslRepositorySupport
         return Optional.ofNullable(grade);
     }
 
-    @Override
-    public Optional<MemberGradeChartRetrieveResponse> retrieveMemberGradeChart() {
-        QMemberGrade memberGrade = QMemberGrade.memberGrade;
-
+//    @Override
+//    public Optional<MemberGradeChartRetrieveResponse> retrieveMemberGradeChart() {
+//        QMemberGrade memberGrade = QMemberGrade.memberGrade;
+//
 //        MemberGradeChartRetrieveResponse memberGradeChartRetrieveResponse
 //            = from(memberGrade)
 //            .where(Expressions.currentDate().before(memberGrade.date))
-
-        return null;
-    }
+//
+//        return null;
+//    }
 }

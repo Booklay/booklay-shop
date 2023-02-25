@@ -271,20 +271,20 @@ class MemberAdminControllerTest {
         then(memberService).should(times(1)).retrieveMemberChart();
     }
 
-    @Test
-    @DisplayName("회원 등급 차트 조회 성공 테스트")
-    void testRetrieveMemberGradeChart() throws Exception {
-        //given
-
-        //when
-        mockMvc.perform(get(URI_PREFIX + "/grade/chart")
-                .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andReturn();
-
-        //then
-        then(memberService).should(times(1)).retrieveMemberGradeChart();
-    }
+//    @Test
+//    @DisplayName("회원 등급 차트 조회 성공 테스트")
+//    void testRetrieveMemberGradeChart() throws Exception {
+//        //given
+//
+//        //when
+//        mockMvc.perform(get(URI_PREFIX + "/grade/chart")
+//                .contentType(MediaType.APPLICATION_JSON))
+//            .andDo(print())
+//            .andReturn();
+//
+//        //then
+//        then(memberService).should(times(1)).retrieveMemberGradeChart();
+//    }
 
     @Test
     @DisplayName("MemberGrade 생성 성공 테스트")

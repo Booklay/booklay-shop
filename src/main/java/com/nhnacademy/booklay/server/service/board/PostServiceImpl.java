@@ -1,5 +1,7 @@
 package com.nhnacademy.booklay.server.service.board;
 
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.POST_RESPONSE_PAGE_CACHE;
+
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostCreateRequest;
 import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
@@ -12,18 +14,15 @@ import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.post.PostRepository;
 import com.nhnacademy.booklay.server.repository.post.PostTypeRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import java.util.List;
 import java.util.Objects;
-
-import com.nhnacademy.booklay.server.service.RedisCacheService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.nhnacademy.booklay.server.utils.CacheKeyName.POST_RESPONSE_PAGE_CACHE;
-import static com.nhnacademy.booklay.server.utils.CacheKeyName.POST_RESPONSE_PAGE_CACHE;
 
 /**
  * @Author:최규태
@@ -139,6 +138,9 @@ public class PostServiceImpl implements PostService {
   @Override
   public Long updateConfirmAnswer(Long postId) {
     postRepository.confirmAnswerByPostId(postId);
+    Optional<Post> post = postRepository.findById(postId);
+    post.ifPresent(value ->
+      redisCacheService.deleteCache(POST_RESPONSE_PAGE_CACHE, value.getProductNo()));
     return postId;
   }
 

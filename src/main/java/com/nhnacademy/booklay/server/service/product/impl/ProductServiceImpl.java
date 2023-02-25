@@ -111,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
 
     // product_author
     productAuthorRegister(request.getAuthorIds(), savedDetail);
-    redisCacheService.deleteCache(PRODUCT_RECOMMEND_LIST, request.getProductId());
+    redisCacheService.deleteCache(PRODUCT_RECOMMEND_LIST, -1L);
     return savedProduct.getId();
   }
 
@@ -134,7 +134,7 @@ public class ProductServiceImpl implements ProductService {
 
     subscribe.setPublisher(request.getPublisher());
     subscribeRepository.save(subscribe);
-    redisCacheService.deleteCache(PRODUCT_RECOMMEND_LIST, request.getProductId());
+    redisCacheService.deleteCache(PRODUCT_RECOMMEND_LIST, -1L);
     return savedProduct.getId();
   }
 
@@ -208,6 +208,7 @@ public class ProductServiceImpl implements ProductService {
     productRepository.save(targetProduct);
     redisCacheService.deleteCache(PRODUCT_RESPONSE_KEY_NAME, productId);
     redisCacheService.deleteCache(PRODUCT_ALL_IN_ONE_KEY_NAME, productId);
+    redisCacheService.deleteCache(PRODUCT_RECOMMEND_LIST, -1L);
   }
 
   /**
@@ -566,7 +567,6 @@ public class ProductServiceImpl implements ProductService {
      *
      * @param
      */
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public Boolean storageSoldOutChecker(List<CartDto> cartDtoList) throws NotEnoughStockException {
         for (CartDto cartDto : cartDtoList) {
@@ -584,7 +584,6 @@ public class ProductServiceImpl implements ProductService {
    * @return
    * @throws NotEnoughStockException
    */
-  @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public Boolean storageRefund(List<CartDto> cartDtoList) throws NotEnoughStockException {
         for (CartDto cartDto : cartDtoList) {

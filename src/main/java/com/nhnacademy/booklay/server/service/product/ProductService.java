@@ -54,10 +54,8 @@ public interface ProductService {
 
     Page<ProductAllInOneResponse> getProductsPage(Pageable pageable);
 
-//    @Transactional(isolation = Isolation.SERIALIZABLE)
     Boolean storageSoldOutChecker(List<CartDto> cartDtoList) throws NotEnoughStockException;
 
-//    @Transactional(isolation = Isolation.SERIALIZABLE)
     Boolean storageRefund(List<CartDto> cartDtoList) throws NotEnoughStockException;
 
     SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable);

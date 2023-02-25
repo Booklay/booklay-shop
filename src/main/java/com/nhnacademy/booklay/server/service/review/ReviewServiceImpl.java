@@ -69,14 +69,14 @@ public class ReviewServiceImpl implements ReviewService {
                     .isDeleted(false)
                     .build();
 
-                reviewRepository.save(review);
+                Review savedReview = reviewRepository.save(review);
 
                 PointHistoryCreateRequest pointRequest = new PointHistoryCreateRequest(
                     request.getMemberNo(), reviewPoint, REVIEW_REGISTER
                 );
 
                 pointHistoryService.createPointHistory(pointRequest);
-                redisCacheService.deleteCache(REVIEW_PAGE_KEY_NAME, request.getProductId());
+                redisCacheService.deleteCache(REVIEW_PAGE_KEY_NAME, savedReview.getProductNo());
             } else {
                 throw new CreateFailedException("사용자 혹은 상품이 리뷰를 작성할 수 없는 상태");
             }

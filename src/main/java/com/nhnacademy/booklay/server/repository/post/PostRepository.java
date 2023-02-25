@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
 
-    Post findPostByPostIdAndMemberId(Long postId, Long memberNo);
+    Post findPostByPostIdAndMemberNo(Long postId, Long memberNo);
 
 }

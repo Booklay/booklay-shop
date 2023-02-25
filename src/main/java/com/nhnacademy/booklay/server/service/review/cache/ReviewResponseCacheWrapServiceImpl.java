@@ -1,19 +1,21 @@
 package com.nhnacademy.booklay.server.service.review.cache;
 
+import static com.nhnacademy.booklay.server.utils.CacheKeyName.REVIEW_PAGE_KEY_NAME;
+
 import com.nhnacademy.booklay.server.dto.review.cache.ReviewResponseWrapDto;
 import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.review.ReviewService;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-
-import static com.nhnacademy.booklay.server.utils.CacheKeyName.REVIEW_PAGE_KEY_NAME;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +27,6 @@ public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCac
     private final Map<Long, ReviewResponseWrapDto> reviewResponseWrapDtoHashMap = new HashMap<>();
     //맵에 넣기 위한 대기열
     private final List<ReviewResponseWrapDto> tempList = Collections.synchronizedList(new LinkedList<>());
-    @Qualifier("serverIp")
-    private final String serverIp;
     private static final int MAX_CACHE_NUM = 200;
 
     @Override
@@ -50,7 +50,7 @@ public class ReviewResponseCacheWrapServiceImpl implements ReviewResponsePageCac
     @Override
     @Scheduled(fixedRate = 100)
     public void updateCheck(){
-        List<Long> mapDeleteList = redisCacheService.updateCheck(REVIEW_PAGE_KEY_NAME, reviewResponseWrapDtoHashMap);
+        List<Long> mapDeleteList = redisCacheService.updateCheck(REVIEW_PAGE_KEY_NAME);
         for (Long productNo:mapDeleteList){
             deleteFromMap(productNo);
         }

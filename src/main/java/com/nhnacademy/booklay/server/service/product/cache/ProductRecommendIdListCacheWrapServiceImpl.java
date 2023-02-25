@@ -49,7 +49,7 @@ public class ProductRecommendIdListCacheWrapServiceImpl implements ProductRecomm
     @Override
     @Scheduled(fixedRate = 100)
     public void updateCheck(){
-        List<Long> mapDeleteList = redisCacheService.updateCheck(PRODUCT_RECOMMEND_LIST, recommendProductIdListWrapDtoMap);
+        List<Long> mapDeleteList = redisCacheService.updateCheck(PRODUCT_RECOMMEND_LIST);
         for (Long productNo : mapDeleteList){
             deleteFromMap(productNo);
         }

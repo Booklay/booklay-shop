@@ -13,6 +13,7 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.repository.product.ProductRelationRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ class ProductRelationServiceImplTest {
 
   @InjectMocks
   ProductRelationServiceImpl productRelationService;
+  @Mock
+  RedisCacheService redisCacheService;
 
   @Mock
   ProductRelationRepository productRelationRepository;
@@ -71,8 +74,8 @@ class ProductRelationServiceImplTest {
   void retrieveRecommendProducts_success() throws IOException {
     List<Long> recommendProductIds = new ArrayList<>();
 
-    given(productRelationRepository.existsAllByBaseProduct_Id(baseProduct.getId())).willReturn(
-        true);
+//    given(productRelationRepository.existsAllByBaseProduct_Id(baseProduct.getId())).willReturn(
+//        true);
     given(
         productRelationRepository.findRecommendIdsByBaseProductId(baseProduct.getId())).willReturn(
         recommendProductIds);
@@ -84,8 +87,8 @@ class ProductRelationServiceImplTest {
 
   @Test
   void retrieveRecommendProducts_failure() throws IOException {
-    given(productRelationRepository.existsAllByBaseProduct_Id(baseProduct.getId())).willReturn(
-        false);
+//    given(productRelationRepository.existsAllByBaseProduct_Id(baseProduct.getId())).willReturn(
+//        false);
 
     List<RetrieveProductResponse> result = productRelationService.retrieveRecommendProducts(
         baseProduct.getId());

@@ -34,6 +34,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.storage.impl.FileServiceImpl;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ class ProductServiceImplTest {
 
   @InjectMocks
   private ProductServiceImpl productService;
+  @Mock
+  RedisCacheService redisCacheService;
 
   @Mock
   private ProductRepository productRepository;

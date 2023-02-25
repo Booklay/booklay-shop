@@ -194,8 +194,8 @@ class ReviewServiceTest {
 
     @Test
     void deleteReviewById () {
+      given(reviewRepository.findById(reviewId)).willReturn(Optional.ofNullable(review));
       reviewService.deleteReviewById(reviewId);
-
       BDDMockito.then(reviewRepository).should().softDeleteReview(reviewId);
 
     }

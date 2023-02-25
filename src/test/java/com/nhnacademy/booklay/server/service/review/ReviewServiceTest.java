@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.service.review;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.review.request.ReviewCreateRequest;
@@ -16,6 +17,7 @@ import com.nhnacademy.booklay.server.entity.Review;
 import com.nhnacademy.booklay.server.repository.ReviewRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
 import com.nhnacademy.booklay.server.service.storage.FileService;
 import java.io.IOException;
@@ -33,6 +35,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +53,8 @@ class ReviewServiceTest {
 
   @InjectMocks
   ReviewServiceImpl reviewService;
+  @Mock
+  RedisCacheService redisCacheService;
   @Mock
   private ReviewRepository reviewRepository;
   @Mock
@@ -189,8 +194,8 @@ class ReviewServiceTest {
 
     @Test
     void deleteReviewById () {
+      given(reviewRepository.findById(reviewId)).willReturn(Optional.ofNullable(review));
       reviewService.deleteReviewById(reviewId);
-
       BDDMockito.then(reviewRepository).should().softDeleteReview(reviewId);
 
     }

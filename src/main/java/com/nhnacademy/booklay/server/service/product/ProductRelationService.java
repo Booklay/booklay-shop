@@ -11,6 +11,8 @@ public interface ProductRelationService {
 
   List<RetrieveProductResponse> retrieveRecommendProducts(Long productId) throws IOException;
 
+  List<Long> retrieveRecommendProductIds(Long productId);
+
   Page<RetrieveProductResponse> retrieveRecommendConnection(Long productNo, Pageable pageable)
       throws IOException;
 

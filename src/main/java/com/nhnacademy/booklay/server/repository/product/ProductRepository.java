@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
     List<Product> findTop8ByIsDeletedOrderByCreatedAtDesc(boolean isDeleted);
+    List<Product> findTop8ByIsDeletedIsFalseOrderByCreatedAtDesc();
 
     Page<Product> findAllByIsDeletedOrderByCreatedAtDesc(boolean isDeleted, Pageable pageable);
     Page<Product> findByIdInAndIsDeletedOrderByCreatedAtDesc(List<Long> ids, boolean isDeleted, Pageable pageable);

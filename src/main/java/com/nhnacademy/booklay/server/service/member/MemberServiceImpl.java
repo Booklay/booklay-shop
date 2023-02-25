@@ -257,12 +257,12 @@ public class MemberServiceImpl implements MemberService {
             .build();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-        return memberGradeRepository.retrieveMemberGradeChart()
-            .orElseThrow(() -> new IllegalArgumentException());
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
+//        return memberGradeRepository.retrieveMemberGradeChart()
+//            .orElseThrow(() -> new IllegalArgumentException());
+//    }
 
     /**
      * myPage main을 위한 메소드

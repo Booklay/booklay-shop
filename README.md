@@ -24,8 +24,8 @@ https://www.booklay.shop/
 
 
 ### 테스트 커버리지
-- 목표 80%, 달성률 57.8% (2월 24일) 
-<img width="938" alt="image" src="https://user-images.githubusercontent.com/96007926/221072531-90fc3c61-85e7-4b80-a5d9-86e6091e1927.png">
+- 목표 80%, 달성률 62.7% (2월 25일) 
+<img width="1040" alt="image" src="https://user-images.githubusercontent.com/96007926/221357410-7bf37360-2f18-4036-8e16-8105b79d5ef7.png">
 
 ## 기능
 

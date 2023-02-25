@@ -197,15 +197,15 @@ public class MemberAdminController {
         return memberService.retrieveMemberChart();
     }
 
-    /**
-     * 관리자의 회원 등급 통계를 위한 데이터 조회 메소드
-     *
-     * @return
-     */
-    @GetMapping("/grade/chart")
-    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-        return memberService.retrieveMemberGradeChart();
-    }
+//    /**
+//     * 관리자의 회원 등급 통계를 위한 데이터 조회 메소드
+//     *
+//     * @return
+//     */
+//    @GetMapping("/grade/chart")
+//    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
+//        return memberService.retrieveMemberGradeChart();
+//    }
 
     /**
      * 관리자의 회원 등급 생성 메소드

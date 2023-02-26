@@ -13,6 +13,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -30,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,6 +46,7 @@ import org.springframework.web.client.RestTemplate;
 public class WebConfig {
 
     @Bean
+    @Primary
     public String gatewayIp(@Value("${booklay.gateway-origin}") String ip) {
         return ip;
     }
@@ -140,5 +144,10 @@ public class WebConfig {
     @Bean
     public FilterRegistrationBean<ContentCachingRequestWrapperFilter> reReadableRequestFilter(){
         return new FilterRegistrationBean<>(new ContentCachingRequestWrapperFilter());
+    }
+
+    @Bean(name = "serverIp")
+    public String serverIp() throws UnknownHostException {
+        return InetAddress.getLocalHost().getHostAddress();
     }
 }

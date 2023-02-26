@@ -61,7 +61,7 @@ public interface MemberService {
 
     MemberChartRetrieveResponse retrieveMemberChart();
 
-    MemberGradeChartRetrieveResponse retrieveMemberGradeChart();
+//    MemberGradeChartRetrieveResponse retrieveMemberGradeChart();
 
     MemberMainRetrieveResponse retrieveMemberMain(Long memberNo);
 

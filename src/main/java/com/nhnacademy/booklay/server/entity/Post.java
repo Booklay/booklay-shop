@@ -41,11 +41,14 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_no")
     private Product productId;
+    @Column(name = "product_no", updatable = false, insertable = false)
+    private Long productNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member memberId;
-
+    @Column(name = "member_no", updatable = false, insertable = false)
+    private Long memberNo;
     @Setter
     @ManyToOne
     @JoinColumn(name = "group_post_no")

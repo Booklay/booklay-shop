@@ -6,6 +6,7 @@ import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.service.board.PostService;
+import com.nhnacademy.booklay.server.service.board.cache.PostResponsePageCacheWrapService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
 
   private final PostService postService;
+  private final PostResponsePageCacheWrapService postResponsePageCacheWrapService;
 
   /**
    * 게시글 등록
@@ -70,7 +72,7 @@ public class BoardController {
   @GetMapping("/product/{productId}")
   public ResponseEntity<PageResponse<PostResponse>> retrieveProductQNA(@PathVariable Long productId,
       Pageable pageable) {
-    Page<PostResponse> content = postService.retrieveProductQNA(productId, pageable);
+    Page<PostResponse> content = postResponsePageCacheWrapService.cacheRetrievePostResponsePage(productId, pageable);
 
     PageResponse<PostResponse> response = new PageResponse<>(content);
 
@@ -128,7 +130,6 @@ public class BoardController {
    */
   @DeleteMapping("/{postId}")
   public ResponseEntity<Void> deletePost(MemberInfo memberInfo, @PathVariable Long postId) {
-    log.info("출력" + memberInfo.getMemberNo());
     postService.deletePost(memberInfo.getMemberNo(), postId);
     return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }

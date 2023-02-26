@@ -23,6 +23,7 @@ import com.nhnacademy.booklay.server.dto.board.request.BoardPostUpdateRequest;
 import com.nhnacademy.booklay.server.dto.board.response.PostResponse;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.service.board.PostService;
+import com.nhnacademy.booklay.server.service.board.cache.PostResponsePageCacheWrapService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,8 @@ class BoardControllerTest {
   BoardController boardController;
   @MockBean
   PostService postService;
+  @MockBean
+  PostResponsePageCacheWrapService postResponsePageCacheWrapService;
   @Autowired
   MockMvc mockMvc;
 
@@ -117,7 +120,8 @@ class BoardControllerTest {
     Page<PostResponse> page = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
 
     //mocking
-    when(postService.retrieveProductQNA(1L, PageRequest.of(0, 20))).thenReturn(page);
+//    when(postService.retrieveProductQNA(1L, PageRequest.of(0, 20))).thenReturn(page);
+    when(postResponsePageCacheWrapService.cacheRetrievePostResponsePage(1L, PageRequest.of(0, 20))).thenReturn(page);
     PageResponse<PostResponse> body = new PageResponse<>(page);
 
     mockMvc.perform(get(URI_PREFIX + "/product/" + 1))
@@ -125,7 +129,8 @@ class BoardControllerTest {
         .andDo(print())
         .andReturn();
 
-    then(postService).should(times(1)).retrieveProductQNA(any(),any());
+//    then(postService).should(times(1)).retrieveProductQNA(any(),any());
+    then(postResponsePageCacheWrapService).should(times(1)).cacheRetrievePostResponsePage(any(),any());
   }
 
   @Test

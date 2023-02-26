@@ -1,9 +1,5 @@
 package com.nhnacademy.booklay.server.service.review;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-
 import com.nhnacademy.booklay.server.repository.ReviewRepository;
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;

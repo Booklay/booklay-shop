@@ -2,7 +2,9 @@ package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
+import com.nhnacademy.booklay.server.dto.coupon.response.CouponRetrieveResponseFromProduct;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
@@ -23,8 +25,11 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.OrderProductDto;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.payment.StorageRequest;
+import com.nhnacademy.booklay.server.dto.order.payment.SubscribeDto;
 import com.nhnacademy.booklay.server.entity.Authority;
 import com.nhnacademy.booklay.server.entity.BlockedMemberDetail;
 import com.nhnacademy.booklay.server.entity.Category;
@@ -492,5 +497,73 @@ public class Dummy {
 
     public static StorageRequest getDummyStorageRequest() {
         return new StorageRequest(List.of(new CartDto(getDummyOrderProduct().getProductNo(), 1)));
+    }
+
+    public static OrderSheet getDummyOrderSheet() {
+        OrderSheet orderSheet = new OrderSheet();
+//        ReflectionTestUtils.setField(orderSheet, "couponCodeList", List.of("couponCodeList"));
+        ReflectionTestUtils.setField(orderSheet, "cartDtoList", List.of(new CartDto(1L, 1)));
+//        ReflectionTestUtils.setField(orderSheet, "orderProductDtoList", List.of(new OrderProductDto(1L, "test", 1, 1000)));
+//        ReflectionTestUtils.setField(orderSheet, "subscribeProductList", List.of(new SubscribeDto(1L, 1, 1000)));
+//        ReflectionTestUtils.setField(orderSheet, "couponUseRequest", List.of("couponCodeList"));
+        ReflectionTestUtils.setField(orderSheet, "productPriceSum", 5000L);
+        ReflectionTestUtils.setField(orderSheet, "usingPoint", 1000L);
+        ReflectionTestUtils.setField(orderSheet, "deliveryPrice", 3000L);
+        ReflectionTestUtils.setField(orderSheet, "giftWrappingPrice", 3000L);
+        ReflectionTestUtils.setField(orderSheet, "discountPrice", 1000L);
+        ReflectionTestUtils.setField(orderSheet, "paymentAmount", 10000L);
+        ReflectionTestUtils.setField(orderSheet, "paymentMethod", 1L);
+        ReflectionTestUtils.setField(orderSheet, "orderId", "testOrder");
+        ReflectionTestUtils.setField(orderSheet, "memberNo", 1L);
+        ReflectionTestUtils.setField(orderSheet, "sender", "testSender");
+        ReflectionTestUtils.setField(orderSheet, "senderPhoneNo", "01012341234");
+        ReflectionTestUtils.setField(orderSheet, "name", "testName");
+        ReflectionTestUtils.setField(orderSheet, "zipCode", "00000");
+        ReflectionTestUtils.setField(orderSheet, "address", "testAddress");
+        ReflectionTestUtils.setField(orderSheet, "isDefaultDestination", true);
+        ReflectionTestUtils.setField(orderSheet, "receiver", "testReceiver");
+        ReflectionTestUtils.setField(orderSheet, "receiverPhoneNo", "01012341234");
+        ReflectionTestUtils.setField(orderSheet, "memo", "testMemo");
+//        ReflectionTestUtils.setField(orderSheet, "orderNo", 1L);
+        ReflectionTestUtils.setField(orderSheet, "orderTitle", "testOrder");
+//        ReflectionTestUtils.setField(orderSheet, "pointAccumulate", List.of("couponCodeList"));
+
+        return orderSheet;
+    }
+
+    public static MemberInfo getDummyMemberInfo() {
+        String[] longStringArray = new String[] {"1"};
+        String[] stringArray = new String[] {"test"};
+        String[] dateArray = new String[] {"2000, 01, 01"};
+        MemberInfo memberInfo= new MemberInfo();
+
+        ReflectionTestUtils.setField(memberInfo, "memberNo", 1L);
+        ReflectionTestUtils.setField(memberInfo, "gender" , "여자");
+        ReflectionTestUtils.setField(memberInfo, "memberId", "testMemberId");
+        ReflectionTestUtils.setField(memberInfo, "nickname", "testNickname");
+        ReflectionTestUtils.setField(memberInfo, "name", "testName");
+        ReflectionTestUtils.setField(memberInfo, "birthday", LocalDate.of(2000, 2, 9));
+        ReflectionTestUtils.setField(memberInfo, "phoneNo", "01012341234");
+        ReflectionTestUtils.setField(memberInfo, "email", "test@test.com");
+
+        return memberInfo;
+    }
+
+    public static CouponRetrieveResponseFromProduct getDummyCouponRetrieveResponseFromProduct() {
+        CouponRetrieveResponseFromProduct response =
+            new CouponRetrieveResponseFromProduct();
+
+        ReflectionTestUtils.setField(response, "id", 1L);
+        ReflectionTestUtils.setField(response, "name", "이달의 쿠폰");
+        ReflectionTestUtils.setField(response, "typeName", "정액");
+        ReflectionTestUtils.setField(response, "amount", 5000);
+        ReflectionTestUtils.setField(response, "minimumUseAmount", 1000);
+        ReflectionTestUtils.setField(response, "maximumDiscountAmount", 5000);
+        ReflectionTestUtils.setField(response, "isLimited", true);
+        ReflectionTestUtils.setField(response, "couponCode", "testCouponCode");
+        ReflectionTestUtils.setField(response, "categoryNo", 1L);
+        ReflectionTestUtils.setField(response, "productNo", 1L);
+
+        return response;
     }
 }

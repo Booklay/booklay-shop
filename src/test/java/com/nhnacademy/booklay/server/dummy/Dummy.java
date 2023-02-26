@@ -549,20 +549,36 @@ public class Dummy {
         return memberInfo;
     }
 
-    public static CouponRetrieveResponseFromProduct getDummyCouponRetrieveResponseFromProduct() {
+    public static CouponRetrieveResponseFromProduct getDummyCouponRetrieveResponseFromProduct_amount() {
         CouponRetrieveResponseFromProduct response =
             new CouponRetrieveResponseFromProduct();
 
         ReflectionTestUtils.setField(response, "id", 1L);
         ReflectionTestUtils.setField(response, "name", "이달의 쿠폰");
-        ReflectionTestUtils.setField(response, "typeName", "정액");
+        ReflectionTestUtils.setField(response, "typeName", "정액쿠폰");
         ReflectionTestUtils.setField(response, "amount", 5000);
         ReflectionTestUtils.setField(response, "minimumUseAmount", 1000);
         ReflectionTestUtils.setField(response, "maximumDiscountAmount", 5000);
         ReflectionTestUtils.setField(response, "isLimited", true);
         ReflectionTestUtils.setField(response, "couponCode", "testCouponCode");
         ReflectionTestUtils.setField(response, "categoryNo", 1L);
-        ReflectionTestUtils.setField(response, "productNo", 1L);
+
+        return response;
+    }
+
+    public static CouponRetrieveResponseFromProduct getDummyCouponRetrieveResponseFromProduct_percent() {
+        CouponRetrieveResponseFromProduct response =
+            new CouponRetrieveResponseFromProduct();
+
+        ReflectionTestUtils.setField(response, "id", 1L);
+        ReflectionTestUtils.setField(response, "name", "이달의 쿠폰");
+        ReflectionTestUtils.setField(response, "typeName", "정률쿠폰");
+        ReflectionTestUtils.setField(response, "amount", 5000);
+        ReflectionTestUtils.setField(response, "minimumUseAmount", 1000);
+        ReflectionTestUtils.setField(response, "maximumDiscountAmount", 5000);
+        ReflectionTestUtils.setField(response, "isLimited", true);
+        ReflectionTestUtils.setField(response, "couponCode", "testCouponCode");
+        ReflectionTestUtils.setField(response, "categoryNo", 1L);
 
         return response;
     }

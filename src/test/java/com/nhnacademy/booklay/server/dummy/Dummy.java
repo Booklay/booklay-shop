@@ -4,6 +4,8 @@ import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponUsingDto;
 import com.nhnacademy.booklay.server.dto.coupon.response.CouponRetrieveResponseFromProduct;
 import com.nhnacademy.booklay.server.dto.delivery.request.DeliveryDestinationCURequest;
 import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRetrieveResponse;
@@ -503,9 +505,9 @@ public class Dummy {
         OrderSheet orderSheet = new OrderSheet();
 //        ReflectionTestUtils.setField(orderSheet, "couponCodeList", List.of("couponCodeList"));
         ReflectionTestUtils.setField(orderSheet, "cartDtoList", List.of(new CartDto(1L, 1)));
-//        ReflectionTestUtils.setField(orderSheet, "orderProductDtoList", List.of(new OrderProductDto(1L, "test", 1, 1000)));
-//        ReflectionTestUtils.setField(orderSheet, "subscribeProductList", List.of(new SubscribeDto(1L, 1, 1000)));
-//        ReflectionTestUtils.setField(orderSheet, "couponUseRequest", List.of("couponCodeList"));
+        ReflectionTestUtils.setField(orderSheet, "orderProductDtoList", List.of(new OrderProductDto(1L, "test", 1, 1000)));
+        ReflectionTestUtils.setField(orderSheet, "subscribeProductList", List.of(new SubscribeDto(1L, 1, 1000L)));
+        ReflectionTestUtils.setField(orderSheet, "couponUseRequest",Dummy.getDummyCouponUseRequest() );
         ReflectionTestUtils.setField(orderSheet, "productPriceSum", 5000L);
         ReflectionTestUtils.setField(orderSheet, "usingPoint", 1000L);
         ReflectionTestUtils.setField(orderSheet, "deliveryPrice", 3000L);
@@ -581,5 +583,22 @@ public class Dummy {
         ReflectionTestUtils.setField(response, "categoryNo", 1L);
 
         return response;
+    }
+
+    public static CouponUsingDto getDummyCouponUsingDto() {
+        CouponUsingDto couponUsingDto = new CouponUsingDto();
+        ReflectionTestUtils.setField(couponUsingDto, "couponCode", "code");
+        ReflectionTestUtils.setField(couponUsingDto, "specifiedCouponNo", 1L);
+        ReflectionTestUtils.setField(couponUsingDto, "usedTargetNo", 1L);
+
+        return couponUsingDto;
+    }
+
+    public static CouponUseRequest getDummyCouponUseRequest() {
+        CouponUseRequest request = new CouponUseRequest();
+        ReflectionTestUtils.setField(request, "productCouponList", List.of(Dummy.getDummyCouponUsingDto()));
+        ReflectionTestUtils.setField(request, "categoryCouponList", List.of(Dummy.getDummyCouponUsingDto()));
+
+        return request;
     }
 }

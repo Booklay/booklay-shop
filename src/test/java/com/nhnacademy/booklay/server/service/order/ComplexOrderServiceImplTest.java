@@ -13,9 +13,12 @@ import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.dto.coupon.response.CouponRetrieveResponseFromProduct;
 import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.SubscribeDto;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
+import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.entity.Product;
+import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
 import com.nhnacademy.booklay.server.service.RestService;
 import com.nhnacademy.booklay.server.service.category.CategoryProductService;
@@ -26,6 +29,7 @@ import com.nhnacademy.booklay.server.service.product.ProductService;
 import com.nhnacademy.booklay.server.service.product.SubscribeService;
 import com.nhnacademy.booklay.server.utils.ControllerUtil;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,6 +45,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -78,6 +83,7 @@ class ComplexOrderServiceImplTest {
     @Mock
     RedisOrderService redisOrderService;
 
+    @Mock
     ObjectMapper objectMapper;
 
     @Test
@@ -280,18 +286,58 @@ class ComplexOrderServiceImplTest {
         MemberInfo memberInfo = Dummy.getDummyMemberInfo();
         Product product = DummyCart.getDummyProduct(DummyCart.getDummyProductBookDto());
         CouponRetrieveResponseFromProduct response = Dummy.getDummyCouponRetrieveResponseFromProduct_percent();
+        ReflectionTestUtils.setField(orderSheet, "paymentAmount", 17900L);
         ReflectionTestUtils.setField(response, "productNo", 1L);
         ReflectionTestUtils.setField(response, "typeName", "포인트");
         ReflectionTestUtils.setField(product, "id", 1L);
         ReflectionTestUtils.setField(orderSheet, "couponCodeList", List.of("testCouponCode"));
+        Subscribe dummySubscribe =
+            DummyCart.getDummySubscribe(DummyCart.getDummyProductSubscribeDto());
+        ReflectionTestUtils.setField(dummySubscribe, "productNo", 1L);
+
+        MultiValueMap<Long, Long> categoryListMap = new LinkedMultiValueMap<>();
+        categoryListMap.add(1L, 1L);
 
         // when
+
+        when(subscribeService.retrieveSubscribeListByProductNoList(anyList())).thenReturn(List.of(
+            dummySubscribe));
+        when(categoryProductService.retrieveCategoryIdListMultiValueMapByProductIdList(anyList())).thenReturn(categoryListMap);
         when(productService.retrieveProductListByProductNoList(anyList())).thenReturn(List.of(product));
         when(pointHistoryService.retrieveTotalPoint(memberInfo.getMemberNo())).thenReturn(new TotalPointRetrieveResponse(memberInfo.getMemberNo(), 1000));
         when(restService.get(anyString(), (MultiValueMap<String, String>) any(), (ParameterizedTypeReference<Object>) any()))
             .thenReturn(new ApiEntity<>(new ResponseEntity<>(List.of(response), HttpStatus.OK),new HttpClientErrorException(HttpStatus.OK)));
 
         complexOrderService.checkOrder(orderSheet, memberInfo);
+
+        // then
+    }
+
+    @Test
+    @DisplayName("주문서 저장 성공")
+    void saveReceipt() {
+        // given
+        Order order = Dummy.getDummyOrder();
+        OrderSheet orderSheet = Dummy.getDummyOrderSheet();
+        MemberInfo memberInfo = Dummy.getDummyMemberInfo();
+
+        // when
+        when(orderService.saveOrder(any())).thenReturn(order);
+
+        // then
+        complexOrderService.saveReceipt(orderSheet, memberInfo);
+    }
+
+    @Test
+    @DisplayName("주문서 조회 성공")
+    void retrieveOrderReceipt() {
+        // given
+        Long targetId = 1L;
+        Order order = Dummy.getDummyOrder();
+
+        // when
+        when(orderService.retrieveOrder(targetId)).thenReturn(order);
+        complexOrderService.retrieveOrderReceipt(targetId, targetId);
 
         // then
     }

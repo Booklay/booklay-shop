@@ -17,7 +17,7 @@ include::admin/member/admin_member.adoc[]
 
 === product
 include::admin/product/admin_author.adoc[]
-include::admin/product/admin_product.adoc[]
+// include::admin/product/admin_product.adoc[]
 include::admin/product/admin_tag.adoc[]
 
 === category

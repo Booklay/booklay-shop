@@ -24,7 +24,8 @@ import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Review;
 import com.nhnacademy.booklay.server.service.mypage.RestockingNotificationService;
-import com.nhnacademy.booklay.server.service.review.ReviewService;
+import com.nhnacademy.booklay.server.service.review.ReviewServiceImpl;
+import com.nhnacademy.booklay.server.service.review.cache.ReviewResponsePageCacheWrapService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,9 +56,11 @@ import org.springframework.web.context.WebApplicationContext;
 class ReviewControllerTest {
 
   @MockBean
-  ReviewService reviewService;
+  ReviewServiceImpl reviewService;
   @MockBean
   RestockingNotificationService restockingNotificationService;
+  @MockBean
+  ReviewResponsePageCacheWrapService reviewResponsePageCacheWrapService;
   @Autowired
   ReviewController reviewController;
   @Autowired
@@ -143,7 +146,9 @@ class ReviewControllerTest {
   void retrieveReviewByProductId_bodyNonNull() throws Exception {
 
     Pageable pageable = PageRequest.of(0, 20);
-    when(reviewService.retrieveReviewListByProductId(productId, pageable)).thenReturn(
+//    when(reviewService.retrieveReviewListByProductId(productId, pageable)).thenReturn(
+//        searchResponse);
+    when(reviewResponsePageCacheWrapService.cacheRetrievePostResponsePage(productId, pageable)).thenReturn(
         searchResponse);
 
     mockMvc.perform(get(URI_PRE_FIX + "/products/" + productId)
@@ -152,7 +157,8 @@ class ReviewControllerTest {
         .andDo(print())
         .andReturn();
 
-    then(reviewService).should(times(1)).retrieveReviewListByProductId(any(), any());
+//    then(reviewService).should(times(1)).retrieveReviewListByProductId(any(), any());
+    then(reviewResponsePageCacheWrapService).should(times(1)).cacheRetrievePostResponsePage(any(), any());
   }
 
   @Test

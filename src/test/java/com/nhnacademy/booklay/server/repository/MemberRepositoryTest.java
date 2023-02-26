@@ -9,6 +9,7 @@ import com.nhnacademy.booklay.server.repository.member.BlockedMemberDetailReposi
 import com.nhnacademy.booklay.server.repository.member.MemberRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.apache.kafka.test.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -132,6 +133,55 @@ class MemberRepositoryTest {
 
         //then
         assertThat(expected).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("MemberRepository retrieveValidMemberCount() 성공 테스트")
+    void testRetrieveValidMemberCount() throws Exception {
+        //given
+        Member member = Dummy.getDummyMember();
+        TestUtils.setFieldValue(member, "isBlocked", false);
+        TestUtils.setFieldValue(member, "deletedAt", null);
+        entityManager.persist(member.getGender());
+        memberRepository.save(member);
+
+        //when
+        Long expected = memberRepository.retrieveValidMemberCount();
+
+        //then
+        assertThat(expected).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("MemberRepository retrieveBlockedMemberCount() 성공 테스트")
+    void testRetrieveBlockedMemberCount() throws Exception {
+        //given
+        Member member = Dummy.getDummyMember();
+        TestUtils.setFieldValue(member, "isBlocked", true);
+        entityManager.persist(member.getGender());
+        memberRepository.save(member);
+
+        //when
+        Long expected = memberRepository.retrieveBlockedMemberCount();
+
+        //then
+        assertThat(expected).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("MemberRepository retrieveDroppedMemberCount() 성공 테스트")
+    void testRetrieveDroppedMemberCount() throws Exception {
+        //given
+        Member member = Dummy.getDummyMember();
+        TestUtils.setFieldValue(member, "deletedAt", LocalDateTime.now());
+        entityManager.persist(member.getGender());
+        memberRepository.save(member);
+
+        //when
+        Long expected = memberRepository.retrieveDroppedMemberCount();
+
+        //then
+        assertThat(expected).isEqualTo(1);
     }
 
 

@@ -1,12 +1,12 @@
 package com.nhnacademy.booklay.server.service.product.impl;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
+import com.nhnacademy.booklay.server.dto.cart.CartDto;
 import com.nhnacademy.booklay.server.dto.product.author.response.RetrieveAuthorResponse;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductSubscribeRequest;
@@ -24,6 +24,7 @@ import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.ProductAuthor;
 import com.nhnacademy.booklay.server.entity.ProductDetail;
 import com.nhnacademy.booklay.server.entity.Subscribe;
+import com.nhnacademy.booklay.server.exception.service.NotEnoughStockException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
 import com.nhnacademy.booklay.server.repository.product.AuthorRepository;
 import com.nhnacademy.booklay.server.repository.product.BookSubscribeRepository;
@@ -33,6 +34,7 @@ import com.nhnacademy.booklay.server.repository.product.ProductDetailRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductRepository;
 import com.nhnacademy.booklay.server.repository.product.ProductTagRepository;
 import com.nhnacademy.booklay.server.repository.product.SubscribeRepository;
+import com.nhnacademy.booklay.server.service.RedisCacheService;
 import com.nhnacademy.booklay.server.service.storage.impl.FileServiceImpl;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -63,6 +66,8 @@ class ProductServiceImplTest {
 
   @InjectMocks
   private ProductServiceImpl productService;
+  @Mock
+  RedisCacheService redisCacheService;
 
   @Mock
   private ProductRepository productRepository;
@@ -401,18 +406,20 @@ class ProductServiceImplTest {
 
 
   @Test
-  void getAllProducts(){
+  void getAllProducts() {
 
-    given(productRepository.findAllByIsDeletedOrderByCreatedAtDesc(false, PageRequest.of(0,16))).willReturn(Page.empty());
+    given(productRepository.findAllByIsDeletedOrderByCreatedAtDesc(false,
+        PageRequest.of(0, 16))).willReturn(Page.empty());
 
-    productService.getAllProducts(PageRequest.of(0,16));
+    productService.getAllProducts(PageRequest.of(0, 16));
 
-    then(productRepository).should(times(1)).findAllByIsDeletedOrderByCreatedAtDesc(false, PageRequest.of(0,16));
+    then(productRepository).should(times(1))
+        .findAllByIsDeletedOrderByCreatedAtDesc(false, PageRequest.of(0, 16));
 
   }
 
   @Test
-  void getLatestEights(){
+  void getLatestEights() {
 
     given(productRepository.findTop8ByIsDeletedOrderByCreatedAtDesc(false))
         .willReturn(List.of());
@@ -425,17 +432,74 @@ class ProductServiceImplTest {
   }
 
   @Test
-  void retrieveProductByRequest(){
+  void retrieveProductByRequest() {
 
     SearchIdRequest searchIdRequest = new SearchIdRequest();
 
     ReflectionTestUtils.setField(searchIdRequest, "classification", "categories");
     ReflectionTestUtils.setField(searchIdRequest, "id", 101001L);
 
-    productService.retrieveProductByRequest(searchIdRequest, PageRequest.of(0,16));
+    productService.retrieveProductByRequest(searchIdRequest, PageRequest.of(0, 16));
 
     then(productRepository).shouldHaveNoInteractions();
 
+  }
+
+
+  @Test
+  @DisplayName("상품 Id 목록으로 상품 조회")
+  void retrieveProductListByProductNoList() {
+    productService.retrieveProductListByProductNoList(List.of());
+
+    BDDMockito.then(productRepository).should().findAllById(List.of());
+  }
+
+  @Test
+  @DisplayName("상품 아이디 리스트 받아서 페이지네이션")
+  void getProductsPage() {
+    Pageable pageable = PageRequest.of(0, 20);
+    productService.getProductsPage(pageable);
+
+    BDDMockito.then(productRepository).should().retrieveProductsInPage(pageable);
+
+  }
+
+  @Test
+  @DisplayName("상품 번호로 상세 조회")
+  void findProductById() {
+    Long productId = 1L;
+    productService.findProductById(productId);
+
+    BDDMockito.then(productRepository).should().retrieveProductById(productId);
+  }
+
+  @Test
+  @DisplayName("구매시 재고 처리 성공")
+  void storageSoldOutChecker() throws NotEnoughStockException {
+    List<CartDto> cartDtoList = new ArrayList<>();
+    cartDtoList.add(new CartDto(1L, 1));
+    for (CartDto cartDto : cartDtoList) {
+      given(productDetailRepository.updateProductStock(cartDto.getProductNo(),
+          (long) cartDto.getCount())).willReturn(1);
+    }
+
+    boolean result = productService.storageSoldOutChecker(cartDtoList);
+
+    assertThat(result).isTrue();
+  }
+
+@Test
+@DisplayName("결제 취소 시 재고 반환")
+  void storageRefund() throws NotEnoughStockException {
+  List<CartDto> cartDtoList = new ArrayList<>();
+  cartDtoList.add(new CartDto(1L, 1));
+    for (CartDto cartDto : cartDtoList) {
+      given(productDetailRepository.addProductStock(cartDto.getProductNo(),
+          (long) cartDto.getCount())).willReturn(1);
+    }
+  boolean result = productService.storageRefund(cartDtoList);
+
+  assertThat(result).isTrue();
   }
 
 }

@@ -5,6 +5,7 @@ import com.nhnacademy.booklay.server.dto.review.response.RetrieveReviewResponse;
 import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.service.review.ReviewService;
+import com.nhnacademy.booklay.server.service.review.cache.ReviewResponsePageCacheWrapService;
 import java.util.Objects;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/reviews")
 public class ReviewController {
 
-
+    private final ReviewResponsePageCacheWrapService reviewResponsePageCacheWrapService;
     private final ReviewService reviewService;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewResponsePageCacheWrapService reviewResponsePageCacheWrapService,
+                            ReviewService reviewService) {
+        this.reviewResponsePageCacheWrapService = reviewResponsePageCacheWrapService;
         this.reviewService = reviewService;
     }
 
@@ -46,7 +49,7 @@ public class ReviewController {
     public ResponseEntity<SearchPageResponse<RetrieveReviewResponse>> retrieveReviewByProductId(@PathVariable Long productId, Pageable pageable) {
 
         SearchPageResponse<RetrieveReviewResponse> response =
-                reviewService.retrieveReviewListByProductId(productId, pageable);
+                reviewResponsePageCacheWrapService.cacheRetrievePostResponsePage(productId, pageable);
 
         return Objects.isNull(response)
             ? ResponseEntity.status(HttpStatus.OK).build()

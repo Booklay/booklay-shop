@@ -2,12 +2,14 @@ package com.nhnacademy.booklay.server.service.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 
+import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
@@ -20,6 +22,7 @@ import com.nhnacademy.booklay.server.entity.Gender;
 import com.nhnacademy.booklay.server.entity.Member;
 import com.nhnacademy.booklay.server.entity.MemberAuthority;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
+import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
 import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.repository.AuthorityRepository;
@@ -450,5 +453,74 @@ class MemberServiceImplTest {
 
         //then
         BDDMockito.then(memberRepository).should().existsByEmail(member.getEmail());
+    }
+
+    @Test
+    @DisplayName("회원 권한 생성 성공 테스트")
+    void createMemberAuthority() {
+        //given
+        MemberAuthorityUpdateRequest request = Dummy.getDummyMemberAuthorityUpdateRequest();
+        given(authorityRepository.findByName(any())).willReturn(
+            Optional.ofNullable(Dummy.getDummyAuthorityAsMember()));
+        given(memberAuthorityRepository.existsById(any())).willReturn(true);
+        given(authorityRepository.findByName(anyString())).willReturn(
+            Optional.ofNullable(Dummy.getDummyAuthorityAsAdmin()));
+        given(authorityRepository.findByName(anyString())).willReturn(
+            Optional.ofNullable(Dummy.getDummyAuthorityAsMember()));
+
+        //when
+
+
+        //then
+        assertThrows(AdminAndAuthorAuthorityCannotExistTogetherException.class, ()-> {
+            memberService.createMemberAuthority(member.getMemberNo(), request);
+        });
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 처리 성공 테스트")
+    void createBlockMember() {
+        //given
+        Long targetId = 1L;
+        given(getMemberService.getMemberNo(targetId)).willReturn(Dummy.getDummyMember());
+
+        //when
+        memberService.createBlockMember(targetId, Dummy.getDummyMemberBlockRequest());
+
+        //then
+        BDDMockito.then(blockedMemberDetailRepository).should().save(any());
+    }
+
+    @Test
+    @DisplayName("마이페이지 회원 정보 마스킹으로 조회.")
+    void retrieveMemberMain() {
+        //given
+        Long targetId = 1L;
+        given(getMemberService.getValidMemberByMemberNo(targetId)).willReturn(Dummy.getDummyMember());
+        given(memberGradeRepository.retrieveCurrentMemberGrade(targetId)).willReturn(
+            Optional.ofNullable(Dummy.getDummyMemberGrade()));
+        given(pointHistoryRepository.retrieveLatestPointHistory(targetId)).willReturn(
+            Optional.ofNullable(Dummy.getDummyTotalPointRetrieveResponse()));
+
+        //when
+        memberService.retrieveMemberMain(targetId);
+
+        //then
+        BDDMockito.then(pointHistoryRepository).should().retrieveLatestPointHistory(any());
+    }
+
+    @Test
+    @DisplayName("차단 회원 취소 성공 테스트.")
+    void blockMemberCancel() {
+        //given
+        Long targetId = 1L;
+        given(blockedMemberDetailRepository.findById(targetId)).willReturn(
+            Optional.ofNullable(Dummy.getDummyBlockedMemberDetail()));
+
+        //when
+        memberService.blockMemberCancel(targetId);
+
+        //then
+        BDDMockito.then(blockedMemberDetailRepository).should().findById(any());
     }
 }

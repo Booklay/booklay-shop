@@ -47,22 +47,25 @@ public class MemberAspect {
         log.info("Method: {}", pjp.getSignature().getName());
         HttpServletRequest request =
             ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        MemberInfo memberInfo;
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authorization != null){
+            String email = tokenUtils.getEmail(authorization.substring("Bearer ".length()));
+            MemberRetrieveResponse memberRetrieveResponse =
+                    memberService.retrieveMemberInfoByEmail(email).orElse(null);
+            memberInfo = memberRetrieveResponse == null ? new MemberInfo() :
+                    new MemberInfo(memberRetrieveResponse);
+        }else {
+            memberInfo = new MemberInfo();
+        }
 
-        String email = tokenUtils.getEmail(
-            request.getHeader(HttpHeaders.AUTHORIZATION).substring("Bearer " .length()));
-        MemberRetrieveResponse memberRetrieveResponse =
-            memberService.retrieveMemberInfoByEmail(email).orElse(null);
-
-        MemberInfo memberInfo = memberRetrieveResponse == null ? new MemberInfo() :
-            new MemberInfo(memberRetrieveResponse);
-
+        MemberInfo finalMemberInfo = memberInfo;
         Object[] args = Arrays.stream(pjp.getArgs()).map(arg -> {
             if (arg instanceof MemberInfo) {
-                arg = memberInfo;
+                arg = finalMemberInfo;
             }
             return arg;
         }).toArray();
-
 
         return pjp.proceed(args);
     }

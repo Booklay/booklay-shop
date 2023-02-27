@@ -75,7 +75,7 @@ jobs:
           path: "${{ github.workspace }}/target/"
 
       - name : upload file
-      - if: ${{ always() }}
+        if: ${{ always() }}
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_IP }}
@@ -144,7 +144,7 @@ jobs:
           path: "${{ github.workspace }}/target/"
 
       - name: upload file
-      - if: ${{ always() }}
+        if: ${{ always() }}
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_IP_2 }}

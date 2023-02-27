@@ -53,18 +53,17 @@ public abstract class CacheServiceExtend<T> {
     @Scheduled(cron = "0/1 * * * * *")
     private void addProductAllInOneInMap(){
         if (!tempList.isEmpty()){
-            synchronized (tempList){
-                while (!tempList.isEmpty()){
-                    ObjectWrapDto<T> wrapDto = tempList.get(0);
-                    tempList.remove(0);
-                    setWrapDtoToLast(wrapDto);
+            while (!tempList.isEmpty()){
+
+                ObjectWrapDto<T> wrapDto = tempList.get(0);
+                tempList.remove(0);
+                setWrapDtoToLast(wrapDto);
+                if(wrapDtoMap.size() > MAX_CACHE_NUM){
+                    ObjectWrapDto<T> removeTarget = first;
+                    wrapDtoMap.remove(removeTarget.getKey());
+                    first.getNext().setPrevious(null);
+                    first = first.getNext();
                 }
-            }
-            while(wrapDtoMap.size() > MAX_CACHE_NUM){
-                ObjectWrapDto<T> removeTarget = first;
-                wrapDtoMap.remove(removeTarget.getKey());
-                first.getNext().setPrevious(null);
-                first = first.getNext();
             }
         }
     }

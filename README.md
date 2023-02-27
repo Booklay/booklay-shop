@@ -56,17 +56,37 @@ https://www.booklay.shop/
       - 댓글 작성 불가
   - 계층형 게시판
 
+### Dev Ops
+- 담당자 : 이성준
+- 사용기술 : Eureka, Jenkins, Github Action, NHN Cloud
+- 주요 기능
+  - 유래카 health check
+  - Jenkins, Github Action
+  - NHN Cloud의 Log & Crash
+  - 무중단 배포
+  
 ### 검색
 
 - 담당자 : 이성준
 - 사용 기술 : 엘라스틱 서치
 - 주요기능
-    - 키워드, 제목, 작가명, 카테고리 단어 검색
+    - 검색
+      - 키워드, 제목, 작가명, 카테고리 단어 검색
+    - 카테고리
+      - 생성, 수정, 조회
+      - 2단계 depth 구조
+      - 상품당 최대 3개 등록 가능
 
-### 카테고리
+
+### Dev Ops
 - 담당자 : 이성준
-- 카테고리 생성, 수정, 조회
-  부모 카테고리, 자식 카테고리로 이뤄진 2단계 Depth 구조
+- 사용기술 : Eureka, Jenkins, Github Action, NHN Cloud
+- 주요 기능
+  - 유래카 health check
+  - Jenkins, Github Action
+  - NHN Cloud의 Log & Crash
+  - 무중단 배포
+
 
 ### 인증
 
@@ -125,8 +145,12 @@ https://www.booklay.shop/
 - 주요기능
     - 카트
       - 비회원 주문 가능하도록 redis 사용
+      - 상품 수량 조절
+      - 결제 대상 상품 선택
     - 결제
       - 쿠폰 / 포인트 적용 가능
+      - Toss API 사용
+      - 기본 배송지 적용
       
 ### 캐시
 

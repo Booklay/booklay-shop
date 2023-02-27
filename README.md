@@ -125,7 +125,6 @@ https://www.booklay.shop/
 - 주요기능
     - 카트
       - 비회원 주문 가능하도록 redis 사용
-      - RDB(MySql) 마이그래이션 지원
     - 결제
       - 쿠폰 / 포인트 적용 가능
       

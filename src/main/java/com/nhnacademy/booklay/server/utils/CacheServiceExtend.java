@@ -19,7 +19,7 @@ public abstract class CacheServiceExtend<T> {
     //맵에 넣기 위한 대기열
     protected final List<ObjectWrapDto<T> >tempList = Collections.synchronizedList(new LinkedList<>());
     private static final int MAX_CACHE_NUM = 200;
-    private final String keyName;
+    public final String keyName;
 
     @Scheduled(fixedRate = 100)
     public void updateCheck(){

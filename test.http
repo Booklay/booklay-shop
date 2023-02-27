@@ -1,0 +1,11 @@
+GET /order/products?productNoList=9&productNoList=19
+Host: localhost:9090
+###
+GET /admin/coupons/product/13?page=0&memberNo=1&isDuplicable=false
+Host: localhost:8090
+###
+GET /test
+Host: localhost:9090
+###
+GET /test/cache
+Host: localhost:9090

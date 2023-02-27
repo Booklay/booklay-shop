@@ -32,14 +32,21 @@ public abstract class CacheServiceExtend<T> {
 
     private void deleteFromMap(Long productId){
         ObjectWrapDto<T> wrapDto = wrapDtoMap.get(productId);
+        if (wrapDto == null){
+            return;
+        }
         wrapDtoMap.remove(productId);
-        wrapDto.getPrevious().setNext(wrapDto.getNext());
-        wrapDto.getNext().setPrevious(wrapDto.getPrevious());
+        if (wrapDto.getPrevious()!=null){
+            wrapDto.getPrevious().setNext(wrapDto.getNext());
+        }
+        if (wrapDto.getNext()!=null){
+            wrapDto.getNext().setPrevious(wrapDto.getPrevious());
+        }
         if (wrapDto==last){
-            last = null;
+            last = wrapDto.getPrevious();
         }
         if (wrapDto==first){
-            first = null;
+            first = wrapDto.getNext();
         }
     }
 

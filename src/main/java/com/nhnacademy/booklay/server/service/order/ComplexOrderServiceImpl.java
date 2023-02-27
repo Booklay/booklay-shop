@@ -182,7 +182,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
 
     private Long getDiscountAmount(CouponRetrieveResponseFromProduct coupon, Long price) {
         if (coupon.getTypeName().equals("정률쿠폰")) {
-            Long amount = coupon.getAmount() * price / 100;
+            long amount = coupon.getAmount() * price / 100;
             return amount > coupon.getMaximumDiscountAmount()?coupon.getMaximumDiscountAmount():amount;
         } else if (coupon.getTypeName().equals("정액쿠폰")) {
             return Integer.toUnsignedLong(coupon.getAmount());
@@ -325,8 +325,11 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         //쿠폰 사용전송
         String couponUsingUrl = gatewayIp + "/coupon/v1/coupons/using";
         CouponUseRequest couponUseRequest = orderSheet.getCouponUseRequest();
-        couponUseRequest.getCategoryCouponList().forEach(couponUsingDto -> couponUsingDto.setUsedTargetNo(order.getId()));
-        restService.post(couponUsingUrl, objectMapper.convertValue(orderSheet.getCouponUseRequest(), Map.class), void.class);
+        if (!couponUseRequest.getCategoryCouponList().isEmpty() ||
+                !couponUseRequest.getProductCouponList().isEmpty()){
+            couponUseRequest.getCategoryCouponList().forEach(couponUsingDto -> couponUsingDto.setUsedTargetNo(order.getId()));
+            restService.post(couponUsingUrl, objectMapper.convertValue(orderSheet.getCouponUseRequest(), Map.class), void.class);
+        }
         orderSheet.setOrderNo(order.getId());
         redisOrderService.saveOrderSheet(orderSheet);
         return order;

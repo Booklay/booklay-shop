@@ -75,7 +75,7 @@ class CommentServiceImplTest {
 
   @Test
   @DisplayName("댓글 페이지로 조회")
-  public void testRetrieveCommentPage() {
+  void testRetrieveCommentPage() {
     // Given
     Long postId = 1L;
     Pageable pageable = PageRequest.of(0, 10);

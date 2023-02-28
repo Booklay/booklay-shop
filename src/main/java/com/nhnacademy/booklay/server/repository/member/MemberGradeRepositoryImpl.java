@@ -1,6 +1,5 @@
 package com.nhnacademy.booklay.server.repository.member;
 
-import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.entity.QMember;
@@ -66,15 +65,4 @@ public class MemberGradeRepositoryImpl extends QuerydslRepositorySupport
 
         return Optional.ofNullable(grade);
     }
-
-//    @Override
-//    public Optional<MemberGradeChartRetrieveResponse> retrieveMemberGradeChart() {
-//        QMemberGrade memberGrade = QMemberGrade.memberGrade;
-//
-//        MemberGradeChartRetrieveResponse memberGradeChartRetrieveResponse
-//            = from(memberGrade)
-//            .where(Expressions.currentDate().before(memberGrade.date))
-//
-//        return null;
-//    }
 }

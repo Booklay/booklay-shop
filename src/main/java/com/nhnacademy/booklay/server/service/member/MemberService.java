@@ -61,8 +61,6 @@ public interface MemberService {
 
     MemberChartRetrieveResponse retrieveMemberChart();
 
-//    MemberGradeChartRetrieveResponse retrieveMemberGradeChart();
-
     MemberMainRetrieveResponse retrieveMemberMain(Long memberNo);
 
     boolean checkMemberId(String memberId);

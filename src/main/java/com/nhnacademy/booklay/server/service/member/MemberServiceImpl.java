@@ -257,13 +257,6 @@ public class MemberServiceImpl implements MemberService {
             .build();
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-//        return memberGradeRepository.retrieveMemberGradeChart()
-//            .orElseThrow(() -> new IllegalArgumentException());
-//    }
-
     /**
      * myPage main을 위한 메소드
      * 개인정보 마스킹처리

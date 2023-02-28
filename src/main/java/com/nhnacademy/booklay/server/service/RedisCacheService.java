@@ -67,7 +67,7 @@ public class RedisCacheService {
         if (hashSet.isEmpty()){
             return;
         }
-        updateHash.delete(deleteKey, hashSet);
+        updateHash.delete(deleteKey, hashSet.toArray());
     }
 
     /**

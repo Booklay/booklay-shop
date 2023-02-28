@@ -26,9 +26,9 @@
             **/*.java
         </sonar.issue.ignore.multicriteria.e1.resourceKey>
         <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S107</sonar.issue.ignore.multicriteria.e2.ruleKey>
-        <sonar.issue.ignore.multicriteria.e1.resourceKey>
+        <sonar.issue.ignore.multicriteria.e2.resourceKey>
             **/*.java
-        </sonar.issue.ignore.multicriteria.e1.resourceKey>
+        </sonar.issue.ignore.multicriteria.e2.resourceKey>
 
         <sonar.exclusions>**/Q*.java</sonar.exclusions>
         <sonar.exclusions>**/aspect/**</sonar.exclusions>

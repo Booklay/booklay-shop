@@ -1,5 +1,6 @@
 package com.nhnacademy.booklay.server.controller.admin.category;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -24,6 +25,7 @@ import com.nhnacademy.booklay.server.dto.category.request.CategoryUpdateRequest;
 import com.nhnacademy.booklay.server.dto.category.response.CategoryResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Category;
+import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.service.category.CategoryService;
 import java.util.ArrayList;
@@ -68,6 +70,7 @@ class CategoryAdminControllerTest {
 
     private static final String IDENTIFIER = "admin/categories";
     private static final String URI_PREFIX = "/" + IDENTIFIER;
+    private static final String NOT_FOUND_MESSAGE = "존재하지 않는 카테고리 ID에 대한 요청입니다.";
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext,
@@ -131,6 +134,40 @@ class CategoryAdminControllerTest {
 
         then(categoryService).should(times(1)).retrieveCategory(101L);
 
+    }
+
+    @Test
+    @DisplayName("카테고리 등록 실패: Category NotFoundException")
+    void testRegisterCategory_failedCategoryNotFound() throws Exception {
+        //when
+        doThrow(new NotFoundException(Category.class, NOT_FOUND_MESSAGE)).when(categoryService).createCategory(any());
+
+        //then
+        mockMvc.perform(post(URI_PREFIX)
+                .content(objectMapper.writeValueAsString(createDto))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotAcceptable())
+            .andDo(print())
+            .andReturn();
+
+        then(categoryService).should(times(1)).createCategory(any());
+    }
+
+    @Test
+    @DisplayName("카테고리 등록 실패: Category AlreadyExistedException")
+    void testRegisterCategory_failedCategoryAlreadyExistedException() throws Exception {
+        //when
+        doThrow(new AlreadyExistedException(Category.class, NOT_FOUND_MESSAGE)).when(categoryService).createCategory(any());
+
+        //then
+        mockMvc.perform(post(URI_PREFIX)
+                .content(objectMapper.writeValueAsString(createDto))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andDo(print())
+            .andReturn();
+
+        then(categoryService).should(times(1)).createCategory(any());
     }
 
     @Test
@@ -212,23 +249,22 @@ class CategoryAdminControllerTest {
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
-
     }
 
-    //    @Test
+    @Test
     @DisplayName("카테고리 수정 실패, 입력값 오류")
     void testUpdateCategory_ifUpdateRequestIncludeNullOrBlank_throwsValidationFailedException()
         throws Exception {
         //given
-        CategoryUpdateRequest emptyRequest = new CategoryUpdateRequest();
 
         //when
+        doThrow(NotFoundException.class).when(categoryService).updateCategory(any(), any());
 
         //then
         mockMvc.perform(put(URI_PREFIX + "/" + category.getId())
-                .content(objectMapper.writeValueAsString(emptyRequest))
+                .content(objectMapper.writeValueAsString(createDto))
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotAcceptable())
             .andDo(print())
             .andReturn();
     }

@@ -4,17 +4,11 @@ import com.nhnacademy.booklay.server.dto.ErrorResponse;
 import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
-import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.member.response.*;
 import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,14 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author 양승아
@@ -197,15 +186,6 @@ public class MemberAdminController {
         return memberService.retrieveMemberChart();
     }
 
-//    /**
-//     * 관리자의 회원 등급 통계를 위한 데이터 조회 메소드
-//     *
-//     * @return
-//     */
-//    @GetMapping("/grade/chart")
-//    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-//        return memberService.retrieveMemberGradeChart();
-//    }
 
     /**
      * 관리자의 회원 등급 생성 메소드

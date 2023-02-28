@@ -1,10 +1,10 @@
 package com.nhnacademy.booklay.server.dto.board.response;
 
 import com.nhnacademy.booklay.server.entity.Comment;
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

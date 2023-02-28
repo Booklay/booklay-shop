@@ -25,7 +25,7 @@
         <sonar.issue.ignore.multicriteria.e1.resourceKey>
             **/*.java
         </sonar.issue.ignore.multicriteria.e1.resourceKey>
-        <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S6212</sonar.issue.ignore.multicriteria.e2.ruleKey>
+        <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S107</sonar.issue.ignore.multicriteria.e2.ruleKey>
         <sonar.issue.ignore.multicriteria.e1.resourceKey>
             **/*.java
         </sonar.issue.ignore.multicriteria.e1.resourceKey>

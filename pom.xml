@@ -20,11 +20,17 @@
         <spring-cloud.version>2021.0.5</spring-cloud.version>
 
         <!-- SonarQube -->
-        <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
+        <sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
         <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S6212</sonar.issue.ignore.multicriteria.e1.ruleKey>
         <sonar.issue.ignore.multicriteria.e1.resourceKey>
             **/*.java
         </sonar.issue.ignore.multicriteria.e1.resourceKey>
+
+        <sonar.issue.ignore.multicriteria.e2.ruleKey>squid:S107</sonar.issue.ignore.multicriteria.e2.ruleKey>
+        <sonar.issue.ignore.multicriteria.e2.resourceKey>
+            **/*.java
+        </sonar.issue.ignore.multicriteria.e2.resourceKey>
+
 
         <sonar.exclusions>**/Q*.java</sonar.exclusions>
         <sonar.exclusions>**/aspect/**</sonar.exclusions>

@@ -8,7 +8,6 @@ import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveRe
 import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;

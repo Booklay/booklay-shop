@@ -1,7 +1,10 @@
 package com.nhnacademy.booklay.server.service.mypage;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
@@ -125,6 +128,8 @@ class PointHistoryServiceImplTest {
         pointHistoryService.presentPoint(member.getMemberNo(), pointPresentRequest);
 
         //then
+        then(pointHistoryRepository).should(times(2)).retrieveLatestPointHistory(any());
+
     }
 
 }

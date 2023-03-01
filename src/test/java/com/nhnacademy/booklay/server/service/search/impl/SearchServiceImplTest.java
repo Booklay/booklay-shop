@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -88,6 +89,22 @@ class SearchServiceImplTest {
         SearchPageResponse<SearchProductResponse> pageResponse = searchService.getAllProducts(Pageable.ofSize(20));
 
         assertThat(pageResponse.getData()).isNotNull();
+    }
+
+    @Test
+    void getLatestProducts() {
+
+        // given
+        SearchHits<ProductDocument>
+            productDocumentSearchHits = new SearchHitsImpl<>(1L, TotalHitsRelation.OFF,1L, null, List.of(), null,null);
+
+        given(operations.search(any(Query.class), eq(ProductDocument.class)))
+            .willReturn(productDocumentSearchHits);
+
+        // when
+        searchService.getLatestProducts();
+
+        BDDMockito.then(operations).should().search((Query) any(), any());
     }
 
     @Test

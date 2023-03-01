@@ -39,7 +39,7 @@ public class DeliveryDestinationServiceImpl implements DeliveryDestinationServic
         Optional<DeliveryDestination> deliveryDestinationOp =
             deliveryDestinationRepository.findByIsDefaultDestinationAndMember_MemberNo(true,
                 memberNo);
-        if (deliveryDestinationOp.isPresent() && isDefaultDestination) {
+        if (deliveryDestinationOp.isPresent() && Boolean.TRUE.equals(isDefaultDestination)) {
             deliveryDestinationOp.get().setIsDefaultDestination(false);
         }
     }

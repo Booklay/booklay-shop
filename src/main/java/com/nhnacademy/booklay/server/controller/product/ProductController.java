@@ -87,7 +87,6 @@ public class ProductController {
   public ResponseEntity<List<RetrieveProductResponse>> retrieveRecommendProducts(
       @PathVariable Long productId)
       throws IOException {
-//    List<RetrieveProductResponse> result = productRelationService.retrieveRecommendProducts(productId);
 
     List<RetrieveProductResponse> result =
             complexProductCacheService.cacheRetrieveRecommendProducts(productId);
@@ -116,7 +115,6 @@ public class ProductController {
   @GetMapping("/latest")
   public ResponseEntity<List<SearchProductResponse>> getLatestProduct() throws IOException {
 
-//    List<SearchProductResponse> pageResponse = productService.getLatestEights();
     List<SearchProductResponse> pageResponse = complexProductCacheService.cacheRetrieveLatestProduct();
 
     return ResponseEntity.status(HttpStatus.OK)

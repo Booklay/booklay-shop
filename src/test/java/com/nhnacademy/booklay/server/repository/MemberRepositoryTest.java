@@ -132,7 +132,7 @@ class MemberRepositoryTest {
         boolean expected = memberRepository.existsByMemberId(member.getMemberId());
 
         //then
-        assertThat(expected).isEqualTo(true);
+        assertThat(expected).isTrue();
     }
 
     @Test

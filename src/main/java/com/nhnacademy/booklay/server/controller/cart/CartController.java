@@ -28,7 +28,7 @@ public class CartController {
     private static final String STRING_CART_ID = "cartId";
     private static final String STRING_PRODUCT_NO = "productNo";
     private static final String STRING_PRODUCT_NO_LIST = "productNoList";
-    //todo 품절체크
+
     @GetMapping
     public ResponseEntity<List<CartRetrieveResponse>> getCart(
         MemberInfo memberInfo,

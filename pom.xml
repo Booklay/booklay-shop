@@ -326,9 +326,6 @@
                         <configuration>
                             <backend>html</backend>
                             <doctype>book</doctype>
-                            <!-- 생성 된 Snippet 과 연결된 .adoc 을 빌드 했을 때 만들어지는 HTML 파일의 위치 설정 -->
-<!--                                <sourceDirectory>src/main/resources/static/docs/asciidoc</sourceDirectory>-->
-<!--                                <outputDirectory>src/main/resources/static/html</outputDirectory>-->
                         </configuration>
                     </execution>
                 </executions>

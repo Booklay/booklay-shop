@@ -1,7 +1,9 @@
 package com.nhnacademy.booklay.server.controller.admin.member;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -26,6 +28,8 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResp
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -330,5 +334,44 @@ class MemberAdminControllerTest {
 
         //then
         then(memberService).should(times(1)).blockMemberCancel(any());
+    }
+
+    @Test
+    @DisplayName("차단회원 해제 시 이미 차단 해제 회원")
+    void testMemberBlockCancel_alreadyUnblockedMember() throws Exception {
+        //given
+        doThrow(AlreadyUnblockedMemberException.class).when(memberService).blockMemberCancel(any());
+
+        //when
+        mockMvc.perform(post(URI_PREFIX + "/block/cancel/" + member.getMemberNo())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andReturn();
+
+        //then
+        assertThrows(AlreadyUnblockedMemberException.class, () -> {
+           memberService.blockMemberCancel(any());
+        });
+    }
+
+    @Test
+    @DisplayName("회원 차단시 이미 차단된 회원")
+    void testMemberBlockCancel_alreadyBlockedMember() throws Exception {
+        //given
+        doThrow(AlreadyBlockedMemberException.class).when(memberService).createBlockMember(any(), any());
+        MemberBlockRequest request = Dummy.getDummyMemberBlockRequest();
+        //when
+        mockMvc.perform(post(URI_PREFIX + "/block/" + member.getMemberNo())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andReturn();
+
+        //then
+        assertThrows(AlreadyBlockedMemberException.class, () -> {
+            memberService.createBlockMember(any(), any());
+        });
     }
 }

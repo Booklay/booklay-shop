@@ -66,6 +66,4 @@ public class MemberGradeRepositoryImpl extends QuerydslRepositorySupport
 
         return Optional.ofNullable(grade);
     }
-
-
 }

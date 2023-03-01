@@ -6,7 +6,6 @@ import com.nhnacademy.booklay.server.dto.member.request.MemberAuthorityUpdateReq
 import com.nhnacademy.booklay.server.dto.member.request.MemberBlockRequest;
 import com.nhnacademy.booklay.server.dto.member.response.*;
 import com.nhnacademy.booklay.server.exception.member.AlreadyBlockedMemberException;
-import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
 import com.nhnacademy.booklay.server.exception.member.AlreadyUnblockedMemberException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -186,7 +185,6 @@ public class MemberAdminController {
         return memberService.retrieveMemberChart();
     }
 
-
     /**
      * 관리자의 회원 등급 생성 메소드
      *
@@ -232,7 +230,7 @@ public class MemberAdminController {
 
     @ExceptionHandler(AlreadyUnblockedMemberException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyUnblockedMemberException(
-        AlreadyExistAuthorityException ex) {
+        AlreadyUnblockedMemberException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder().code(ALREADY_UNBLOCKED_MEMBER_ERROR_CODE)
                 .message(ex.getMessage()).build());
@@ -240,7 +238,7 @@ public class MemberAdminController {
 
     @ExceptionHandler(AlreadyBlockedMemberException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyBlockedMemberException(
-        AlreadyExistAuthorityException ex) {
+        AlreadyBlockedMemberException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse.builder().code(ALREADY_BLOCKED_MEMBER_ERROR_CODE)
                 .message(ex.getMessage()).build());

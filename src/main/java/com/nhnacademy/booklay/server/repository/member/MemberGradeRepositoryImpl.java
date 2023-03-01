@@ -6,12 +6,13 @@ import com.nhnacademy.booklay.server.entity.QMember;
 import com.nhnacademy.booklay.server.entity.QMemberGrade;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
+
+import java.util.List;
+import java.util.Optional;
 
 
 public class MemberGradeRepositoryImpl extends QuerydslRepositorySupport
@@ -21,8 +22,8 @@ public class MemberGradeRepositoryImpl extends QuerydslRepositorySupport
     }
 
     @Override
-    public Page<MemberGradeRetrieveResponse> findByMember_MemberNo(Pageable pageable,
-                                                                   Long memberNo) {
+    public Page<MemberGradeRetrieveResponse> findByMemberMemberNo(Pageable pageable,
+                                                                  Long memberNo) {
         QMember member = QMember.member;
         QMemberGrade memberGrade = QMemberGrade.memberGrade;
 

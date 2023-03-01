@@ -3,6 +3,7 @@ package com.nhnacademy.booklay.server.controller.delivery;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -23,6 +24,8 @@ import com.nhnacademy.booklay.server.dto.delivery.response.DeliveryDestinationRe
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.DeliveryDestination;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationLimitExceededException;
+import com.nhnacademy.booklay.server.exception.delivery.DeliveryDestinationNotFoundException;
 import com.nhnacademy.booklay.server.service.delivery.DeliveryDestinationService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,6 +109,24 @@ class DeliveryDestinationControllerTest {
     }
 
     @Test
+    @DisplayName("배송지 등록 시 갯수 초과")
+    void testCreateDeliveryDestination_throwsDeliveryDestinationLimitExceeded() throws Exception {
+        //given
+        doThrow(DeliveryDestinationLimitExceededException.class).when(deliveryDestinationService).createDeliveryDestination(any(), any());
+
+        //when
+        mockMvc.perform(post(URI_PREFIX + "/" + member.getMemberNo())
+                .content(objectMapper.writeValueAsString(deliveryDestinationCURequest))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andReturn();
+
+        //then
+        then(deliveryDestinationService).should(times(1)).createDeliveryDestination(any(), any());
+    }
+
+    @Test
     @DisplayName("배송지 리스트 조회 성공 테스트")
     void testRetrieveDeliveryDestinations() throws Exception {
         //given
@@ -155,6 +176,26 @@ class DeliveryDestinationControllerTest {
                 post(URI_PREFIX + "/update/" + member.getMemberNo() + "/" + deliveryDestination.getId())
                     .content(objectMapper.writeValueAsString(deliveryDestinationCURequest))
                     .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+
+        //then
+        then(deliveryDestinationService).should(times(1))
+            .updateDeliveryDestination(any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("배송지 수정 시 배송지 찾을 수 없음.")
+    void testUpdateDeliveryDestination_throwDeliveryDestinationNotFound() throws Exception {
+        //given
+        doThrow(DeliveryDestinationNotFoundException.class).when(deliveryDestinationService).updateDeliveryDestination(any(), any(), any());
+
+        //when
+        mockMvc.perform(
+                post(URI_PREFIX + "/update/" + member.getMemberNo() + "/" + deliveryDestination.getId())
+                    .content(objectMapper.writeValueAsString(deliveryDestinationCURequest))
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
             .andDo(print())
             .andReturn();
 

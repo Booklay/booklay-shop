@@ -45,7 +45,6 @@ public class CreateUpdateProductSubscribeRequest {
 
     private Long subscribeId;
 
-    //TODO : 삭제 예정
     @Length(max = 4)
     private Integer subscribeWeek;
     @Length(max = 7)

@@ -3,6 +3,8 @@ package com.nhnacademy.booklay.server.service.order;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -98,7 +100,7 @@ class ComplexOrderServiceImplTest {
         complexOrderService.checkOrder(orderSheet, memberInfo);
 
         // then
-        BDDMockito.then(pointHistoryService.retrieveTotalPoint(memberInfo.getMemberNo()));
+        then(pointHistoryService.retrieveTotalPoint(memberInfo.getMemberNo()));
     }
 
     @Test
@@ -320,12 +322,13 @@ class ComplexOrderServiceImplTest {
         Order order = Dummy.getDummyOrder();
         OrderSheet orderSheet = Dummy.getDummyOrderSheet();
         MemberInfo memberInfo = Dummy.getDummyMemberInfo();
-
-        // when
         when(orderService.saveOrder(any())).thenReturn(order);
 
-        // then
+        // when
         complexOrderService.saveReceipt(orderSheet, memberInfo);
+
+        // then
+        then(orderService).should(times(1)).saveOrder(any());
     }
 
     @Test
@@ -334,12 +337,13 @@ class ComplexOrderServiceImplTest {
         // given
         Long targetId = 1L;
         Order order = Dummy.getDummyOrder();
+        when(orderService.retrieveOrder(targetId)).thenReturn(order);
 
         // when
-        when(orderService.retrieveOrder(targetId)).thenReturn(order);
         complexOrderService.retrieveOrderReceipt(targetId, targetId);
 
         // then
+        then(orderService).should(times(1)).retrieveOrder(any());
     }
 
 }

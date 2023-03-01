@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import com.nhnacademy.booklay.server.dto.product.request.CreateDeleteProductRelationRequest;
 import com.nhnacademy.booklay.server.dto.product.request.CreateUpdateProductBookRequest;
@@ -111,6 +112,8 @@ class ProductRelationServiceImplTest {
     }
 
     productRelationService.retrieveRecommendConnection(baseProduct.getId(), pageable);
+
+    then(productService).should().retrieveProductPage(any());
   }
 
   @Test

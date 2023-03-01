@@ -36,17 +36,6 @@ public class MemberInfo {
         this.email = readMap(memberInfoFieldName[arrayCount], paramMap);
     }
 
-    public MemberInfo(MemberInfoPostGetter memberInfoPostGetter) {
-        this.memberNo = memberInfoPostGetter.getMember_info_memberNo();
-        this.gender = memberInfoPostGetter.getMember_info_gender();
-        this.memberId = memberInfoPostGetter.getMember_info_memberId();
-        this.nickname = memberInfoPostGetter.getMember_info_nickname();
-        this.name = memberInfoPostGetter.getMember_info_name();
-        this.birthday = memberInfoPostGetter.getMember_info_birthday();
-        this.phoneNo = memberInfoPostGetter.getMember_info_phoneNo();
-        this.email = memberInfoPostGetter.getMember_info_email();
-    }
-
     public MemberInfo(MemberRetrieveResponse memberRetrieveResponse) {
         this.memberNo = memberRetrieveResponse.getMemberNo();
         this.gender = memberRetrieveResponse.getGender();

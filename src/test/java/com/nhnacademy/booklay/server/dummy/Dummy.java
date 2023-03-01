@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
+import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;

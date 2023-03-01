@@ -1,7 +1,10 @@
 package com.nhnacademy.booklay.server.service.mypage;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import com.nhnacademy.booklay.server.dto.member.request.PointHistoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.member.request.PointPresentRequest;
@@ -112,13 +115,12 @@ class PointHistoryServiceImplTest {
         BDDMockito.then(pointHistoryRepository).should().retrieveLatestPointHistory(any());
     }
 
-    @Disabled
     @Test
     @DisplayName("포인트 선물하기 테스트")
     void presentPointSuccessTest() {
         //given
         given(getMemberService.getValidMemberByMemberNo(any())).willReturn(member);
-
+        given(getMemberService.getValidMemberByMemberId(any())).willReturn(member);
         given(pointHistoryRepository.retrieveLatestPointHistory(any())).willReturn(
             Optional.of(totalPointRetrieveResponse));
 
@@ -126,7 +128,8 @@ class PointHistoryServiceImplTest {
         pointHistoryService.presentPoint(member.getMemberNo(), pointPresentRequest);
 
         //then
-        BDDMockito.then(pointHistoryRepository).should().save(any());
+        then(pointHistoryRepository).should(times(2)).retrieveLatestPointHistory(any());
+
     }
 
 }

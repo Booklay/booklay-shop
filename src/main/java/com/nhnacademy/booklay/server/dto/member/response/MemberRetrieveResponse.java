@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SuppressWarnings("java:S107")
 public class MemberRetrieveResponse {
     private Long memberNo;
     private String gender;

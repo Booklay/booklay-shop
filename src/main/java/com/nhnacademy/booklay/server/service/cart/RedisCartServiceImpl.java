@@ -60,7 +60,7 @@ public class RedisCartServiceImpl implements RedisCartService {
     public void deleteCartItems(String key, List<Long> productNoList) {
         redisTemplate.opsForHash().delete(key,
                                           productNoList.stream().map(Object::toString)
-                                                       .collect(Collectors.toList()));
+                                                       .toArray());
         createUsedInRedis(key);
     }
 

@@ -8,7 +8,6 @@ import com.nhnacademy.booklay.server.dto.member.response.BlockedMemberRetrieveRe
 import com.nhnacademy.booklay.server.dto.member.response.DroppedMemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberAuthorityRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberChartRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.member.response.MemberGradeChartRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberGradeRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberLoginResponse;
 import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveResponse;
@@ -161,7 +160,7 @@ public class MemberServiceImpl implements MemberService {
     public void createBlockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        if (member.getIsBlocked()) {
+        if (Boolean.TRUE.equals(member.getIsBlocked())) {
             throw new AlreadyBlockedMemberException(member);
         }
 
@@ -186,7 +185,7 @@ public class MemberServiceImpl implements MemberService {
                                                                   Pageable pageable) {
         getMemberService.getMemberNo(memberNo);
 
-        return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
+        return memberGradeRepository.findByMemberMemberNo(pageable, memberNo);
     }
 
     @Override
@@ -256,13 +255,6 @@ public class MemberServiceImpl implements MemberService {
             .droppedMemberCount(memberRepository.retrieveDroppedMemberCount())
             .build();
     }
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    public MemberGradeChartRetrieveResponse retrieveMemberGradeChart() {
-//        return memberGradeRepository.retrieveMemberGradeChart()
-//            .orElseThrow(() -> new IllegalArgumentException());
-//    }
 
     /**
      * myPage main을 위한 메소드

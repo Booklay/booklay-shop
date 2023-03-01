@@ -51,7 +51,6 @@ public class SearchServiceImpl implements SearchService {
     private final ElasticsearchOperations operations;
 
     private static final String KEYWORDS_TEXT = "keywordText";
-    private static final String KEYWORDS_ID = "keywordId";
     private static final String[] PRODUCT_NESTED_PATH = { "categories", "tags", "authors"};
 
 
@@ -86,34 +85,6 @@ public class SearchServiceImpl implements SearchService {
         return getSearchPageResponse(pageable, productDocumentSearchHits, "전체 상품");
 
     }
-//    @Override
-//    public SearchPageResponse<SearchProductResponse> getAllProducts(Pageable pageable) {
-//
-//        Page<ProductAllInOneResponse> products = productRepository.retrieveProductsInPage(pageable);
-//        List<ProductDocument> productDocuments = new ArrayList<>();
-//
-//        if (!products.getContent().isEmpty()) {
-//            AtomicInteger count = new AtomicInteger(1);
-//            products.getContent().forEach(product -> {
-//                if (!product.getInfo().isDeleted()) {
-//                    productDocuments.add(ProductDocument.fromEntity(product));
-//                    log.info(" Docs Add Counts : {}", count.getAndIncrement());
-//                }
-//            });
-//        }
-//
-//        List<SearchProductResponse> list = convertHitsToResponse(productDocuments);
-//
-//        return SearchPageResponse.<SearchProductResponse>builder()
-//            .searchKeywords("전체 상품")
-//            .totalHits(products.getTotalElements())
-//            .pageNumber(pageable.getPageNumber())
-//            .pageSize(pageable.getPageSize())
-//            .totalPages((list.size() / pageable.getPageSize()) + 1)
-//            .data(list)
-//            .build();
-//
-//    }
 
     @Override
     public SearchPageResponse<SearchProductResponse> searchProductsByKeywords(
@@ -254,25 +225,7 @@ public class SearchServiceImpl implements SearchService {
 
         return responses;
     }
-
-    /**
-     * 검색된 결과들의 아이디 리스트만 리턴해주는 메소드,
-     * 조회한 정보를 MySQL을 통해 페이지를 리턴하기 때문에 ID 리스트만 리턴.
-     * @param searchHits 검색된 도큐먼트.
-     * @return 아이디 리스트.
-     * @param <T> 도큐먼트 타입.
-     */
-
-    private <T> List<Long> getHitIds(SearchHits<T> searchHits) {
-        List<Long> hitIds = new ArrayList<>();
-
-        searchHits.getSearchHits().forEach(
-            productDocumentSearchHit -> hitIds.add(
-                Long.valueOf(Objects.requireNonNull(productDocumentSearchHit.getId()))));
-
-        return hitIds;
-    }
-
+    
     private <T> List<T> getHits(SearchHits<T> searchHits) {
         List<T> hits = new ArrayList<>();
 

@@ -42,10 +42,6 @@ class DeliveryStatusCodeServiceImplTest {
   }
 
   @Test
-  void retrieveOrderStatusCodeName() {
-  }
-
-  @Test
   void saveOrderStatusCode() {
     given(deliveryStatusCodeRepository.save(deliveryStatusCode)).willReturn(deliveryStatusCode);
 

@@ -225,7 +225,7 @@ public class SearchServiceImpl implements SearchService {
 
         return responses;
     }
-
+    
     private <T> List<T> getHits(SearchHits<T> searchHits) {
         List<T> hits = new ArrayList<>();
 

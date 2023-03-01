@@ -160,7 +160,7 @@ public class MemberServiceImpl implements MemberService {
     public void createBlockMember(Long memberNo, MemberBlockRequest request) {
         Member member = getMemberService.getMemberNo(memberNo);
 
-        if (member.getIsBlocked()) {
+        if (Boolean.TRUE.equals(member.getIsBlocked())) {
             throw new AlreadyBlockedMemberException(member);
         }
 
@@ -185,7 +185,7 @@ public class MemberServiceImpl implements MemberService {
                                                                   Pageable pageable) {
         getMemberService.getMemberNo(memberNo);
 
-        return memberGradeRepository.findByMember_MemberNo(pageable, memberNo);
+        return memberGradeRepository.findByMemberMemberNo(pageable, memberNo);
     }
 
     @Override

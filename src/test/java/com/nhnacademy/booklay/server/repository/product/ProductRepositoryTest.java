@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
@@ -37,6 +38,41 @@ class ProductRepositoryTest {
 
         //then
         assertThat(expected.isDeleted()).isFalse();
+    }
 
+    @Test
+    @DisplayName("AuthorityRepository save test")
+    void findAllBooksForSubscribeBy() {
+        //given
+        PageRequest request = PageRequest.of(1, 1);
+
+        //when
+        productRepository.findAllBooksForSubscribeBy(request);
+
+        //then
+    }
+
+    @Test
+    @DisplayName("AuthorityRepository save test")
+    void findAuthorNameByProductId() {
+        //given
+        Long targetId = 1L;
+
+        //when
+        productRepository.findAuthorNameByProductId(targetId);
+
+        //then
+    }
+
+    @Test
+    @DisplayName("AuthorityRepository save test")
+    void findNotDeletedByPageable() {
+        //given
+        PageRequest request = PageRequest.of(1, 1);
+
+        //when
+        productRepository.findNotDeletedByPageable(request);
+
+        //then
     }
 }

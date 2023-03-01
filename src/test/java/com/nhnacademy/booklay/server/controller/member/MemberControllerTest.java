@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -31,6 +32,9 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveRespo
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
+import com.nhnacademy.booklay.server.exception.member.AdminAndAuthorAuthorityCannotExistTogetherException;
+import com.nhnacademy.booklay.server.exception.member.AlreadyExistAuthorityException;
+import com.nhnacademy.booklay.server.exception.member.AuthorityNotFoundException;
 import com.nhnacademy.booklay.server.exception.member.MemberNotFoundException;
 import com.nhnacademy.booklay.server.service.member.MemberService;
 import java.util.List;
@@ -372,5 +376,53 @@ class MemberControllerTest {
             .andReturn();
 
         verify(memberService, times(1)).deleteMember(any());
+    }
+
+    @Test
+    @DisplayName("회원 수정 실패 테스트")
+    void testUpdateMember_throwsAuthorityNotFoundException() throws Exception {
+        //given
+        doThrow(AuthorityNotFoundException.class).when(memberService).updateMember(anyLong(), any());
+
+        //when
+        mockMvc.perform(put(URI_PREFIX + "/" + member.getMemberNo())
+            .content(objectMapper.writeValueAsString(updateDto))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+
+        //then
+        then(memberService).should().updateMember(anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("회원 수정 실패 테스트")
+    void testUpdateMember_throwsAdminAndAuthorAuthorityCannotExistTogetherException() throws Exception {
+        //given
+        doThrow(AdminAndAuthorAuthorityCannotExistTogetherException.class).when(memberService).updateMember(anyLong(), any());
+
+        //when
+        mockMvc.perform(put(URI_PREFIX + "/" + member.getMemberNo())
+                .content(objectMapper.writeValueAsString(updateDto))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+
+        //then
+        then(memberService).should().updateMember(anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("회원 수정 실패 테스트")
+    void testUpdateMember_throwsAlreadyExistAuthorityException() throws Exception {
+        //given
+        doThrow(AlreadyExistAuthorityException.class).when(memberService).updateMember(anyLong(), any());
+
+        //when
+        mockMvc.perform(put(URI_PREFIX + "/" + member.getMemberNo())
+                .content(objectMapper.writeValueAsString(updateDto))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+
+        //then
+        then(memberService).should().updateMember(anyLong(), any());
     }
 }

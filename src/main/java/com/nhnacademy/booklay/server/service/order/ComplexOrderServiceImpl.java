@@ -301,10 +301,14 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
     @Override
     public Order saveReceipt(OrderSheet orderSheet, MemberInfo memberInfo) {
         Order order = orderService.saveOrder(orderSheet);
+        Map<Long, Long> productNoOrderProductMap = new HashMap<>();
         //주문 상품 저장
         if (!orderSheet.getOrderProductDtoList().isEmpty()) {
             orderSheet.getOrderProductDtoList().forEach(orderProductDto ->
-                orderProductService.saveOrderProduct(orderProductDto, order.getId())
+                {
+                    OrderProduct orderProduct = orderProductService.saveOrderProduct(orderProductDto, order.getId());
+                    productNoOrderProductMap.put(orderProduct.getProductNo(), orderProduct.getId());
+                }
             );
         }
         //일반 상품용 배송정보
@@ -328,6 +332,7 @@ public class ComplexOrderServiceImpl implements ComplexOrderService{
         if (!couponUseRequest.getCategoryCouponList().isEmpty() ||
                 !couponUseRequest.getProductCouponList().isEmpty()){
             couponUseRequest.getCategoryCouponList().forEach(couponUsingDto -> couponUsingDto.setUsedTargetNo(order.getId()));
+            couponUseRequest.getProductCouponList().forEach(couponUsingDto -> couponUsingDto.setUsedTargetNo(productNoOrderProductMap.get(couponUsingDto.getUsedTargetNo())));
             restService.post(couponUsingUrl, objectMapper.convertValue(orderSheet.getCouponUseRequest(), Map.class), void.class);
         }
         orderSheet.setOrderNo(order.getId());

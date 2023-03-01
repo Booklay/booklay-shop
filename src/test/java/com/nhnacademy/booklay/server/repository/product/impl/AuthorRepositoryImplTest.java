@@ -55,7 +55,6 @@ class AuthorRepositoryImplTest {
 
 
     @Test
-    @Disabled
   void findAllByPageable() {
     //given
 

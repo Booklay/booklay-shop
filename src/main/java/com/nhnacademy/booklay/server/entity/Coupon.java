@@ -22,6 +22,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuppressWarnings("java:S107")
 public class Coupon {
 
     @Id

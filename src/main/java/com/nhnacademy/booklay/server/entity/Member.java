@@ -30,6 +30,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@SuppressWarnings("java:S107")
 public class Member {
     @Id
     @Column(name = "member_no")

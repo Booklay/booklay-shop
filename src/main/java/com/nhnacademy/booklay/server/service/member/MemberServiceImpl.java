@@ -256,7 +256,6 @@ public class MemberServiceImpl implements MemberService {
             .build();
     }
 
-
     /**
      * myPage main을 위한 메소드
      * 개인정보 마스킹처리

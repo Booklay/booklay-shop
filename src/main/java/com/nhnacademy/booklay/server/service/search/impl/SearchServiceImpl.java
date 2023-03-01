@@ -225,16 +225,7 @@ public class SearchServiceImpl implements SearchService {
 
         return responses;
     }
-
-    /**
-     * 검색된 결과들의 아이디 리스트만 리턴해주는 메소드,
-     * 조회한 정보를 MySQL을 통해 페이지를 리턴하기 때문에 ID 리스트만 리턴.
-     * @param searchHits 검색된 도큐먼트.
-     * @return 아이디 리스트.
-     * @param <T> 도큐먼트 타입.
-     */
-
-
+    
     private <T> List<T> getHits(SearchHits<T> searchHits) {
         List<T> hits = new ArrayList<>();
 

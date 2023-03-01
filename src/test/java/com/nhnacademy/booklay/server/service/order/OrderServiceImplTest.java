@@ -70,7 +70,7 @@ class OrderServiceImplTest {
     List<OrderListRetrieveResponse> content = new ArrayList<>();
     content.add(orderlist);
     Page<OrderListRetrieveResponse> page = new PageImpl<>(content);
-    given(orderRepository.findAllByMemberNoAndIsBlinded(memberNo, false, pageable)).willReturn(
+    given(orderRepository.findAllByMemberNoAndIsBlindedOrderByOrderedAtDesc(memberNo, false, pageable)).willReturn(
         page);
 
     PageResponse<OrderListRetrieveResponse> orderListRetrieveResponsePageResponse = new PageResponse<>(

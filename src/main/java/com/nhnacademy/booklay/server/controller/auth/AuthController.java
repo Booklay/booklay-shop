@@ -33,7 +33,7 @@ public class AuthController {
                                                                .orElseThrow(() ->
                                                                    new MemberNotFoundException(MEMBER_NOT_FOUND_ERROR_CODE));
 
-        if (memberLoginResponse.getIsBlocked()) {
+        if (Boolean.TRUE.equals(memberLoginResponse.getIsBlocked())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                        .header("error-code", MEMBER_BLOCKED_ERROR)
                        .build();

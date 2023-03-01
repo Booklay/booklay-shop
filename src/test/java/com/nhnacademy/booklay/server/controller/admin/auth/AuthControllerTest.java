@@ -54,7 +54,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(AuthController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class AuthControllerTest {
+class AuthControllerTest {
     @MockBean
     MemberService memberService;
     @Autowired

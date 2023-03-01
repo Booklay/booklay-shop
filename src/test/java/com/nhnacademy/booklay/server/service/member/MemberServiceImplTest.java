@@ -186,7 +186,7 @@ class MemberServiceImplTest {
     void retrieveMemberGradesSuccessTest() {
         //given
         given(getMemberService.getMemberNo(any())).willReturn(member);
-        given(memberGradeRepository.findByMember_MemberNo(any(), any())).willReturn(Page.empty());
+        given(memberGradeRepository.findByMemberMemberNo(any(), any())).willReturn(Page.empty());
 
         //when
         Page<MemberGradeRetrieveResponse> pageResponse =
@@ -194,7 +194,7 @@ class MemberServiceImplTest {
 
         //then
         then(getMemberService).should().getMemberNo(any());
-        then(memberGradeRepository).should().findByMember_MemberNo(any(), any());
+        then(memberGradeRepository).should().findByMemberMemberNo(any(), any());
         assertThat(pageResponse.getTotalElements()).isZero();
     }
 

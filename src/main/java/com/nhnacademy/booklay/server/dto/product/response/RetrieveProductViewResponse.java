@@ -103,7 +103,6 @@ public class RetrieveProductViewResponse {
         this.subscribeId = subscribe.getId();
         this.subscribeWeek = subscribe.getSubscribeWeek();
         this.subscribeDay = subscribe.getSubscribeDay();
-//    this.childProducts = childProducts;
         this.publisher = subscribe.getPublisher();
     }
 }

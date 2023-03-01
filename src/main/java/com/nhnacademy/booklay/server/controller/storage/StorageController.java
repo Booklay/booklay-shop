@@ -51,8 +51,7 @@ public class StorageController {
    * @throws IOException .
    */
   @GetMapping("/{fileId}")
-  public ResponseEntity<String> downloadUrl(@PathVariable("fileId") final Long fileId)
-      throws IOException {
+  public ResponseEntity<String> downloadUrl(@PathVariable("fileId") final Long fileId) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(fileService.downloadUrl(fileId));
   }

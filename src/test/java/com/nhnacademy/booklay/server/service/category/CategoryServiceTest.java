@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -18,6 +19,7 @@ import com.nhnacademy.booklay.server.entity.Category;
 import com.nhnacademy.booklay.server.exception.service.AlreadyExistedException;
 import com.nhnacademy.booklay.server.exception.service.NotFoundException;
 import com.nhnacademy.booklay.server.repository.category.CategoryRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -173,6 +175,25 @@ class CategoryServiceTest {
         //then
         assertThatNoException().isThrownBy(() -> categoryService.updateCategory(updateRequest,
             category.getId()));
+    }
+
+    @Test
+    @DisplayName("카테고리 수정. 바꾸려는 카테고리와 같지 않을 때.")
+    void testUpdateCategory_ifNotEqualId() {
+        //mocking
+        given(categoryRepository.findById(updateRequest.getParentCategoryId())).willReturn(
+            Optional.ofNullable(parentCategory));
+
+        given(categoryRepository.findById(category.getId())).willReturn(
+            Optional.ofNullable(category));
+
+        ReflectionTestUtils.setField(updateRequest, "id", 2L);
+
+        //when
+        categoryService.updateCategory(updateRequest, category.getId());
+
+        //then
+        then(categoryRepository).should().delete(any());
     }
 
     @Test

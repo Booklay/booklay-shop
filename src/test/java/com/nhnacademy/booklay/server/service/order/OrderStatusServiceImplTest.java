@@ -41,10 +41,6 @@ class OrderStatusServiceImplTest {
   }
 
   @Test
-  void retrieveOrderStatusCodeName() {
-  }
-
-  @Test
   void saveOrderStatusCode() {
     given(orderStatusCodeRepository.save(orderStatusCode)).willReturn(orderStatusCode);
 

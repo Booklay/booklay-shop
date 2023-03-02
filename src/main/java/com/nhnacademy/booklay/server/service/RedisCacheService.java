@@ -76,9 +76,11 @@ public class RedisCacheService {
      * @param keyNo key
      */
     public void deleteCache(String keyName, Long keyNo){
-        HashOperations<String, String, String> updateHash = redisTemplate.opsForHash();
-        deleteCheckedCache(keyName+keyNo);
-        updateHash.put(keyName, keyNo.toString(), "");
+        if (keyNo!= null){
+            HashOperations<String, String, String> updateHash = redisTemplate.opsForHash();
+            deleteCheckedCache(keyName+keyNo);
+            updateHash.put(keyName, keyNo.toString(), "");
+        }
     }
 
 

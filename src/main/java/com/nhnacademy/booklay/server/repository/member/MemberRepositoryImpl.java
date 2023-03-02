@@ -174,7 +174,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport
             .innerJoin(memberAuthority).on(member.memberNo.eq(memberAuthority.pk.memberNo))
             .innerJoin(authority).on(memberAuthority.pk.authorityId.eq(authority.id))
             .innerJoin(memberGrade).on(member.memberNo.eq(memberGrade.member.memberNo))
-            .where(member.email.eq(email))
+            .where(member.email.eq(email)).orderBy(memberGrade.date.desc())
             .select(Projections.constructor(MemberRetrieveResponse.class,
                                             member.memberNo,
                                             member.gender.name,

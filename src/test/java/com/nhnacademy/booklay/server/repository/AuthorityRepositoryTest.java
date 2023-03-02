@@ -4,11 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Authority;
+import com.nhnacademy.booklay.server.repository.product.impl.AuthorRepositoryImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
@@ -20,6 +23,9 @@ class AuthorityRepositoryTest {
 
     @Autowired
     AuthorityRepository authorityRepository;
+
+    @Autowired
+    AuthorRepositoryImpl authorRepositoryImpl;
 
     @Test
     @DisplayName("AuthorityRepository save test")
@@ -47,5 +53,17 @@ class AuthorityRepositoryTest {
 
         //then
         assertThat(expected.getId()).isEqualTo(authority.getId());
+    }
+
+    @Test
+    @DisplayName("authorityRepository findAllByPageable 테스트")
+    void findAllByPageable() {
+        //given
+        PageRequest request = PageRequest.of(1, 1);
+
+        //when
+        authorRepositoryImpl.findAllByPageable(request);
+
+        //then
     }
 }

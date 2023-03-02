@@ -21,6 +21,7 @@ import com.nhnacademy.booklay.server.dto.PageResponse;
 import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
+import com.nhnacademy.booklay.server.dto.order.payment.OrderSheetCheckResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.StorageRequest;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Member;
@@ -159,6 +160,24 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("orderSheet 저장 시 예외 테스트")
+    void testSaveOrderSheet_notInstanceOfOrderSheetCheckResponse() throws Exception {
+        //given
+        given(complexOrderService.checkOrder(any(), any())).willReturn(new OrderSheetCheckResponse("reason", 1, true));
+
+        //when
+        mockMvc.perform(post(URI_PREFIX + "/check/")
+                .content(objectMapper.writeValueAsString(orderSheet))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andReturn();
+
+        //then
+        then(complexOrderService).should(times(1)).checkOrder(any(), any());
+    }
+
+    @Test
     @DisplayName("Order Sheet 조회 성공 테스트")
     void testRetrieveOrderSheet() throws Exception {
         //mocking
@@ -174,8 +193,8 @@ class OrderControllerTest {
     }
 
     @Test
-    @DisplayName("재고 감소 테스트")
-    void testProductStorageDown() throws Exception {
+    @DisplayName("재고 감소 시 재고 부족 테스트")
+    void testProductStorageDown_throwNotEnoughStock() throws Exception {
         //mocking
         when(productService.storageSoldOutChecker(any())).thenThrow(NotEnoughStockException.class);
 
@@ -190,10 +209,41 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("재고 감소 테스트")
+    void testProductStorageDown() throws Exception {
+        //mocking
+        when(productService.storageSoldOutChecker(any())).thenReturn(true);
+
+        //then
+        mockMvc.perform(
+            post(URI_PREFIX + "/storage/down").accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(storageRequest))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        then(productService).should(times(1)).storageSoldOutChecker(any());
+
+    }
+
+    @Test
+    @DisplayName("재고 증가 시 예외 테스트")
+    void testProductStorageUp_throwsNotEnoughStock() throws Exception {
+        //mocking
+        when(productService.storageRefund(any())).thenThrow(NotEnoughStockException.class);
+
+        //then
+        mockMvc.perform(
+            post(URI_PREFIX + "/storage/up").accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(storageRequest))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        then(productService).should(times(1)).storageRefund(any());
+    }
+
+    @Test
     @DisplayName("재고 증가 테스트")
     void testProductStorageUp() throws Exception {
         //mocking
-        when(productService.storageRefund(any())).thenThrow(NotEnoughStockException.class);
+        when(productService.storageRefund(any())).thenReturn(true);
 
         //then
         mockMvc.perform(

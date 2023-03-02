@@ -132,4 +132,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.confirmOrder(orderNo, memberInfo.getMemberNo()));
     }
 
+    @GetMapping("stat/{month}")
+    public ResponseEntity<List<List<Long>>> orderStat(@PathVariable Integer month){
+        return ResponseEntity.ok(orderService.retrieveOrderStat(month));
+    }
+
 }

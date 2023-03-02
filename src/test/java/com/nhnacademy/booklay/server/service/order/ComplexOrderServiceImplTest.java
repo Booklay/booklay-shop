@@ -19,6 +19,7 @@ import com.nhnacademy.booklay.server.dto.order.payment.SubscribeDto;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Order;
+import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.Product;
 import com.nhnacademy.booklay.server.entity.Subscribe;
 import com.nhnacademy.booklay.server.repository.mypage.PointHistoryRepository;
@@ -322,7 +323,10 @@ class ComplexOrderServiceImplTest {
         Order order = Dummy.getDummyOrder();
         OrderSheet orderSheet = Dummy.getDummyOrderSheet();
         MemberInfo memberInfo = Dummy.getDummyMemberInfo();
+        OrderProduct orderProduct = Dummy.getDummyOrderProduct();
+
         when(orderService.saveOrder(any())).thenReturn(order);
+        when(orderProductService.saveOrderProduct(any(), any())).thenReturn(orderProduct);
 
         // when
         complexOrderService.saveReceipt(orderSheet, memberInfo);

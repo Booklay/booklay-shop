@@ -9,6 +9,7 @@ import com.nhnacademy.booklay.server.service.product.ProductService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +53,10 @@ public class RedisCartServiceImpl implements RedisCartService {
 
     @Override
     public void deleteAllCartItems(String key) {
-        redisTemplate.opsForHash()
-                     .delete(key, redisTemplate.<String, CartDto>opsForHash().keys(key).toArray());
+        Set<String> keySet = redisTemplate.<String, CartDto>opsForHash().keys(key);
+        if (!keySet.isEmpty()){
+            redisTemplate.opsForHash().delete(key, keySet.toArray());
+        }
     }
 
     @Override

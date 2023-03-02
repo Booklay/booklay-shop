@@ -85,7 +85,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("login/{cartId}")
+    @GetMapping("move/{cartId}")
     public ResponseEntity<Void> moveRedisToRDB(MemberInfo memberInfo,
                                                @PathVariable String cartId) {
         List<CartRetrieveResponse> allCartItems = redisCartService.getAllCartItems(cartId);

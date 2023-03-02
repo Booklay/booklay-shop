@@ -48,6 +48,7 @@ import com.nhnacademy.booklay.server.entity.MemberGrade;
 import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.entity.OrderProduct;
 import com.nhnacademy.booklay.server.entity.OrderStatusCode;
+import com.nhnacademy.booklay.server.entity.OrderSubscribe;
 import com.nhnacademy.booklay.server.entity.PointHistory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -601,5 +602,9 @@ public class Dummy {
         ReflectionTestUtils.setField(request, "categoryCouponList", List.of(Dummy.getDummyCouponUsingDto()));
 
         return request;
+    }
+
+    public static OrderSubscribe getDummyOrderSubscribe() {
+        return new OrderSubscribe(1L, DummyCart.getDummySubscribe(DummyCart.getDummyProductSubscribeDto()), 1L, Dummy.getDummyOrder(), 1L, 3, 1L, LocalDate.now(), LocalDate.now());
     }
 }

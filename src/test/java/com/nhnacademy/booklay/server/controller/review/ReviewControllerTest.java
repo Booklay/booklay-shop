@@ -2,6 +2,7 @@ package com.nhnacademy.booklay.server.controller.review;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -23,6 +24,7 @@ import com.nhnacademy.booklay.server.dto.search.response.SearchPageResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.dummy.DummyCart;
 import com.nhnacademy.booklay.server.entity.Review;
+import com.nhnacademy.booklay.server.exception.controller.CreateFailedException;
 import com.nhnacademy.booklay.server.service.mypage.RestockingNotificationService;
 import com.nhnacademy.booklay.server.service.review.ReviewServiceImpl;
 import com.nhnacademy.booklay.server.service.review.cache.ReviewResponsePageCacheWrapService;
@@ -143,6 +145,28 @@ class ReviewControllerTest {
   }
 
   @Test
+  void createReview_throwsCreateFailed() throws Exception {
+
+    // given
+    doThrow(CreateFailedException.class).when(reviewService).createReview(any(), any());
+    MockMultipartFile request = new MockMultipartFile(
+        "request",
+        "file.txt",
+        String.valueOf(MediaType.APPLICATION_JSON),
+        objectMapper.writeValueAsString(reviewCreateRequest).getBytes());
+
+    // when, then
+    mockMvc.perform(multipart(URI_PRE_FIX)
+            .file(file)
+            .file(request))
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andReturn();
+
+    then(reviewService).should(times(1)).createReview(any(), any());
+  }
+
+  @Test
   void retrieveReviewByProductId_bodyNonNull() throws Exception {
 
     Pageable pageable = PageRequest.of(0, 20);
@@ -158,6 +182,22 @@ class ReviewControllerTest {
         .andReturn();
 
 //    then(reviewService).should(times(1)).retrieveReviewListByProductId(any(), any());
+    then(reviewResponsePageCacheWrapService).should(times(1)).cacheRetrievePostResponsePage(any(), any());
+  }
+
+  @Test
+  void retrieveReviewByProductId_bodyNull() throws Exception {
+
+    Pageable pageable = PageRequest.of(0, 20);
+    when(reviewResponsePageCacheWrapService.cacheRetrievePostResponsePage(productId, pageable)).thenReturn(
+        null);
+
+    mockMvc.perform(get(URI_PRE_FIX + "/products/" + productId)
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andDo(print())
+        .andReturn();
+
     then(reviewResponsePageCacheWrapService).should(times(1)).cacheRetrievePostResponsePage(any(), any());
   }
 

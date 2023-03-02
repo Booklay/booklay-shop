@@ -2,8 +2,10 @@ package com.nhnacademy.booklay.server.service.order;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.when;
 
 import com.nhnacademy.booklay.server.dto.order.payment.SubscribeDto;
 import com.nhnacademy.booklay.server.dummy.Dummy;
@@ -78,6 +80,18 @@ class OrderSubscribeServiceImplTest {
     then(subscribeRepository).should().save(any());
   }
 
+  @Test
+  void renewOrderSubscribe() {
+    // given
+    when(subscribeRepository.findById(any())).thenReturn(
+        Optional.of(Dummy.getDummyOrderSubscribe()));
+
+    // when
+    orderSubscribeService.renewOrderSubscribe(1L, 1);
+
+    // then
+    then(subscribeRepository).should().save(any());
+  }
 
   @Test
   void deleteOrderSubscribeByOrderNo() {

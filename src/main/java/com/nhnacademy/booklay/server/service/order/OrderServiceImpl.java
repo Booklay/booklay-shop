@@ -8,10 +8,16 @@ import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import com.nhnacademy.booklay.server.entity.Order;
 import com.nhnacademy.booklay.server.repository.order.OrderRepository;
 import com.nhnacademy.booklay.server.service.mypage.PointHistoryService;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +33,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public PageResponse<OrderListRetrieveResponse> retrieveOrderListRetrieveResponsePageByMemberNoAndBlind(Long memberNo, Boolean isBlind, Pageable pageable){
         PageResponse<OrderListRetrieveResponse> orderListRetrieveResponsePageResponse =
-            new PageResponse<>(orderRepository.findAllByMemberNoAndIsBlinded(memberNo, isBlind, pageable));
+            new PageResponse<>(orderRepository.findAllByMemberNoAndIsBlindedOrderByOrderedAtDesc(memberNo, isBlind, pageable));
         orderListRetrieveResponsePageResponse.getData().forEach(response ->
             response.setOrderStatusName(orderStatusService.retrieveOrderStatusCodeName(response.getOrderStatusCodeNo())));
         return orderListRetrieveResponsePageResponse;
@@ -74,5 +80,30 @@ public class OrderServiceImpl implements OrderService{
         return Boolean.TRUE;
     }
 
+    @Override
+    public List<List<Long>> retrieveOrderStat(Integer month) {
+        List<Order> orderList = orderRepository.findAllByOrderedAtMonth(month);
+        MultiValueMap<Integer, Order> multiValueMap = new LinkedMultiValueMap<>();
+        for (Order order : orderList){
+            multiValueMap.add(order.getOrderedAt().getDayOfMonth(), order);
+        }
+        List<List<Long>> returnList = new ArrayList<>();
+        for (int i = 0; i <= LocalDateTime.now().withDayOfMonth(1).plusMonths(1).minusDays(1).getDayOfMonth()+1;i++){
+            List<Long> list = new ArrayList<>();
+            list.add((long) i);
+            list.add(0L);//payment
+            list.add(0L);//discounted
+            list.add(0L);//productPrice
+            if (multiValueMap.get(i) != null){
+                for (Order order: Objects.requireNonNull(multiValueMap.get(i))){
+                    list.set(1, list.get(1) + order.getPaymentPrice());
+                    list.set(2, list.get(2) + order.getDiscountPrice());
+                    list.set(3, list.get(3) + order.getProductPriceSum());
+                }
+            }
+            returnList.add(list);
+        }
+        return returnList;
+    }
 
 }

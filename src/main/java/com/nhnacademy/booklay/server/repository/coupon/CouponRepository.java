@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.repository.coupon;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.coupon.response.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,7 +2,6 @@ package com.nhnacademy.booklay.server.dummy;
 
 import com.nhnacademy.booklay.server.dto.cart.CartAddRequest;
 import com.nhnacademy.booklay.server.dto.cart.CartDto;
-import com.nhnacademy.booklay.server.dto.category.request.CategoryCreateRequest;
 import com.nhnacademy.booklay.server.dto.common.MemberInfo;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponIssueRequest;
 import com.nhnacademy.booklay.server.dto.coupon.request.CouponUseRequest;
@@ -27,7 +26,7 @@ import com.nhnacademy.booklay.server.dto.member.response.MemberMainRetrieveRespo
 import com.nhnacademy.booklay.server.dto.member.response.MemberRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.PointHistoryRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.member.response.TotalPointRetrieveResponse;
-import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.response.OrderListRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.OrderProductDto;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;

@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.entity;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponUpdateRequest;
+import com.nhnacademy.booklay.server.dto.coupon.request.CouponUpdateRequest;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;

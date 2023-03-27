@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.order;
+package com.nhnacademy.booklay.server.dto.order.response;
 
 import com.nhnacademy.booklay.server.entity.Order;
 import lombok.Getter;

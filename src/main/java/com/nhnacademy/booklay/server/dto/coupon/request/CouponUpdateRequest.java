@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.coupon;
+package com.nhnacademy.booklay.server.dto.coupon.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

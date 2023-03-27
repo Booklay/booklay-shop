@@ -10,5 +10,4 @@ public class OrderSheetSaveResponse {
     private Boolean valid;
     private Long paymentAmount;
     private String reason;
-    private Integer reasonType;
 }

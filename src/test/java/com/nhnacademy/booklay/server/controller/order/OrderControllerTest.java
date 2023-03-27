@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.booklay.server.dto.PageResponse;
-import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.response.OrderListRetrieveResponse;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderReceipt;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheet;
 import com.nhnacademy.booklay.server.dto.order.payment.OrderSheetCheckResponse;

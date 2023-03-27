@@ -1,6 +1,6 @@
 package com.nhnacademy.booklay.server.repository.order;
 
-import com.nhnacademy.booklay.server.dto.order.OrderListRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.order.response.OrderListRetrieveResponse;
 import com.nhnacademy.booklay.server.entity.Order;
 import java.util.List;
 import java.util.Optional;

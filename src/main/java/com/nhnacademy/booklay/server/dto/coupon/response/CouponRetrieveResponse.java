@@ -1,4 +1,4 @@
-package com.nhnacademy.booklay.server.dto.coupon;
+package com.nhnacademy.booklay.server.dto.coupon.response;
 
 import com.nhnacademy.booklay.server.entity.Coupon;
 import com.nhnacademy.booklay.server.entity.CouponType;

@@ -2,7 +2,7 @@ package com.nhnacademy.booklay.server.repository.coupon;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-import com.nhnacademy.booklay.server.dto.coupon.CouponRetrieveResponse;
+import com.nhnacademy.booklay.server.dto.coupon.response.CouponRetrieveResponse;
 import com.nhnacademy.booklay.server.dummy.Dummy;
 import com.nhnacademy.booklay.server.entity.Coupon;
 import org.junit.jupiter.api.BeforeEach;
